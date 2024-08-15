@@ -1,0 +1,39 @@
+{% extends 'delete.html' %}
+
+{% block entity_to_delete %}
+<div class="card-body table-responsive">
+  <div class="alert alert-danger alert-dismissible">
+    <h5><i class="icon fas fa-triangle-exclamation"></i> Atención!</h5>
+      Estas por eliminar el registro Nro: Estas por eliminar el registro Nro: {{object.id}}, {{del_title}} {{object.wall_port}}, de la Oficina: {{object.office.office}}.
+      Recorrido del cable del puerto al rack:
+      <ul>
+        <li>
+          Boca: {{object.wall_port}}
+        </li>
+        {% if object.switch_port_in.patch_port_out.patch %}
+        <li>
+          Patchera: {{object.switch_port_in.patch_port_out.patch}}, Puerto: {{object.switch_port_in.patch_port_out.port}}
+        </li>
+        {% endif %}
+        <li>
+          Switch: {{object.switch_port_in.switch.brand}}, N° de Serie: {{object.switch_port_in.switch.serial_n}}, de {{object.switch_port_in.switch.ports_q}}, Puerto: {{object.switch_port_in.port_id}}
+        </li>
+        <li>
+          Rack: {{object.switch_port_in.switch.rack}}
+        </li>
+      </ul>
+      <ul>
+        {% if object.switch_port_out %}
+        <b>ALIMENTA AL SWITCH</b>
+        <li>
+          Sale al Switch: {{object.switch_port_out.switch.brand}}, N° de serie: {{object.switch_port_out.switch.serial_n}} de {{object.switch_port_out.switch.ports_q}} Bocas.
+          {% if object.switch_out.switch.rack %}
+          Del Rack: {{object.switch_port_out.switch.rack}}
+          {% endif %}
+        </li>
+        {% endif %}
+      </ul>
+      ¿Deseas continuar?
+    </div>
+</div>
+{% endblock entity_to_delete %}

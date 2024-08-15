@@ -1,0 +1,22 @@
+.dashboard-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px - 60px); /* 56px navbar + 56px footer */
+  overflow: hidden; /* Ocultar el scroll */
+}
+
+.dashboard-content .container {
+  height: 100%;
+}
+
+.dashboard-content .row {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.align-middle {
+  vertical-align: middle !important;
+}

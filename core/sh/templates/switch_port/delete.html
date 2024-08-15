@@ -1,0 +1,31 @@
+{% extends 'delete.html' %}
+
+{% block entity_to_delete %}
+<div class="card-body table-responsive">
+  <div class="alert alert-danger alert-dismissible">
+    <h5><i class="icon fas fa-triangle-exclamation"></i> Atención!</h5>
+      Estas por eliminar el registro Nro: {{object.id}}, {{del_title}} {{object.port_id}}:
+      Detalle:
+      <ul>
+        <li>
+          Rack: {{object.switch.rack}}
+        </li>
+        <li>
+          Posicion: {{object.switch.switch_rack_pos}}
+        </li>
+        <li>
+          Switch: {{object.switch.brand}}, Número de Serie: {{object.switch.serial_n}} de {{object.switch.ports_q}} Bocas
+        </li>
+      </ul>
+      {% if object.patchport_out.port %}
+      <ul>
+        <b>PATCHERA</b>
+        <li>
+          sale al puerto {{object.patchport_out.port}} de la Patchera: {{object.patchport_out.patch.patch}} del Rack: {{object.patchport_out.patch.rack.rack}}
+        </li>
+      </ul>
+      {% endif %}
+      ¿Deseas continuar?
+    </div>
+</div>
+{% endblock entity_to_delete %}

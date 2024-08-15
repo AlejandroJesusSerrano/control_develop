@@ -1,0 +1,39 @@
+{% extends 'list.html' %}
+
+{% load static %}
+
+{% block header_list %}
+ <!-- Datatables de la App sh -->
+ <script src="{% static 'device/js/list.js' %}"></script>
+{% endblock header_list %}
+
+{% block columns %}
+
+  <th scope="col" style="width: 5%;">Id</th>
+  <th scope="col" style="width: 5%;">Tipo</th>
+  <th scope="col" style="width: 10%;">Marca</th>
+  <th scope="col" style="width: 10%;">Modelo</th>
+  <th scope="col" style="width: 10%;">IP</th>
+  <th scope="col" style="width: 10%;">Boca Pared</th>
+  <th scope="col" style="width: 5%;">Switch Ingreso</th>
+  <th scope="col" style="width: 15%;">Opciones</th>
+
+{% endblock columns %}
+
+{% block rows %}
+
+
+
+{% endblock rows %}
+
+{% block add_button %}
+
+<a href="{{ create_url }}" type="button" class="btn btn-primary" id="{{btn_add_id}}">
+  <i class="fas fa-plus"></i> Agregar Dispositivo
+</a>
+
+{% endblock add_button %}
+
+{% block js %}
+
+{% endblock js %}

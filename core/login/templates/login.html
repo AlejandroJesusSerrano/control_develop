@@ -1,0 +1,91 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{title}}</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+  <!-- jQuery -->
+  <script src="{% static 'lib/adminlte_3.2.0/plugins/jquery/jquery.min.js' %}"></script>
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+
+  <div class="card card-outline card-primary">
+    <div class="card-header bg-primary text-center">
+      <a href="{% url 'index' %}" class="h1"><b>Smart</b>HUNT</a>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">Ingresa tus credenciales para ingresar</p>
+
+      <form action="." method="post">
+        <input type="hidden" name="next" value="{{ next }}">
+
+        {% csrf_token %}
+
+        <div class="input-group mb-3">
+
+          {% if form.errors %}
+
+            <div class="alert alert-danger alert-dismissible">
+              <h5 class="text-center"><i class="icon fas fa-exclamation-triangle"></i> Revise la Informacion Ingresada!</h5>
+              <div>
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            </div>
+
+          {% endif %}
+        </div>
+        <div class="input-group mb-3">
+          {{ form.username|add_class:'form-control'|attr:'autocomplet:off'|attr:'placeholder:Ingrese su usuario' }}
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          {{ form.password|add_class:'form-control'|attr:'autocomplet:off'|attr:'placeholder:Ingrese su contraseña' }}
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Iniciar sesión</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    </script>
+  </div>
+</div>
+
+<!-- Bootstrap 4 -->
+<script src="{% static 'lib/adminlte_3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'lib/adminlte_3.2.0/dist/js/adminlte.min.js' %}"></script>
+<!-- Sweet Alert 2 -->
+<script src="{% static 'lib/sweetalert2-11.11.0/sweetalert2.all.min.js' %}"></script>
+</body>
+</html>

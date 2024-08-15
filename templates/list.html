@@ -1,0 +1,77 @@
+{% extends 'body.html' %}
+{% load static %}
+
+{% block extra_refs %}
+<!-- Data Tables Jquery -->
+<script src="{% static 'lib/adminlte_3.2.0/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+<!-- Data Tables Bs4 -->
+<link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+  {% block header_list %}
+  {% endblock header_list %}
+
+{% endblock extra_refs %}
+
+{% block content %}
+
+  <div class="card card-default mb-2">
+    <div class="card-header bg-primary">
+      <h3 class="card-title">
+      <i class="{{nav_icon}}"></i>
+      {{title}}
+      </h3>
+    </div>
+
+    <div class="card-body table-responsive">
+      <table class="table text-center" id="{{table_id}}">
+        <thead>
+
+          {% block columns %}
+          {% endblock columns %}
+
+        </thead>
+
+        <tbody>
+
+          {% block rows %}
+          {% endblock rows %}
+
+        </tbody>
+      </table>
+    </div>
+    <div class="card-footer">
+
+      {% block add_button %}
+      {% endblock add_button %}
+
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script type="application/javascript">
+
+    $(document).ready(function() {
+        $('#{{btn_add_id}}').on('click', function(){
+          $.ajax({
+            url: "{% url 'sh:p_list'%}",
+            type: 'POST',
+            data: {id: 34},
+            dataType: 'json',
+          }).done(function(data){
+            console.log(data);
+          }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert(textStatus+': ' +errorThrown);
+          }).always(function(data){
+
+          })
+        })
+    });
+
+</script>
+{% endblock js %}
+
+{% block extra_js %}
+<!-- Data Tables BS4 -->
+<script src="{% static 'lib/adminlte_3.2.0/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+{% endblock extra_js %}

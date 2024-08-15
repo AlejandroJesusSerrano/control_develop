@@ -1,0 +1,34 @@
+{% extends 'list.html' %}
+
+{% load static %}
+
+{% block header_list %}
+ <!-- Datatables de la App sh -->
+ <script src="{% static 'employee_status/js/list.js' %}"></script>
+{% endblock header_list %}
+
+{% block columns %}
+
+  <th scope="col" style="width: 5%;">Id</th>
+  <th scope="col" style="width: 80%;">Estado</th>
+  <th scope="col" style="width: 15%;">Opciones</th>
+
+{% endblock columns %}
+
+{% block rows %}
+
+
+
+{% endblock rows %}
+
+{% block add_button %}
+
+<a href="{{ create_url }}" type="button" class="btn btn-primary" id="{{btn_add_id}}">
+  <i class="fas fa-plus"></i> Agregar Estado de Empleado
+</a>
+
+{% endblock add_button %}
+
+{% block js %}
+
+{% endblock js %}
