@@ -25,7 +25,7 @@ $(document).ready(function(){
       {
         "data": "employee",
         "render": function(data, type, row){
-          return data.map(emp => emp.employee_last_name +", "+ emp.employee_name).join(' <b>/</b> ');
+          return data.map(emp => emp.employee_last_name +", "+ emp.employee_name).join('<br>');
         }
       },
       {"data": null, "defaultContent": ""},

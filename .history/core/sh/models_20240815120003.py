@@ -471,7 +471,7 @@ class Device(models.Model):
     item['office'] = self.office.office
     employees = self.employee.all()
     employee_data = [
-        {'employee_name': empl.employee_name, 'employee_last_name': empl.employee_last_name}
+        {'employee_name': empl.employee_name, ' employee_last_name': empl.employee_last_name}
         for empl in employees
     ]
     item['employee'] = employee_data

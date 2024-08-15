@@ -469,12 +469,11 @@ class Device(models.Model):
     item['w_port'] = self.wall_port.wall_port if self.wall_port else 'No se conecta a puerto de pared'
     item['s_port'] = self.switch_port.switch.ports_q if self.switch_port else 'No se conecta a Switch intermedio'
     item['office'] = self.office.office
-    employees = self.employee.all()
     employee_data = [
-        {'employee_name': empl.employee_name, 'employee_last_name': empl.employee_last_name}
-        for empl in employees
+        {'employee_name': empl.employee_name, ' employee_last_name': empl.employee_last_name}
+        for empl in self.employee.all()
     ]
-    item['employee'] = employee_data
+    item['employees'] = employee_data
     return item
 
   class Meta:

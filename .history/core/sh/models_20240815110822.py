@@ -474,7 +474,7 @@ class Device(models.Model):
         {'employee_name': empl.employee_name, 'employee_last_name': empl.employee_last_name}
         for empl in employees
     ]
-    item['employee'] = employee_data
+    item['employees'] = employee_data
     return item
 
   class Meta:

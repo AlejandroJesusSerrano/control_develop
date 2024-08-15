@@ -1,3 +1,4 @@
+import json
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import HttpRequest, JsonResponse
@@ -29,7 +30,8 @@ class DeviceListView(ListView):
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
       data = {'error': str(e)}
-
+      
+      print(json.dumps(data, indent=4))
     return JsonResponse(data, safe=False)
 
   def get_context_data(self, **kwargs):
