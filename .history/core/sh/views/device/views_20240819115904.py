@@ -56,22 +56,14 @@ class DeviceCreateView(TemplateView):
       data = {}
       try:
         action = request.POST.get('action')
-        if action == 'search_models':
-          dev_type_id = request.POST.get('dev_type_id')
-          brand_id = request.POST.get('brand_id')
+        if action == 'search_model_id':
+          data=[]
+          for d in Dev_Model.objects.filter(dev_type_id = request.POST['id']):
+            data.append({'id': d.id, 'name': d.dev_model})
 
-          models = Dev_Model.objects.all()
-          if dev_type_id:
-            models = models.filter(dev_type_id=dev_type_id)
-          if brand_id:
-            models = models.filter(brand_id=brand_id)
-
-          data = [
-            {
-              'id':d.id,
-              'name':d.dev_model
-            } for d in models
-          ]
+        if action == 'search_model_brand':
+          for d in data.objects.filter(brand_id = request.POST['id']):
+            data.filter({'id': d.id, 'name': d.dev_model})
         else:
           data['error'] = 'Ha ocurrido un error'
       except Exception as e:

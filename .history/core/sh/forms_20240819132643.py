@@ -832,11 +832,10 @@ class DeviceForm(Form):
     serial_number = forms.CharField(
       widget = forms.TextInput(
         attrs={
-        'class': 'form-control',
         'placeholder': 'Ingrese el número de serie'
         }
       )
-    )
+    ),
 
     # wall_port: Select(
       # attrs={

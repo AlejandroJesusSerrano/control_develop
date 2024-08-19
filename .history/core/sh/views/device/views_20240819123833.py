@@ -57,8 +57,8 @@ class DeviceCreateView(TemplateView):
       try:
         action = request.POST.get('action')
         if action == 'search_models':
-          dev_type_id = request.POST.get('dev_type_id')
-          brand_id = request.POST.get('brand_id')
+          dev_type_id = request.POST.get('id')
+          brand_id = request.POST.get('id')
 
           models = Dev_Model.objects.all()
           if dev_type_id:

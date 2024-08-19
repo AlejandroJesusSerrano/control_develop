@@ -13,26 +13,6 @@
   <label>Modelo de Dispositivo: </label>
   {{form.dev_model}}
 </div>
-<div class="form-group">
-  <label>Tipo de Conexión: </label>
-  {{form.connection_type}}
-</div>
-<div class="form-group">
-  <label>Ip: </label>
-  {{form.ip}}
-</div>
-<div class="form-group">
-  <label>Nombre en la Red: </label>
-  {{form.dev_net_name}}
-</div>
-<div class="form-group">
-  <label>Estado: </label>
-  {{form.dev_status}}
-</div>
-<div class="form-group">
-  <label>S/N°: </label>
-  {{form.serial_number}}
-</div>
 {% endblock form %}
 
 {% block form_scripts %}
@@ -42,7 +22,7 @@
       alert(msg)
     }
 
-    function updateDeviceModelOption(dev_type_id, brand_id) {
+    function updateDeviceModelOption(filter_action, id) {
       let select_models = $('select[name="dev_model"]');
       let options = '<option value="">----------</option>';
 
@@ -50,9 +30,8 @@
         url:window.location.pathname,
         type: 'POST',
         data: {
-          'action': 'search_models',
-          'dev_type_id': dev_type_id,
-          'brand_id': brand_id
+          'action': 'filter_action',
+          'id': id
         },
         dataType: 'json'
       }).done(function (data) {
@@ -73,15 +52,15 @@
     };
 
     $(function () {
-      function getSelectedVaslues() {
-        let dev_type_id = $('select[name="dev_type"]').val();
-        let brand_id = $('select[name="brand"]').val();
-        return {dev_type_id, brand_id};
-      }
 
-      $('select[name = "dev_type"], select[name="brand"]').on('change', function(){
-        let {dev_type_id, brand_id} = getSelectedVaslues();
-        updateDeviceModelOption(dev_type_id, brand_id);
+      $('select[name="dev_type"]').on('change', function (){
+        let id = $(this).val();
+        updateDeviceModelOption('search_model_id', id);
+      });
+
+      $('select[name="brand"]').on('change', function (){
+        let id = $(this).val();
+        updateDeviceModelOption('search_model_brand', id);
       });
     });
 

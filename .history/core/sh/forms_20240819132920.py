@@ -836,7 +836,7 @@ class DeviceForm(Form):
         'placeholder': 'Ingrese el número de serie'
         }
       )
-    )
+    ),
 
     # wall_port: Select(
       # attrs={

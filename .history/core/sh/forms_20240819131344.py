@@ -6,7 +6,7 @@ from django.db.models.base import Model
 from django.forms import ModelForm, Select, TextInput, Textarea, FileInput, DateInput, RadioSelect
 from django.forms.utils import ErrorList
 
-from core.sh.models import Connection_Type, Dependency, Dev_Status, Device, Edifice, Location, Move_Type, Movements, Office, Patch_Port, Patchera, Province, Brand, Dev_Type, Employee_Status, Employee, Rack, Suply, Suply_Type, Switch_Port, Techs, Dev_Model, Wall_Port, Switch
+from core.sh.models import Connection_Type, Dependency, Device, Edifice, Location, Move_Type, Movements, Office, Patch_Port, Patchera, Province, Brand, Dev_Type, Employee_Status, Employee, Rack, Suply, Suply_Type, Switch_Port, Techs, Dev_Model, Wall_Port, Switch
 
 # Brand Forms
 class BrandForm(ModelForm):
@@ -762,8 +762,7 @@ class WallPortForm(ModelForm):
 class DeviceForm(Form):
 
     dev_type = ModelChoiceField(
-      queryset = Dev_Type.objects.all(),
-      widget = Select(
+      queryset = Dev_Type.objects.all(), widget = Select(
         attrs = {
           'class': 'form-control select2',
           'placeholder': 'Seleccione el tipo de dispositivo'
@@ -772,8 +771,7 @@ class DeviceForm(Form):
     )
 
     brand = ModelChoiceField(
-      queryset = Brand.objects.all(),
-      widget = Select(
+      queryset = Brand.objects.all(), widget = Select(
         attrs = {
           'class': 'form-control select2',
           'placeholder': 'Selecciona la Marca'
@@ -782,8 +780,7 @@ class DeviceForm(Form):
     )
 
     dev_model = ModelChoiceField(
-      queryset = Dev_Model.objects.none(),
-      widget = Select(
+      queryset = Dev_Model.objects.none(), widget = Select(
         attrs = {
           'class': 'form-control select2',
           'placeholder': 'Seleccione el modelo del dispositivo'
@@ -792,8 +789,7 @@ class DeviceForm(Form):
     )
 
     connection_type = ModelChoiceField(
-      queryset = Connection_Type.objects.all(),
-      widget = Select(
+      queryset = Connection_Type.objects.all(), widget = Select(
         attrs = {
           'class': 'form-control select2',
           'placeholder': 'Seleccione el tipo de conexion del dispositivo'
@@ -803,7 +799,7 @@ class DeviceForm(Form):
 
     ip = forms.CharField(
       widget = forms.TextInput(
-        attrs = {
+        attrs={
             'class': 'form-control',
             'placeholder': 'Si tuviera, ingrese la dirección ip del dispositivo'
           }
@@ -812,55 +808,45 @@ class DeviceForm(Form):
 
     dev_net_name = forms.CharField(
       widget = forms.TextInput(
-        attrs = {
-          'class': 'form-control',
-          'placeholder': 'Si tuviera, ingrese el nombre de regsitro en la red del dispositivo'
-        }
+      attrs = {
+        'class': 'form-control'
+        'placeholder': 'Si tuviera, ingrese el nombre de regsitro en la red del dispositivo'
+      }
       )
     )
-
-    dev_status = ModelChoiceField(
-      queryset = Dev_Status.objects.all(),
-      widget = Select(
-        attrs = {
-        'class': 'form-control select2',
+    dev_status: Select(
+      attrs={
         'placeholder': 'Seleccione el estado funcional del dispositivo'
-        }
-      )
-    )
-
-    serial_number = forms.CharField(
-      widget = forms.TextInput(
-        attrs={
-        'class': 'form-control',
+      }
+    ),
+    serial_number: Select(
+      attrs={
         'placeholder': 'Ingrese el número de serie'
-        }
-      )
+      }
+    ),
+    wall_port: Select(
+      attrs={
+        'placeholder': 'Seleccione el purto del que viene la conexión de red'
+      }
+    ),
+    employee: Select(
+      attrs={
+        'placeholder': 'Seleccione el empleado responsable del dispositivo'
+      }
     )
 
-    # wall_port: Select(
-      # attrs={
-        # 'placeholder': 'Seleccione el purto del que viene la conexión de red'
-      # }
-    # ),
-    # employee: Select(
-      # attrs={
-        # 'placeholder': 'Seleccione el empleado responsable del dispositivo'
-      # }
-    # )
-
-#   def save(self, commit=True):
-#     data={}
-#     form = super()
-#     try:
-#       if form.is_valid():
-#         form.save()
-#       else:
-#         data['error'] = form.errors.get_json_data()
-#     except Exception as e:
-#       data['error'] = str(e)
-#     return data
-# class DeviceForm(ModelForm):
+  def save(self, commit=True):
+    data={}
+    form = super()
+    try:
+      if form.is_valid():
+        form.save()
+      else:
+        data['error'] = form.errors.get_json_data()
+    except Exception as e:
+      data['error'] = str(e)
+    return data
+class DeviceForm(ModelForm):
 
 #   def __init__(self, *args, **kwargs):
 #     super().__init__(*args, **kwargs)
