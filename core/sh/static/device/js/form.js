@@ -63,7 +63,7 @@ $(function(){
   if (office_id) {
     updateOptions(window.location.pathname, {
       'action': 'search_wall_ports',
-      'office_id': office_id
+      'office_id': office_id,
     }, $('select[name="wall_port"]'), $('#id_wall_port').data('preselected'));
 
     updateOptions(window.location.pathname, {

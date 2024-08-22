@@ -124,5 +124,7 @@ function submit_with_ajax(url, params, callback, actionType = 'add'){
 // SELECT2
 
 $(document).ready(function() {
-  $('.select2').select2();
+    $('.select2').select2({
+      theme:'bootstrap4',
+    });
 });

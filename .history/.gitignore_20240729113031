@@ -1,6 +1,0 @@
-#Ignore db.py file
-db.py
-#Ignore vars.py file
-vars.py
-#Ignore static/lib folder
- static/lib/
