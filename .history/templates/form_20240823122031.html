@@ -62,24 +62,6 @@
 {% block form_scripts %}
 
 {% endblock form_scripts %}
-<script>
 
-    $('#{{form_id}}').on('submit', function(e) {
-      e.preventDefault()
-
-      let params = new FormData(this);
-
-      params.forEach(function (value, key){
-        console.log(key+': '+value);
-      })
-
-      let actionType = "{{ action }}"
-
-      submit_with_ajax(window.location.pathname, params, function(data){
-        window.location.href = '{{ list_url }}'
-      }, actionType);
-    });
-
-</script>
 
 {% endblock content %}

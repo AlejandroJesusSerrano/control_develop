@@ -115,5 +115,11 @@ $(function(){
     }, $('select[name="dev_model"]'));
   });
 
+  $(document).ready(function() {
+    $('.select2').select2({
+      theme:'bootstrap4',
+    });
+  });
+
 });
 

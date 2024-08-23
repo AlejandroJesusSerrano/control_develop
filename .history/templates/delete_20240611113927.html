@@ -39,11 +39,10 @@ $(document).ready(function() {
     let params = $(this).serializeArray();
     let actionType = "{{ action }}"
 
-    submit_with_ajax(window.location.pathname, params, function(data){
+    submit_whit_ajax(window.location.pathname, params, function(data){
       window.location.href = '{{ list_url }}'
     }, actionType);
     });
   });
-
 </script>
 {% endblock content %}

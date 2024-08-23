@@ -13,7 +13,9 @@
       <ul>
         {% for e in object.employee.all %}
         <li>
-          {{e.employee_last_name}}, {{e.employee_name}}
+          {{object.employee.employee_last_name}}, {{object.employee.employee_name}}
+          {% if not forloop.last %}; {% endif %}
+
         </li>
         {% endfor %}
       </ul>

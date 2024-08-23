@@ -115,5 +115,34 @@ $(function(){
     }, $('select[name="dev_model"]'));
   });
 
+  const formElement = $('form[data-form-id]');
+  const formId = formElement.data('form-id');
+  const listUrl = formElement.data('list-url');
+
+  console.log("Form ID: ", formId)
+  console.log("List URL: ", listUrl)
+
+  console.log("Form elements: ", formElement.serializeArray());
+
+  // formElement.on('submit', function(e) {
+  //   e.preventDefault();
+
+  //   let params = new FormData(this);
+
+  //   params.forEach(function(value, key){
+  //     console.log(key + ': ' + value);
+  //   })
+
+  //   let actionType = formId;
+
+  //   console.log("Submitting with the following data: ");
+  //   params.forEach((value, key) => {
+  //     console.log(key, ":", value);
+  //   });
+
+  //   submit_with_ajax(window.location.pathname, params, function(data){
+  //     window.location.href = formElement.data('list_url');
+  //   }, actionType);
+  // });
 });
 
