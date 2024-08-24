@@ -830,14 +830,6 @@ class DeviceForm(forms.ModelForm):
       self.fields['employee'].queryset = Employee.objects.filter(office=self.instance.office)
 
     else:
-
-      if 'dependency' in self.data:
-        try:
-          dependency_id = int(self.data.get('dependency'))
-          self.fields['office'].queryset = Office.objects.filter(dependency_id=dependency_id)
-        except:
-          pass
-
       if 'office' in self.data:
         try:
           office_id = int(self.data.get('office'))

@@ -53,72 +53,84 @@ function updateOptions(url, data, selectElement, preselectedValue) {
     message_error(textStatus + ': ' + errorThrown);
     console.log("Response text: ", jqXHR.responseText);
   });
-};
-
-function initializeSelects() {
-  const brand_id = $('select[name="brand"]').val();
-  const dev_type_id = $('select[name="dev_type"]').val();
-  const dependency_id = $('select[name="dependency"]').val();
-  const office_id = $('select[name="office"]').val();
-
-  if (brand_id && dev_type_id) updateModelOptions(brand_id, dev_type_id);
-  if (dependency_id) updateOfficeOptions(dependency_id);
-  if (office_id) updateOfficeRelatedOptions(office_id);
-
 }
 
-function updateModelOptions(brand_id, dev_type_id) {
-  updateOptions(window.location.pathname, {
-    'action': 'search_models',
-    'dev_type_id': dev_type_id,
-    'brand_id': brand_id
-  }, $('select[name="dev_model"]'), $('#id_dev_model').data('preselected'));
-};
+$(function(){
+  const dependency_id = $('select[name="dependency"]').val();
+  const office_id = $('select[name="office"]').val();
+  const brand_id = $('select[name="brand"]').val();
+  const dev_type_id = $('select[name="dev_type"]').val();
 
-function updateOfficeOptions(dependency_id) {
-  if (dependency_id) {
+  if(dependency_id) {
     updateOptions(window.location.pathname, {
-    'action': 'search_office',
-    'dependency_id': dependency_id,
+      'action': 'search_office',
+      'dependency_id': dependency_id,
     }, $('select[name="office"]'), $('#id_office').data('preselected'));
-  } else {
-    $('select[name="office"]').html('<option value="">----------</option>');
   };
-};
 
-function updateOfficeRelatedOptions(office_id) {
   if (office_id) {
     updateOptions(window.location.pathname, {
-    'action': 'search_wall_ports',
-    'office_id': office_id,
+      'action': 'search_wall_ports',
+      'office_id': office_id,
     }, $('select[name="wall_port"]'), $('#id_wall_port').data('preselected'));
 
     updateOptions(window.location.pathname, {
-    'action': 'search_switch_ports',
-    'office_id': office_id
+      'action': 'search_switch_ports',
+      'office_id': office_id
     }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
 
     updateOptions(window.location.pathname, {
-    'action': 'search_employees',
-    'office_id': office_id
+      'action': 'search_employees',
+      'office_id': office_id
     }, $('select[name="employee"]'), $('#id_employee').data('preselected'));
-  } else {
-    $('select[name="wall_port"], select[name="switch_port"], select[name="employee"]').html('<option value="">----------</option>');
   };
-};
 
-$(function() {
-  initializeSelects();
+  if (brand_id && dev_type_id) {
+    updateOptions(window.location.pathname, {
+      'action': 'search_models',
+      'dev_type_id': dev_type_id,
+      'brand_id': brand_id
+    }, $('select[name="dev_model"]'), $('#id_dev_model').data('preselected'));
+  };
 
   $('select[name="dependency"]').on('change', function(){
-    updateOfficeOptions($(this).val());
+    const dependency_id = $(this).val();
+
+    updateOptions(window.location.pathname, {
+      'action': 'search_office',
+      'dependency_id': dependency_id
+    }, $('select[name="office"]'));
   });
 
   $('select[name="office"]').on('change', function(){
-    updateOfficeRelatedOptions($(this).val());
+    const office_id = $(this).val();
+
+    updateOptions(window.location.pathname, {
+      'action': 'search_wall_ports',
+      'office_id': office_id
+    }, $('select[name="wall_port"]'));
+
+    updateOptions(window.location.pathname, {
+      'action': 'search_switch_ports',
+      'office_id': office_id
+    }, $('select[name="switch_port"]'));
+
+    updateOptions(window.location.pathname, {
+      'action': 'search_employees',
+      'office_id': office_id
+    }, $('select[name="employee"]'));
   });
 
   $('select[name="dev_type"], select[name="brand"]').on('change', function(){
-    updateModelOptions($('select[name="brand"]').val(), $('select[name="dev_type"]').val());
+    const dev_type_id = $('select[name="dev_type"]').val();
+    const brand_id = $('select[name="brand"]').val();
+
+    updateOptions(window.location.pathname, {
+      'action': 'search_models',
+      'dev_type_id': dev_type_id,
+      'brand_id': brand_id
+    }, $('select[name="dev_model"]'));
   });
-})
+
+});
+

@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from core.sh.forms import DeviceForm
-from core.sh.models import Device, Dev_Model, Employee, Office, Switch_Port, Wall_Port
+from core.sh.models import Device, Dev_Model, Employee, Switch_Port, Wall_Port
 
 class DeviceListView(ListView):
   model = Device
@@ -71,11 +71,6 @@ class DeviceCreateView(CreateView):
             models = models.filter(brand_id=brand_id)
 
           data = [{'id': m.id, 'name': m.dev_model} for m in models]
-
-        elif action == 'search_office':
-          dependency_id = request.POST.get('dependency_id')
-          office = Office.objects.filter(dependency_id=dependency_id)
-          data = [{'id':o.id, 'name': o.office} for o in office]
 
         elif action == 'search_wall_ports':
           office_id = request.POST.get('office_id')
@@ -153,11 +148,6 @@ class DeviceUpdateView(UpdateView):
 
               data = [{'id': m.id, 'name': m.dev_model} for m in models]
 
-          elif action == 'search_office':
-            dependency_id = request.POST.get('dependency_id')
-            office = Office.objects.filter(dependency_id=dependency_id)
-            data = [{'id':o.id, 'name': o.office} for o in office]
-
           elif action == 'search_wall_ports':
             office_id = request.POST.get('office_id')
             wall_ports = Wall_Port.objects.filter(office_id=office_id)
@@ -208,10 +198,6 @@ class DeviceUpdateView(UpdateView):
 
         device = self.get_object()
 
-        context['form'].fields['office'].queryset = Office.objects.filter(
-          dependency = device.office.dependency
-        )
-
         context['form'].fields['dev_model'].queryset = Dev_Model.objects.filter(
             brand=device.dev_model.brand,
             dev_type=device.dev_model.dev_type
@@ -232,17 +218,12 @@ class DeviceUpdateView(UpdateView):
         context['form'].initial['dev_type'] = device.dev_model.dev_type.id if device.dev_model.dev_type else None
         context['form'].initial['brand'] = device.dev_model.brand.id if device.dev_model.brand else None
         context['form'].initial['dev_model'] = device.dev_model.id if device.dev_model else None
-        context['form'].initial['dependency'] = device.office.dependency.id if device.office.dependency else None
-        context['form'].initial['office'] = device.office.id if device.office else None
         context['form'].initial['wall_port'] = device.wall_port.id if device.wall_port else None
         context['form'].initial['switch_port'] = device.switch_port.id if device.switch_port else None
         context['form'].initial['employee'] = [emp.id for emp in device.employee.all()] if device.employee.exists() else None
 
         context['form'].fields['dev_model'].widget.attrs.update({
           'data-preselected': self.object.dev_model.id if self.object.dev_model else ''
-        })
-        context['form'].fields['office'].widget.attrs.update({
-          'data-preselected': self.object.office.id if self.object.office else ''
         })
         context['form'].fields['wall_port'].widget.attrs.update({
           'data-preselected': self.object.wall_port.id if self.object.wall_port else ''
