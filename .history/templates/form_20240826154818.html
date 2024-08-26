@@ -39,7 +39,7 @@
                 <ul>
                   {% for field, errors in form.errors.items %}
 
-                  <li><strong>{{ field|capfirst }}: </strong> {{errors|join:", "}}</li>
+                  <li><strong>{{ field.label }}: </strong> {{errors|join:", "}}</li>
 
                   {% endfor %}
                 </ul>

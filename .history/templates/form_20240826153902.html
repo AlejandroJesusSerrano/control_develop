@@ -37,9 +37,9 @@
               <div class="alert alert-danger alert-dismissible">
                 <h5><i class="icon fas fa-triangle-exclamation"></i> Ha Ocurrido un Error!</h5>
                 <ul>
-                  {% for field, errors in form.errors.items %}
+                  {% for field, errors in form.errors.items in  %}
 
-                  <li><strong>{{ field|capfirst }}: </strong> {{errors|join:", "}}</li>
+                  <li><strong>{{ form[field].label }}: </strong> {{errors|join:", "}}</li>
 
                   {% endfor %}
                 </ul>

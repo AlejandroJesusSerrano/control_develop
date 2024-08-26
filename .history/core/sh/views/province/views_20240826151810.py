@@ -57,15 +57,6 @@ class ProvinceCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
      return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    form.save()
-    return super().form_valid(form)
-  
-  def form_invalid(self, form):
-    response = super().form_invalid(form)
-    response.content_data['show_alert'] = True
-    return response
-
   def post(self, request, *args, **kwargs):
     data = {}
     try:
@@ -107,16 +98,13 @@ class ProvinceUpdateView(UpdateView):
     data = {}
     try:
       action = request.POST.get('action')
-      if action == 'edit' :
+      if action == 'edit':
         form = self.get_form()
-        if form.is_valid():
-          form.save()
-          data = {'success': 'Provincia editada exitosamente'}
-        else:
-          data['error'] = form.errors
-      else: data ['error'] = {'action': ['Acción no Válida']}
+        data = form.save()
+      else:
+        data['error'] = 'Acción no válida'
     except Exception as e:
-      data['error'] = {'exception': [str(e)]}
+      data['error'] = str(e)
     return JsonResponse(data)
 
   def get_context_data(self, **kwargs):

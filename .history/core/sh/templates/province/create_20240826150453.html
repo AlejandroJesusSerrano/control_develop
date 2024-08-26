@@ -6,24 +6,9 @@
 <div class="form-group">
   <label>Número de Identificación: </label>
   {{ form.number_id }}
-
-  {% if form.number_id.errors %}
-    <div class="text-danger">
-      {{ form.number_id.errors|striptags }}
-    </div>
-  {% endif %}
-
 </div>
-
 <div class="form-group">
   <label>Provincia: </label>
   {{ form.province }}
-
-  {% if form.province.errors %}
-  <div class="text-danger">
-    {{ form.province.errors|striptags }}
-  </div>
-  {% endif %}
-
 </div>
 {% endblock form %}

@@ -26,17 +26,12 @@ $.ajaxSetup({
 
 function error_msg(obj) {
   let html = '<ul class="text-center">';
-  if (typeof (obj) === 'object' && obj !== null) {
-    $.each(obj, function(key, value) {
-      if (Array.isArray(value)) {
-        value = value[0].message || value[0];
-      }
-      html+='<li>' +key+': '+value+'</li>';
-    });
-  } else {
-    html+='<li>' +obj+'</li>';
-  };
-
+  $.each(obj, function (key, value) {
+    if (typeof (obj) === 'object' && value !== null) {
+      value = value[0].message;
+    }
+    html+='<li>' +key+': '+value+'</li>';
+  });
   html+='</ul>';
   Swal.fire({
     icon: "error",
@@ -45,8 +40,8 @@ function error_msg(obj) {
     html: html,
     confirmButtonColor: "#dc3545",
     background: "#ffffff",
-  });
-};
+  })
+}
 
 // SUBMITS AJAX
 

@@ -161,14 +161,12 @@ class ProvinceForm(forms.ModelForm):
     widgets = {
       'number_id': TextInput(
         attrs={
-          'class': 'form-control',
           'placeholder': 'Ingrese el número correspondiente al Distrito'
         }
       ),
 
       'province': TextInput(
         attrs={
-          'class': 'form-control',
           'placeholder': ' Ingrese el nombre del Distrito'
         }
       )

@@ -57,15 +57,6 @@ class ProvinceCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
      return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    form.save()
-    return super().form_valid(form)
-  
-  def form_invalid(self, form):
-    response = super().form_invalid(form)
-    response.content_data['show_alert'] = True
-    return response
-
   def post(self, request, *args, **kwargs):
     data = {}
     try:
