@@ -48,21 +48,6 @@ function error_msg(obj) {
   });
 };
 
-function show_errors_in_form(errors){
-  // Limpiar errores anteriores
-  $('.is-invalid').removeClass('is-invalid');
-  $('.invalid-feedback').remove();
-
-  // Mostrar errores nuevos
-  $.each(errors, function(field, messages) {
-    let fieldElement = $('[name="' + field + '"]');
-    if (fieldElement.length > 0) {
-      fieldElement.addClass('is-invalid');
-      fieldElement.after('<div class="invalid-feedback d-block">' + messages.join('<br>') + '</div>');
-    }
-  });
-}
-
 // SUBMITS AJAX
 
 function submit_with_ajax(url, params, callback, actionType = 'add'){
