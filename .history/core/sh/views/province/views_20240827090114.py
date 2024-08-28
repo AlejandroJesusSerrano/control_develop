@@ -4,7 +4,7 @@ from django.http.response import HttpResponse as HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from django.contrib import messages
 
@@ -59,20 +59,24 @@ class ProvinceCreateView(CreateView):
 
   def form_valid(self, form):
     form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
-
-    # return self.render_to_response(self.get_context_data(form=form, saved=True))
+    return super().form_valid(form)
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse ({'error': form.errors})
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+    return self.render_to_response(self.get_context_data(form=form))
+
+  # def post(self, request, *args, **kwargs):
+  #   data = {}
+  #   try:
+  #     action = request.POST.get('action')
+  #     form = self.get_form()
+  #     if action == 'add' and form.is_valid():
+  #       form.save()
+  #       data['success'] = 'Provincia agregada exitosamente'
+  #     else:
+  #       data['error'] = form.errors.as_json()
+  #   except Exception as e:
+  #     data['error'] = str(e)
+  #   return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -84,7 +88,6 @@ class ProvinceCreateView(CreateView):
       context['form_id'] = 'provForm'
       context['action'] = 'add'
       context['bg_color'] = 'bg-primary'
-      context['saved'] = kwargs.get('saved', None)
       return context
 
 class ProvinceUpdateView(UpdateView):
@@ -98,22 +101,21 @@ class ProvinceUpdateView(UpdateView):
     self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
-
-    # return self.render_to_response(self.get_context_data(form=form, saved=True))
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse ({'error': form.errors})
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+  def post(self, request, *args, **kwargs):
+    data = {}
+    try:
+      action = request.POST.get('action')
+      if action == 'edit' :
+        form = self.get_form()
+        if form.is_valid():
+          form.save()
+          data = {'success': 'Provincia editada exitosamente'}
+        else:
+          data['error'] = form.errors
+      else: data ['error'] = {'action': ['Acción no Válida']}
+    except Exception as e:
+      data['error'] = {'exception': [str(e)]}
+    return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -125,7 +127,6 @@ class ProvinceUpdateView(UpdateView):
       context['form_id'] = 'provForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-warning'
-      context['saved'] = kwargs.get('saved', None)
       return context
 
 class ProvinceDeleteView(DeleteView):

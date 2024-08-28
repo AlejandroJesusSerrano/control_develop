@@ -59,7 +59,7 @@ class ProvinceCreateView(CreateView):
 
   def form_valid(self, form):
     form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('x-rquested-with') == 'XMLHttpRequest':
       return JsonResponse({'success':True})
     else:
       return redirect(self.success_url)
@@ -67,12 +67,10 @@ class ProvinceCreateView(CreateView):
     # return self.render_to_response(self.get_context_data(form=form, saved=True))
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('x-rquested-with') == 'XMLHttpRequest':
       return JsonResponse ({'error': form.errors})
     else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+      return self.render_to_response(self.get_context_data(form=form))
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -100,7 +98,7 @@ class ProvinceUpdateView(UpdateView):
 
   def form_valid(self, form):
     form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('x-rquested-with') == 'XMLHttpRequest':
       return JsonResponse({'success':True})
     else:
       return redirect(self.success_url)
@@ -108,12 +106,10 @@ class ProvinceUpdateView(UpdateView):
     # return self.render_to_response(self.get_context_data(form=form, saved=True))
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('x-rquested-with') == 'XMLHttpRequest':
       return JsonResponse ({'error': form.errors})
     else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+      return self.render_to_response(self.get_context_data(form=form))
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)

@@ -83,6 +83,8 @@ class ProvinceCreateView(CreateView):
       context['list_url'] = reverse_lazy('sh:province_list')
       context['form_id'] = 'provForm'
       context['action'] = 'add'
+      context['swa_url_add'] = 'sh:province_add'
+      context['swa_url_list'] = 'sh:province_list'
       context['bg_color'] = 'bg-primary'
       context['saved'] = kwargs.get('saved', None)
       return context

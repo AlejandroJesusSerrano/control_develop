@@ -81,6 +81,7 @@ class ProvinceCreateView(CreateView):
       context['btn_add_id'] = 'prov_add'
       context['entity'] = 'Provincias'
       context['list_url'] = reverse_lazy('sh:province_list')
+      context['action_url'] = reverse_lazy('sh:province_add')
       context['form_id'] = 'provForm'
       context['action'] = 'add'
       context['bg_color'] = 'bg-primary'
@@ -122,6 +123,7 @@ class ProvinceUpdateView(UpdateView):
       context['btn_add_id'] = 'prov_add'
       context['entity'] = 'Provincias'
       context['list_url'] = reverse_lazy('sh:province_list')
+      context['action_url'] = reverse_lazy('sh:province_edit', kwargs={'pk': self.object.pk})
       context['form_id'] = 'provForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-warning'

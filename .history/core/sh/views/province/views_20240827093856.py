@@ -4,7 +4,7 @@ from django.http.response import HttpResponse as HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 from django.contrib import messages
 
@@ -59,20 +59,10 @@ class ProvinceCreateView(CreateView):
 
   def form_valid(self, form):
     form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
-
-    # return self.render_to_response(self.get_context_data(form=form, saved=True))
+    return super().form_valid(form)
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse ({'error': form.errors})
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+    return self.render_to_response(self.get_context_data(form=form))
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -84,7 +74,6 @@ class ProvinceCreateView(CreateView):
       context['form_id'] = 'provForm'
       context['action'] = 'add'
       context['bg_color'] = 'bg-primary'
-      context['saved'] = kwargs.get('saved', None)
       return context
 
 class ProvinceUpdateView(UpdateView):
@@ -100,20 +89,10 @@ class ProvinceUpdateView(UpdateView):
 
   def form_valid(self, form):
     form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
-
-    # return self.render_to_response(self.get_context_data(form=form, saved=True))
+    return super().form_valid(form)
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse ({'error': form.errors})
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+    return self.render_to_response(self.get_context_data(form=form))
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -125,7 +104,6 @@ class ProvinceUpdateView(UpdateView):
       context['form_id'] = 'provForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-warning'
-      context['saved'] = kwargs.get('saved', None)
       return context
 
 class ProvinceDeleteView(DeleteView):

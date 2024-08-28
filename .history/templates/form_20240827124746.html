@@ -58,8 +58,7 @@
         <div class="card-footer">
 
           {% block add_button %}
-          <button type="button" class="btn btn-primary" id="{{btn_add_id}}"
-          onclick="submit_with_ajax('{{ action_url }}', new FormData(document.getElementById('{{ form_id }}')), function() { window.location.href = '{{ list_url }}'; }, '{{ action }}')">
+          <button type="submit" class="btn btn-primary" id="{{btn_add_id}}" onclick="submit_with_ajax()">
             <i class="fas fa-save"></i> Guardar Registro
           </button>
           <a href="{{ list_url }}" type="submit" class="btn btn-danger" id="{{btn_add_id}}">
@@ -75,6 +74,5 @@
 {% block form_scripts %}
 
 {% endblock form_scripts %}
-
 
 {% endblock content %}

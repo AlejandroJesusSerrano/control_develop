@@ -36,9 +36,9 @@ function updateOptions(url, data, selectElement, preselectedValue) {
       });
       selectElement.html(options);
 
-      selectElement.trigger('change'); // Esto asegura que Select2 se actualice
+      selectElement.trigger('change');
       selectElement.select2({
-        theme: 'bootstrap'  // Asegúrate de usar el tema de Bootstrap si lo estás usando
+        theme: 'bootstrap'
       });
 
       if (preselectedValue) {
