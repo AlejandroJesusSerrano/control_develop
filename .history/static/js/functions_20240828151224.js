@@ -50,13 +50,14 @@ function error_msg(obj) {
 }
 
 function message_error(msg){
+
   console.error('Errores del formulario recibidos: ', msg);
 
-  if (typeof msg === 'object' && msg.error){
+  if (typeof msg === 'object'){
     let errorMessages = "";
-    for (let key in msg.error){
-      if (msg.error.hasOwnProperty(key)){
-        errorMessages += `${key}: ${msg.error[key].join(', ')}\n`;
+    for (let key in msg){
+      if (msg.hasOwnProperty(key)){
+        errorMessages += `${key}: ${msg[key].join(', ')}\n;`
       }
     }
     alert("Hay errores en el formulario:\n" + errorMessages);
@@ -64,24 +65,6 @@ function message_error(msg){
     alert(msg);
   }
 }
-
-
-// function message_error(msg){
-
-//   console.error('Errores del formulario recibidos: ', msg);
-
-//   if (typeof msg === 'object'){
-//     let errorMessages = "";
-//     for (let key in msg){
-//       if (msg.hasOwnProperty(key)){
-//         errorMessages += `${key}: ${msg[key].join(', ')}\n;`
-//       }
-//     }
-//     alert("Hay errores en el formulario:\n" + errorMessages);
-//   } else {
-//     alert(msg);
-//   }
-// }
 
 // SHOW ERRORS IN FORM
 

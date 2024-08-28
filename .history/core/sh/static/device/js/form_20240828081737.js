@@ -2,8 +2,14 @@ function message_error(msg){
 
   console.error('Errores del formulario recibidos: ', msg);
 
-  if (typeof msg === 'object' && msg.form_errors){
-    show_errors_in_form(msg.form_errors);
+  if (typeof msg === 'object'){
+    let errorMessages = "";
+    for (let key in msg){
+      if (msg.hasOwnProperty(key)){
+        errorMessages += `${key}: ${msg[key].join(', ')}\n;`
+      }
+    }
+    alert("Hay errores en el formulario:\n" + errorMessages);
   } else {
     alert(msg);
   }
@@ -30,9 +36,9 @@ function updateOptions(url, data, selectElement, preselectedValue) {
       });
       selectElement.html(options).trigger('change');
 
-      selectElement.trigger('change'); 
+      selectElement.trigger('change'); // Esto asegura que Select2 se actualice
       selectElement.select2({
-        theme: 'bootstrap'
+        theme: 'bootstrap'  // Asegúrate de usar el tema de Bootstrap si lo estás usando
       });
 
       if (preselectedValue) {
@@ -60,17 +66,9 @@ function initializeSelects() {
   const dependency_id = $('select[name="dependency"]').val();
   const office_id = $('select[name="office"]').val();
 
-  if (brand_id && dev_type_id) {
-    updateModelOptions(brand_id, dev_type_id);
-  }
-
-  if (dependency_id) {
-    updateOfficeOptions(dependency_id);
-  }
-
-  if (office_id) {
-    updateOfficeRelatedOptions(office_id);
-  }
+  if (brand_id && dev_type_id) updateModelOptions(brand_id, dev_type_id);
+  if (dependency_id) updateOfficeOptions(dependency_id);
+  if (office_id) updateOfficeRelatedOptions(office_id);
 
 }
 
@@ -90,7 +88,7 @@ function updateOfficeOptions(dependency_id) {
     }, $('select[name="office"]'), $('#id_office').data('preselected'));
   } else {
     $('select[name="office"]').html('<option value="">----------</option>');
-  }
+  };
 };
 
 function updateOfficeRelatedOptions(office_id) {
@@ -114,7 +112,7 @@ function updateOfficeRelatedOptions(office_id) {
   };
 };
 
-$(document).ready(function() {
+$(function() {
   initializeSelects();
 
   $('select[name="dependency"]').on('change', function(){
@@ -128,6 +126,4 @@ $(document).ready(function() {
   $('select[name="dev_type"], select[name="brand"]').on('change', function(){
     updateModelOptions($('select[name="brand"]').val(), $('select[name="dev_type"]').val());
   });
-
-  initializeFormSubmission('#myForm', 'edit')
-});
+})

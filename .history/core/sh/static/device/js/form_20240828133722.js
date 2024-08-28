@@ -90,7 +90,7 @@ function updateOfficeOptions(dependency_id) {
     }, $('select[name="office"]'), $('#id_office').data('preselected'));
   } else {
     $('select[name="office"]').html('<option value="">----------</option>');
-  }
+  };
 };
 
 function updateOfficeRelatedOptions(office_id) {

@@ -137,94 +137,44 @@ class DeviceUpdateView(UpdateView):
 
     def post(self, request, *args, **kwargs):
       if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        data = {}
-        try:
-            action = request.POST.get('action')
-            print(f"Acción recibida: {action}")
+        action = request.POST.get('action', '')
+        print(f"Acción recibida: {action}")
+        # data = {}
 
-            if action == 'search_models':
-                dev_type_id = request.POST.get('dev_type_id')
-                brand_id = request.POST.get('brand_id')
 
-                models = Dev_Model.objects.all()
-                if dev_type_id:
-                    models = models.filter(dev_type_id=dev_type_id)
-                if brand_id:
-                    models = models.filter(brand_id=brand_id)
+        # try:
+        #   action = request.POST.get('action')
+        #   print(f"Acción recibida: {action}")
 
-                data = [{'id': m.id, 'name': m.dev_model} for m in models]
-
-            elif action == 'search_office':
-                dependency_id = request.POST.get('dependency_id')
-                office = Office.objects.filter(dependency_id=dependency_id)
-                data = [{'id':o.id, 'name': o.office} for o in office]
-
-            elif action == 'search_wall_ports':
-                office_id = request.POST.get('office_id')
-                wall_ports = Wall_Port.objects.filter(office_id=office_id)
-                data = [{'id': w.id, 'name': w.wall_port} for w in wall_ports]
-
-            elif action == 'search_switch_ports':
-                office_id = request.POST.get('office_id')
-                switch_ports = Switch_Port.objects.filter(switch__office_id=office_id)
-                data = [{'id': s.id, 'name': s.port_id} for s in switch_ports]
-
-            elif action == 'search_employees':
-                office_id = request.POST.get('office_id')
-                employees = Employee.objects.filter(office_id=office_id)
-                data = [{'id': e.id, 'name': f'{e.employee_last_name}, {e.employee_name}'} for e in employees]
-
-            else:
-                self.object = self.get_object()
-                form = self.get_form()  # Se ha añadido para obtener el formulario con la instancia actual
-                if form.is_valid():
-                    try:
-                        form.save()
-                        return JsonResponse({"success": "Dispositivo actualizado correctamente"}, status=200)
-                    except Exception as e:
-                        return JsonResponse({"error": f"Error al guardar el dispositivo: {str(e)}"}, status=400)
-                else:
-                    errors = form.errors.get_json_data()
-                    print(f"Errores del formulario: {errors}")
-                    return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
-
+        if action in ['search_models', 'search_office', 'search_wall_ports', 'search_switch_ports', 'search_employee']:
+            data = self.handle_search_action(action, request.POST)
             return JsonResponse(data, safe=False)
+          # else:
 
-        except Exception as e:
-            data = {'error': str(e)}
-            return JsonResponse(data, safe=False)
+        self.object = self.get_object()
+        form = self.form_class(request.POST, instance=self.object)
+
+        if form.is_valid():
+
+          try:
+            form.save()
+            return JsonResponse({'success': "Dispositivo actualizado correctamente"}, status=200)
+
+          except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+        else:
+          errors = form.errors.get_json_data()
+          print(f"Errores del formulario: {errors}")
+          return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
+
+        #   return JsonResponse(data, safe=False)
+
+        # except Exception as e:
+        #   return JsonResponse({'error':str(e)}, status=400, safe=False)
+
       else:
         return super().post(request, *args, **kwargs)
-
-
-    # def post(self, request, *args, **kwargs):
-    #   if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-    #     data = {}
-    #     try:
-    #       action = request.POST.get('action')
-    #       print(f"Acción recibida: {action}")
-
-    #       if action in ['search_models', 'search_office', 'search_wall_ports', 'search_switch_ports', 'search_employee']:
-    #         data = self.handle_search_action(action, request.POST)
-    #       else:
-    #         self.object = self.get_object()
-    #         form = self.form_class(request.POST, instance=self.object)
-
-    #       if form.is_valid():
-    #         try:
-    #           form.save()
-    #           return JsonResponse({'success': "Dispositivo actualizado correctamente"}, status=200)
-    #         except Exception as e:
-    #           return JsonResponse({"error": str(e)}, status=400)
-    #       else:
-    #         errors = form.errors.get_json_data()
-    #         print(f"Errores del formulario: {errors}")
-    #         return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
-    #       return JsonResponse(data, safe=False)
-    #     except Exception as e:
-    #       return JsonResponse({'error':str(e)}, status=400, safe=False)
-    #   else:
-    #     return super().post(request, *args, **kwargs)
 
     def handle_search_action(self, action, post_data):
 
@@ -235,58 +185,31 @@ class DeviceUpdateView(UpdateView):
         brand_id = post_data.get('brand_id')
         models = Dev_Model.objects.all()
         if dev_type_id:
-          try:
-            dev_type_id = int(dev_type_id)
-            models = models.filter(dev_type_id=dev_type_id)
-          except ValueError:
-            pass
-          # models = models.filter(dev_type_id=dev_type_id)
+          models = models.filter(dev_type_id=dev_type_id)
         if brand_id:
-          try:
-            brand_id = int(brand_id)
-            models = models.filter(brand_id=brand_id)
-          except ValueError:
-            pass
+          models = models.filter(brand_id=brand_id)
+
         data = [{'id': m.id, 'name': m.dev_model} for m in models]
 
       elif action == 'search_office':
         dependency_id = post_data.get('dependency_id')
-        if dependency_id:
-          try:
-            dependency_id = int(dependency_id)
-            office = Office.objects.filter(dependency_id=dependency_id)
-            data = [{'id':o.id, 'name': o.office} for o in office]
-          except ValueError:
-            pass
+        office = Office.objects.filter(dependency_id=dependency_id)
+        data = [{'id':o.id, 'name': o.office} for o in office]
 
       elif action == 'search_wall_ports':
         office_id = post_data.get('office_id')
-        if office_id:
-          try:
-            office_id = int(office_id)
-            wall_ports = Wall_Port.objects.filter(office_id=office_id)
-            data = [{'id': w.id, 'name': w.wall_port} for w in wall_ports]
-          except ValueError:
-            pass
+        wall_ports = Wall_Port.objects.filter(office_id=office_id)
+        data = [{'id': w.id, 'name': w.wall_port} for w in wall_ports]
 
       elif action == 'search_switch_ports':
         office_id = post_data.get('office_id')
-        if office_id:
-          try:
-            office_id = int(office_id)
-            switch_ports = Switch_Port.objects.filter(switch__office_id=office_id)
-            data = [{'id': s.id, 'name': s.port_id} for s in switch_ports]
-          except ValueError:
-            pass
+        switch_ports = Switch_Port.objects.filter(switch__office_id=office_id)
+        data = [{'id': s.id, 'name': s.port_id} for s in switch_ports]
+
       elif action == 'search_employees':
         office_id = post_data.get('office_id')
-        if office_id:
-          try:
-            office_id = int(office_id)
-            employees = Employee.objects.filter(office_id=office_id)
-            data = [{'id': e.id, 'name': f'{e.employee_last_name}, {e.employee_name}'} for e in employees]
-          except ValueError:
-            pass
+        employees = Employee.objects.filter(office_id=office_id)
+        data = [{'id': e.id, 'name': f'{e.employee_last_name}, {e.employee_name}'} for e in employees]
 
       return data
 

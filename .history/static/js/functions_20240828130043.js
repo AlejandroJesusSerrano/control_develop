@@ -49,40 +49,6 @@ function error_msg(obj) {
   });
 }
 
-function message_error(msg){
-  console.error('Errores del formulario recibidos: ', msg);
-
-  if (typeof msg === 'object' && msg.error){
-    let errorMessages = "";
-    for (let key in msg.error){
-      if (msg.error.hasOwnProperty(key)){
-        errorMessages += `${key}: ${msg.error[key].join(', ')}\n`;
-      }
-    }
-    alert("Hay errores en el formulario:\n" + errorMessages);
-  } else {
-    alert(msg);
-  }
-}
-
-
-// function message_error(msg){
-
-//   console.error('Errores del formulario recibidos: ', msg);
-
-//   if (typeof msg === 'object'){
-//     let errorMessages = "";
-//     for (let key in msg){
-//       if (msg.hasOwnProperty(key)){
-//         errorMessages += `${key}: ${msg[key].join(', ')}\n;`
-//       }
-//     }
-//     alert("Hay errores en el formulario:\n" + errorMessages);
-//   } else {
-//     alert(msg);
-//   }
-// }
-
 // SHOW ERRORS IN FORM
 
 function show_errors_in_form(errors){
@@ -159,8 +125,6 @@ function submit_with_ajax(url, formData, callback, actionType = 'add') {
             processData: false,
             contentType: false
           }).done(function(data){
-            console.log("Received data: ", data)
-            console.log("URL: ", url);
             if(!data.hasOwnProperty('error')){
               callback();
               } else {

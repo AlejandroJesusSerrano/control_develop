@@ -49,66 +49,24 @@ function error_msg(obj) {
   });
 }
 
-function message_error(msg){
-  console.error('Errores del formulario recibidos: ', msg);
-
-  if (typeof msg === 'object' && msg.error){
-    let errorMessages = "";
-    for (let key in msg.error){
-      if (msg.error.hasOwnProperty(key)){
-        errorMessages += `${key}: ${msg.error[key].join(', ')}\n`;
-      }
-    }
-    alert("Hay errores en el formulario:\n" + errorMessages);
-  } else {
-    alert(msg);
-  }
-}
-
-
-// function message_error(msg){
-
-//   console.error('Errores del formulario recibidos: ', msg);
-
-//   if (typeof msg === 'object'){
-//     let errorMessages = "";
-//     for (let key in msg){
-//       if (msg.hasOwnProperty(key)){
-//         errorMessages += `${key}: ${msg[key].join(', ')}\n;`
-//       }
-//     }
-//     alert("Hay errores en el formulario:\n" + errorMessages);
-//   } else {
-//     alert(msg);
-//   }
-// }
-
-// SHOW ERRORS IN FORM
-
 function show_errors_in_form(errors){
+  // Limpiar errores anteriores
   $('.is-invalid').removeClass('is-invalid');
   $('.invalid-feedback').remove();
 
-  $.each(errors, function(field, fieldErrors) {
-    let fieldElement = $(`[name="${field}"]`);
-
+  // Mostrar errores nuevos
+  $.each(errors, function(field, messages) {
+    let fieldElement = $('[name="' + field + '"]');
     if (fieldElement.length > 0) {
       fieldElement.addClass('is-invalid');
-      let errorHtml = '<div class="invalid-feedback d-block>';
-
-      $.each(fieldErrors, function(index, error){
-        errorHtml += error.message + '<br>';
-      });
-
-      errorHtml += '</div>';
-      fieldElement.after(errorHtml);
+      fieldElement.after('<div class="invalid-feedback d-block">' + messages.join('<br>') + '</div>');
     }
   });
 }
 
 // SUBMITS AJAX
 
-function submit_with_ajax(url, formData, callback, actionType = 'add') {
+function submit_with_ajax(url, params, callback, actionType = 'add') {
 
   let title, icon, content, type;
 
@@ -151,16 +109,14 @@ function submit_with_ajax(url, formData, callback, actionType = 'add') {
           $.ajax({
             url: url,
             type: 'POST',
-            data: formData,
+            data: params,
+            processData: false,
+            contentType: false,
             dataType: 'json',
             headers: {
               'X-CSRFToken': csrftoken
-            },
-            processData: false,
-            contentType: false
+            }
           }).done(function(data){
-            console.log("Received data: ", data)
-            console.log("URL: ", url);
             if(!data.hasOwnProperty('error')){
               callback();
               } else {
@@ -188,25 +144,25 @@ function submit_with_ajax(url, formData, callback, actionType = 'add') {
   })
 }
 
-// FORMS DATA
-let objectId = $('#myForm').data('form-id')
-function initializeFormSubmission() {
-  $('#myform').on('submit', function(e) {
-    e.preventDefault();
+function show_errors_in_form(errors){
+  $('.is-invalid').removeClass('is-invalid');
+  $('.invalid-feedback').remove();
 
-    let formData = new FormData(this);
-    formData.append('id', objectId);
-
-    submit_with_ajax($(this).attr('action'), formData, function() {
-      console.log('Formulario envido y procesado con éxito.');
-    }, 'edit');
-  });
+$.each(errors, function(field, messages) {
+  let fieldElement = $(`[name="${field}"]`);
+  if (fieldElement.length > 0) {
+    fieldElement.addClass('is-invalid');
+    fieldElement.after(`<div class="invalid-feedback">${messages.join('<br>')}</div>`);
+  }
+})
 }
+
+
 
 // SELECT2
 
 $(document).ready(function() {
-  $('.select2').select2({
-    theme:'bootstrap',
-  });
-});
+    $('.select2').select2({
+      theme:'bootstrap',
+    });
+  })

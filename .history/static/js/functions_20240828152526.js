@@ -49,19 +49,41 @@ function error_msg(obj) {
   });
 }
 
-function message_error(msg){
+function message_error(msg) {
   console.error('Errores del formulario recibidos: ', msg);
 
-  if (typeof msg === 'object' && msg.error){
-    let errorMessages = "";
-    for (let key in msg.error){
-      if (msg.error.hasOwnProperty(key)){
-        errorMessages += `${key}: ${msg.error[key].join(', ')}\n`;
+  if (typeof msg === 'object') {
+      let errorMessages = "";
+      
+      // Verifica si el objeto tiene una clave "error"
+      if (msg.hasOwnProperty('error')) {
+          let errors = msg['error'];
+          
+          // Itera a través de los errores y construye el mensaje de error
+          for (let key in errors) {
+              if (errors.hasOwnProperty(key)) {
+                  if (Array.isArray(errors[key])) {
+                      // Si el valor es un array, une los elementos con coma
+                      errorMessages += `${key}: ${errors[key].join(', ')}\n`;
+                  } else if (typeof errors[key] === 'object') {
+                      // Si el valor es un objeto, maneja el caso recursivamente o según el formato esperado
+                      for (let subKey in errors[key]) {
+                          if (errors[key].hasOwnProperty(subKey)) {
+                              errorMessages += `${subKey}: ${errors[key][subKey].join(', ')}\n`;
+                          }
+                      }
+                  } else {
+                      errorMessages += `${key}: ${errors[key]}\n`;
+                  }
+              }
+          }
+      } else {
+          errorMessages = "Se produjo un error desconocido.";
       }
-    }
-    alert("Hay errores en el formulario:\n" + errorMessages);
+
+      alert("Hay errores en el formulario:\n" + errorMessages);
   } else {
-    alert(msg);
+      alert(msg);
   }
 }
 

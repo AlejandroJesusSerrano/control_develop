@@ -49,19 +49,32 @@ function error_msg(obj) {
   });
 }
 
-function message_error(msg){
+function message_error(msg) {
   console.error('Errores del formulario recibidos: ', msg);
 
-  if (typeof msg === 'object' && msg.error){
-    let errorMessages = "";
-    for (let key in msg.error){
-      if (msg.error.hasOwnProperty(key)){
-        errorMessages += `${key}: ${msg.error[key].join(', ')}\n`;
+  if (typeof msg === 'object') {
+      let errorMessages = "";
+      for (let key in msg) {
+          if (msg.hasOwnProperty(key)) {
+              if (Array.isArray(msg[key])) {
+                  // Si es un array, utilizar join para crear el mensaje de error.
+                  errorMessages += `${key}: ${msg[key].join(', ')}\n`;
+              } else if (typeof msg[key] === 'object') {
+                  // Si es un objeto, iterar sobre sus propiedades para generar mensajes de error.
+                  for (let subKey in msg[key]) {
+                      if (msg[key].hasOwnProperty(subKey)) {
+                          errorMessages += `${subKey}: ${msg[key][subKey].join(', ')}\n`;
+                      }
+                  }
+              } else {
+                  // Si es un tipo de dato no esperado, simplemente mostrar el valor.
+                  errorMessages += `${key}: ${msg[key]}\n`;
+              }
+          }
       }
-    }
-    alert("Hay errores en el formulario:\n" + errorMessages);
+      alert("Hay errores en el formulario:\n" + errorMessages);
   } else {
-    alert(msg);
+      alert(msg);
   }
 }
 

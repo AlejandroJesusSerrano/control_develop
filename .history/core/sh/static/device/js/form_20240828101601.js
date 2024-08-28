@@ -3,7 +3,17 @@ function message_error(msg){
   console.error('Errores del formulario recibidos: ', msg);
 
   if (typeof msg === 'object' && msg.form_errors){
-    show_errors_in_form(msg.form_errors);
+    let errorMessages = "";
+    for (let key in msg,form_errors){
+      if (msg.from_errors.hasOwnProperty(key)){
+        const fieldErrors = msg.form_errors[key];
+        fieldErrors.forEach(error => {
+          errorMessages += '${key}: ${error.message}\n';
+        });
+        // errorMessages += `${key}: ${msg[key].join(', ')}\n;`
+      }
+    }
+    alert("Hay errores en el formulario:\n" + errorMessages);
   } else {
     alert(msg);
   }
@@ -60,17 +70,9 @@ function initializeSelects() {
   const dependency_id = $('select[name="dependency"]').val();
   const office_id = $('select[name="office"]').val();
 
-  if (brand_id && dev_type_id) {
-    updateModelOptions(brand_id, dev_type_id);
-  }
-
-  if (dependency_id) {
-    updateOfficeOptions(dependency_id);
-  }
-
-  if (office_id) {
-    updateOfficeRelatedOptions(office_id);
-  }
+  if (brand_id && dev_type_id) updateModelOptions(brand_id, dev_type_id);
+  if (dependency_id) updateOfficeOptions(dependency_id);
+  if (office_id) updateOfficeRelatedOptions(office_id);
 
 }
 
@@ -90,7 +92,7 @@ function updateOfficeOptions(dependency_id) {
     }, $('select[name="office"]'), $('#id_office').data('preselected'));
   } else {
     $('select[name="office"]').html('<option value="">----------</option>');
-  }
+  };
 };
 
 function updateOfficeRelatedOptions(office_id) {
@@ -114,7 +116,7 @@ function updateOfficeRelatedOptions(office_id) {
   };
 };
 
-$(document).ready(function() {
+$(function() {
   initializeSelects();
 
   $('select[name="dependency"]').on('change', function(){
@@ -128,6 +130,4 @@ $(document).ready(function() {
   $('select[name="dev_type"], select[name="brand"]').on('change', function(){
     updateModelOptions($('select[name="brand"]').val(), $('select[name="dev_type"]').val());
   });
-
-  initializeFormSubmission('#myForm', 'edit')
-});
+})

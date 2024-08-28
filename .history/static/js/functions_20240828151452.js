@@ -49,14 +49,25 @@ function error_msg(obj) {
   });
 }
 
-function message_error(msg){
+function message_error(msg) {
   console.error('Errores del formulario recibidos: ', msg);
 
-  if (typeof msg === 'object' && msg.error){
+  if (typeof msg === 'object') {
     let errorMessages = "";
-    for (let key in msg.error){
-      if (msg.error.hasOwnProperty(key)){
-        errorMessages += `${key}: ${msg.error[key].join(', ')}\n`;
+    for (let key in msg) {
+      if (msg.hasOwnProperty(key)) {
+        if (Array.isArray(msg[key])) {
+          errorMessages += `${key}: ${msg[key].join(', ')}\n`;
+        } else if (typeof msg[key] === 'object') {
+          // Manejar objetos anidados, si los hay
+          for (let subKey in msg[key]) {
+            if (msg[key].hasOwnProperty(subKey)) {
+              errorMessages += `${subKey}: ${msg[key][subKey].join(', ')}\n`;
+            }
+          }
+        } else {
+          errorMessages += `${key}: ${msg[key]}\n`;
+        }
       }
     }
     alert("Hay errores en el formulario:\n" + errorMessages);
@@ -64,7 +75,6 @@ function message_error(msg){
     alert(msg);
   }
 }
-
 
 // function message_error(msg){
 

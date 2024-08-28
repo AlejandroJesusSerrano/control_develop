@@ -759,7 +759,7 @@ class DeviceForm(forms.ModelForm):
   dev_model = forms.ModelChoiceField(
     queryset=Dev_Model.objects.none(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=False
+    required=True
   )
 
   dependency = forms.ModelChoiceField(
