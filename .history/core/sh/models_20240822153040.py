@@ -354,10 +354,10 @@ class Patch_Port(models.Model):
 
 class Switch(models.Model):
   brand = models.ForeignKey(Brand, related_name = 'switch_brand', verbose_name = 'Marca', on_delete = models.CASCADE)
-  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True, unique=True)
+  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True)
   ports_q = models.CharField(max_length = 2, verbose_name = 'Cantidad de Puertos')
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
-  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True, unique=True)
+  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
   office = models.ForeignKey(Office, related_name = 'switch_office', verbose_name = 'Oficina', on_delete = models.CASCADE, blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
@@ -379,7 +379,7 @@ class Switch(models.Model):
 
 class Switch_Port(models.Model):
   switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)
-  port_id = models.CharField(max_length = 3, verbose_name = 'Puerto del Switch', unique=True)
+  port_id = models.CharField(max_length = 3, verbose_name = 'Puerto del Switch')
   patch_port_out = models.OneToOneField(Patch_Port, related_name = 'port_patch_port_out', verbose_name= 'Puerto Patchera Salida', null = True, blank = True, on_delete = models.CASCADE)
   patch_port_in = models.OneToOneField(Patch_Port, related_name = 'port_patch_port_in', verbose_name = 'Puerto Patchera Entrada', null = True, blank = True, on_delete = models.CASCADE)
   switch_in = models.ForeignKey(Switch, related_name = 'ports_switch_in', verbose_name = 'Switch de Ingreso', null=True, blank=True, on_delete = models.CASCADE)
@@ -448,12 +448,12 @@ class Device(models.Model):
   dev_model = models.ForeignKey(Dev_Model, related_name='device_model', verbose_name='Modelo de Dispositivo', on_delete=models.CASCADE)
   dev_status = models.ForeignKey(Dev_Status, related_name='device_status', verbose_name='Estado del Dispositivo', on_delete=models.CASCADE)
   connection = models.ForeignKey(Connection_Type, related_name='device_connection', verbose_name='Conexion del Dispositivo', on_delete=models.CASCADE)
-  ip = models.CharField(max_length=15, verbose_name='IP', blank=True, null=True, unique=True)
-  serial_n = models.CharField(max_length=20, verbose_name='S/N°', unique=True)
-  net_name = models.CharField(max_length=11, verbose_name='ID en la Red', blank=True, null=True, unique=True)
+  ip = models.CharField(max_length=15, verbose_name='IP', blank=True, null=True)
+  serial_n = models.CharField(max_length=20, verbose_name='S/N°')
+  net_name = models.CharField(max_length=11, verbose_name='ID en la Red', blank=True, null=True)
   office = models.ForeignKey(Office, related_name='device_office', verbose_name='Oficina', on_delete=models.CASCADE)
-  wall_port = models.OneToOneField(Wall_Port, related_name='device_wall_port', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
-  switch_port = models.OneToOneField(Switch_Port, related_name='device_switch_port', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
+  wall_port = models.ForeignKey(Wall_Port, related_name='device_wall_port', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
+  switch_port = models.ForeignKey(Switch_Port, related_name='device_switch_port', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
   employee = models.ManyToManyField(Employee, related_name='device_employee', verbose_name='Empleado')
 
   def __str__(self):

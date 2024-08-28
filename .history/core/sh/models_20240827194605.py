@@ -354,10 +354,10 @@ class Patch_Port(models.Model):
 
 class Switch(models.Model):
   brand = models.ForeignKey(Brand, related_name = 'switch_brand', verbose_name = 'Marca', on_delete = models.CASCADE)
-  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True, unique=True)
+  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True)
   ports_q = models.CharField(max_length = 2, verbose_name = 'Cantidad de Puertos')
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
-  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True, unique=True)
+  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
   office = models.ForeignKey(Office, related_name = 'switch_office', verbose_name = 'Oficina', on_delete = models.CASCADE, blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
@@ -379,7 +379,7 @@ class Switch(models.Model):
 
 class Switch_Port(models.Model):
   switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)
-  port_id = models.CharField(max_length = 3, verbose_name = 'Puerto del Switch', unique=True)
+  port_id = models.CharField(max_length = 3, verbose_name = 'Puerto del Switch')
   patch_port_out = models.OneToOneField(Patch_Port, related_name = 'port_patch_port_out', verbose_name= 'Puerto Patchera Salida', null = True, blank = True, on_delete = models.CASCADE)
   patch_port_in = models.OneToOneField(Patch_Port, related_name = 'port_patch_port_in', verbose_name = 'Puerto Patchera Entrada', null = True, blank = True, on_delete = models.CASCADE)
   switch_in = models.ForeignKey(Switch, related_name = 'ports_switch_in', verbose_name = 'Switch de Ingreso', null=True, blank=True, on_delete = models.CASCADE)

@@ -26,19 +26,18 @@ $.ajaxSetup({
 
 function error_msg(obj) {
   let html = '<ul class="text-center">';
+  if (typeof (obj) === 'object' && obj !== null) {
+    $.each(obj, function(key, value) {
+      if (Array.isArray(value)) {
+        value = value[0].message || value[0];
+      }
+      html+='<li>' +key+': '+value+'</li>';
+    });
+  } else {
+    html+='<li>' +obj+'</li>';
+  };
 
-  $.each(obj, function (key, value) {
-
-    if (Array.isArray(value) && value.length > 0) {
-      let message = value[0].message ? value[0].message : value[0];
-      html += `<li>${key}: ${message}</li>`;
-    } else {
-      html += `<li>${key}: Error desconocido</li>`;
-    }
-  });
-
-  html += '</ul>';
-
+  html+='</ul>';
   Swal.fire({
     icon: "error",
     iconColor: "#dc3545",
@@ -47,7 +46,8 @@ function error_msg(obj) {
     confirmButtonColor: "#dc3545",
     background: "#ffffff",
   });
-}
+};
+
 function show_errors_in_form(errors){
   // Limpiar errores anteriores
   $('.is-invalid').removeClass('is-invalid');
@@ -65,7 +65,7 @@ function show_errors_in_form(errors){
 
 // SUBMITS AJAX
 
-function submit_with_ajax(url, params, callback, actionType = 'add') {
+function submit_with_ajax(url, params, callback, actionType = 'add'){
 
   let title, icon, content, type;
 
@@ -101,7 +101,7 @@ function submit_with_ajax(url, params, callback, actionType = 'add') {
     typeAnimated: true,
     dragWindowsBorder: false,
     buttons: {
-      confirm: {
+      info: {
         text: "Si",
         btnClass: 'btn-primary',
         action: function(){
@@ -113,24 +113,24 @@ function submit_with_ajax(url, params, callback, actionType = 'add') {
             contentType: false,
             dataType: 'json',
             headers: {
-              'X-CSRFToken': csrftoken
+              'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()
             }
           }).done(function(data){
             if(!data.hasOwnProperty('error')){
               callback();
               } else {
-                show_errors_in_form(data.error);
+                error_msg(data.error);
               }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
+            }).fail(function (jqXHR, textStatus, errorThrown) {a
 
             alert(textStatus+': ' +errorThrown);
 
-          });
+          }).always(function(data){
 
+          })
         }
-
       },
-      cancel: {
+      danger: {
         text: "No",
         btnClass: 'btn-danger',
         action: function(){
@@ -140,22 +140,6 @@ function submit_with_ajax(url, params, callback, actionType = 'add') {
     }
   })
 }
-
-function show_errors_in_form(errors){
-  $('.is-invalid').removeClass('is-invalid');
-  $('.invalid-feedback').remove()
-
-$.each(errors, function(field, messages) {
-  let fieldElement = $(`[name="${field}"]`);
-  if (fieldElement.length > 0) {
-    fieldElement.addClass('is-invalid');
-    fieldElement.after(`<div class="invalid-feedback">${messages.join('<br>')}</div>`);
-  }
-})
-}
-sa
-
-
 
 // SELECT2
 
