@@ -60,9 +60,7 @@ class ProvinceCreateView(CreateView):
   def form_valid(self, form):
     form.save()
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
+      return JsonResponse({'success':True}) and redirect(self.success_url)
 
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':

@@ -159,23 +159,45 @@ class ProvinceForm(forms.ModelForm):
 # Location Forms
 class LocationForm(forms.ModelForm):
 
+  province=forms.ModelChoiceField(
+    queryset=Province.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=True
+  )
+
   class Meta:
     model = Location
-    fields = '__all__'
+    fields = [
+      'location'
+    ]
     widgets = {
-      'province': Select(
-        attrs={
-          'class': 'form-control select2',
-        }
-      ),
-
-      'location': TextInput(
-        attrs={
-          'class': 'form-control',
-          'placeholder': 'Ingrese una localidad'
-        }
-      )
+      'location': forms.TextInput(attrs={'class': 'form-control'})
     }
+
+  def __init__(self, *args, **kwargs):
+
+    super(ProvinceForm, self).__init__(*args, **kwargs)
+
+    self.fields['province'].queryset = Province.objects.none()
+
+    if self.instance.pk:
+      location = self.instance
+
+      self.fields['location'].queryset = Location.objects.filter(province=self.instance.province)
+
+    else:
+
+      if 'province' in self.data:
+        try:
+          province_id = int(self.data.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+        except:
+          pass
+
+  def clean(self):
+    cleaned_data = super().clean()
+    print("cleaned data: ", cleaned_data)
+    return cleaned_data
 
 
 # Edifice Forms

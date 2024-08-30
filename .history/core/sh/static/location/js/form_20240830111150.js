@@ -38,12 +38,17 @@ function show_errors_in_form(errors){
 function updateOptions(url, data, selectElement, preselectedValue) {
   let options = '<option value="">----------</option>';
 
+  console.log("URL: ", url);
+  console.log("Data: ", data);
+
   $.ajax({
     url: url,
     type: 'POST',
     data: data,
     dataType: 'json'
   }).done(function (data) {
+
+    console.log("Received data: ", data);
 
     if (typeof data === 'object' && !data.hasOwnProperty('error')) {
       $.each(data, function (key, value) {
@@ -60,6 +65,8 @@ function updateOptions(url, data, selectElement, preselectedValue) {
         selectElement.val(preselectedValue).trigger('change');
       }
 
+      console.log("Updated selectElement: ", selectElement);
+
     } else if(data.hasOwnProperty('error')) {
       message_error(data.error);
 
@@ -69,6 +76,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 
   }).fail(function (jqXHR, textStatus, errorThrown) {
     message_error(textStatus + ': ' + errorThrown);
+    console.log("Response text: ", jqXHR.responseText);
   });
 };
 

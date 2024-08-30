@@ -60,6 +60,8 @@ function updateOptions(url, data, selectElement, preselectedValue) {
         selectElement.val(preselectedValue).trigger('change');
       }
 
+      console.log("Updated selectElement: ", selectElement);
+
     } else if(data.hasOwnProperty('error')) {
       message_error(data.error);
 
@@ -69,6 +71,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 
   }).fail(function (jqXHR, textStatus, errorThrown) {
     message_error(textStatus + ': ' + errorThrown);
+    console.log("Response text: ", jqXHR.responseText);
   });
 };
 

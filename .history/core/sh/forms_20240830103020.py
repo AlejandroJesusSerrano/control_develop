@@ -159,23 +159,86 @@ class ProvinceForm(forms.ModelForm):
 # Location Forms
 class LocationForm(forms.ModelForm):
 
+  province=forms.ModelChoiceField(
+    queryset=Province.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=True
+  )
+
   class Meta:
     model = Location
-    fields = '__all__'
+    fields = [
+      'location'
+    ]
     widgets = {
-      'province': Select(
-        attrs={
-          'class': 'form-control select2',
-        }
-      ),
-
-      'location': TextInput(
-        attrs={
-          'class': 'form-control',
-          'placeholder': 'Ingrese una localidad'
-        }
-      )
+      'connection': forms.Select(attrs={'class': 'form-control select2'}),
+      'ip': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese la dirección ip del dispositivo'}),
+      'net_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese el nombre de registro en la red del dispositivo'}),
+      'dev_status': forms.Select(attrs={'class': 'form-control select2'}),
+      'serial_n': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
+      'office': forms.Select(attrs={'class': 'form-control select2'}),
+      'wall_port': forms.Select(attrs={'class': 'form-control select2'}),
+      'switch_port': forms.Select(attrs={'class': 'form-control select2'}),
+      'employee': forms.SelectMultiple(attrs={'class': 'form-control select2'}),
     }
+
+  def __init__(self, *args, **kwargs):
+    super(DeviceForm, self).__init__(*args, **kwargs)
+
+    print("Data received in form: ", self.data)
+
+    self.fields['dev_model'].queryset = Dev_Model.objects.none()
+    self.fields['office'].queryset = Office.objects.none()
+    self.fields['wall_port'].queryset = Wall_Port.objects.none()
+    self.fields['switch_port'].queryset = Switch_Port.objects.none()
+    self.fields['employee'].queryset = Employee.objects.none()
+
+    if self.instance.pk:
+      device = self.instance
+
+      self.fields['dev_model'].queryset = Dev_Model.objects.filter(
+        brand = self.instance.dev_model.brand,
+        dev_type = self.instance.dev_model.dev_type
+      )
+
+      self.fields['office'].queryset = Office.objects.filter(
+        dependency = self.instance.office.dependency
+      )
+
+      self.fields['wall_port'].queryset = Wall_Port.objects.filter(office=self.instance.office)
+      self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office=self.instance.office)
+      self.fields['employee'].queryset = Employee.objects.filter(office=self.instance.office)
+
+    else:
+
+      if 'dependency' in self.data:
+        try:
+          dependency_id = int(self.data.get('dependency'))
+          self.fields['office'].queryset = Office.objects.filter(dependency_id=dependency_id)
+        except:
+          pass
+
+      if 'office' in self.data:
+        try:
+          office_id = int(self.data.get('office'))
+          self.fields['wall_port'].queryset = Wall_Port.objects.filter(office_id=office_id)
+          self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office_id=office_id)
+          self.fields['employee'].queryset = Employee.objects.filter(office_id=office_id)
+        except (ValueError, TypeError):
+          pass
+
+      if 'brand' in self.data and 'dev_type' in self.data:
+        try:
+          brand_id = int(self.data.get('brand'))
+          dev_type_id = int(self.data.get('dev_type'))
+          self.fields['dev_model'].queryset = Dev_Model.objects.filter(brand_id=brand_id, dev_type_id=dev_type_id)
+        except (ValueError, TypeError):
+          pass
+
+  def clean(self):
+    cleaned_data = super().clean()
+    print("cleaned data: ", cleaned_data)
+    return cleaned_data
 
 
 # Edifice Forms
@@ -754,6 +817,8 @@ class DeviceForm(forms.ModelForm):
 
   def __init__(self, *args, **kwargs):
     super(DeviceForm, self).__init__(*args, **kwargs)
+
+    print("Data received in form: ", self.data)
 
     self.fields['dev_model'].queryset = Dev_Model.objects.none()
     self.fields['office'].queryset = Office.objects.none()

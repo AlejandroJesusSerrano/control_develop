@@ -45,6 +45,8 @@ function updateOptions(url, data, selectElement, preselectedValue) {
     dataType: 'json'
   }).done(function (data) {
 
+    console.log("Received data: ", data);
+
     if (typeof data === 'object' && !data.hasOwnProperty('error')) {
       $.each(data, function (key, value) {
         options += '<option value="' + value.id + '">' + value.name + '</option>';
@@ -60,6 +62,8 @@ function updateOptions(url, data, selectElement, preselectedValue) {
         selectElement.val(preselectedValue).trigger('change');
       }
 
+      console.log("Updated selectElement: ", selectElement);
+
     } else if(data.hasOwnProperty('error')) {
       message_error(data.error);
 
@@ -69,6 +73,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 
   }).fail(function (jqXHR, textStatus, errorThrown) {
     message_error(textStatus + ': ' + errorThrown);
+    console.log("Response text: ", jqXHR.responseText);
   });
 };
 

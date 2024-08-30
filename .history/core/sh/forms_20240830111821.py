@@ -165,14 +165,14 @@ class LocationForm(forms.ModelForm):
     widgets = {
       'province': Select(
         attrs={
-          'class': 'form-control select2',
+          'class': 'form-contro select2',
         }
       ),
 
-      'location': TextInput(
+      'province': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese una localidad'
+          'placeholder': ' Ingrese el nombre del Distrito'
         }
       )
     }

@@ -1,3 +1,11 @@
+// SELECT 2
+
+$(document).ready(function() {
+  $('.select2').select2({
+    theme:'bootstrap',
+  });
+});
+
 // SHOW ERRORS IN FORM
 
 function show_errors_in_form(errors){
@@ -12,7 +20,11 @@ function show_errors_in_form(errors){
       let errorHtml = '<div class="invalid-feedback d-block">';
 
       $.each(fieldErrors, function(index, error){
-        errorHtml += error.message + '<br>';
+        if (typeof error === 'object' && error.message) {
+          errorHtml += error.message + '<br>';
+        } else {
+          errorHtml += error.message + '<br>';
+        }
       });
 
       errorHtml += '</div>';

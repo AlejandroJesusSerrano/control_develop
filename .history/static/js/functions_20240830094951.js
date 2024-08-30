@@ -59,9 +59,9 @@ function message_error(msg) {
 
       show_errors_in_form(msg.form_errors);
 
-  } else if (typeof msg === 'object' && msg.error) {
+  // } else if (typeof msg === 'object' && msg.error) {
 
-      show_errors_in_form(msg.error);
+  //     show_errors_in_form(msg.error);
 
   } else {
     alert(msg);

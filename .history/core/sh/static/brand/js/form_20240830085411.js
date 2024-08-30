@@ -1,6 +1,7 @@
 // SHOW ERRORS IN FORM
 
 function show_errors_in_form(errors){
+
   $('.is-invalid').removeClass('is-invalid');
   $('.invalid-feedback').remove();
 
@@ -12,11 +13,16 @@ function show_errors_in_form(errors){
       let errorHtml = '<div class="invalid-feedback d-block">';
 
       $.each(fieldErrors, function(index, error){
-        errorHtml += error.message + '<br>';
+        if (typeof error === 'string'){
+          errorHtml += error + '<br>';
+        } else if (typeof error === 'object' && error.message){
+          errorHtml += error.message + '<br>';
+        }
       });
 
       errorHtml += '</div>';
       fieldElement.after(errorHtml);
+
     }
   });
 }

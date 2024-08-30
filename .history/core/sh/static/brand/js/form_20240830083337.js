@@ -1,11 +1,13 @@
 // SHOW ERRORS IN FORM
 
 function show_errors_in_form(errors){
+
   $('.is-invalid').removeClass('is-invalid');
   $('.invalid-feedback').remove();
 
   $.each(errors, function(field, fieldErrors) {
     let fieldElement = $(`[name="${field}"]`);
+    console.log("Field Element: ", fieldElementpython)
 
     if (fieldElement.length > 0) {
       fieldElement.addClass('is-invalid');
@@ -17,6 +19,7 @@ function show_errors_in_form(errors){
 
       errorHtml += '</div>';
       fieldElement.after(errorHtml);
+
     }
   });
 }

@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.http import HttpRequest, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
@@ -56,24 +55,18 @@ class LocationCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+  def post(self, request, *args, **kwargs):
+    data={}
+    try:
+      action = request.POST.get('action')
+      if action == 'add':
+        form = self.get_form()
+        data = form.save()
+      else:
+        data['error'] = 'Acción no válida'
+    except Exception as e:
+      data['error'] = str(e)
+    return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -85,7 +78,6 @@ class LocationCreateView(CreateView):
     context['form_id'] = 'locationForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
-    context['saved'] = kwargs.get('saved', None)
     return context
 
 class LocationUpadateView(UpdateView):
@@ -99,24 +91,18 @@ class LocationUpadateView(UpdateView):
     self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+  def post(self, request, *args, **kwargs):
+    data={}
+    try:
+      action = request.POST.get('action')
+      if action == 'edit':
+        form = self.get_form()
+        data = form.save()
+      else:
+        data['error'] = 'Accion no válida'
+    except Exception as e:
+      data['error'] = str(e)
+    return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -128,7 +114,6 @@ class LocationUpadateView(UpdateView):
       context['form_id'] = 'locationForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-warning'
-      context['saved'] = kwargs.get('saved', None)
       return context
 
 class LocationDeleteView(DeleteView):

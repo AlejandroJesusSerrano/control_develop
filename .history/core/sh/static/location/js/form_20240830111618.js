@@ -12,7 +12,11 @@ function show_errors_in_form(errors){
       let errorHtml = '<div class="invalid-feedback d-block">';
 
       $.each(fieldErrors, function(index, error){
-        errorHtml += error.message + '<br>';
+        if (typeof error === 'object' && error.message) {
+          errorHtml += error.message + '<br>';
+        } else {
+          errorHtml += error.message + '<br>';
+        }
       });
 
       errorHtml += '</div>';

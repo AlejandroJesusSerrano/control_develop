@@ -66,13 +66,10 @@ class BrandCreateView(CreateView):
 
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
+      return JsonResponse({'error': form.errors.get_json_data()})
     else:
       context = self.get_context_data(form=form)
+      context['form'] = form
       context['saved'] = False
       return self.render_to_response(context)
 
@@ -109,13 +106,10 @@ class BrandUpadateView(UpdateView):
 
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
+      return JsonResponse ({'error': form.errors.get_json_data()})
     else:
       context = self.get_context_data(form=form)
+      context['form'] = form
       context['saved'] = False
       return self.render_to_response(context)
 

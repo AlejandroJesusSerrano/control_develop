@@ -166,7 +166,8 @@ class LocationForm(forms.ModelForm):
       'province': Select(
         attrs={
           'class': 'form-control select2',
-        }
+        },
+        required=True
       ),
 
       'location': TextInput(
