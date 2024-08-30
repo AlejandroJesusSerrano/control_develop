@@ -186,7 +186,7 @@ class EdificeForm(forms.ModelForm):
   class Meta:
     model = Edifice
     fields = [
-              'location', 'edifice', 'address'
+      'location, edifice, address'
               ]
     widget = {
       'location': Select(attrs={'class': 'form-control select2'}),
@@ -204,7 +204,7 @@ class EdificeForm(forms.ModelForm):
     }
 
   def __init__(self, *args, **kwargs):
-    super(EdificeForm, self).__init__(*args, **kwargs)
+    super(DeviceForm, self).__init__(*args, **kwargs)
 
     self.fields['location'].queryset = Location.objects.none()
 

@@ -1,6 +1,10 @@
 from django.forms import *
+from typing import Any, Mapping
 from django import forms
-from django.forms import ModelForm, Select, TextInput, Textarea, FileInput, DateInput
+from django.core.files.base import File
+from django.db.models.base import Model
+from django.forms import ModelForm, Select, TextInput, Textarea, FileInput, DateInput, RadioSelect
+from django.forms.utils import ErrorList
 
 from core.sh.models import Connection_Type, Dependency, Dev_Status, Device, Edifice, Location, Move_Type, Movements, Office, Patch_Port, Patchera, Province, Brand, Dev_Type, Employee_Status, Employee, Rack, Suply, Suply_Type, Switch_Port, Techs, Dev_Model, Wall_Port, Switch
 
@@ -186,7 +190,7 @@ class EdificeForm(forms.ModelForm):
   class Meta:
     model = Edifice
     fields = [
-              'location', 'edifice', 'address'
+      'location, edifice, address'
               ]
     widget = {
       'location': Select(attrs={'class': 'form-control select2'}),
@@ -204,7 +208,7 @@ class EdificeForm(forms.ModelForm):
     }
 
   def __init__(self, *args, **kwargs):
-    super(EdificeForm, self).__init__(*args, **kwargs)
+    super(DeviceForm, self).__init__(*args, **kwargs)
 
     self.fields['location'].queryset = Location.objects.none()
 

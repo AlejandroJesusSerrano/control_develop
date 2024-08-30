@@ -156,46 +156,17 @@ class EdificeUpadateView(UpdateView):
         context['saved'] = False
         return self.render_to_response(context)
 
-  def handle_search_action(self, action, post_data):
-
-      data = []
-
-      if action =='search_location':
-        province_id = post_data.get('province_id')
-        locations = Location.objects.all()
-        if province_id:
-          try:
-            province_id = int(province_id)
-            locations = Location.filter(province_id=province_id)
-          except ValueError:
-            pass
-
-      return data
-
   def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Edificios'
-    context['title'] = 'Editar Edificio'
-    context['btn_add_id'] = 'edifice_add'
-    context['entity'] = 'Edificios'
-    context['list_url'] = reverse_lazy('sh:edifice_list')
-    context['form_id'] = 'edificeForm'
-    context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
-
-    edifice = self.get_object()
-
-    context['form'].fields['location'].queryset = Location.objects.filter(
-      province = edifice.location.province
-    )
-
-    context['form'].initial['province'] = edifice.location.province.id if edifice.location.province else None
-
-    context['form'].fields['location'].widget.attrs.update({
-      'data-preselected': self.object.location.id if self.object.location else ''
-    })
-
-    return context
+      context = super().get_context_data(**kwargs)
+      context['page_title'] = 'Edificios'
+      context['title'] = 'Editar Edificio'
+      context['btn_add_id'] = 'edifice_add'
+      context['entity'] = 'Edificios'
+      context['list_url'] = reverse_lazy('sh:edifice_list')
+      context['form_id'] = 'edificeForm'
+      context['action'] = 'edit'
+      context['bg_color'] = 'bg-warning'
+      return context
 
 class EdificeDeleteView(DeleteView):
   model = Edifice
