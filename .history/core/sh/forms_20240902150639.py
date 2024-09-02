@@ -251,7 +251,7 @@ class DependencyForm(forms.ModelForm):
   def clean_dependency(self):
     dependency = self.cleaned_data.get('dependency')
 
-    if Dependency.objects.filter(dependency__iexact=dependency).exists():
+    if Dependency.objects.filter(dependency=dependency).exists():
       raise ValidationError("Esta dependencia ya existe")
 
     return dependency

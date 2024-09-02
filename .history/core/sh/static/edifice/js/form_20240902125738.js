@@ -74,7 +74,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 // INITALIZE SELECTS
 
 function initializeSelects() {
-  const province_id = $('select[name="province"]').val();
+  const province_id = $('select[name="location.province"]').val();
 
   if (province_id) {
     updateLocationsOptions(province_id);
@@ -89,7 +89,7 @@ function updateLocationsOptions(province_id) {
     updateOptions(window.location.pathname, {
       'action': 'search_locations',
       'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+    }, $('select[name="province"]'), $('#id_province').data('preselected'));
   }
 };
 

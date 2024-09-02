@@ -59,15 +59,11 @@ class DependencyCreateView(CreateView):
     return super().dispatch(request, *args, **kwargs)
 
   def form_valid(self, form):
-    try:
-      form.save()
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'success':True})
-      else:
-        return redirect(self.success_url)
-    except IntegrityError:
-      form.add_error('dependency', 'Ya existe una dependencia con este nombre.')
-      return self.form_invalid(form)
+    form.save()
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      return JsonResponse({'success':True})
+    else:
+      return redirect(self.success_url)
 
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -112,13 +108,13 @@ class DependencyUpadateView(UpdateView):
       form.add_error('dependency', 'Esta dependencia ya existe.')
       return self.form_invalid(form)
 
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRedirect':
       return JsonResponse({'success':True})
     else:
       return redirect(self.success_url)
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRedirect':
       errors = form.errors.get_json_data()
       return JsonResponse({
         "error": "Formulario no válido",

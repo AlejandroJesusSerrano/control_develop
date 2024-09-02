@@ -225,36 +225,41 @@ class EdificeForm(forms.ModelForm):
           pass
 
   def clean(self):
-    edifice = self.cleaned_data.get('edifice').upper()
-    location = self.cleaned_data.get('location')
-
-    if Edifice.objects.filter(location=location, edifice=edifice).exists():
-      self.add_error('edifice', f"Ya existe un edificio en el nombre '{edifice}' en la localidad seleccionada")
     cleaned_data = super().clean()
+    print("cleaned data: ", cleaned_data)
     return cleaned_data
 
 # Dependency Forms
-class DependencyForm(forms.ModelForm):
+class DependencyForm(ModelForm):
+
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    for form in self.visible_fields():
+      form.field.widget.attrs['class'] = 'form-control m-1'
+    self.fields['description'].widget.attrs['autofocus'] = True
 
   class Meta:
     model = Dependency
     fields = '__all__'
-    widgets = {
-      'dependency': TextInput(
+    widget = {
+      'description': TextInput(
         attrs={
-          'class': 'form-control',
           'placeholder': 'Ingrese el Nombre de una Dependencia'
         }
       ),
     }
 
-  def clean_dependency(self):
-    dependency = self.cleaned_data.get('dependency')
-
-    if Dependency.objects.filter(dependency__iexact=dependency).exists():
-      raise ValidationError("Esta dependencia ya existe")
-
-    return dependency
+  def save(self, commit=True):
+    data={}
+    form = super()
+    try:
+      if form.is_valid():
+        form.save()
+      else:
+        data['error'] = form.errors.get_json_data()
+    except Exception as e:
+      data['error'] = str(e)
+    return data
 
 # Office Forms
 class OfficeForm(ModelForm):

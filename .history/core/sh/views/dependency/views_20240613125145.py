@@ -1,7 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.db import IntegrityError
-from django.forms import BaseModelForm
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
@@ -58,28 +55,18 @@ class DependencyCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
+  def post(self, request, *args, **kwargs):
+    data={}
     try:
-      form.save()
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'success':True})
+      action = request.POST.get('action')
+      if action == 'add':
+        form = self.get_form()
+        data = form.save()
       else:
-        return redirect(self.success_url)
-    except IntegrityError:
-      form.add_error('dependency', 'Ya existe una dependencia con este nombre.')
-      return self.form_invalid(form)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+        data['error'] = 'Acción no válida'
+    except Exception as e:
+      data['error'] = str(e)
+    return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -91,7 +78,6 @@ class DependencyCreateView(CreateView):
     context['form_id'] = 'dependencyForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
-    context['saved'] = kwargs.get('saved', None)
     return context
 
 class DependencyUpadateView(UpdateView):
@@ -105,29 +91,18 @@ class DependencyUpadateView(UpdateView):
     self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
+  def post(self, request, *args, **kwargs):
+    data={}
     try:
-      form.save()
-    except IntegrityError:
-      form.add_error('dependency', 'Esta dependencia ya existe.')
-      return self.form_invalid(form)
-
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+      action = request.POST.get('action')
+      if action == 'edit':
+        form = self.get_form()
+        data = form.save()
+      else:
+        data['error'] = 'Accion no válida'
+    except Exception as e:
+      data['error'] = str(e)
+    return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -139,7 +114,6 @@ class DependencyUpadateView(UpdateView):
       context['form_id'] = 'dependencyForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-warning'
-      context['saved'] = kwargs.get('saved', None)
       return context
 
 class DependencyDeleteView(DeleteView):

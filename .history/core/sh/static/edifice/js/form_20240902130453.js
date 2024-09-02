@@ -89,7 +89,7 @@ function updateLocationsOptions(province_id) {
     updateOptions(window.location.pathname, {
       'action': 'search_locations',
       'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+    }, $('select[name="location.province"]'), $('#id_province').data('preselected'));
   }
 };
 

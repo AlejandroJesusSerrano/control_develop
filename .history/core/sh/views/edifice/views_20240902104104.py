@@ -65,36 +65,29 @@ class EdificeCreateView(CreateView):
 
         if action == 'search_locations':
           province_id = request.POST.get('province_id')
-          if province_id:
-            locations = Location.objects.filter(province_id=province_id)
-            data = [{'id': l.id, 'name': l.location} for l in locations]
-
-          else:
-            data = {'error': 'No se proporcionó un ID de provincia válido.'}
-
-          return JsonResponse(data, safe=False)
+          locations = Location.objects.filter(province_id=province_id)
+          data = [{'id': l.id, 'name': l.location} for l in locations]
 
         else:
-          form = self.get_form()
+          form = EdificeForm(request.POST)
           if form.is_valid():
-            form.save()
-            return JsonResponse({"success": "Edificio guardado correctamente"}, status=200)
+            try:
+              form.save()
+              return JsonResponse({"success": "Edificio guardado correctamente"}, status=200)
+            except Exception as e:
+              return JsonResponse({"error":f"Error al guardar el edificio: {str(e)}"}, status=400)
           else:
-              return self.form_invalid(form)
+            errors = form.errors.get_json_data()
+            print(f"Errores del formulario: {errors}")
+            return JsonResponse({"error": "Formulario no valido", "form_errors":errors}, status=400)
+
+        return JsonResponse(data, safe=False)
 
       except Exception as e:
         return JsonResponse({'error': str(e)}, status=400, safe=False)
 
     else:
       return super().post(request, *args, **kwargs)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      print(f"Errores del formulario: {errors}")
-      return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
-    else:
-      return super().form_invlid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -128,15 +121,11 @@ class EdificeUpadateView(UpdateView):
 
         if action == 'search_locations':
           province_id = request.POST.get('province_id')
-          if province_id:
-            locations = Location.objects.filter(province_id=province_id)
-            data = [{'id': l.id, 'name': l.location} for l in locations]
-          else:
-            data = {'error': 'No se proporcionó un ID de provincia válido.'}
+          locations = Location.objects.filter(province_id=province_id)
+          data = [{'id': l.id, 'name': l.location} for l in locations]
 
         else:
-          self.object = self.get_object()
-          form = self.get_form()
+          form = EdificeForm(request.POST)
           if form.is_valid():
             try:
               form.save()

@@ -149,7 +149,10 @@ class Edifice(models.Model):
 
   def save(self,*args, **kwargs):
     self.edifice = self.edifice.upper()
-    self.address = self.address.upper()
+
+    # if Edifice.objects.filter(location=self.location, edifice=self.edifice).exists():
+    #   raise ValidationError(f"Ya existe un edificio con el nombre '{self.edifice}' en la localidad '{self.location.location}'.")
+
     super(Edifice, self).save(*args, **kwargs)
 
   def __str__(self):
@@ -169,13 +172,9 @@ class Edifice(models.Model):
     unique_together = ('location', 'edifice')
 
 class Dependency(models.Model):
-  dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia', unique=True)
+  dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
-
-  def save(self, *args, **kwargs):
-    self.dependency = self.dependency.upper()
-    super(Dependency, self).save(*args, *kwargs)
 
   def __str__(self):
     return self.dependency

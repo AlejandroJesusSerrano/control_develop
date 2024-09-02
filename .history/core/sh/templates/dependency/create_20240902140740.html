@@ -1,7 +1,5 @@
 {% extends 'form.html' %}
 
-{% load static %}
-
 {% block form %}
 <div class="form-group">
   <label for="dependency">Dependencia:</label>
@@ -14,7 +12,3 @@
 </div>
 
 {% endblock form %}
-
-{% block form_scripts %}
-  <script src="{% static 'dependency/js/form.js' %}"></script>
-{% endblock form_scripts %}

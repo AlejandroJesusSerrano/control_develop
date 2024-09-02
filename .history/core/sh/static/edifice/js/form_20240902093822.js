@@ -51,6 +51,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
       });
       selectElement.html(options).trigger('change');
 
+      selectElement.trigger('change'); 
       selectElement.select2({
         theme: 'bootstrap'
       });
@@ -89,7 +90,7 @@ function updateLocationsOptions(province_id) {
     updateOptions(window.location.pathname, {
       'action': 'search_locations',
       'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+    }, $('select[name="province"]'), $('#id_province').data('preselected'));
   }
 };
 
@@ -99,7 +100,7 @@ $(document).ready(function() {
   initializeSelects();
 
   $('select[name="province"]').on('change', function(){
-    updateLocationsOptions($(this).val());
+    updateLocationOptions($(this).val());
   });
 
   initializeFormSubmission('#myForm', 'edit')

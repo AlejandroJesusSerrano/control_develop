@@ -240,21 +240,13 @@ class DependencyForm(forms.ModelForm):
     model = Dependency
     fields = '__all__'
     widgets = {
-      'dependency': TextInput(
+      'description': TextInput(
         attrs={
           'class': 'form-control',
           'placeholder': 'Ingrese el Nombre de una Dependencia'
         }
       ),
     }
-
-  def clean_dependency(self):
-    dependency = self.cleaned_data.get('dependency')
-
-    if Dependency.objects.filter(dependency__iexact=dependency).exists():
-      raise ValidationError("Esta dependencia ya existe")
-
-    return dependency
 
 # Office Forms
 class OfficeForm(ModelForm):

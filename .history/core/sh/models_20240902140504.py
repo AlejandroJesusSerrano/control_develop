@@ -169,7 +169,7 @@ class Edifice(models.Model):
     unique_together = ('location', 'edifice')
 
 class Dependency(models.Model):
-  dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia', unique=True)
+  dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 

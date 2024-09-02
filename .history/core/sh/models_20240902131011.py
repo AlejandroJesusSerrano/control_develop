@@ -1,8 +1,7 @@
-from typing import Iterable
 from django.db import models
 from datetime import datetime
 
-from django.forms import ValidationError, model_to_dict
+from django.forms import model_to_dict
 # Create your models here.
 class Brand(models.Model):
   brand = models.CharField(max_length=50, verbose_name = 'Marca', unique=True)
@@ -142,16 +141,10 @@ class Location(models.Model):
 
 class Edifice(models.Model):
   location = models.ForeignKey(Location, on_delete = models.CASCADE, verbose_name = 'Localidad')
-  edifice = models.CharField(max_length = 50, verbose_name = 'Edificio')
+  edifice = models.CharField(max_length = 50, verbose_name = 'Edificio', unique=True)
   address = models.TextField(verbose_name = 'Domicilio')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
-
-  def save(self,*args, **kwargs):
-    self.edifice = self.edifice.upper()
-    self.address = self.address.upper()
-    super(Edifice, self).save(*args, **kwargs)
-
   def __str__(self):
     return  self.edifice
 
@@ -166,16 +159,11 @@ class Edifice(models.Model):
     verbose_name_plural = 'Edificios'
     db_table = 'edificios'
     ordering = ['id']
-    unique_together = ('location', 'edifice')
 
 class Dependency(models.Model):
-  dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia', unique=True)
+  dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
-
-  def save(self, *args, **kwargs):
-    self.dependency = self.dependency.upper()
-    super(Dependency, self).save(*args, *kwargs)
 
   def __str__(self):
     return self.dependency

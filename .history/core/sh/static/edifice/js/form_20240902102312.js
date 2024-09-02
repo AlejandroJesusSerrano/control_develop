@@ -38,6 +38,8 @@ function show_errors_in_form(errors){
 function updateOptions(url, data, selectElement, preselectedValue) {
   let options = '<option value="">----------</option>';
 
+  console.log('Datos Enviados: ', data)
+
   $.ajax({
     url: url,
     type: 'POST',
@@ -89,7 +91,7 @@ function updateLocationsOptions(province_id) {
     updateOptions(window.location.pathname, {
       'action': 'search_locations',
       'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+    }, $('select[name="province"]'), $('#id_province').data('preselected'));
   }
 };
 
@@ -99,7 +101,7 @@ $(document).ready(function() {
   initializeSelects();
 
   $('select[name="province"]').on('change', function(){
-    updateLocationsOptions($(this).val());
+    updateLocationOptions($(this).val());
   });
 
   initializeFormSubmission('#myForm', 'edit')
