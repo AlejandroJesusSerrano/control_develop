@@ -20,7 +20,11 @@ function show_errors_in_form(errors){
       let errorHtml = '<div class="invalid-feedback d-block">';
 
       $.each(fieldErrors, function(index, error){
-          errorHtml += error.message ? error.message + '<br>' : error + '<br>';
+        if (typeof error === 'object' && error.message) {
+          errorHtml += error.message + '<br>';
+        } else {
+          errorHtml += error.message + '<br>';
+        }
       });
 
       errorHtml += '</div>';
@@ -51,23 +55,21 @@ function updateEdificeOptions(location_id) {
 
 // UPDATE OPTIONS
 
-function updateOptions(url, data, selectElement, preselectedValue) {
+function updateOptions(url, data, selectElement, preselectedValue){
   let options = '<option value="">----------</option>';
 
   $.ajax({
-    url: url,
+    url:url,
     type: 'POST',
     data: data,
-    dataType: 'json',
+    dataType: 'json'
   }).done(function (data) {
-
     if (typeof data === 'object' && !data.hasOwnProperty('error')) {
-      $.each(data, function (key, value) {
+      $.each(data, function (index, value) {
         options += '<option value="' + value.id + '">' + value.name + '</option>';
       });
       selectElement.html(options).trigger('change');
 
-      selectElement.trigger('change'); 
       selectElement.select2({
         theme: 'bootstrap'
       });
@@ -76,7 +78,8 @@ function updateOptions(url, data, selectElement, preselectedValue) {
         selectElement.val(preselectedValue).trigger('change');
       }
 
-    } else if(data.hasOwnProperty('error')) {
+    } else if (data.hasOwnProperty('error')) {
+
       message_error(data.error);
 
     } else {

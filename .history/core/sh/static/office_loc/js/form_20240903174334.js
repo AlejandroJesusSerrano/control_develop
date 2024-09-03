@@ -20,7 +20,11 @@ function show_errors_in_form(errors){
       let errorHtml = '<div class="invalid-feedback d-block">';
 
       $.each(fieldErrors, function(index, error){
-          errorHtml += error.message ? error.message + '<br>' : error + '<br>';
+        if (typeof error === 'object' && error.message) {
+          errorHtml += error.message + '<br>';
+        } else {
+          errorHtml += error.message + '<br>';
+        }
       });
 
       errorHtml += '</div>';
@@ -58,7 +62,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
     url: url,
     type: 'POST',
     data: data,
-    dataType: 'json',
+    dataType: 'json'
   }).done(function (data) {
 
     if (typeof data === 'object' && !data.hasOwnProperty('error')) {

@@ -58,7 +58,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
     url: url,
     type: 'POST',
     data: data,
-    dataType: 'json',
+    dataType: 'json'
   }).done(function (data) {
 
     if (typeof data === 'object' && !data.hasOwnProperty('error')) {

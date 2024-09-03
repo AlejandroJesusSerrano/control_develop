@@ -304,11 +304,22 @@ class OfficeLocForm(forms.ModelForm):
         location_id = int(self.data.get('location'))
         self.fields['location'].queryset = Edifice.objects.filter(location_id=location_id).order_by('location')
       except(ValueError, TypeError):
-        pass
+        passoffice_loc = self.instance
 
     elif self.instance.pk:
       self.fields['location'].queryset = self.instance.edifice.location.province.location_set.order_by('location')
       self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.edifice.location).order_by('edifice')
+
+    else:
+      if 'province' in self.data:
+        try:
+          province_id = int(self.data.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
+        except (ValueError, TypeError):
+          pass
+
+      elif self.instance.pk:
+          self.fields['edifice'].queryset = self.instance.edifice.location.province.location_set.order_by('location')Edifice.objects.filter(location_id=location_id)
 
   def clean(self):
     cleaned_data = super().clean()

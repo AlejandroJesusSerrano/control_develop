@@ -155,4 +155,5 @@ $(document).ready(function() {
         window.location.href = 'your-redirect-url';
       }, 'add');
     });
+    
   })

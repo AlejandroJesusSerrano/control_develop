@@ -86,25 +86,6 @@ class OfficeLocCreateView(CreateView):
     data = [{'id': l.id, 'name': l.location} for l in locations]
     return JsonResponse(data, safe=False)
 
-  def search_edifices(self, request):
-    location_id = request.POST.get('location_id')
-    edifices = Edifice.objects.filter(location_id=location_id).order_by('edifice')
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-    return JsonResponse(data, safe=False)
-
-  def save_form(self, request):
-    form = self.get_form()
-    if form.is_valid():
-      form.save()
-      return JsonResponse({"success": "Piso y Ala guardados correctamente"})
-    else:
-      return self.form_invalid(form)
-
-  def form_invalid(self, form):
-    errors = form.errors.get_json_data()
-    return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
-
-
   #       province_id = request.POST.get('province_id')
 
   #         locations = Location.objects.all()
