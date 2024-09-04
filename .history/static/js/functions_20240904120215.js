@@ -148,7 +148,7 @@ $(document).ready(function() {
       theme:'bootstrap',
     });
 
-    $('#form_id').on('submit', function(e) {
+    $('#{{form_id}}').on('submit', function(e) {
       e.preventDefault();
       let params = new FormData(this);
       submit_with_ajax('your-submit-url', params, function() {

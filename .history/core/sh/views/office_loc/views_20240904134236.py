@@ -183,27 +183,17 @@ class OfficeLocUpadateView(UpdateView):
 
     if action == 'search_location':
       province_id = post_data.get('province_id')
-      locations = Location.objects.all()
       if province_id:
-        try:
-          province_id = int(province_id)
-          locations = locations.filter(province_id=province_id)
-          data = [{'id': l.id, 'name': l.location} for l in locations]
-        except ValueError:
-          pass
+        locations = Location.objects.filter(province_id=province_id)
+        data = [{'id': l.id, 'name': l.location} for l in locations]
       else:
         data = {'Error': 'No se proporcionó un ID de provincia válido'}
 
     elif action ==  'search_edifice':
       location_id = post_data.get('location_id')
-      edifices = Edifice.objects.all()
       if location_id:
-        try:
-          location_id = int(location_id)
-          edifices = edifices.filter(location_id=location_id)
-          data = [{'id': e.id, 'name': e.edifices} for e in edifices]
-        except ValueError:
-          pass
+        edifices = Edifice.objects.filter(location_id=location_id)
+        data = [{'id': e.id, 'name': e.edifices} for e in edifices]
       else:
         data = {'Error': 'No se proporcionó un ID de Localidad válido'}
 
@@ -211,8 +201,8 @@ class OfficeLocUpadateView(UpdateView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Locación de Oficinas ( Piso / Ala )'
-    context['title'] = 'Editar Locación de Oficina ( Piso / Ala )'
+    context['page_title'] = 'Locación de Oficinas ( Piso / Ala)'
+    context['title'] = 'Editar Locación de Oficina ( Piso / Ala)'
     context['btn_add_id'] = 'office_loc_add'
     context['entity'] = 'Locacion de Oficinas'
     context['list_url'] = reverse_lazy('sh:office_loc_list')
@@ -222,16 +212,13 @@ class OfficeLocUpadateView(UpdateView):
 
     office_loc = self.get_object()
 
-    context['form'].fields['location'].queryset = Location.objects.filter(
-      province = office_loc.edifice.location.province
-    ).order_by('location')
+    context['form'].fields['edifice'].queryset =  Edifice.objects.filter(
+      province = office_loc.edifice.location.province.province,
+      location = office_loc.edifice.location.location
+    )
 
-    context['form'].fields['edifice'].queryset = Edifice.objects.filter(
-      location = office_loc.edifice.location
-    ).order_by('edifice')
-
-    context['form'].initial['province'] = office_loc.edifice.location.province.id if office_loc.edifice.location.province else None
-    context['form'].initial['location'] = office_loc.edifice.location.id if office_loc.edifice.location else None
+    context['form'].initial['province'] = office_loc.edifice.location.province.province if office_loc.edifice.location.province else None
+    context['form'].initial['location'] = office_loc.edifice.location.location if office_loc.edifice.location else None
 
     context['form'].fields['edifice'].widget.attrs.update({
       'data-preselected': self.object.edifice.id if self.object.edifice else ''

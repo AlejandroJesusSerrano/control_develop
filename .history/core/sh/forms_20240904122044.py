@@ -259,7 +259,7 @@ class DependencyForm(forms.ModelForm):
 # Office Loc Form
 class OfficeLocForm(forms.ModelForm):
   province = forms.ModelChoiceField(
-    queryset = Province.objects.all(),
+    queryset = Location.province.objects.all(),
     widget = forms.Select(attrs={'class': 'form-control select2'}),
     required = False
   )
@@ -292,7 +292,7 @@ class OfficeLocForm(forms.ModelForm):
       })
     }
     help_texts = {
-      'wing': 'En caso de no tener un nombre de ala, se recomienda poner el nombre de la calle hacia la que mira el ala.'
+      'wing': 'En caso de no tener un nombre de ala se recomienda poner el nombre de la calle hacia la que mira el ala.'
     }
 
   def __init__(self, *args, **kwargs):
@@ -305,10 +305,11 @@ class OfficeLocForm(forms.ModelForm):
       office_loc = self.instance
 
       self.fields['location'].queryset = Location.objects.filter(
-        province = self.instance.edifice.location.province
+        province = self.instance.location.province
       )
 
       self.fields['edifice'].queryset = Edifice.objects.filter(
+        province = self.instance.edifice.location.province,
         location = self.instance.edifice.location
       )
 
@@ -316,7 +317,7 @@ class OfficeLocForm(forms.ModelForm):
       if 'province' in self.data:
         try:
           province_id = int(self.data.get('province'))
-          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+          self.fields['location'].queryset = Location.objects.fileter(province_id=province_id)
         except:
           pass
 

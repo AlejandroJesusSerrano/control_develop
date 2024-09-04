@@ -292,7 +292,7 @@ class OfficeLocForm(forms.ModelForm):
       })
     }
     help_texts = {
-      'wing': 'En caso de no tener un nombre de ala, se recomienda poner el nombre de la calle hacia la que mira el ala.'
+      'wing': 'En caso de no tener un nombre de ala se recomienda poner el nombre de la calle hacia la que mira el ala.'
     }
 
   def __init__(self, *args, **kwargs):
@@ -316,7 +316,7 @@ class OfficeLocForm(forms.ModelForm):
       if 'province' in self.data:
         try:
           province_id = int(self.data.get('province'))
-          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+          self.fields['location'].queryset = Location.objects.fileter(province_id=province_id)
         except:
           pass
 

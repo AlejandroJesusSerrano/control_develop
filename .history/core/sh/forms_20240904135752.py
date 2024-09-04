@@ -316,7 +316,7 @@ class OfficeLocForm(forms.ModelForm):
       if 'province' in self.data:
         try:
           province_id = int(self.data.get('province'))
-          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+          self.fields['location'].queryset = Location.objects.fileter(province_id=province_id)
         except:
           pass
 

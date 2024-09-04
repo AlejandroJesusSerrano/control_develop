@@ -71,16 +71,15 @@ function updateOptions(url, data, selectElement, preselectedValue) {
       $.each(data, function (key, value) {
         options += '<option value="' + value.id + '">' + value.name + '</option>';
       });
-      selectElement.html(options);
+      selectElement.html(options).trigger('change');
 
+      selectElement.trigger('change'); 
       selectElement.select2({
         theme: 'bootstrap'
       });
 
       if (preselectedValue) {
         selectElement.val(preselectedValue).trigger('change');
-      } else {
-        selectElement.trigger('change');
       }
 
     } else if(data.hasOwnProperty('error')) {
@@ -110,18 +109,3 @@ function initializeSelects() {
   }
 
 }
-
-// START
-
-$(document).ready(function() {
-  initializeSelects();
-
-  $('select[name="province"]').on('change', function(){
-    updateLocationOptions($(this).val());
-  });
-
-  $('select[name="location"]').on('change', function(){
-    updateEdificeOptions($(this).val());
-  });
-
-});

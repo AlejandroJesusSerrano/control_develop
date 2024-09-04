@@ -124,46 +124,24 @@ class OfficeLocUpadateView(UpdateView):
 
   def post(self, request, *args, **kwargs):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      data = {}
-      try:
-        action = request.POST.get('action')
-        if action == 'search_location':
-          province_id = request.POST.get('province_id')
+        try:
+            action = request.POST.get('action')
+            if action == 'search_location' or action == 'search_edifice':
+                data = self.handle_search_action(action, request.POST)
+                return JsonResponse(data, safe=False)
 
-          locations = Location.objects.all()
-          if province_id:
-            locations = locations.filter(province_id=province_id)
+            form = OfficeLocForm(request.POST, instance=self.get_object())
+            if form.is_valid():
+                form.save()
+                return JsonResponse({"success": "Locación de Oficina actualizada correctamente"}, status=200)
+            else:
+                return JsonResponse({"error": "Formulario no válido", "form_errors": form.errors.get_json_data()}, status=400)
 
-          data = [{'id': l.id, 'name': l.location} for l in locations]
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
-        elif action == 'search_edifice':
-          location_id = request.POST.get('location_id')
+    return super().post(request, *args, **kwargs)
 
-          edifices = Edifice.objects.all()
-          if location_id:
-            edifices = edifices.filter(location_id=location_id)
-
-          data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-
-        else:
-          form = OfficeLocForm(request.POST)
-          if form.is_valid():
-            try:
-              form.save()
-              return JsonResponse({"success": "Locación de Oficina agregada corectamente"}, status=200)
-            except Exception as e:
-              return JsonResponse({"error":f"Error al guardar la locación de edificio: {str(e)}"}, status=400)
-          else:
-            errors = form.errors.get_json_data()
-            return JsonResponse({"error": "Formulario no válido", "form_errors":errors}, status=400)
-
-        return JsonResponse(data, safe=False)
-
-      except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400, safe=False)
-
-    else:
-      return super().post(request, *args, **kwargs)
 
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -178,63 +156,57 @@ class OfficeLocUpadateView(UpdateView):
       return self.render_to_response(context)
 
   def handle_search_action(self, action, post_data):
-
     data = []
 
-    if action == 'search_location':
-      province_id = post_data.get('province_id')
-      locations = Location.objects.all()
-      if province_id:
-        try:
-          province_id = int(province_id)
-          locations = locations.filter(province_id=province_id)
-          data = [{'id': l.id, 'name': l.location} for l in locations]
-        except ValueError:
-          pass
-      else:
-        data = {'Error': 'No se proporcionó un ID de provincia válido'}
+    try:
+        if action == 'search_location':
+            province_id = post_data.get('province_id')
+            if province_id:
+                locations = Location.objects.filter(province_id=province_id).order_by('location')
+                data = [{'id': l.id, 'name': l.location} for l in locations]
+            else:
+                data = {'error': 'No se proporcionó un ID de provincia válido'}
 
-    elif action ==  'search_edifice':
-      location_id = post_data.get('location_id')
-      edifices = Edifice.objects.all()
-      if location_id:
-        try:
-          location_id = int(location_id)
-          edifices = edifices.filter(location_id=location_id)
-          data = [{'id': e.id, 'name': e.edifices} for e in edifices]
-        except ValueError:
-          pass
-      else:
-        data = {'Error': 'No se proporcionó un ID de Localidad válido'}
+        elif action == 'search_edifice':
+            location_id = post_data.get('location_id')
+            if location_id:
+                edifices = Edifice.objects.filter(location_id=location_id).order_by('edifice')
+                data = [{'id': e.id, 'name': e.edifice} for e in edifices]
+            else:
+                data = {'error': 'No se proporcionó un ID de localidad válido'}
+
+    except ValueError as e:
+        data = {'error': str(e)}
 
     return data
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Locación de Oficinas ( Piso / Ala )'
-    context['title'] = 'Editar Locación de Oficina ( Piso / Ala )'
-    context['btn_add_id'] = 'office_loc_add'
-    context['entity'] = 'Locacion de Oficinas'
-    context['list_url'] = reverse_lazy('sh:office_loc_list')
-    context['form_id'] = 'officeLocForm'
-    context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context.update({
+        'page_title': 'Locación de Oficinas ( Piso / Ala )',
+        'title': 'Editar Locación de Oficina ( Piso / Ala )',
+        'btn_add_id': 'office_loc_add',
+        'entity': 'Locacion de Oficinas',
+        'list_url': reverse_lazy('sh:office_loc_list'),
+        'form_id': 'officeLocForm',
+        'action': 'edit',
+        'bg_color': 'bg-warning'
+    })
 
     office_loc = self.get_object()
 
     context['form'].fields['location'].queryset = Location.objects.filter(
-      province = office_loc.edifice.location.province
+        province=office_loc.edifice.location.province
     ).order_by('location')
 
     context['form'].fields['edifice'].queryset = Edifice.objects.filter(
-      location = office_loc.edifice.location
+        location=office_loc.edifice.location
     ).order_by('edifice')
 
-    context['form'].initial['province'] = office_loc.edifice.location.province.id if office_loc.edifice.location.province else None
-    context['form'].initial['location'] = office_loc.edifice.location.id if office_loc.edifice.location else None
-
-    context['form'].fields['edifice'].widget.attrs.update({
-      'data-preselected': self.object.edifice.id if self.object.edifice else ''
+    # Asegúrate de que los initial se configuren correctamente
+    context['form'].initial.update({
+        'province': office_loc.edifice.location.province.id if office_loc.edifice.location.province else None,
+        'location': office_loc.edifice.location.id if office_loc.edifice.location else None
     })
 
     return context

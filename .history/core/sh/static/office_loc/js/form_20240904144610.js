@@ -34,15 +34,34 @@ function show_errors_in_form(errors){
 }
 
 function updateLocationOptions(province_id) {
+  console.log("Provincia seleccionada:", province_id);  // Depuración
   if (province_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_location',
-    'province_id': province_id,
+    updateOptions('/your-url-to-get-locations/', {  // Asegúrate de que esta URL sea correcta
+      'action': 'search_location',
+      'province_id': province_id,
+      'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
     }, $('select[name="location"]'), $('#id_location').data('preselected'));
   } else {
-    $('select[name="location"]').html('<option value="">----------</option>');
+    console.log("No se seleccionó una provincia, limpiando campos de location y edifice.");  // Depuración
+    $('select[name="location"]').html('<option value="">----------</option>').trigger('change').select2({
+      theme: 'bootstrap'
+    });
+    $('select[name="edifice"]').html('<option value="">----------</option>').trigger('change').select2({
+      theme: 'bootstrap'
+    });
   }
-};
+}
+
+// function updateLocationOptions(province_id) {
+//   if (province_id) {
+//     updateOptions(window.location.pathname, {
+//     'action': 'search_location',
+//     'province_id': province_id,
+//     }, $('select[name="location"]'), $('#id_location').data('preselected'));
+//   } else {
+//     $('select[name="location"]').html('<option value="">----------</option>');
+//   }
+// };
 
 function updateEdificeOptions(location_id) {
   if (location_id) {

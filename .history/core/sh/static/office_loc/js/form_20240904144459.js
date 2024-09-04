@@ -35,14 +35,34 @@ function show_errors_in_form(errors){
 
 function updateLocationOptions(province_id) {
   if (province_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_location',
-    'province_id': province_id,
+    updateOptions('/your-url-to-get-locations/', {  // Asegúrate de que esta URL sea correcta
+      'action': 'search_location',
+      'province_id': province_id,
+      'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()  // Incluye el token CSRF
     }, $('select[name="location"]'), $('#id_location').data('preselected'));
   } else {
-    $('select[name="location"]').html('<option value="">----------</option>');
+    // Limpiar el campo `location` y reinicializar select2
+    $('select[name="location"]').html('<option value="">----------</option>').trigger('change').select2({
+      theme: 'bootstrap'
+    });
+
+    // Limpiar también el campo `edifice` ya que depende de `location`
+    $('select[name="edifice"]').html('<option value="">----------</option>').trigger('change').select2({
+      theme: 'bootstrap'
+    });
   }
 };
+
+// function updateLocationOptions(province_id) {
+//   if (province_id) {
+//     updateOptions(window.location.pathname, {
+//     'action': 'search_location',
+//     'province_id': province_id,
+//     }, $('select[name="location"]'), $('#id_location').data('preselected'));
+//   } else {
+//     $('select[name="location"]').html('<option value="">----------</option>');
+//   }
+// };
 
 function updateEdificeOptions(location_id) {
   if (location_id) {

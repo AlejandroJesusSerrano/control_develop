@@ -292,40 +292,29 @@ class OfficeLocForm(forms.ModelForm):
       })
     }
     help_texts = {
-      'wing': 'En caso de no tener un nombre de ala, se recomienda poner el nombre de la calle hacia la que mira el ala.'
+      'wing': 'En caso de no tener un nombre de ala se recomienda poner el nombre de la calle hacia la que mira el ala.'
     }
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-    self.fields['location'].queryset = Location.objects.none()
-    self.fields['edifice'].queryset = Edifice.objects.none()
+    if 'province' in self.data:
+      try:
+        province_id = int(self.data.get('province'))
+        self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
+      except(ValueError, TypeError):
+        pass
 
-    if self.instance.pk:
-      office_loc = self.instance
+    if 'location' in self.data:
+      try:
+        location_id = int(self.data.get('location'))
+        self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id).order_by('edifice')
+      except(ValueError, TypeError):
+        pass
 
-      self.fields['location'].queryset = Location.objects.filter(
-        province = self.instance.edifice.location.province
-      )
-
-      self.fields['edifice'].queryset = Edifice.objects.filter(
-        location = self.instance.edifice.location
-      )
-
-    else:
-      if 'province' in self.data:
-        try:
-          province_id = int(self.data.get('province'))
-          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
-        except:
-          pass
-
-      if 'location' in self.data:
-        try:
-          location_id = int(self.data.get('location'))
-          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id)
-        except:
-          pass
+    elif self.instance.pk:
+      self.fields['location'].queryset = Location.objects.filter(province=self.instance.edifice.location.province).order_by('location')
+      self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.edifice.location).order_by('edifice')
 
   def clean(self):
     cleaned_data = super().clean()

@@ -211,8 +211,8 @@ class OfficeLocUpadateView(UpdateView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Locación de Oficinas ( Piso / Ala )'
-    context['title'] = 'Editar Locación de Oficina ( Piso / Ala )'
+    context['page_title'] = 'Locación de Oficinas ( Piso / Ala)'
+    context['title'] = 'Editar Locación de Oficina ( Piso / Ala)'
     context['btn_add_id'] = 'office_loc_add'
     context['entity'] = 'Locacion de Oficinas'
     context['list_url'] = reverse_lazy('sh:office_loc_list')

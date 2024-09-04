@@ -64,5 +64,6 @@
 {% endblock form %}
 
 {% block form_scripts %}
+  <script> let form_id = "{{form_id}}";</script>
   <script src="{% static 'office_loc/js/form.js' %}"></script>
 {% endblock form_scripts %}

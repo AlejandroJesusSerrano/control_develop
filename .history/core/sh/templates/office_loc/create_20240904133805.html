@@ -53,7 +53,7 @@
 <div class="form-group">
   <label for="wing">Ala:</label>
   {{ form.wing }}
-  <small class="form-text text-muted text-center">{{ form.wing.help_text }}</small>
+  <small class="form-text text-muted">{{ form.floor.help_text }}</small>
   {% if form.wing.errors %}
     <div class="invalid-feedback d-block">
       {{ form.wing.errors|join:"<br>" }}
@@ -64,5 +64,6 @@
 {% endblock form %}
 
 {% block form_scripts %}
+  <script> let form_id = "{{form_id}}";</script>
   <script src="{% static 'office_loc/js/form.js' %}"></script>
 {% endblock form_scripts %}
