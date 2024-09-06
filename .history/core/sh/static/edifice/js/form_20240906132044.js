@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-/// SELECT 2
-=======
 // SELECT 2
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
 
 $(document).ready(function() {
   $('.select2').select2({
@@ -37,31 +33,6 @@ function show_errors_in_form(errors){
   });
 }
 
-<<<<<<< HEAD
-function updateLocationOptions(province_id) {
-  if (province_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_location',
-    'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
-  } else {
-    $('select[name="location"]').html('<option value="">----------</option>');
-  }
-};
-
-function updateEdificeOptions(location_id) {
-  if (location_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_edifice',
-    'location_id': location_id,
-    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
-  } else {
-    $('select[name="edifice"]').html('<option value="">----------</option>');
-  }
-};
-
-=======
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
 // UPDATE OPTIONS
 
 function updateOptions(url, data, selectElement, preselectedValue) {
@@ -78,23 +49,15 @@ function updateOptions(url, data, selectElement, preselectedValue) {
       $.each(data, function (key, value) {
         options += '<option value="' + value.id + '">' + value.name + '</option>';
       });
-<<<<<<< HEAD
-      selectElement.html(options);
-=======
       selectElement.html(options).trigger('change');
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
 
+      selectElement.trigger('change'); 
       selectElement.select2({
         theme: 'bootstrap'
       });
 
       if (preselectedValue) {
         selectElement.val(preselectedValue).trigger('change');
-<<<<<<< HEAD
-      } else {
-        selectElement.trigger('change');
-=======
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
       }
 
     } else if(data.hasOwnProperty('error')) {
@@ -113,56 +76,31 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 
 function initializeSelects() {
   const province_id = $('select[name="province"]').val();
-<<<<<<< HEAD
-  const location_id = $('select[name="location"]').val();
 
   if (province_id) {
     updateLocationOptions(province_id);
   }
 
-  if (location_id) {
-    updateEdificeOptions(location_id);
-=======
-
-  if (province_id) {
-    updateLocationsOptions(province_id);
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
-  }
-
 }
 
-<<<<<<< HEAD
-=======
 // UPDATE OPTIONS
 
-function updateLocationsOptions(province_id) {
-  if (province_id) {
-    updateOptions(window.location.pathname, {
-      'action': 'search_locations',
-      'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
-  }
+function updateLocationOptions(province_id) {
+  updateOptions(window.location.pathname, {
+    'action': 'search_models',
+    'province_id': province_id,
+  }, $('select[name="location"]'), $('#id_location').data('preselected'));
 };
 
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
+
 // START
 
 $(document).ready(function() {
   initializeSelects();
 
   $('select[name="province"]').on('change', function(){
-<<<<<<< HEAD
     updateLocationOptions($(this).val());
   });
 
-  $('select[name="location"]').on('change', function(){
-    updateEdificeOptions($(this).val());
-  });
-
-=======
-    updateLocationsOptions($(this).val());
-  });
-
   initializeFormSubmission('#myForm', 'edit')
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
 });
