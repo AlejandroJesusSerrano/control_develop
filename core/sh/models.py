@@ -175,7 +175,7 @@ class Dependency(models.Model):
 
   def save(self, *args, **kwargs):
     self.dependency = self.dependency.upper()
-    super(Dependency, self).save(*args, *kwargs)
+    super(Dependency, self).save(*args, **kwargs)
 
   def __str__(self):
     return self.dependency
@@ -199,12 +199,25 @@ class Office_Loc(models.Model):
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
+  def save(self, *args, **kwargs):
+    self.wing = self.wing.upper()
+    self.floor = self.floor
+    super(Office_Loc, self).save(*args, **kwargs)
+
   def __str__(self):
     return f'Piso: {self.floor} Ala: {self.wing}'
 
   def toJSON(self):
     item = model_to_dict(self)
+    item['location'] = self.edifice.location.location
+    item['edifice'] = self.edifice.edifice
     return item
+
+  class Meta:
+    verbose_name = 'Locación de Oficina'
+    verbose_name_plural = 'Locaciones de Oficinas'
+    db_table = 'locaciones_oficinas'
+    ordering = ['id']
 
 class Office(models.Model):
   dependency = models.ForeignKey(Dependency, related_name = 'offices_dependencies', verbose_name = 'Dependencia', on_delete=models.CASCADE)

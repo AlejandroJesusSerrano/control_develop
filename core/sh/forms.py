@@ -2,7 +2,7 @@ from django.forms import *
 from django import forms
 from django.forms import ModelForm, Select, TextInput, Textarea, FileInput, DateInput
 
-from core.sh.models import Connection_Type, Dependency, Dev_Status, Device, Edifice, Location, Move_Type, Movements, Office, Patch_Port, Patchera, Province, Brand, Dev_Type, Employee_Status, Employee, Rack, Suply, Suply_Type, Switch_Port, Techs, Dev_Model, Wall_Port, Switch
+from core.sh.models import Connection_Type, Dependency, Dev_Status, Device, Edifice, Location, Move_Type, Movements, Office, Office_Loc, Patch_Port, Patchera, Province, Brand, Dev_Type, Employee_Status, Employee, Rack, Suply, Suply_Type, Switch_Port, Techs, Dev_Model, Wall_Port, Switch
 
 # Brand Forms
 class BrandForm(forms.ModelForm):
@@ -255,6 +255,72 @@ class DependencyForm(forms.ModelForm):
       raise ValidationError("Esta dependencia ya existe")
 
     return dependency
+
+# Office Location Form
+class Office_Loc_Form(forms.ModelForm):
+
+  location = forms.ModelChoiceField(
+    queryset=Location.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
+  class Meta:
+    model = Office_Loc
+    fields = [
+      'edifice', 'floor', 'wing'
+    ]
+    widgets = {
+      'edifice': Select(
+        attrs={
+          'class': 'form-control select2'
+          }),
+      'floor': TextInput(
+        attrs={
+          'class': 'form-control', 'placeholder': 'Ingre el Piso'
+          }),
+      'wing': TextInput(
+        attrs={
+          'class': 'form-control', 'placeholder': 'Injgrese el Ala'
+          }),
+    }
+    helptext = {
+      'floor': 'Ingrese el piso ingresando 2 numeros, ej. 01, y PB para Planta baja',
+      'wing': 'En caso de no haber una desigancion del ala, se recomienda ingresar el nombre de la calle a la que mira la misma'
+    }
+
+  def __init__(self, *args, **kwargs):
+    super(Office_Loc_Form, self).__init__(*args, **kwargs)
+
+    self.fields['edifice'].queryset = Edifice.objects.none()
+
+    if self.instance.pk:
+      office_loc = self.instance
+
+      self.fields['edifice'].queryset = Edifice.objects.filter(
+        location = self.instance.edifice.location
+      )
+
+    else:
+
+      if 'location' in self.data:
+        try:
+          location_id = int(self.data.get('location'))
+          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id)
+        except:
+          pass
+
+  def clean(self):
+    edifice = self.cleaned_data.get('edifice')
+    location = edifice.location if edifice else None
+    floor = self.cleaned_data.get('floor')
+    wing = self.cleaned_data.get('wing').upper()
+
+    if Office_Loc.objects.filter(edifice=edifice, edifice__location=location, floor=floor, wing=wing).exists():
+      self.add_error('floor', f"Ya existe un registro con los datos que intenta cargar")
+      self.add_error('wing', f"Ya existe un registro con los datos que intenta cargar")
+    cleaned_data = super().clean()
+    return cleaned_data
 
 # Office Forms
 class OfficeForm(ModelForm):

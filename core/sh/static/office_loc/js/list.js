@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  $('#ofice_loc_table').DataTable({
+  $('#office_loc_table').DataTable({
     responsive: true,
     autowidth: false,
     destroy: true,
