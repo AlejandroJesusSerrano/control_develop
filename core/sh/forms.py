@@ -236,10 +236,23 @@ class EdificeForm(forms.ModelForm):
 # Dependency Forms
 class DependencyForm(forms.ModelForm):
 
+  province=forms.ModelChoiceField(
+    queryset=Province.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
   class Meta:
     model = Dependency
-    fields = '__all__'
+    fields = [
+      'location', 'dependency'
+      ]
     widgets = {
+      'location': Select(
+        attrs={
+          'class': 'form-control select2',
+        }
+      ),
       'dependency': TextInput(
         attrs={
           'class': 'form-control',
@@ -248,18 +261,40 @@ class DependencyForm(forms.ModelForm):
       ),
     }
 
-  def clean_dependency(self):
-    dependency = self.cleaned_data.get('dependency')
+  def __init__(self, *args, **kwargs):
+    super(DependencyForm, self).__init__(*args, **kwargs)
 
-    if Dependency.objects.filter(dependency__iexact=dependency).exists():
+    self.fields['location'].queryset = Location.objects.none()
+
+    if self.instance.pk:
+      dependency = self.instance
+
+      self.fields['location'].queryset = Location.objects.filter(
+        province = self.instance.location.province
+      )
+
+    else:
+      if 'province' in self.data:
+        try:
+          province_id = int(self.data.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+        except:
+          pass
+
+  def clean(self):
+    dependency = self.cleaned_data.get('dependency').upper()
+    location = self.cleaned_data.get('location')
+
+    if Dependency.objects.filter(location=location, dependency__iexact=dependency).exists():
       raise ValidationError("Esta dependencia ya existe")
 
-    return dependency
+    cleaned_data = super().clean()
+    return cleaned_data
 
 # Office Location Form
 class Office_Loc_Form(forms.ModelForm):
 
-  location = forms.ModelChoiceField(
+  location=forms.ModelChoiceField(
     queryset=Location.objects.all(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
     required=False
@@ -284,9 +319,9 @@ class Office_Loc_Form(forms.ModelForm):
           'class': 'form-control', 'placeholder': 'Injgrese el Ala'
           }),
     }
-    helptext = {
-      'floor': 'Ingrese el piso ingresando 2 numeros, ej. 01, y PB para Planta baja',
-      'wing': 'En caso de no haber una desigancion del ala, se recomienda ingresar el nombre de la calle a la que mira la misma'
+    help_texts = {
+      'floor': '* Ingrese el piso ingresando 2 numeros, ej. 01, y PB para Planta baja',
+      'wing': '* En caso de no haber una desigancion del ala, se recomienda ingresar el nombre de la calle a la que mira la misma'
     }
 
   def __init__(self, *args, **kwargs):

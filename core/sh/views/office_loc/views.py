@@ -105,51 +105,51 @@ class Office_Loc_UpdateView(UpdateView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+      return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
       if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         data = {}
         try:
-            action = request.POST.get('action')
+          action = request.POST.get('action')
 
-            if action == 'search_edifice':
-                location_id = request.POST.get('location_id')
-                edifices = Edifice.objects.filter(location_id=location_id)
-                data = [{'id':e.id, 'name': e.edifice} for e in edifices]
+          if action == 'search_edifice':
+            location_id = request.POST.get('location_id')
+            edifices = Edifice.objects.filter(location_id=location_id)
+            data = [{'id':e.id, 'name': e.edifice} for e in edifices]
 
+          else:
+            self.object = self.get_object()
+            form = self.get_form()  # Se ha añadido para obtener el formulario con la instancia actual
+            if form.is_valid():
+              try:
+                form.save()
+                return JsonResponse({"success": "Locación de Oficina actualizada correctamente"}, status=200)
+              except Exception as e:
+                return JsonResponse({"error": f"Error al actualizar la locación de oficina: {str(e)}"}, status=400)
             else:
-                self.object = self.get_object()
-                form = self.get_form()  # Se ha añadido para obtener el formulario con la instancia actual
-                if form.is_valid():
-                    try:
-                        form.save()
-                        return JsonResponse({"success": "Locación de Oficina actualizada correctamente"}, status=200)
-                    except Exception as e:
-                        return JsonResponse({"error": f"Error al actualizar la locación de oficina: {str(e)}"}, status=400)
-                else:
-                    errors = form.errors.get_json_data()
-                    return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
+              errors = form.errors.get_json_data()
+              return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
 
-            return JsonResponse(data, safe=False)
+          return JsonResponse(data, safe=False)
 
         except Exception as e:
-            data = {'error': str(e)}
-            return JsonResponse(data, safe=False)
+          data = {'error': str(e)}
+          return JsonResponse(data, safe=False)
       else:
         return super().post(request, *args, **kwargs)
 
     def form_invalid(self, form):
       if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-          errors = form.errors.get_json_data()
-          return JsonResponse({
-              "error": "Formulario no válido",
-              "form_errors": errors
-          }, status=400)
+        errors = form.errors.get_json_data()
+        return JsonResponse({
+          "error": "Formulario no válido",
+          "form_errors": errors
+        }, status=400)
       else:
-          context = self.get_context_data(form=form)
-          context['saved'] = False
-          return self.render_to_response(context)
+        context = self.get_context_data(form=form)
+        context['saved'] = False
+        return self.render_to_response(context)
 
 
     def handle_search_action(self, action, post_data):

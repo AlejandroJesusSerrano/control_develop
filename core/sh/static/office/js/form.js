@@ -75,24 +75,24 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 // INITALIZE SELECTS
 
 function initializeSelects() {
-  const province_id = $('select[name="province"]').val();
+  const location_id = $('select[name="location"]').val();
 
-  if (province_id) {
-    updateLocationOptions(province_id);
+  if (location_id) {
+    updateEdificeOptions(location_id);
   }
 
 }
 
 // UPDATE OPTIONS
 
-function updateLocationOptions(province_id) {
-  if (province_id) {
+function updateEdificeOptions(location_id) {
+  if (location_id) {
     updateOptions(window.location.pathname, {
-    'action': 'search_location',
-    'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+    'action': 'search_edifice',
+    'location_id': location_id,
+    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
   } else {
-    $('select[name="location"]').html('<option value="">----------</option>');
+    $('select[name="edifice"]').html('<option value="">----------</option>');
   }
 };
 
@@ -101,8 +101,8 @@ function updateLocationOptions(province_id) {
 $(document).ready(function() {
   initializeSelects();
 
-  $('select[name="province"]').on('change', function(){
-    updateLocationOptions($(this).val());
+  $('select[name="location"]').on('change', function(){
+    updateEdificeOptions($(this).val());
   });
 
   initializeFormSubmission('#myForm', 'edit')

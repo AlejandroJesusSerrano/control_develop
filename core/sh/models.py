@@ -169,6 +169,7 @@ class Edifice(models.Model):
     unique_together = ('location', 'edifice')
 
 class Dependency(models.Model):
+  location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='Localidad')
   dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia', unique=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
@@ -183,6 +184,7 @@ class Dependency(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['dependency'] = self.dependency
+    item['location'] = self.location.location
     return item
 
   class Meta:
@@ -223,6 +225,7 @@ class Office(models.Model):
   dependency = models.ForeignKey(Dependency, related_name = 'offices_dependencies', verbose_name = 'Dependencia', on_delete=models.CASCADE)
   loc = models.ForeignKey(Office_Loc, related_name = 'office_location', verbose_name = 'Piso/Ala', on_delete = models.CASCADE)
   office = models.CharField(max_length = 50, verbose_name = 'Oficina')
+  description = models.TextField(verbose_name='Descripcion', blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
@@ -241,7 +244,7 @@ class Office(models.Model):
 
 
   class Meta:
-    verbose_name = 'Officina'
+    verbose_name = 'Oficina'
     verbose_name_plural = 'Oficinas'
     db_table = 'oficina'
     ordering = ['id']
