@@ -1,0 +1,16 @@
+{% extends 'delete.html' %}
+
+{% block entity_to_delete %}
+<div class="card-body table-responsive">
+  <div class="alert alert-danger alert-dismissible">
+    <h5><i class="icon fas fa-triangle-exclamation"></i> Atención!</h5>
+      <p>
+        Estas por eliminar el registro Nro: {{object.id}}, {{del_title}} Piso: {{object.floor}} - Ala: {{object.wing}}.
+      </p>
+      <p>
+        Del edificio: {{object.edifice}}, Localidad: {{object.edifice.location}}.
+      </p>
+      ¿Deseas continuar?
+    </div>
+</div>
+{% endblock entity_to_delete %}
