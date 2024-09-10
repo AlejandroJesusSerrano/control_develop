@@ -18,14 +18,6 @@ class BrandForm(forms.ModelForm):
         }
       )
     }
-
-  def clean(self):
-    brand = self.cleaned_data.get('brand').upper()
-
-    if Brand.objects.filter(brand__iexact=brand).exists():
-      self.add_error('brand', f"La marca ya se encuentra registrada")
-    cleaned_data = super().clean()
-    return cleaned_data
 # Dev_Type
 class Dev_TypeForm(ModelForm):
 
@@ -180,6 +172,7 @@ class LocationForm(forms.ModelForm):
         }
       )
     }
+
 
 # Edifice Forms
 class EdificeForm(forms.ModelForm):
@@ -571,10 +564,8 @@ class RackForm(ModelForm):
 
   class Meta:
     model = Rack
-    fields = [
-      'rack', 'details'
-              ]
-    widgets = {
+    fields = '__all__'
+    widget = {
       'rack': TextInput(
         attrs={
           'class': 'form-control',
@@ -588,17 +579,6 @@ class RackForm(ModelForm):
         }
       )
     }
-    help_texts = {
-      'details': '* Aqui puede ingresar referencia de la ubicación, forma, y demas detalles que ayuden a individualizar el Rack'
-    }
-
-  def clean(self):
-    rack = self.cleaned_data.get('rack').upper()
-
-    if Rack.objects.filter(rack__iexact=rack).exists():
-      self.add_error('rack', f"El Rack que se quiere ingresar, ya existe")
-    cleaned_data = super().clean()
-    return cleaned_data
 
 # Patchera Forms
 class PatcheraForm(ModelForm):

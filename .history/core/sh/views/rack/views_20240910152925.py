@@ -69,7 +69,7 @@ class RackCreateView(CreateView):
       errors = form.errors.get_json_data()
       return JsonResponse({
         "error": "Formulario no válido",
-        "form_errors": errors
+        "form-errors": errors
       }, status=400)
     else:
       context = self.get_context_data(form=form)

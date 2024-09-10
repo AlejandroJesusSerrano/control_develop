@@ -571,10 +571,8 @@ class RackForm(ModelForm):
 
   class Meta:
     model = Rack
-    fields = [
-      'rack', 'details'
-              ]
-    widgets = {
+    fields = '__all__'
+    widget = {
       'rack': TextInput(
         attrs={
           'class': 'form-control',
@@ -588,15 +586,12 @@ class RackForm(ModelForm):
         }
       )
     }
-    help_texts = {
-      'details': '* Aqui puede ingresar referencia de la ubicación, forma, y demas detalles que ayuden a individualizar el Rack'
-    }
 
   def clean(self):
     rack = self.cleaned_data.get('rack').upper()
 
     if Rack.objects.filter(rack__iexact=rack).exists():
-      self.add_error('rack', f"El Rack que se quiere ingresar, ya existe")
+      self.add_error('brand', f"El Rack que se quiere ingresar, ya existe")
     cleaned_data = super().clean()
     return cleaned_data
 

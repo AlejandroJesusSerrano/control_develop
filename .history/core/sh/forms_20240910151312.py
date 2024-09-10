@@ -571,9 +571,7 @@ class RackForm(ModelForm):
 
   class Meta:
     model = Rack
-    fields = [
-      'rack', 'details'
-              ]
+    fields = '__all__'
     widgets = {
       'rack': TextInput(
         attrs={
@@ -596,7 +594,7 @@ class RackForm(ModelForm):
     rack = self.cleaned_data.get('rack').upper()
 
     if Rack.objects.filter(rack__iexact=rack).exists():
-      self.add_error('rack', f"El Rack que se quiere ingresar, ya existe")
+      self.add_error('brand', f"El Rack que se quiere ingresar, ya existe")
     cleaned_data = super().clean()
     return cleaned_data
 

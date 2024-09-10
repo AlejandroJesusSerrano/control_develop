@@ -335,15 +335,13 @@ class Connection_Type(models.Model):
     ordering = ['id']
 
 class Rack(models.Model):
-  rack = models.CharField(max_length = 6, verbose_name = 'Rack', unique=True)
+  rack = models.CharField(max_length = 6, verbose_name = 'Rack')
   details = models.TextField(verbose_name = 'Detalle')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
-  def save(self,*args, **kwargs):
-    self.rack = self.rack.upper()
-    super(Rack, self).save(*args, **kwargs)
-
+  def save(self)
+  
   def __str__(self):
     return f'{self.rack}'
 

@@ -571,9 +571,7 @@ class RackForm(ModelForm):
 
   class Meta:
     model = Rack
-    fields = [
-      'rack', 'details'
-              ]
+    fields = '__all__'
     widgets = {
       'rack': TextInput(
         attrs={
