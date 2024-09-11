@@ -27,7 +27,7 @@ class BrandForm(forms.ModelForm):
     cleaned_data = super().clean()
     return cleaned_data
 # Dev_Type
-class Dev_TypeForm(forms.ModelForm):
+class Dev_TypeForm(ModelForm):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
@@ -381,7 +381,6 @@ class OfficeForm(forms.ModelForm):
       'edifice','dependency', 'loc', 'office', 'description'
       ]
     widgets = {
-      'edifice': Select(attrs={'class': 'form-control select2'}),
       'dependency': Select(attrs={'class': 'form-control select2'}),
       'loc': Select(attrs={'class': 'form-control select2'}),
       'office': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese un nombre identificatorio para la Oficina'}),
@@ -408,9 +407,7 @@ class OfficeForm(forms.ModelForm):
         location = self.instance.loc.edifice.location
       )
 
-      self.fields['loc'].queryset = Office_Loc.objects.filter(
-        edifice = self.instance.loc.edifice
-      )
+      self.fields['loc'].queryset = Office_Loc.objects.filter(edifice = self.instance.loc.edifice)
 
     else:
 
@@ -570,7 +567,7 @@ class ConnectionTypeForm(ModelForm):
     return data
 
 # Rack Forms
-class RackForm(forms.ModelForm):
+class RackForm(ModelForm):
 
   class Meta:
     model = Rack
@@ -678,96 +675,38 @@ class PatchPortForm(ModelForm):
     return data
 
 # Switch Forms
-class SwitchForm(forms.ModelForm):
-  brand = forms.ModelChoiceField(
-    queryset=Brand.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=False
-  )
-
-  location = forms.ModelChoiceField(
-    queryset=Location.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
-    required=False
-  )
-
-  edifice=forms.ModelChoiceField(
-    queryset=Edifice.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=False
-  )
+class SwitchForm(ModelForm):
 
   class Meta:
-    model = Switch
-    fields = [
-      'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'office'
-      ]
-    widgets = {
-      'model': Select(attrs={'class': 'form-control select2'}),
-      'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
-      'ports_q': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la cantidad de puertos del Switch'}),
-      'rack': Select(attrs={'class': 'form-control select2'}),
-      'switch_rack_pos': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la posición del Switch en el Rack'}),
-      'office': Select(attrs={'class': 'form-control select2'})
-    }
-    help_texts = {
-      'port_q': '* Ingrese solo números',
-      'switch_rack_pos': '* Ingrese el número de posición del switch en el rack'
-    }
-
-  def __init__(self, *args, **kwargs):
-    super(SwitchForm, self).__init__(*args, **kwargs)
-
-    self.fields['model'].queryset = Dev_Model.objects.none()
-    self.fields['office'].queryset = Office.objects.none()
-
-    if self.instance.pk:
-      switch = self.instance
-
-      self.fields['model'].queryset = Dependency.objects.filter(
-        dev_type__dev_type = 'SWITCH',
-        brand = self.instance.model.brand
-      )
-
-      self.fields['edifice'].queryet = Edifice.objects.filter(
-        location = self.instance.office.edifice.location
-      )
-
-      self.fields['office'].queryset = Office.objects.filter(
-        edifice = self.instance.office.edifice
-      )
-
-    else:
-      if 'location' in self.data:
-        try:
-          location_id = int(self.data.get('location'))
-          self.fields['location'].queryset = Location.objects.filter(location_id=location_id)
-        except:
-          pass
-
-      if 'edifice' in self.data:
-        try:
-          edifice_id = int(self.data.get('edifice'))
-          self.fields['edifice'].queryset = Edifice.objects.filter(edifice_id=edifice_id)
-        except:
-          pass
-
-      if 'brand' in self.data:
-        try:
-          brand_id = int(self.data.get('brand'))
-          self.fields['brand'].queryset = Brand.objects.filter(brand_id=brand_id)
-        except:
-          pass
-
-  def clean(self):
-    model = self.cleaned_data.get('model')
-    serial_n = self.cleaned_data.get('serial_n')
-
-    if Switch.objects.filter(model=model, serial_n=serial_n).exists():
-      self.add_error('model', f"Ya se encuentra cargado este modelo de Switch")
-      self.add_error('serial_n', f"El número de serie ya se encuentra registrado y asociado al mismo modelo")
-    cleaned_data = super().clean()
-    return cleaned_data
+      model = Switch
+      fields = '__all__'
+      widget = {
+        'brand': Select(
+          attrs={
+            'placeholder': 'Seleccione la marca del Switch'
+          }
+        ),
+        'serial_n': TextInput(
+          attrs={
+            'placeholder': 'Ingrese el número de serie'
+          }
+        ),
+        'ports_q': TextInput(
+          attrs={
+            'placeholder': 'Ingrese la cantidad de puertos del Switch'
+          }
+        ),
+        'rack': Select(
+          attrs={
+            'placeholder': 'Seleccione el Rack donde está instalado el Switch'
+          }
+        ),
+        'switch_rack_pos': TextInput(
+          attrs={
+            'placeholder': 'Ingrese la posición del Switch en el Rack'
+          }
+        )
+      }
 
   def save(self, commit=True):
     data={}

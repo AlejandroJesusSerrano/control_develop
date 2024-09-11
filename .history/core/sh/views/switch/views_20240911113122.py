@@ -24,7 +24,7 @@ class SwitchListView(ListView):
       action = request.POST['action']
       if action == 'searchdata':
         switches = Switch.objects.all()
-        data = [s.toJSON() for s in switches]
+        data = [d.toJSON() for s in switches]
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
@@ -60,12 +60,15 @@ class SwitchCreateView(CreateView):
       try:
         action = request.POST.get('action')
         if action == 'search_models':
+          dev_type_id = request.POST.get('dev_type_id')
           brand_id = request.POST.get('brand_id')
 
-          models = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
-
+          models = Dev_Model.objects.all()
+          if dev_type_id:
+            models = models.filter(dev_type_id=dev_type_id)
           if brand_id:
             models = models.filter(brand_id=brand_id)
+
           data = [{'id': m.id, 'name': m.dev_model} for m in models]
 
         elif action == 'search_edifice':
@@ -128,11 +131,14 @@ class SwitchUpadateView(UpdateView):
         action = request.POST.get('action')
 
         if action == 'search_models':
+          dev_type_id = request.POST.get('dev_type_id')
           brand_id = request.POST.get('brand_id')
 
-          models = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
+          models = Dev_Model.objects.all()
+          if dev_type_id:
+              models = models.filter(dev_type_id=dev_type_id)
           if brand_id:
-            models = models.filter(brand_id=brand_id)
+              models = models.filter(brand_id=brand_id)
 
           data = [{'id': m.id, 'name': m.dev_model} for m in models]
 
@@ -236,33 +242,11 @@ class SwitchUpadateView(UpdateView):
 
     switch = self.get_object()
 
-    context['form'].fields['model'].queryset = Dev_Model.objects.filter(
-      dev_type = switch.model.dev_type,
-      brand = switch.model.brand
-    )
+    context['model'].fields
+
     context['form'].fields['edifice'].queryset = Edifice.objects.filter(
       location = switch.office.edifice.location
     )
-    context['form'].fields['office'].queryset = Office.objects.filter(
-      office = switch.office.edifice
-    )
-
-    context['form'].initial['brand'] = switch.model.brand.id if switch.model.brand else None
-    context['form'].initial['dev_type'] = switch.model.dev_type.id if switch.model.dev_type else 'SWITCH'
-    context['form'].initial['model'] = switch.model.id if switch.model else None
-    context['form'].initial['location'] = switch.office.edifice.location.id if switch.office.edifice.location else None
-    context['form'].initial['edifice'] = switch.office.edifice.id if switch.office.edifice else None
-    context['form'].initial['office'] = switch.office.id if switch.office else None
-
-    context['form'].fields['model'].widget.attrs.update({
-      'data-preselected': self.object.model.id if self.object.model else ''
-    })
-    context['form'].fields['edifice'].widget.attrs.update({
-      'data-preselected': self.object.office.edifice.id if self.object.office.edifice else ''
-    })
-    context['form'].fields['office'].widget.attrs.update({
-      'data-preselected': self.object.office.id if self.object.office else ''
-    })
 
     return context
 

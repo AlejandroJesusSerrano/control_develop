@@ -400,10 +400,10 @@ class Patch_Port(models.Model):
 
 class Switch(models.Model):
   model = models.ForeignKey(Dev_Model, related_name = 'switch_model', verbose_name = 'Modelo', on_delete = models.CASCADE)
-  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True)
+  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True, unique=True)
   ports_q = models.CharField(max_length = 2, verbose_name = 'Cantidad de Puertos')
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
-  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
+  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True, unique=True)
   office = models.ForeignKey(Office, related_name = 'switch_office', verbose_name = 'Oficina', on_delete = models.CASCADE, blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
@@ -429,7 +429,6 @@ class Switch(models.Model):
     verbose_name_plural = 'Switches'
     db_table = 'switchs'
     ordering = ['id']
-    unique_together = ('model', 'serial_n')
 
 class Switch_Port(models.Model):
   switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)

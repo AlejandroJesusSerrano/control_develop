@@ -51,7 +51,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_switch_rack_pos">Posición en el Rack:</label>
+  <label for="id_switch_rack_pos">Descripción:</label>
   {{ form.switch_rack_pos }}
   {% if form.switch_rack_pos.errors %}
   <div class="invalid-feedback d-block">
@@ -61,24 +61,35 @@
 </div>
 
 <div class="form-group">
-  <label for="id_location">Localidad:</label>
-  {{ form.location }}
-  {% if form.location.errors %}
+  <label for="id_switch_rack_pos">Descripción:</label>
+  {{ form.switch_rack_pos }}
+  {% if form.switch_rack_pos.errors %}
   <div class="invalid-feedback d-block">
-    {{ form.location.errors|join:"<br>" }}
+    {{ form.switch_rack_pos.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>
 
 <div class="form-group">
-  <label for="id_edifice">Edificio:</label>
-  {{ form.edifice }}
-  {% if form.edifice.errors %}
+  <label for="id_switch_rack_pos">Descripción:</label>
+  {{ form.switch_rack_pos }}
+  {% if form.switch_rack_pos.errors %}
   <div class="invalid-feedback d-block">
-    {{ form.edifice.errors|join:"<br>" }}
+    {{ form.switch_rack_pos.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>
+
+<div class="form-group">
+  <label for="id_switch_rack_pos">Descripción:</label>
+  {{ form.switch_rack_pos }}
+  {% if form.switch_rack_pos.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.switch_rack_pos.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
 
 <div class="form-group">
   <label for="id_office">Oficina:</label>

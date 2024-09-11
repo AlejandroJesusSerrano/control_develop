@@ -81,6 +81,17 @@
 </div>
 
 <div class="form-group">
+  <label for="id_office">Descripción:</label>
+  {{ form.office }}
+  {% if form.office.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.office.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+
+<div class="form-group">
   <label for="id_office">Oficina:</label>
   {{ form.office }}
   {% if form.office.errors %}

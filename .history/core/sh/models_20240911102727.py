@@ -429,7 +429,7 @@ class Switch(models.Model):
     verbose_name_plural = 'Switches'
     db_table = 'switchs'
     ordering = ['id']
-    unique_together = ('model', 'serial_n')
+    unique_togheter = ('model', 'serial_n')
 
 class Switch_Port(models.Model):
   switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)

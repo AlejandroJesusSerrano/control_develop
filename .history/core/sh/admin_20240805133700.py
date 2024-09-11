@@ -151,11 +151,11 @@ admin.site.register(Patch_Port, PatchPortAdmin)
 
 class SwitchAdmin(admin.ModelAdmin):
 
-  list_display = ('rack', 'model','serial_n', 'switch_rack_pos', 'ports_q', 'office')
+  list_display = ('rack', 'brand','serial_n', 'switch_rack_pos', 'ports_q', 'office')
   list_instances = True
-  search_fields = ['model__dev_type__dev_type', 'model__brand__brand', 'model__dev_model', 'serial_n', 'ports_q', 'rack__rack', 'switch_rack_pos', 'office__office']
-  list_filter = ['model__dev_type__dev_type', 'model__brand__brand', 'model__dev_model', 'ports_q', 'rack__rack', 'office__office']
-  ordering = ['model__dev_type__dev_type', 'model__brand__brand', 'model__dev_model', 'serial_n', 'ports_q', 'rack__rack', 'switch_rack_pos', 'office__office']
+  search_fields = ['brand__brand', 'serial_n', 'ports_q', 'rack__rack', 'switch_rack_pos', 'office__office']
+  list_filter = ['brand__brand', 'ports_q', 'rack__rack', 'office__office']
+  ordering = ['brand__brand', 'serial_n', 'ports_q', 'rack__rack', 'switch_rack_pos', 'office__office']
 
 admin.site.register(Switch, SwitchAdmin)
 
@@ -163,9 +163,9 @@ class SwitchPortAdmin(admin.ModelAdmin):
 
   list_display = ('get_switchRack', 'get_switchRackPos', 'get_switch_brand', 'get_switch_ports', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out', 'obs')
   list_instances = True
-  search_fields = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
-  list_filter = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
-  ordering = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
+  search_fields = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
+  list_filter = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
+  ordering = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
 
   def get_switchRack(self, obj):
     return obj.switch.rack.rack

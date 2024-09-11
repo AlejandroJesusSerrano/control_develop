@@ -81,6 +81,17 @@
 </div>
 
 <div class="form-group">
+  <label for="id_switch_rack_pos">Descripción:</label>
+  {{ form.switch_rack_pos }}
+  {% if form.switch_rack_pos.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.switch_rack_pos.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+
+<div class="form-group">
   <label for="id_office">Oficina:</label>
   {{ form.office }}
   {% if form.office.errors %}

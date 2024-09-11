@@ -66,6 +66,7 @@ class SwitchCreateView(CreateView):
 
           if brand_id:
             models = models.filter(brand_id=brand_id)
+
           data = [{'id': m.id, 'name': m.dev_model} for m in models]
 
         elif action == 'search_edifice':

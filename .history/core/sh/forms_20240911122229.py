@@ -707,8 +707,7 @@ class SwitchForm(forms.ModelForm):
       'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
       'ports_q': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la cantidad de puertos del Switch'}),
       'rack': Select(attrs={'class': 'form-control select2'}),
-      'switch_rack_pos': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la posición del Switch en el Rack'}),
-      'office': Select(attrs={'class': 'form-control select2'})
+      'switch_rack_pos': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la posición del Switch en el Rack'})
     }
     help_texts = {
       'port_q': '* Ingrese solo números',
@@ -725,7 +724,7 @@ class SwitchForm(forms.ModelForm):
       switch = self.instance
 
       self.fields['model'].queryset = Dependency.objects.filter(
-        dev_type__dev_type = 'SWITCH',
+        type = self.instance.model.dev_type,
         brand = self.instance.model.brand
       )
 
@@ -763,7 +762,7 @@ class SwitchForm(forms.ModelForm):
     model = self.cleaned_data.get('model')
     serial_n = self.cleaned_data.get('serial_n')
 
-    if Switch.objects.filter(model=model, serial_n=serial_n).exists():
+    if Switch.objects.filter(model=model, serial_n=serial_n).exist():
       self.add_error('model', f"Ya se encuentra cargado este modelo de Switch")
       self.add_error('serial_n', f"El número de serie ya se encuentra registrado y asociado al mismo modelo")
     cleaned_data = super().clean()

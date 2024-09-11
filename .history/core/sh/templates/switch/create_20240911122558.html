@@ -31,7 +31,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_serial_n">Número de Serie:</label>
+  <label for="id_serial_n">Número de Serie</label>
   {{ form.serial_n }}
   {% if form.serial_n.errors %}
   <div class="invalid-feedback d-block">
@@ -51,41 +51,20 @@
 </div>
 
 <div class="form-group">
-  <label for="id_switch_rack_pos">Posición en el Rack:</label>
-  {{ form.switch_rack_pos }}
-  {% if form.switch_rack_pos.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.switch_rack_pos.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_location">Localidad:</label>
-  {{ form.location }}
-  {% if form.location.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.location.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_edifice">Edificio:</label>
-  {{ form.edifice }}
-  {% if form.edifice.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.edifice.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
   <label for="id_office">Oficina:</label>
   {{ form.office }}
   {% if form.office.errors %}
   <div class="invalid-feedback d-block">
     {{ form.office.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+<div class="form-group">
+  <label for="id_description">Descripción:</label>
+  {{ form.description }}
+  {% if form.description.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.description.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>

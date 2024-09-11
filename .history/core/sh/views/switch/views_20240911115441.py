@@ -24,7 +24,7 @@ class SwitchListView(ListView):
       action = request.POST['action']
       if action == 'searchdata':
         switches = Switch.objects.all()
-        data = [s.toJSON() for s in switches]
+        data = [d.toJSON() for s in switches]
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
@@ -60,12 +60,15 @@ class SwitchCreateView(CreateView):
       try:
         action = request.POST.get('action')
         if action == 'search_models':
+          dev_type_id = request.POST.get('dev_type_id')
           brand_id = request.POST.get('brand_id')
 
-          models = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
-
+          models = Dev_Model.objects.all()
+          if dev_type_id:
+            models = models.filter(dev_type_id=dev_type_id)
           if brand_id:
             models = models.filter(brand_id=brand_id)
+
           data = [{'id': m.id, 'name': m.dev_model} for m in models]
 
         elif action == 'search_edifice':
@@ -128,11 +131,14 @@ class SwitchUpadateView(UpdateView):
         action = request.POST.get('action')
 
         if action == 'search_models':
+          dev_type_id = request.POST.get('dev_type_id')
           brand_id = request.POST.get('brand_id')
 
-          models = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
+          models = Dev_Model.objects.all()
+          if dev_type_id:
+              models = models.filter(dev_type_id=dev_type_id)
           if brand_id:
-            models = models.filter(brand_id=brand_id)
+              models = models.filter(brand_id=brand_id)
 
           data = [{'id': m.id, 'name': m.dev_model} for m in models]
 
