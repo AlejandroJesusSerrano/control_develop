@@ -80,6 +80,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 function initializeSelects() {
   const brand_id = $('select[name="brand"]').val();
   const location_id = $('select[name="location"]').val();
+  const dependency_id = $('select[name="dependency"]').val();
   const edifice_id = $('select[name="edifice"]').val();
 
   if (brand_id) {
@@ -87,11 +88,11 @@ function initializeSelects() {
   }
 
   if (location_id) {
-    updateEdificeOptions(location_id);
+    updateLocationRelatedOptions(location_id);
   }
 
-  if (edifice_id) {
-    updateOfficeLocationOptions(edifice_id)
+  if (edifice_id && dependency_id) {
+    updateOfficeLocationOptions(edifice_id, dependency_id)
   }
 
 
@@ -100,36 +101,36 @@ function initializeSelects() {
 // UPDATE OPTIONS
 
 function updateModelOptions(brand_id) {
-  if (brand_id) {
-    updateOptions(window.location.pathname, {
-      'action': 'search_model',
-      'brand_id': brand_id,
-    }, $('select[name="model"]'), $('#id_model').data('preselected'));
-  } else {
-    $('select[name="model"]').html('<option value="">----------</option>');
-  }
+  const dev_type_id = 7
+  updateOptions(window.location.pathname, {
+    'action': 'search_models',
+    'brand_id': brand_id,
+    'dev_type_id': dev_type_id
+  }, $('select[name="model"]'), $('#id_model').data('preselected'));
 };
 
-function updateEdificeOptions(location_id) {
+function updateLocationrelatedOptions(location_id) {
   if (location_id) {
     updateOptions(window.location.pathname, {
       'action': 'search_edifice',
       'location_id': location_id,
     }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
+
+    updateOptions(window.location.pathname, {
+      'action': 'search_dependency',
+      'location_id': location_id,
+    }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
   } else {
-    $('select[name="edifice"]').html('<option value="">----------</option>');
-  }
+    $('select[name="edifice"], select[name="dependency"]').html('<option value="">----------</option>').trigger('change');
+  };
 };
 
-function updateOfficeLocationOptions(edifice_id) {
-  if (edifice_id) {
+function updateOfficeOptions(edifice_id, dependency_id) {
     updateOptions(window.location.pathname, {
-      'action': 'search_loc',
+      'action': 'search_office',
       'edifice_id': edifice_id,
-    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
-  } else {
-    $('select[name="loc"]').html('<option value="">----------</option>');
-  }
+      'dependency_id': dependency_id
+    }, $('select[name="office"]'), $('#id_office').data('preselected'));
 };
 
 // START
@@ -137,16 +138,16 @@ function updateOfficeLocationOptions(edifice_id) {
 $(document).ready(function() {
   initializeSelects();
 
-  $('select[name="location"]').on('change', function(){
-    updateEdificeOptions($(this).val());
-  });
-
-  $('select[name="edifice"]').on('change', function(){
-    updateOfficeLocationOptions($(this).val());
-  });
-
   $('select[name="brand"]').on('change', function(){
     updateModelOptions($(this).val());
+  });
+
+  $('select[name="location"]').on('change', function(){
+    updateLocationRelatedOptions($(this).val());
+  });
+
+  $('select[name="edifice"], select[name="dependency"]').on('change', function(){
+    updateOfficeOptions($('select[name="edifice"]').val(), $('select[name="dependency"]').val());
   });
 
   initializeFormSubmission('#myForm', 'edit')

@@ -409,18 +409,18 @@ class Switch(models.Model):
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def save(self,*args, **kwargs):
-    if self.model.dev_type.name != 'SWITCH':
-        self.model.dev_type = Dev_Type.objects.get(name='SWITCH')
+    if self.model.dev_type.dev_type != 'SWITCH':
+        self.model.dev_type.dev_type = Dev_Type.objects.get(name='SWITCH')
     self.serial_n = self.serial_n.upper()
     self.switch_rack_pos = self.switch_rack_pos.upper()
     super(Switch, self).save(*args, **kwargs)
 
   def __str__(self):
-    return f'{self.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}' if self.rack else f'{self.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
+    return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}' if self.rack else f'{self.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['brand'] = self.brand.brand
+    item['brand'] = self.model.brand.brand
     item['rack'] = self.rack.rack
     return item
 

@@ -679,15 +679,27 @@ class PatchPortForm(ModelForm):
 
 # Switch Forms
 class SwitchForm(forms.ModelForm):
-  brand = forms.ModelChoiceField(
+  brand=forms.ModelChoiceField(
     queryset=Brand.objects.all(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
     required=False
   )
 
-  location = forms.ModelChoiceField(
+  model=forms.ModelChoiceField(
+    queryset=Dev_Model.objects.none(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=True
+  )
+
+  location=forms.ModelChoiceField(
     queryset=Location.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
+  dependency=forms.ModelChoiceField(
+    queryset=Dependency.objects.none(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
     required=False
   )
 
@@ -703,7 +715,6 @@ class SwitchForm(forms.ModelForm):
       'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'office'
       ]
     widgets = {
-      'model': Select(attrs={'class': 'form-control select2'}),
       'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
       'ports_q': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la cantidad de puertos del Switch'}),
       'rack': Select(attrs={'class': 'form-control select2'}),
@@ -724,38 +735,49 @@ class SwitchForm(forms.ModelForm):
     if self.instance.pk:
       switch = self.instance
 
-      self.fields['model'].queryset = Dependency.objects.filter(
+      if self.instance.model:
+        self.fields['model'].queryset = Dev_Model.objects.filter(
         dev_type__dev_type = 'SWITCH',
         brand = self.instance.model.brand
       )
 
-      self.fields['edifice'].queryet = Edifice.objects.filter(
-        location = self.instance.office.edifice.location
+      if self.instance.office and self.instance.office.edifice:
+        self.fields['edifice'].queryset = Edifice.objects.filter(
+        location = self.instance.edifice.location
       )
 
-      self.fields['office'].queryset = Office.objects.filter(
-        edifice = self.instance.office.edifice
+      if self.instance.office and self.instance.office.dependency:
+        self.fields['dependency'].queryset = Dependency.objects.filter(
+        location = self.instance.dependency.location
+      )
+
+      if self.instance.office:
+        self.fields['office'].queryset = Office.objects.filter(
+        edifice = self.instance.office.edifice,
+        dependency = self.instance.office.dependency
       )
 
     else:
-      if 'location' in self.data:
-        try:
-          location_id = int(self.data.get('location'))
-          self.fields['location'].queryset = Location.objects.filter(location_id=location_id)
-        except:
-          pass
-
-      if 'edifice' in self.data:
-        try:
-          edifice_id = int(self.data.get('edifice'))
-          self.fields['edifice'].queryset = Edifice.objects.filter(edifice_id=edifice_id)
-        except:
-          pass
-
       if 'brand' in self.data:
         try:
           brand_id = int(self.data.get('brand'))
-          self.fields['brand'].queryset = Brand.objects.filter(brand_id=brand_id)
+          self.fields['model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH', brand_id=brand_id)
+        except (ValueError, TypeError):
+          pass
+
+      if 'location' in self.data:
+        try:
+          location_id = int(self.data.get('location'))
+          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id),
+          self.fields['dependency'].queryset = Dependency.objects.filter(location_id=location_id)
+        except (ValueError, TypeError):
+          pass
+
+      if 'edifice' in self.data and 'dependency' in self.data:
+        try:
+          edifice_id = int(self.data.get('edifice'))
+          dependency_id = int(self.data.get('dependency'))
+          self.fields['office'].queryset = Office.objects.filter(edifice_id=edifice_id, dependency_id=dependency_id)
         except:
           pass
 
@@ -769,17 +791,6 @@ class SwitchForm(forms.ModelForm):
     cleaned_data = super().clean()
     return cleaned_data
 
-  def save(self, commit=True):
-    data={}
-    form = super()
-    try:
-      if form.is_valid():
-        form.save()
-      else:
-        data['error'] = form.errors.get_json_data()
-    except Exception as e:
-      data['error'] = str(e)
-    return data
 
 # Switch Port Forms
 class SwitchPortForm(ModelForm):
