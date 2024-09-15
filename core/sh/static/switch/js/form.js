@@ -1,3 +1,5 @@
+// SELECT 2
+
 $(document).ready(function() {
   $('.select2').select2({
     theme:'bootstrap',
@@ -31,30 +33,13 @@ function show_errors_in_form(errors){
   });
 }
 
-function updateLocationOptions(province_id) {
-  if (province_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_location',
-    'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
-  } else {
-    $('select[name="location"]').html('<option value="">----------</option>');
-  }
-};
-
-function updateEdificeOptions(location_id) {
-  if (location_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_edifice',
-    'location_id': location_id,
-    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
-  } else {
-    $('select[name="edifice"]').html('<option value="">----------</option>');
-  }
-};
+// UPDATE OPTIONS
 
 function updateOptions(url, data, selectElement, preselectedValue) {
   let options = '<option value="">----------</option>';
+
+  console.log("Enviando datos a:", url);
+  console.log("Datos enviados:", data);
 
   $.ajax({
     url: url,
@@ -67,13 +52,8 @@ function updateOptions(url, data, selectElement, preselectedValue) {
       $.each(data, function (key, value) {
         options += '<option value="' + value.id + '">' + value.name + '</option>';
       });
-
-      selectElement.html(options);
-
       selectElement.html(options).trigger('change');
 
-
-      selectElement.trigger('change'); 
       selectElement.select2({
         theme: 'bootstrap'
       });
@@ -90,6 +70,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
     }
 
   }).fail(function (jqXHR, textStatus, errorThrown) {
+    console.log("Error en la solicitud AJAX:", jqXHR.responseText);
     message_error(textStatus + ': ' + errorThrown);
   });
 };
@@ -97,25 +78,59 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 // INITALIZE SELECTS
 
 function initializeSelects() {
+  const brand_id = $('select[name="brand"]').val();
   const location_id = $('select[name="location"]').val();
+  const dependency_id = $('select[name="dependency"]').val();
+  const edifice_id = $('select[name="edifice"]').val();
+
+  if (brand_id) {
+    updateModelOptions(brand_id)
+  }
 
   if (location_id) {
-    updateEdificeOptions(location_id);
+    updateLocationRelatedOptions(location_id);
   }
+
+  if (edifice_id && dependency_id) {
+    updateOfficeLocationOptions(edifice_id, dependency_id)
+  }
+
 
 }
 
 // UPDATE OPTIONS
 
-function updateEdificeOptions(location_id) {
+function updateModelOptions(brand_id) {
+  const dev_type_id = 7
+  updateOptions(window.location.pathname, {
+    'action': 'search_models',
+    'brand_id': brand_id,
+    'dev_type_id': dev_type_id
+  }, $('select[name="model"]'), $('#id_model').data('preselected'));
+};
+
+function updateLocationrelatedOptions(location_id) {
   if (location_id) {
     updateOptions(window.location.pathname, {
-    'action': 'search_edifice',
-    'location_id': location_id,
+      'action': 'search_edifice',
+      'location_id': location_id,
     }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
+
+    updateOptions(window.location.pathname, {
+      'action': 'search_dependency',
+      'location_id': location_id,
+    }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
   } else {
-    $('select[name="edifice"]').html('<option value="">----------</option>');
-  }
+    $('select[name="edifice"], select[name="dependency"]').html('<option value="">----------</option>').trigger('change');
+  };
+};
+
+function updateOfficeOptions(edifice_id, dependency_id) {
+    updateOptions(window.location.pathname, {
+      'action': 'search_office',
+      'edifice_id': edifice_id,
+      'dependency_id': dependency_id
+    }, $('select[name="office"]'), $('#id_office').data('preselected'));
 };
 
 // START
@@ -123,8 +138,16 @@ function updateEdificeOptions(location_id) {
 $(document).ready(function() {
   initializeSelects();
 
+  $('select[name="brand"]').on('change', function(){
+    updateModelOptions($(this).val());
+  });
+
   $('select[name="location"]').on('change', function(){
-    updateEdificeOptions($(this).val());
+    updateLocationRelatedOptions($(this).val());
+  });
+
+  $('select[name="edifice"], select[name="dependency"]').on('change', function(){
+    updateOfficeOptions($('select[name="edifice"]').val(), $('select[name="dependency"]').val());
   });
 
   initializeFormSubmission('#myForm', 'edit')

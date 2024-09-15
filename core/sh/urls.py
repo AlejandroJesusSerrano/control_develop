@@ -2,8 +2,8 @@ from django.urls import path
 
 from core.sh.views.connection_type.views import Connection_TypeCreateView, Connection_TypeDeleteView, Connection_TypeListView, Connection_TypeUpadateView
 from core.sh.views.device.views import DeviceCreateView, DeviceDeleteView, DeviceListView, DeviceUpdateView
-from core.sh.views.office.views import OfficeCreateView, OfficeListView, OfficeUpadateView, OfficeDeleteView
-from core.sh.views.office_loc.views import OfficeLocCreateView, OfficeLocDeleteView, OfficeLocListView, OfficeLocUpadateView
+from core.sh.views.office.views import OfficeCreateView, OfficeListView, OfficeDeleteView, OfficeUpadateView
+from core.sh.views.office_loc.views import Office_Loc_ListView, Office_Loc_CreateView, Office_Loc_UpdateView, Office_Loc_DeleteView
 from core.sh.views.patch_port.views import Patch_PortCreateView, Patch_PortDeleteView, Patch_PortListView, Patch_PortUpadateView
 from core.sh.views.patchera.views import PatcheraCreateView, PatcheraDeleteView, PatcheraListView, PatcheraUpadateView
 from core.sh.views.province.views import ProvinceDeleteView, ProvinceFormView, ProvinceListView, ProvinceCreateView, ProvinceUpdateView
@@ -53,11 +53,11 @@ urlpatterns = [
   path('dependency/add/', DependencyCreateView.as_view(), name='dependency_add'),
   path('dependency/edit/<int:pk>/', DependencyUpadateView.as_view(), name='dependency_edit'),
   path('dependency/delete/<int:pk>/', DependencyDeleteView.as_view(), name='dependency_delete'),
-  # Office Location
-  path('office_loc/list/', OfficeLocListView.as_view(), name='office_loc_list'),
-  path('office_loc/add/', OfficeLocCreateView.as_view(), name='office_loc_add'),
-  path('office_loc/edit/<int:pk>/', OfficeLocUpadateView.as_view(), name='office_loc_edit'),
-  path('office_loc/delete/<int:pk>/', OfficeLocDeleteView.as_view(), name='office_loc_delete'),
+  # Office_Loc
+  path('office_loc/list/', Office_Loc_ListView.as_view(), name='office_loc_list'),
+  path('office_loc/add/', Office_Loc_CreateView.as_view(), name='office_loc_add'),
+  path('office_loc/edit/<int:pk>/', Office_Loc_UpdateView.as_view(), name='office_loc_edit'),
+  path('office_loc/delete/<int:pk>/', Office_Loc_DeleteView.as_view(), name='office_loc_delete'),
   # Office
   path('office/list/', OfficeListView.as_view(), name='office_list'),
   path('office/add/', OfficeCreateView.as_view(), name='office_add'),

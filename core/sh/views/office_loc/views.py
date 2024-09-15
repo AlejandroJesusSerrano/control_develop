@@ -1,17 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.forms import BaseModelForm
 from django.urls import reverse_lazy
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponseRedirect, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from core.sh.forms import OfficeLocForm
-from core.sh.models import Edifice, Location, Office_Loc
+from core.sh.forms import Office_Loc_Form
+from core.sh.models import Edifice, Office_Loc
 
-
-class OfficeLocListView(ListView):
+class Office_Loc_ListView(ListView):
   model = Office_Loc
   template_name = 'office_loc/list.html'
 
@@ -23,73 +21,63 @@ class OfficeLocListView(ListView):
   def post (self, request, *args, **kwargs):
     data = {}
     try:
-      action = request.POST['action']
+      action = request.POST.get('action')
       if action == 'searchdata':
-        data = []
-        for i in Office_Loc.objects.all():
-          data.append(i.toJSON())
+        office_locs = Office_Loc.objects.all()
+        data = [ol.toJSON() for ol in office_locs]
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
-      data['error'] = str(e)
+      data = {'error': str(e)}
+
     return JsonResponse(data, safe=False)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Locacion de Oficinas ( Piso / Ala )'
-    context['title'] = 'Listado de Locaciones de Oficinas'
+    context['page_title'] = 'Locaciones de Oficinas'
+    context['title'] = 'Locación de Oficina'
     context['btn_add_id'] = 'office_loc_add'
     context['create_url'] = reverse_lazy('sh:office_loc_add')
     context['list_url'] = reverse_lazy('sh:office_loc_list')
-    context['entity'] = 'Locacion de Oficinas'
-    context['nav_icon'] = 'fa-regular fa-building'
+    context['entity'] = 'Locación de Oficina'
+    context['nav_icon'] = 'fa-solid fa-building'
     context['table_id'] = 'office_loc_table'
     return context
 
-class OfficeLocCreateView(CreateView):
-  model: Office_Loc
-  form_class = OfficeLocForm
-  template_name = 'office_loc/create.html'
-  success_url = reverse_lazy('sh:office_list')
+class Office_Loc_CreateView(CreateView):
+  model = Office_Loc
+  form_class = Office_Loc_Form
+  template_name = "office_loc/create.html"
+  success_url = reverse_lazy('sh:office_loc_list')
 
   @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+  def dispatch(self, *args, **kwargs):
+    return super().dispatch(*args, **kwargs)
 
   def post(self, request, *args, **kwargs):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
       data = {}
       try:
         action = request.POST.get('action')
-        if action == 'search_location':
-          province_id = request.POST.get('province_id')
 
-          locations = Location.objects.all()
-          if province_id:
-            locations = locations.filter(province_id=province_id)
-
-          data = [{'id': l.id, 'name': l.location} for l in locations]
-
-        elif action == 'search_edifice':
+        if action == 'search_edifice':
           location_id = request.POST.get('location_id')
-
-          edifices = Edifice.objects.all()
-          if location_id:
-            edifices = edifices.filter(location_id=location_id)
-
-          data = [{'id': e.id, 'name': e.edifice} for e in edifices]
+          edifices = Edifice.objects.filter(location_id=location_id)
+          data = [{'id':e.id, 'name': e.edifice} for e in edifices]
 
         else:
-          form = OfficeLocForm(request.POST)
+          form = Office_Loc_Form(request.POST)
+
           if form.is_valid():
             try:
               form.save()
-              return JsonResponse({"success": "Locación de Oficina agregada corectamente"}, status=200)
+              return JsonResponse({"success": "Locación de Oficina guardada correctamente"}, status=200)
             except Exception as e:
-              return JsonResponse({"error":f"Error al guardar la locación de edificio: {str(e)}"}, status=400)
+              return JsonResponse({"error":f"Error al guardar la locación de oficina: {str(e)}"}, status=400)
+
           else:
             errors = form.errors.get_json_data()
-            return JsonResponse({"error": "Formulario no válido", "form_errors":errors}, status=400)
+            return JsonResponse({"error": "Formulario no valido", "form_errors":errors}, status=400)
 
         return JsonResponse(data, safe=False)
 
@@ -101,145 +89,114 @@ class OfficeLocCreateView(CreateView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Locacion de Oficinas ( Piso / Ala )'
-    context['title'] = 'Agregar una Locacion de Oficina ( Piso / Ala )'
+    context['page_title'] = 'Locaciones de Oficinas'
+    context['title'] = 'Agregar una Locación de Oficina'
     context['btn_add_id'] = 'office_loc_add'
-    context['entity'] = 'Locaciond de Oficinas'
+    context['entity'] = 'Locación de Oficina'
     context['list_url'] = reverse_lazy('sh:office_loc_list')
-    context['form_id'] = 'officeLocForm'
+    context['form_id'] = 'office_locForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
     return context
 
-class OfficeLocUpadateView(UpdateView):
-  model = Office_Loc
-  form_class = OfficeLocForm
-  template_name = 'office_loc/create.html'
-  success_url = reverse_lazy('sh:office_loc_list')
+class Office_Loc_UpdateView(UpdateView):
+    model = Office_Loc
+    form_class = Office_Loc_Form
+    template_name = 'office_loc/create.html'
+    success_url = reverse_lazy('sh:office_loc_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+      return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      data = {}
-      try:
-        action = request.POST.get('action')
-        if action == 'search_location':
-          province_id = request.POST.get('province_id')
+    def post(self, request, *args, **kwargs):
+      if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = {}
+        try:
+          action = request.POST.get('action')
 
-          locations = Location.objects.all()
-          if province_id:
-            locations = locations.filter(province_id=province_id)
+          if action == 'search_edifice':
+            location_id = request.POST.get('location_id')
+            edifices = Edifice.objects.filter(location_id=location_id)
+            data = [{'id':e.id, 'name': e.edifice} for e in edifices]
 
-          data = [{'id': l.id, 'name': l.location} for l in locations]
-
-        elif action == 'search_edifice':
-          location_id = request.POST.get('location_id')
-
-          edifices = Edifice.objects.all()
-          if location_id:
-            edifices = edifices.filter(location_id=location_id)
-
-          data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-
-        else:
-          form = OfficeLocForm(request.POST)
-          if form.is_valid():
-            try:
-              form.save()
-              return JsonResponse({"success": "Locación de Oficina agregada corectamente"}, status=200)
-            except Exception as e:
-              return JsonResponse({"error":f"Error al guardar la locación de edificio: {str(e)}"}, status=400)
           else:
-            errors = form.errors.get_json_data()
-            return JsonResponse({"error": "Formulario no válido", "form_errors":errors}, status=400)
+            self.object = self.get_object()
+            form = self.get_form()  # Se ha añadido para obtener el formulario con la instancia actual
+            if form.is_valid():
+              try:
+                form.save()
+                return JsonResponse({"success": "Locación de Oficina actualizada correctamente"}, status=200)
+              except Exception as e:
+                return JsonResponse({"error": f"Error al actualizar la locación de oficina: {str(e)}"}, status=400)
+            else:
+              errors = form.errors.get_json_data()
+              return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
 
-        return JsonResponse(data, safe=False)
+          return JsonResponse(data, safe=False)
 
-      except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400, safe=False)
-
-    else:
-      return super().post(request, *args, **kwargs)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
-    else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
-
-  def handle_search_action(self, action, post_data):
-
-    data = []
-
-    if action == 'search_location':
-      province_id = post_data.get('province_id')
-      locations = Location.objects.all()
-      if province_id:
-        try:
-          province_id = int(province_id)
-          locations = locations.filter(province_id=province_id)
-          data = [{'id': l.id, 'name': l.location} for l in locations]
-        except ValueError:
-          pass
+        except Exception as e:
+          data = {'error': str(e)}
+          return JsonResponse(data, safe=False)
       else:
-        data = {'Error': 'No se proporcionó un ID de provincia válido'}
+        return super().post(request, *args, **kwargs)
 
-    elif action ==  'search_edifice':
-      location_id = post_data.get('location_id')
-      edifices = Edifice.objects.all()
-      if location_id:
-        try:
-          location_id = int(location_id)
-          edifices = edifices.filter(location_id=location_id)
-          data = [{'id': e.id, 'name': e.edifices} for e in edifices]
-        except ValueError:
-          pass
+    def form_invalid(self, form):
+      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        errors = form.errors.get_json_data()
+        return JsonResponse({
+          "error": "Formulario no válido",
+          "form_errors": errors
+        }, status=400)
       else:
-        data = {'Error': 'No se proporcionó un ID de Localidad válido'}
+        context = self.get_context_data(form=form)
+        context['saved'] = False
+        return self.render_to_response(context)
 
-    return data
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Locación de Oficinas ( Piso / Ala )'
-    context['title'] = 'Editar Locación de Oficina ( Piso / Ala )'
-    context['btn_add_id'] = 'office_loc_add'
-    context['entity'] = 'Locacion de Oficinas'
-    context['list_url'] = reverse_lazy('sh:office_loc_list')
-    context['form_id'] = 'officeLocForm'
-    context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    def handle_search_action(self, action, post_data):
 
-    office_loc = self.get_object()
+      data = []
 
-    context['form'].fields['location'].queryset = Location.objects.filter(
-      province = office_loc.edifice.location.province
-    ).order_by('location')
+      if action == 'search_edifice':
+        location_id = post_data.get('location_id')
+        if location_id:
+          try:
+            location_id = int(location_id)
+            edifices = Edifice.objects.filter(location_id=location_id)
+            data = [{'id':e.id, 'name': e.edifice} for e in edifices]
+          except ValueError:
+            pass
 
-    context['form'].fields['edifice'].queryset = Edifice.objects.filter(
-      location = office_loc.edifice.location
-    ).order_by('edifice')
+      return data
 
-    context['form'].initial['province'] = office_loc.edifice.location.province.id if office_loc.edifice.location.province else None
-    context['form'].initial['location'] = office_loc.edifice.location.id if office_loc.edifice.location else None
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Locaciones de Oficinas'
+        context['title'] = 'Editar Locación de Oficina'
+        context['btn_add_id'] = 'office_loc_add'
+        context['entity'] = 'Locación de Oficina'
+        context['list_url'] = reverse_lazy('sh:office_loc_list')
+        context['form_id'] = 'office_locForm'
+        context['action'] = 'edit'
+        context['bg_color'] = 'bg-warning'
 
-    context['form'].fields['edifice'].widget.attrs.update({
-      'data-preselected': self.object.edifice.id if self.object.edifice else ''
-    })
+        office_loc = self.get_object()
 
-    return context
+        context['form'].fields['edifice'].queryset = Edifice.objects.filter(
+          location = office_loc.edifice.location
+        )
 
-class OfficeLocDeleteView(DeleteView):
+        context['form'].initial['location'] = office_loc.edifice.location.id if office_loc.edifice.location else None
+        context['form'].initial['edifice'] = office_loc.edifice.id if office_loc.edifice else None
+
+        context['form'].fields['edifice'].widget.attrs.update({
+          'data-preselected': self.object.edifice.id if self.object.edifice else ''
+        })
+
+        return context
+
+class Office_Loc_DeleteView(DeleteView):
   model = Office_Loc
   template_name = 'office_loc/delete.html'
   success_url = reverse_lazy('sh:office_loc_list')
@@ -259,11 +216,11 @@ class OfficeLocDeleteView(DeleteView):
 
   def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Locacion de Oficinas ( Piso / Ala )'
-        context['title'] = 'Eliminar una Locacion de Oficina ( Piso / Ala )'
-        context['del_title'] = 'Locacion de Oficina: '
+        context['page_title'] = 'Locaciones de Oficinas'
+        context['title'] = 'Eliminar una Locaión de Oficina'
+        context['del_title'] = 'Locación de Oficina: '
         context['list_url'] = reverse_lazy('sh:office_loc_list')
-        context['form_id'] = 'officeLocForm'
+        context['form_id'] = 'office_locForm'
         context['bg_color'] = 'bg-danger'
         context['action'] = 'delete'
         return context

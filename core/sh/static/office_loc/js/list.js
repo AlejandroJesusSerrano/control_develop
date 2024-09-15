@@ -1,9 +1,5 @@
 $(document).ready(function(){
-<<<<<<< HEAD
   $('#office_loc_table').DataTable({
-=======
-  $('#ofice_loc_table').DataTable({
->>>>>>> d0c807020e7c9a0e7ff6bbdc6c32a67308d211bc
     responsive: true,
     autowidth: false,
     destroy: true,

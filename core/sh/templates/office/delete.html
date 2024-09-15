@@ -4,12 +4,15 @@
 <div class="card-body table-responsive">
   <div class="alert alert-danger alert-dismissible">
     <h5><i class="icon fas fa-triangle-exclamation"></i> Atención!</h5>
-      Estas por eliminar el registro Nro: {{object.id}}, {{del_title}} {{object.office}}, de la dependencia: 
-    {% for dependency in object.dependency.all %}
-      {{ dependency.description }}
-    {% endfor %}
-
-          de la localidad: {{object.edifice.location.location}}.
+      Estas por eliminar el registro Nro: <b>{{object.id}}</b>, {{del_title}} <b>{{object.office}}</b>.
+      <ul>
+        <li>
+          Dependencia: <b>{{object.dependency.dependency}}</b>
+        </li>
+        <li>
+          Localidad: <b>{{object.dependency.location.location}}.</b>
+        </li>
+      </ul>
       ¿Deseas continuar?
     </div>
 </div>

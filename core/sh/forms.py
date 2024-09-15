@@ -18,8 +18,16 @@ class BrandForm(forms.ModelForm):
         }
       )
     }
+
+  def clean(self):
+    brand = self.cleaned_data.get('brand').upper()
+
+    if Brand.objects.filter(brand__iexact=brand).exists():
+      self.add_error('brand', f"La marca ya se encuentra registrada")
+    cleaned_data = super().clean()
+    return cleaned_data
 # Dev_Type
-class Dev_TypeForm(ModelForm):
+class Dev_TypeForm(forms.ModelForm):
 
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
@@ -173,7 +181,6 @@ class LocationForm(forms.ModelForm):
       )
     }
 
-
 # Edifice Forms
 class EdificeForm(forms.ModelForm):
 
@@ -236,46 +243,65 @@ class EdificeForm(forms.ModelForm):
 # Dependency Forms
 class DependencyForm(forms.ModelForm):
 
+  province=forms.ModelChoiceField(
+    queryset=Province.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
   class Meta:
     model = Dependency
-    fields = '__all__'
+    fields = [
+      'location', 'dependency'
+    ]
     widgets = {
+      'location': Select(
+        attrs={
+          'class': 'form-control select2'
+          }),
       'dependency': TextInput(
         attrs={
-          'class': 'form-control',
-          'placeholder': 'Ingrese el Nombre de una Dependencia'
-        }
-      ),
+          'class': 'form-control', 'placeholder': 'Ingrese la dependencia'
+          }),
     }
 
-  def clean_dependency(self):
+  def __init__(self, *args, **kwargs):
+    super(DependencyForm, self).__init__(*args, **kwargs)
+
+    self.fields['location'].queryset = Location.objects.none()
+
+    if self.instance.pk:
+      dependency = self.instance
+
+      self.fields['location'].queryset = Location.objects.filter(
+        province = self.instance.location.province
+      )
+
+    else:
+
+      if 'province' in self.data:
+        try:
+          province_id = int(self.data.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+        except:
+          pass
+
+  def clean(self):
+    location = self.cleaned_data.get('location')
     dependency = self.cleaned_data.get('dependency')
 
-    if Dependency.objects.filter(dependency__iexact=dependency).exists():
-      raise ValidationError("Esta dependencia ya existe")
+    if Dependency.objects.filter(location=location, dependency=dependency).exists():
+      self.add_error('dependency', f"Ya existe una dependencia con los datos ingresados")
+    cleaned_data = super().clean()
+    return cleaned_data
+# Office Location Form
+class Office_Loc_Form(forms.ModelForm):
 
-    return dependency
-
-# Office Loc Form
-class OfficeLocForm(forms.ModelForm):
-  province = forms.ModelChoiceField(
-    queryset = Province.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
-    required = False
+  location=forms.ModelChoiceField(
+    queryset=Location.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
   )
-
-  location = forms.ModelChoiceField(
-    queryset = Location.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
-    required = False
-  )
-
-  edifice = forms.ModelChoiceField(
-    queryset = Edifice.objects.none(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
-    required = True
-  )
-
 
   class Meta:
     model = Office_Loc
@@ -283,42 +309,37 @@ class OfficeLocForm(forms.ModelForm):
       'edifice', 'floor', 'wing'
     ]
     widgets = {
-      'floor': TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Ingrese el piso'}),
-      'wing': TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Ingrese el nombre del ala'
-      })
+      'edifice': Select(
+        attrs={
+          'class': 'form-control select2'
+          }),
+      'floor': TextInput(
+        attrs={
+          'class': 'form-control', 'placeholder': 'Ingre el Piso'
+          }),
+      'wing': TextInput(
+        attrs={
+          'class': 'form-control', 'placeholder': 'Ingrese el Ala'
+          }),
     }
     help_texts = {
-      'wing': 'En caso de no tener un nombre de ala, se recomienda poner el nombre de la calle hacia la que mira el ala.'
+      'floor': '* Ingrese el piso ingresando 2 numeros, ej. 01, y PB para Planta baja',
+      'wing': '* En caso de no haber una desigancion del ala, se recomienda ingresar el nombre de la calle a la que mira la misma'
     }
 
   def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
+    super(Office_Loc_Form, self).__init__(*args, **kwargs)
 
-    self.fields['location'].queryset = Location.objects.none()
     self.fields['edifice'].queryset = Edifice.objects.none()
 
     if self.instance.pk:
       office_loc = self.instance
-
-      self.fields['location'].queryset = Location.objects.filter(
-        province = self.instance.edifice.location.province
-      )
 
       self.fields['edifice'].queryset = Edifice.objects.filter(
         location = self.instance.edifice.location
       )
 
     else:
-      if 'province' in self.data:
-        try:
-          province_id = int(self.data.get('province'))
-          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
-        except:
-          pass
 
       if 'location' in self.data:
         try:
@@ -328,52 +349,94 @@ class OfficeLocForm(forms.ModelForm):
           pass
 
   def clean(self):
+    edifice = self.cleaned_data.get('edifice')
+    location = edifice.location if edifice else None
+    floor = self.cleaned_data.get('floor')
+    wing = self.cleaned_data.get('wing').upper()
+
+    if Office_Loc.objects.filter(edifice=edifice, edifice__location=location, floor=floor, wing=wing).exists():
+      self.add_error('floor', f"Ya existe un registro con los datos que intenta cargar")
+      self.add_error('wing', f"Ya existe un registro con los datos que intenta cargar")
     cleaned_data = super().clean()
-    print("cleaned data: ", cleaned_data)
     return cleaned_data
 
-
 # Office Forms
-class OfficeForm(ModelForm):
+class OfficeForm(forms.ModelForm):
+  location=forms.ModelChoiceField(
+    queryset=Location.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for form in self.visible_fields():
-      form.field.widget.attrs['class'] = 'form-control m-1'
-    self.fields['office'].widget.attrs['autofocus'] = True
+  edifice=forms.ModelChoiceField(
+    queryset=Edifice.objects.none(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
 
   class Meta:
     model = Office
-    fields = '__all__'
-    widget = {
-      'edifice': Select(
-        attrs={
-          'placeholder': 'Seleccione un Edificio'
-        }
-      ),
-      'office': TextInput(
-        attrs={
-          'placeholder': 'Ingrese un nombre identificatorio para la Oficina'
-        }
-      ),
-      'dependency': Select(
-        attrs={
-          'placeholder': 'Seleccione una Dependencia'
-        }
-      )
+    fields = [
+      'edifice','dependency', 'loc', 'office', 'description'
+      ]
+    widgets = {
+      'edifice': Select(attrs={'class': 'form-control select2'}),
+      'dependency': Select(attrs={'class': 'form-control select2'}),
+      'loc': Select(attrs={'class': 'form-control select2'}),
+      'office': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese un nombre identificatorio para la Oficina'}),
+      'description': Textarea(attrs={'class':'form-control', 'placeholder': 'Ingrese una descripción de la oficina'})
+    }
+    help_texts = {
+      'description': '* Esta campo no es obligatorio, pero puede agregar detalles para individualizar la oficina, o agregar algún dato relevenate de la misma.'
     }
 
-  def save(self, commit=True):
-    data={}
-    form = super()
-    try:
-      if form.is_valid():
-        form.save()
-      else:
-        data['error'] = form.errors.get_json_data()
-    except Exception as e:
-      data['error'] = str(e)
-    return data
+  def __init__(self, *args, **kwargs):
+    super(OfficeForm, self).__init__(*args, **kwargs)
+
+    self.fields['dependency'].queryset = Dependency.objects.none()
+    self.fields['loc'].queryset = Office_Loc.objects.none()
+
+    if self.instance.pk:
+      office = self.instance
+
+      self.fields['dependency'].queryset = Dependency.objects.filter(
+        location = self.instance.dependency.location
+      )
+
+      self.fields['edifice'].queryset = Edifice.objects.filter(
+        location = self.instance.loc.edifice.location
+      )
+
+      self.fields['loc'].queryset = Office_Loc.objects.filter(
+        edifice = self.instance.loc.edifice
+      )
+
+    else:
+
+      if 'location' in self.data:
+        try:
+          location_id = int(self.data.get('location'))
+          self.fields['dependency'].queryset = Dependency.objects.filter(location_id=location_id)
+          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id)
+        except:
+          pass
+
+      if 'edifice'in self.data:
+        try:
+          edifice_id = int(self.data.get('edifice'))
+          self.fields['loc'].queryset = Office_Loc.objects.filter(edifice_id=edifice_id)
+        except:
+          pass
+
+  def clean(self):
+    dependency = self.cleaned_data.get('dependency')
+    office = self.cleaned_data.get('office')
+
+    if Office.objects.filter(dependency=dependency, office__iexact=office).exists():
+      self.add_error('office', f"Ya existe la oficina en la dependencia seleccionada")
+    cleaned_data = super().clean()
+    return cleaned_data
 
 # Employee Status Forms
 class EmployeeStatusForm(ModelForm):
@@ -507,41 +570,38 @@ class ConnectionTypeForm(ModelForm):
     return data
 
 # Rack Forms
-class RackForm(ModelForm):
-
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for form in self.visible_fields():
-      form.field.widget.attrs['class'] = 'form-control m-1'
-    self.fields['rack'].widget.attrs['autofocus'] = True
+class RackForm(forms.ModelForm):
 
   class Meta:
     model = Rack
-    fields = '__all__'
-    widget = {
+    fields = [
+      'rack', 'details'
+              ]
+    widgets = {
       'rack': TextInput(
         attrs={
+          'class': 'form-control',
           'placeholder': 'Ingrese el Nombre del Rack'
         }
       ),
       'details': Textarea(
         attrs={
+          'class': 'form-control',
           'placeholder': 'Ingrese detalles que ayuden a individualizar el Rack'
         }
       )
     }
+    help_texts = {
+      'details': '* Aqui puede ingresar referencia de la ubicación, forma, y demas detalles que ayuden a individualizar el Rack'
+    }
 
-  def save(self, commit=True):
-    data={}
-    form = super()
-    try:
-      if form.is_valid():
-        form.save()
-      else:
-        data['error'] = form.errors.get_json_data()
-    except Exception as e:
-      data['error'] = str(e)
-    return data
+  def clean(self):
+    rack = self.cleaned_data.get('rack').upper()
+
+    if Rack.objects.filter(rack__iexact=rack).exists():
+      self.add_error('rack', f"El Rack que se quiere ingresar, ya existe")
+    cleaned_data = super().clean()
+    return cleaned_data
 
 # Patchera Forms
 class PatcheraForm(ModelForm):
@@ -618,56 +678,119 @@ class PatchPortForm(ModelForm):
     return data
 
 # Switch Forms
-class SwitchForm(ModelForm):
+class SwitchForm(forms.ModelForm):
+  brand=forms.ModelChoiceField(
+    queryset=Brand.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for form in self.visible_fields():
-      form.field.widget.attrs['class'] = 'form-control m-1'
-    self.fields['switch_rack_pos'].widget.attrs['autofocus'] = True
+  model=forms.ModelChoiceField(
+    queryset=Dev_Model.objects.none(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=True
+  )
+
+  location=forms.ModelChoiceField(
+    queryset=Location.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
+  dependency=forms.ModelChoiceField(
+    queryset=Dependency.objects.none(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
+  edifice=forms.ModelChoiceField(
+    queryset=Edifice.objects.none(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
 
   class Meta:
-      model = Switch
-      fields = '__all__'
-      widget = {
-        'brand': Select(
-          attrs={
-            'placeholder': 'Seleccione la marca del Switch'
-          }
-        ),
-        'serial_n': TextInput(
-          attrs={
-            'placeholder': 'Ingrese el número de serie'
-          }
-        ),
-        'ports_q': TextInput(
-          attrs={
-            'placeholder': 'Ingrese la cantidad de puertos del Switch'
-          }
-        ),
-        'rack': Select(
-          attrs={
-            'placeholder': 'Seleccione el Rack donde está instalado el Switch'
-          }
-        ),
-        'switch_rack_pos': TextInput(
-          attrs={
-            'placeholder': 'Ingrese la posición del Switch en el Rack'
-          }
-        )
-      }
+    model = Switch
+    fields = [
+      'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'office'
+      ]
+    widgets = {
+      'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
+      'ports_q': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la cantidad de puertos del Switch'}),
+      'rack': Select(attrs={'class': 'form-control select2'}),
+      'switch_rack_pos': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la posición del Switch en el Rack'}),
+      'office': Select(attrs={'class': 'form-control select2'})
+    }
+    help_texts = {
+      'port_q': '* Ingrese solo números',
+      'switch_rack_pos': '* Ingrese el número de posición del switch en el rack'
+    }
 
-  def save(self, commit=True):
-    data={}
-    form = super()
-    try:
-      if form.is_valid():
-        form.save()
-      else:
-        data['error'] = form.errors.get_json_data()
-    except Exception as e:
-      data['error'] = str(e)
-    return data
+  def __init__(self, *args, **kwargs):
+    super(SwitchForm, self).__init__(*args, **kwargs)
+
+    self.fields['model'].queryset = Dev_Model.objects.none()
+    self.fields['office'].queryset = Office.objects.none()
+
+    if self.instance.pk:
+      switch = self.instance
+
+      if self.instance.model:
+        self.fields['model'].queryset = Dev_Model.objects.filter(
+        dev_type__dev_type = 'SWITCH',
+        brand = self.instance.model.brand
+      )
+
+      if self.instance.office and self.instance.office.edifice:
+        self.fields['edifice'].queryset = Edifice.objects.filter(
+        location = self.instance.edifice.location
+      )
+
+      if self.instance.office and self.instance.office.dependency:
+        self.fields['dependency'].queryset = Dependency.objects.filter(
+        location = self.instance.dependency.location
+      )
+
+      if self.instance.office:
+        self.fields['office'].queryset = Office.objects.filter(
+        edifice = self.instance.office.edifice,
+        dependency = self.instance.office.dependency
+      )
+
+    else:
+      if 'brand' in self.data:
+        try:
+          brand_id = int(self.data.get('brand'))
+          self.fields['model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH', brand_id=brand_id)
+        except (ValueError, TypeError):
+          pass
+
+      if 'location' in self.data:
+        try:
+          location_id = int(self.data.get('location'))
+          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id),
+          self.fields['dependency'].queryset = Dependency.objects.filter(location_id=location_id)
+        except (ValueError, TypeError):
+          pass
+
+      if 'edifice' in self.data and 'dependency' in self.data:
+        try:
+          edifice_id = int(self.data.get('edifice'))
+          dependency_id = int(self.data.get('dependency'))
+          self.fields['office'].queryset = Office.objects.filter(edifice_id=edifice_id, dependency_id=dependency_id)
+        except:
+          pass
+
+  def clean(self):
+    model = self.cleaned_data.get('model')
+    serial_n = self.cleaned_data.get('serial_n')
+
+    if Switch.objects.filter(model=model, serial_n=serial_n).exists():
+      self.add_error('model', f"Ya se encuentra cargado este modelo de Switch")
+      self.add_error('serial_n', f"El número de serie ya se encuentra registrado y asociado al mismo modelo")
+    cleaned_data = super().clean()
+    return cleaned_data
+
 
 # Switch Port Forms
 class SwitchPortForm(ModelForm):
@@ -822,15 +945,15 @@ class DeviceForm(forms.ModelForm):
       'dev_model', 'connection', 'ip', 'net_name', 'dev_status', 'serial_n', 'office', 'wall_port', 'switch_port', 'employee'
     ]
     widgets = {
-      'connection': forms.Select(attrs={'class': 'form-control select2'}),
-      'ip': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese la dirección ip del dispositivo'}),
-      'net_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese el nombre de registro en la red del dispositivo'}),
-      'dev_status': forms.Select(attrs={'class': 'form-control select2'}),
-      'serial_n': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
-      'office': forms.Select(attrs={'class': 'form-control select2'}),
-      'wall_port': forms.Select(attrs={'class': 'form-control select2'}),
-      'switch_port': forms.Select(attrs={'class': 'form-control select2'}),
-      'employee': forms.SelectMultiple(attrs={'class': 'form-control select2'}),
+      'connection': Select(attrs={'class': 'form-control select2'}),
+      'ip': TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese la dirección ip del dispositivo'}),
+      'net_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese el nombre de registro en la red del dispositivo'}),
+      'dev_status': Select(attrs={'class': 'form-control select2'}),
+      'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
+      'office': Select(attrs={'class': 'form-control select2'}),
+      'wall_port': Select(attrs={'class': 'form-control select2'}),
+      'switch_port': Select(attrs={'class': 'form-control select2'}),
+      'employee': SelectMultiple(attrs={'class': 'form-control select2'}),
     }
 
   def __init__(self, *args, **kwargs):

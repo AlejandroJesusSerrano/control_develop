@@ -1,3 +1,5 @@
+// SELECT 2
+
 $(document).ready(function() {
   $('.select2').select2({
     theme:'bootstrap',
@@ -31,27 +33,7 @@ function show_errors_in_form(errors){
   });
 }
 
-function updateLocationOptions(province_id) {
-  if (province_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_location',
-    'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
-  } else {
-    $('select[name="location"]').html('<option value="">----------</option>');
-  }
-};
-
-function updateEdificeOptions(location_id) {
-  if (location_id) {
-    updateOptions(window.location.pathname, {
-    'action': 'search_edifice',
-    'location_id': location_id,
-    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
-  } else {
-    $('select[name="edifice"]').html('<option value="">----------</option>');
-  }
-};
+// UPDATE OPTIONS
 
 function updateOptions(url, data, selectElement, preselectedValue) {
   let options = '<option value="">----------</option>';
@@ -67,13 +49,8 @@ function updateOptions(url, data, selectElement, preselectedValue) {
       $.each(data, function (key, value) {
         options += '<option value="' + value.id + '">' + value.name + '</option>';
       });
-
-      selectElement.html(options);
-
       selectElement.html(options).trigger('change');
 
-
-      selectElement.trigger('change'); 
       selectElement.select2({
         theme: 'bootstrap'
       });
@@ -98,23 +75,52 @@ function updateOptions(url, data, selectElement, preselectedValue) {
 
 function initializeSelects() {
   const location_id = $('select[name="location"]').val();
+  const edifice_id = $('select[name="edifice"]').val();
 
   if (location_id) {
     updateEdificeOptions(location_id);
+    updateDependencyOptions(location_id);
   }
+
+  if (edifice_id) {
+    updateOfficeLocationOptions(edifice_id)
+  }
+
 
 }
 
 // UPDATE OPTIONS
 
+function updateDependencyOptions(location_id) {
+  if (location_id) {
+    updateOptions(window.location.pathname, {
+      'action': 'search_dependency',
+      'location_id': location_id,
+    }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
+  } else {
+    $('select[name="dependency"]').html('<option value="">----------</option>');
+  }
+};
+
 function updateEdificeOptions(location_id) {
   if (location_id) {
     updateOptions(window.location.pathname, {
-    'action': 'search_edifice',
-    'location_id': location_id,
+      'action': 'search_edifice',
+      'location_id': location_id,
     }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
   } else {
     $('select[name="edifice"]').html('<option value="">----------</option>');
+  }
+};
+
+function updateOfficeLocationOptions(edifice_id) {
+  if (edifice_id) {
+    updateOptions(window.location.pathname, {
+      'action': 'search_loc',
+      'edifice_id': edifice_id,
+    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
+  } else {
+    $('select[name="loc"]').html('<option value="">----------</option>');
   }
 };
 
@@ -125,6 +131,11 @@ $(document).ready(function() {
 
   $('select[name="location"]').on('change', function(){
     updateEdificeOptions($(this).val());
+    updateDependencyOptions($(this).val());
+  });
+
+  $('select[name="edifice"]').on('change', function(){
+    updateOfficeLocationOptions($(this).val());
   });
 
   initializeFormSubmission('#myForm', 'edit')

@@ -1,4 +1,6 @@
 from django.contrib.auth.decorators import login_required
+from django.forms import BaseModelForm
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.http import HttpRequest, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
@@ -17,7 +19,7 @@ class RackListView(ListView):
   @method_decorator(login_required)
   @method_decorator(csrf_exempt)
   def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    return super().dispatch(request, *args, **kwargs) 
 
   def post (self, request, *args, **kwargs):
     data = {}
@@ -55,18 +57,24 @@ class RackCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
-    try:
-      action = request.POST.get('action')
-      if action == 'add':
-        form = self.get_form()
-        data = form.save()
-      else:
-        data['error'] = 'Acción no válida'
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+  def form_valid(self, form):
+    form.save()
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      return JsonResponse({'success':True})
+    else:
+      return redirect(self.success_url)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({
+        "error": "Formulario no válido",
+        "form_errors": errors
+      }, status=400)
+    else:
+      context = self.get_context_data(form=form)
+      context['saved'] = False
+    return self.render_to_response(context)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -91,18 +99,24 @@ class RackUpadateView(UpdateView):
     self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
-    try:
-      action = request.POST.get('action')
-      if action == 'edit':
-        form = self.get_form()
-        data = form.save()
-      else:
-        data['error'] = 'Accion no válida'
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+  def form_valid(self, form):
+    form.save()
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      return JsonResponse({'success':True})
+    else:
+      return redirect(self.success_url)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({
+        "error": "Formulario no válido",
+        "form_errors": errors
+      }, status=400)
+    else:
+      context = self.get_context_data(form=form)
+      context['saved'] = False
+      return self.render_to_response(context)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)

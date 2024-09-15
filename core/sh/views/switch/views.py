@@ -7,7 +7,62 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from core.sh.forms import SwitchForm
-from core.sh.models import Switch
+from core.sh.models import Dependency, Dev_Model, Edifice, Office, Switch
+
+class SwitchBaseView:
+  def handle_ajax_request(self, request):
+    data = {}
+    action = request.POST.get('action')
+
+    if action == 'search_model':
+      brand_id = request.POST.get('brand_id')
+      models = Dev_Model.objects.filter(dev_type__dev_type = 'SWITCH')
+      if brand_id:
+        models = models.filter(brand_id=brand_id)
+
+        data = [{'id': m.id, 'name': m.dev_model} for m in models]
+
+    elif action == 'search_edifice':
+      location_id = request.POST.get('location_id')
+      edifices = Edifice.objects.filter(location_id=location_id)
+      data = [{'id':e.id, 'name': e.edifice} for e in edifices]
+
+    elif action =='search_dependency':
+      location_id = request.POST.get('location_id')
+      dependencies = Dependency.objects.filter(location_id=location_id)
+      data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+
+    elif action == 'search_office':
+      edifice_id = request.POST.get('edifice_id')
+      dependency_id = request.POST.get('dependency_id')
+
+      offices = Office.objects.all()
+      if edifice_id:
+        offices = offices.filter(edifice_id=edifice_id)
+      if dependency_id:
+        offices = offices.filter(dependency_id=dependency_id)
+
+      data = [{'id': o.id, 'name': o.wall_port} for o in offices]
+
+    # else:
+    #   form = SwitchForm(request.POST)
+    #   if form.is_valid():
+    #     try:
+    #       form.save()
+    #       return JsonResponse({"success": "Switch guardado correctamente"}, status=200)
+    #     except Exception as e: 
+    #       return JsonResponse({"error":f"Error al guardar el Switch: {str(e)}"}, status=400)
+    #   else:
+    #     errors = form.errors.get_json_data()
+    #     return JsonResponse({"error": "Formulario no valido", "form_errors":errors}, status=400)
+
+    return JsonResponse(data, safe=False)
+
+  def post(self, request, *args, **kwargs):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+      return self.handle_ajax_request(request)
+    else:
+      return super().post(request, *args, **kwargs)
 
 
 class SwitchListView(ListView):
@@ -24,13 +79,13 @@ class SwitchListView(ListView):
     try:
       action = request.POST['action']
       if action == 'searchdata':
-        data = []
-        for i in Switch.objects.all():
-          data.append(i.toJSON())
+        switches = Switch.objects.all()
+        data = [s.toJSON() for s in switches]
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
-      data['error'] = str(e)
+      data = {'error': str(e)}
+
     return JsonResponse(data, safe=False)
 
   def get_context_data(self, **kwargs):
@@ -45,7 +100,7 @@ class SwitchListView(ListView):
     context['table_id'] = 'switch_table'
     return context
 
-class SwitchCreateView(CreateView):
+class SwitchCreateView(SwitchBaseView, CreateView):
   model: Switch
   form_class = SwitchForm
   template_name = 'switch/create.html'
@@ -55,18 +110,62 @@ class SwitchCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
-    try:
-      action = request.POST.get('action')
-      if action == 'add':
-        form = self.get_form()
-        data = form.save()
-      else:
-        data['error'] = 'Acción no válida'
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+  # def post(self, request, *args, **kwargs):
+  #   if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+  #     data = {}
+  #     try:
+  #       action = request.POST.get('action')
+        # if action == 'search_model':
+        #   brand_id = request.POST.get('brand_id')
+        #   dev_type_id = Dev_Model.objects.filter(dev_type='SWITCH').id
+
+        #   models = Dev_Model.objects.filter(dev_type_id=dev_type_id)
+        #   if brand_id:
+        #     models = models.filter(brand_id=brand_id)
+
+        #   data = [{'id': m.id, 'name': m.dev_model} for m in models]
+
+        # elif action == 'search_edifice':
+        #   location_id = request.POST.get('location_id')
+        #   edifices = Edifice.objects.filter(location_id=location_id)
+        #   data = [{'id':e.id, 'name': e.edifice} for e in edifices]
+
+        # elif action =='search_dependency':
+        #   location_id = request.POST.get('location_id')
+        #   dependencies = Dependency.objects.filter(location_id=location_id)
+        #   data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+
+        # elif action == 'search_office':
+        #   edifice_id = request.POST.get('edifice_id')
+        #   dependency_id = request.POST.get('dependency_id')
+
+        #   offices = Office.objects.all()
+        #   if edifice_id:
+        #     offices = offices.filter(edifice_id=edifice_id)
+        #   if dependency_id:
+        #     offices = offices.filter(dependency_id=dependency_id)
+
+        #   data = [{'id': o.id, 'name': o.wall_port} for o in offices]
+
+        # else:
+        #   form = SwitchForm(request.POST)
+        #   if form.is_valid():
+        #     try:
+        #       form.save()
+        #       return JsonResponse({"success": "Switch guardado correctamente"}, status=200)
+        #     except Exception as e: 
+        #       return JsonResponse({"error":f"Error al guardar el Switch: {str(e)}"}, status=400)
+        #   else:
+        #     errors = form.errors.get_json_data()
+        #     return JsonResponse({"error": "Formulario no valido", "form_errors":errors}, status=400)
+
+        # return JsonResponse(data, safe=False)
+
+    #   except Exception as e:
+    #     return JsonResponse({'error': str(e)}, status=400, safe=False)
+
+    # else:
+    #   return super().post(request, *args, **kwargs)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -78,9 +177,10 @@ class SwitchCreateView(CreateView):
     context['form_id'] = 'switchForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
+    context['dev_type_id'] = 'SWITCH'
     return context
 
-class SwitchUpadateView(UpdateView):
+class SwitchUpadateView(SwitchBaseView, UpdateView):
   model = Switch
   form_class = SwitchForm
   template_name = 'switch/create.html'
@@ -91,30 +191,170 @@ class SwitchUpadateView(UpdateView):
     self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
-    try:
-      action = request.POST.get('action')
-      if action == 'edit':
-        form = self.get_form()
-        data = form.save()
-      else:
-        data['error'] = 'Accion no válida'
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+  # def post(self, request, *args, **kwargs):
+  #   if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+  #     data = {}
+  #     try:
+  #       action = request.POST.get('action')
+
+  #       if action == 'search_models':
+  #         brand_id = request.POST.get('brand_id')
+  #         dev_type_id = Dev_Model.objects.filter(dev_type='SWITCH').id
+
+  #         models = Dev_Model.objects.filter(dev_type_id=dev_type_id)
+  #         if brand_id:
+  #           models = models.filter(brand_id=brand_id)
+
+  #         data = [{'id': m.id, 'name': m.dev_model} for m in models]
+
+  #       elif action == 'search_edifice':
+  #         location_id = request.POST.get('location_id')
+  #         edifices = Edifice.objects.filter(location_id=location_id)
+  #         data = [{'id':e.id, 'name': e.edifice} for e in edifices]
+
+  #       elif action =='search_dependency':
+  #         location_id = request.POST.get('location_id')
+  #         dependencies = Dependency.objects.filter(location_id=location_id)
+  #         data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+
+  #       elif action == 'search_office':
+  #         edifice_id = request.POST.get('edifice_id')
+  #         dependency_id = request.POST.get('dependency_id')
+
+  #         offices = Office.objects.all()
+  #         if edifice_id:
+  #           offices = offices.filter(edifice_id=edifice_id)
+  #         if dependency_id:
+  #           offices = offices.filter(dependency_id=dependency_id)
+
+  #         data = [{'id': o.id, 'name': o.wall_port} for o in offices]
+
+
+  #       else:
+  #         self.object = self.get_object()
+  #         form = self.get_form()
+  #         if form.is_valid():
+  #           try:
+  #             form.save()
+  #             return JsonResponse({"success": "Switch actualizado correctamente"}, status=200)
+  #           except Exception as e:
+  #             return JsonResponse({"error": f"Error al actualizar el Switch: {str(e)}"}, status=400)
+  #         else:
+  #           errors = form.errors.get_json_data()
+  #           return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
+
+  #       return JsonResponse(data, safe=False)
+
+  #     except Exception as e:
+  #       data = {'error': str(e)}
+  #       return JsonResponse(data, safe=False)
+  #   else:
+  #     return super().post(request, *args, **kwargs)
+
+  # def form_invalid(self, form):
+  #   if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+  #     errors = form.errors.get_json_data()
+  #     return JsonResponse({
+  #       "error": "Formulario no válido",
+  #       "form_errors": errors
+  #     }, status=400)
+  #   else:
+  #     context = self.get_context_data(form=form)
+  #     context['saved'] = False
+  #     return self.render_to_response(context)
+
+  # def handle_search_action(self, action, post_data):
+  #   data = []
+
+  #   if action =='search_models':
+
+  #     dev_type_id = post_data.get('dev_type_id')
+  #     brand_id = post_data.get('brand_id')
+  #     models = Dev_Model.objects.all()
+  #     if dev_type_id:
+  #       try:
+  #         dev_type_id = int(dev_type_id)
+  #         models = models.filter(dev_type_id=dev_type_id)
+  #       except ValueError:
+  #         pass
+  #     if brand_id:
+  #       try:
+  #         brand_id = int(brand_id)
+  #         models = models.filter(brand_id=brand_id)
+  #       except ValueError:
+  #         pass
+  #       data = [{'id': m.id, 'name': m.dev_model} for m in models]
+
+  #     elif action == 'search_edifice':
+  #       location_id = post_data.get('location_id')
+  #       if location_id:
+  #         try:
+  #           location_id = int(location_id)
+  #           edifices = Edifice.objects.filter(location_id=location_id)
+  #           data = [{'id':e.id, 'name': e.edifice} for e in edifices]
+  #         except ValueError:
+  #           pass
+
+  #     elif action == 'search_office':
+  #       edifice_id = post_data.get('edifice_id')
+  #       if edifice_id:
+  #         try:
+  #           edifice_id = int(edifice_id)
+  #           offices = Office.objects.filter(edifice_id=edifice_id)
+  #           data = [{'id': o.id, 'name': o.office} for o in offices]
+  #         except ValueError:
+  #           pass
+
+  #     return data
 
   def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['page_title'] = 'Switchs '
-      context['title'] = 'Editar un Switch'
-      context['btn_add_id'] = 'switch_add'
-      context['entity'] = 'Switchs'
-      context['list_url'] = reverse_lazy('sh:switch_list')
-      context['form_id'] = 'switchForm'
-      context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
-      return context
+    context = super().get_context_data(**kwargs)
+    context['page_title'] = 'Switchs '
+    context['title'] = 'Editar un Switch'
+    context['btn_add_id'] = 'switch_add'
+    context['entity'] = 'Switchs'
+    context['list_url'] = reverse_lazy('sh:switch_list')
+    context['form_id'] = 'switchForm'
+    context['action'] = 'edit'
+    context['bg_color'] = 'bg-warning'
+
+    switch = self.get_object()
+
+    if switch.model:
+      context['form'].fields['model'].queryset = Dev_Model.objects.filter(
+        dev_type=switch.model.dev_type,
+        brand=switch.model.brand
+    )
+
+    if switch.office and switch.office.edifice:
+      context['form'].fields['edifice'].queryset = Edifice.objects.filter(
+        location=switch.office.edifice.location
+    )
+
+    if switch.office:
+      context['form'].fields['office'].queryset = Office.objects.filter(
+        edifice=switch.office.edifice
+    )
+
+# Manejar inicialización segura de datos en el contexto
+    context['form'].initial['brand'] = switch.model.brand.id if switch.model and switch.model.brand else None
+    context['form'].initial['dev_type'] = switch.model.dev_type.id if switch.model and switch.model.dev_type else 'SWITCH'
+    context['form'].initial['model'] = switch.model.id if switch.model else None
+    context['form'].initial['location'] = switch.office.edifice.location.id if switch.office and switch.office.edifice else None
+    context['form'].initial['edifice'] = switch.office.edifice.id if switch.office and switch.office.edifice else None
+    context['form'].initial['office'] = switch.office.id if switch.office else None
+
+    context['form'].fields['model'].widget.attrs.update({
+      'data-preselected': self.object.model.id if self.object.model else ''
+    })
+    context['form'].fields['edifice'].widget.attrs.update({
+      'data-preselected': self.object.office.edifice.id if self.object.office.edifice else ''
+    })
+    context['form'].fields['office'].widget.attrs.update({
+      'data-preselected': self.object.office.id if self.object.office else ''
+    })
+
+    return context
 
 class SwitchDeleteView(DeleteView):
   model = Switch

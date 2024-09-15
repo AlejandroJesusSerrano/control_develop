@@ -9,6 +9,10 @@ class Brand(models.Model):
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Regilstro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
+  def save(self,*args, **kwargs):
+    self.brand = self.brand.upper()
+    super(Brand, self).save(*args, **kwargs)
+
   def __str__(self):
     return self.brand
 
@@ -23,9 +27,13 @@ class Brand(models.Model):
     ordering = ['brand']
 
 class Dev_Type(models.Model):
-  dev_type = models.CharField(max_length = 50, verbose_name = 'Tipo de Dispositivo')
+  dev_type = models.CharField(max_length = 50, verbose_name = 'Tipo de Dispositivo', unique=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Regilstro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
+
+  def save(self,*args, **kwargs):
+    self.dev_type = self.dev_type.upper()
+    super(Dev_Type, self).save(*args, **kwargs)
 
   def __str__(self):
     return self.dev_type
@@ -169,13 +177,15 @@ class Edifice(models.Model):
     unique_together = ('location', 'edifice')
 
 class Dependency(models.Model):
+  location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='Localidad')
+  edifice = models.ForeignKey(Edifice, on_delete=models.CASCADE, verbose_name='Edificio')
   dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia', unique=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def save(self, *args, **kwargs):
     self.dependency = self.dependency.upper()
-    super(Dependency, self).save(*args, *kwargs)
+    super(Dependency, self).save(*args, **kwargs)
 
   def __str__(self):
     return self.dependency
@@ -183,6 +193,7 @@ class Dependency(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['dependency'] = self.dependency
+    item['location'] = self.location.location
     return item
 
   class Meta:
@@ -190,6 +201,7 @@ class Dependency(models.Model):
     verbose_name_plural = 'Dependencias'
     db_table = 'dependencia'
     ordering = ['id']
+    unique_together = ('location', 'dependency')
 
 class Office_Loc(models.Model):
 
@@ -199,21 +211,37 @@ class Office_Loc(models.Model):
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
+  def save(self, *args, **kwargs):
+    self.wing = self.wing.upper()
+    self.floor = self.floor
+    super(Office_Loc, self).save(*args, **kwargs)
+
   def __str__(self):
-    return f'Piso: {self.floor} Ala: {self.wing}'
+    return f'Piso: {self.floor} / Ala: {self.wing}'
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['province'] = self.edifice.location.province.province
     item['location'] = self.edifice.location.location
+    item['edifice'] = self.edifice.edifice
     return item
+
+  class Meta:
+    verbose_name = 'Locación de Oficina'
+    verbose_name_plural = 'Locaciones de Oficinas'
+    db_table = 'locaciones_oficinas'
+    ordering = ['id']
 
 class Office(models.Model):
   dependency = models.ForeignKey(Dependency, related_name = 'offices_dependencies', verbose_name = 'Dependencia', on_delete=models.CASCADE)
   loc = models.ForeignKey(Office_Loc, related_name = 'office_location', verbose_name = 'Piso/Ala', on_delete = models.CASCADE)
   office = models.CharField(max_length = 50, verbose_name = 'Oficina')
+  description = models.TextField(verbose_name='Descripcion', blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
+
+  def save(self, *args, **kwargs):
+    self.office = self.office.upper()
+    super(Office, self).save(*args, **kwargs)
 
   def __str__(self):
     return self.office
@@ -230,7 +258,7 @@ class Office(models.Model):
 
 
   class Meta:
-    verbose_name = 'Officina'
+    verbose_name = 'Oficina'
     verbose_name_plural = 'Oficinas'
     db_table = 'oficina'
     ordering = ['id']
@@ -307,10 +335,14 @@ class Connection_Type(models.Model):
     ordering = ['id']
 
 class Rack(models.Model):
-  rack = models.CharField(max_length = 6, verbose_name = 'Rack')
+  rack = models.CharField(max_length = 6, verbose_name = 'Rack', unique=True)
   details = models.TextField(verbose_name = 'Detalle')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
+
+  def save(self,*args, **kwargs):
+    self.rack = self.rack.upper()
+    super(Rack, self).save(*args, **kwargs)
 
   def __str__(self):
     return f'{self.rack}'
@@ -367,21 +399,28 @@ class Patch_Port(models.Model):
     ordering = ['id']
 
 class Switch(models.Model):
-  brand = models.ForeignKey(Brand, related_name = 'switch_brand', verbose_name = 'Marca', on_delete = models.CASCADE)
-  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True, unique=True)
+  model = models.ForeignKey(Dev_Model, related_name = 'switch_model', verbose_name = 'Modelo', on_delete = models.CASCADE)
+  serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True)
   ports_q = models.CharField(max_length = 2, verbose_name = 'Cantidad de Puertos')
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
-  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True, unique=True)
+  switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
   office = models.ForeignKey(Office, related_name = 'switch_office', verbose_name = 'Oficina', on_delete = models.CASCADE, blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
+  def save(self,*args, **kwargs):
+    if self.model.dev_type.dev_type != 'SWITCH':
+        self.model.dev_type.dev_type = Dev_Type.objects.get(name='SWITCH')
+    self.serial_n = self.serial_n.upper()
+    self.switch_rack_pos = self.switch_rack_pos.upper()
+    super(Switch, self).save(*args, **kwargs)
+
   def __str__(self):
-    return f'{self.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}' if self.rack else f'{self.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
+    return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}' if self.rack else f'{self.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['brand'] = self.brand.brand
+    item['brand'] = self.model.brand.brand
     item['rack'] = self.rack.rack
     return item
 
@@ -390,6 +429,7 @@ class Switch(models.Model):
     verbose_name_plural = 'Switches'
     db_table = 'switchs'
     ordering = ['id']
+    unique_together = ('model', 'serial_n')
 
 class Switch_Port(models.Model):
   switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)
