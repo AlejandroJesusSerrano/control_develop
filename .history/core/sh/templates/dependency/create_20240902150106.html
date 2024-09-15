@@ -1,0 +1,20 @@
+{% extends 'form.html' %}
+
+{% load static %}
+
+{% block form %}
+<div class="form-group">
+  <label for="dependency">Dependencia:</label>
+  {{ form.dependency }}
+  {% if form.dependency.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.dependency.errors|join:'<br>' }}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'dependency/js/form.js' %}"></script>
+{% endblock form_scripts %}
