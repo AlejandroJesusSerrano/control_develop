@@ -112,26 +112,6 @@ class SwitchCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    self.object = form.save(commit=False)
-    self.object.save()
-
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      data = {
-        'success': True,
-        'message': 'Switch creada exitosamente',
-      }
-      return JsonResponse(data)
-    else:
-      return super().form_valid(form)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        errors = form.errors.as_json()
-        return JsonResponse({'error': errors}, status=400)
-    else:
-        return super().form_invalid(form)
-
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['page_title'] = 'Switchs'

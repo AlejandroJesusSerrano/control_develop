@@ -741,7 +741,7 @@ class SwitchForm(forms.ModelForm):
 
       if self.instance.model:
         self.fields['model'].queryset = Dev_Model.objects.filter(
-        dev_type = dev_type,
+        dev_type = dev_type
         brand = self.instance.model.brand
       )
 
@@ -757,6 +757,8 @@ class SwitchForm(forms.ModelForm):
           dependency = self.instance.office.dependency
         )
         self.fields['office'].initial = self.insrance.office
+      else:
+        pass
 
   def clean(self):
     cleaned_data = super().clean()

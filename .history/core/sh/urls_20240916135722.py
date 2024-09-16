@@ -78,7 +78,7 @@ urlpatterns = [
   path('switch/add/', switch_views.SwitchCreateView.as_view(), name='switch_add'),
   path('switch/edit/<int:pk>/', switch_views.SwitchUpdateView.as_view(), name='switch_edit'),
   path('switch/delete/<int:pk>/', switch_views.SwitchDeleteView.as_view(), name='switch_delete'),
-  # Ajax Routes
+  # Other Routes
   path('ajax/search_brand/', switch_views.ajax_search_brand, name='ajax_search_brand'),
   path('ajax/search_model/', switch_views.ajax_search_model, name='ajax_search_model'),
   path('ajax/search_edifice/', switch_views.ajax_search_edifice, name='ajax_search_edifice'),

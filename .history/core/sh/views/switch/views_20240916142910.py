@@ -42,7 +42,7 @@ def ajax_search_edifice(request):
   if request.method == 'POST':
     location_id = request.POST.get('location_id')
     edifices = Edifice.objects.filter(location_id=location_id)
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
+    data = [{'id': e.id, 'name': e.model} for e in edifices]
   return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -51,7 +51,7 @@ def ajax_search_dependency(request):
   if request.method == 'POST':
     location_id = request.POST.get('location_id')
     dependencies = Dependency.objects.filter(location_id=location_id)
-    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+    data = [{'id': d.id, 'name': d.model} for d in dependencies]
   return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -62,10 +62,10 @@ def ajax_search_office(request):
     dependency_id = request.POST.get('dependency_id')
     offices = Office.objects.all()
     if edifice_id:
-      offices = offices.filter(loc__edifice_id=edifice_id)
+      offices = offices.filter(edifice_id=edifice_id)
     if dependency_id:
       offices = offices.filter(dependency_id=dependency_id)
-    data = [{'id': o.id, 'name': o.office} for o in offices]
+    data = [{'id': o.id, 'name': o.model} for o in offices]
   return JsonResponse(data, safe=False)
 
 class SwitchListView(ListView):
@@ -111,26 +111,6 @@ class SwitchCreateView(CreateView):
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
-
-  def form_valid(self, form):
-    self.object = form.save(commit=False)
-    self.object.save()
-
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      data = {
-        'success': True,
-        'message': 'Switch creada exitosamente',
-      }
-      return JsonResponse(data)
-    else:
-      return super().form_valid(form)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        errors = form.errors.as_json()
-        return JsonResponse({'error': errors}, status=400)
-    else:
-        return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)

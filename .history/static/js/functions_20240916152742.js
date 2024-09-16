@@ -1,3 +1,4 @@
+// Obtener el token CSRF
 function getCookie(name) {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {
@@ -23,12 +24,13 @@ $.ajaxSetup({
   }
 });
 
-
+// Mostrar errores en el formulario
 function show_errors_in_form(errors) {
-
+  // Limpiar errores anteriores
   $('.is-invalid').removeClass('is-invalid');
   $('.invalid-feedback').remove();
 
+  // Mostrar errores nuevos
   $.each(errors, function (field, messages) {
     let fieldElement = $('[name="' + field + '"]');
 
@@ -46,7 +48,7 @@ function show_errors_in_form(errors) {
   });
 }
 
-
+// Función para mostrar mensajes de error
 function message_error(msg) {
   console.error('Errores recibidos: ', msg);
 
@@ -57,6 +59,7 @@ function message_error(msg) {
   }
 }
 
+// Función para actualizar opciones de un select
 function updateOptions(url, data, selectElement, preselectedValue) {
   let options = '<option value="">----------</option>';
 
@@ -94,7 +97,7 @@ function updateOptions(url, data, selectElement, preselectedValue) {
   });
 }
 
-
+// Función para confirmar y enviar una solicitud AJAX
 function confirmAndSend(url, title, icon, content, type, formData, callback) {
   $.confirm({
     theme: 'bootstrap',
@@ -110,7 +113,6 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
         text: "Sí",
         btnClass: 'btn-primary',
         action: function () {
-          form.Data.append('csrfmiddlewaretoken', csrftoken);
           $.ajax({
             url: url,
             type: 'POST',
@@ -137,13 +139,14 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
         text: "No",
         btnClass: 'btn-danger',
         action: function () {
-
+          // Acción en caso de cancelar
         }
       },
     }
   });
 }
 
+// Función para enviar solicitudes AJAX con confirmación
 function submit_with_ajax(url, formData, callback, actionType = 'add') {
   let title, icon, content, type;
 
@@ -172,20 +175,23 @@ function submit_with_ajax(url, formData, callback, actionType = 'add') {
   confirmAndSend(url, title, icon, content, type, formData, callback);
 }
 
-
+// Manejador del evento de envío del formulario
 $(document).ready(function () {
   $('#submitButton').on('click', function (e) {
-    e.preventDefault();
+    e.preventDefault(); // Prevenir el comportamiento predeterminado del botón
 
-    var form = $('#form');
+    var form = $('#form'); // Asegúrate de que '#form' es el ID correcto de tu formulario
     var formData = new FormData(form[0]);
     var url = form.attr('action');
 
     var callback = function () {
+      // Acción después de una respuesta exitosa
       alert('Operación realizada exitosamente.');
+      // Puedes redirigir, actualizar la página, etc.
       window.location.reload();
     };
 
-    submit_with_ajax(url, formData, callback, 'add');
+    // Llamar a submit_with_ajax pasando formData
+    submit_with_ajax(url, formData, callback, 'add'); // Cambia 'add' por 'edit' o 'delete' según corresponda
   });
 });

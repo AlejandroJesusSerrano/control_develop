@@ -19,7 +19,7 @@ from core.sh.views.employee.views import EmployeeListView, EmployeeCreateView, E
 from core.sh.views.rack.views import RackCreateView, RackDeleteView, RackListView, RackUpadateView
 from core.sh.views.suply.views import SuplyCreateView, SuplyDeleteView, SuplyListView, SuplyUpadateView
 from core.sh.views.suply_type.views import SuplyTypeCreateView, SuplyTypeDeleteView, SuplyTypeListView, SuplyTypeUpadateView
-from core.sh.views.switch import views as switch_views
+from core.sh.views.switch.views import views as switch_views
 from core.sh.views.switch_port.views import Switch_PortCreateView, Switch_PortDeleteView, Switch_PortListView, Switch_PortUpadateView
 from core.sh.views.tehcs.views import TechsDeleteView, TechsListView, TechsCreateView, TechsUpadateView
 from core.sh.views.dashboard.views import DashboardView
@@ -76,10 +76,9 @@ urlpatterns = [
   # Switchs
   path('switch/list/', switch_views.SwitchListView.as_view(), name='switch_list'),
   path('switch/add/', switch_views.SwitchCreateView.as_view(), name='switch_add'),
-  path('switch/edit/<int:pk>/', switch_views.SwitchUpdateView.as_view(), name='switch_edit'),
+  path('switch/edit/<int:pk>/', switch_views.SwitchUpadateView.as_view(), name='switch_edit'),
   path('switch/delete/<int:pk>/', switch_views.SwitchDeleteView.as_view(), name='switch_delete'),
-  # Ajax Routes
-  path('ajax/search_brand/', switch_views.ajax_search_brand, name='ajax_search_brand'),
+  # Other Routes
   path('ajax/search_model/', switch_views.ajax_search_model, name='ajax_search_model'),
   path('ajax/search_edifice/', switch_views.ajax_search_edifice, name='ajax_search_edifice'),
   path('ajax/search_dependency/', switch_views.ajax_search_dependency, name='ajax_search_dependency'),

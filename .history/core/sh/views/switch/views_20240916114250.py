@@ -4,27 +4,14 @@ from django.http import HttpRequest, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_exempt
 
 from core.sh.forms import SwitchForm
-from core.sh.models import Brand, Dependency, Dev_Model, Dev_Type, Edifice, Office, Switch
+from core.sh.models import Dependency, Dev_Model, Edifice, Office, Switch
 
 # Ajax views
 
-@csrf_protect
-def ajax_search_brand(request):
-  data=[]
-  if request.method == 'POST':
-    dev_type_name = request.POST.get('dev_type_name', 'SWITCH')
-    try:
-      dev_type = Dev_Type.objects.get(dev_type=dev_type_name)
-      brands = Brand.objects.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
-      data = [{'id': b.id, 'name': b.brand}for b in brands]
-    except Dev_Type.DoesNotExist:
-      pass
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
+@csrf_exempt
 def ajax_search_model(request):
   data = []
   if request.method == 'POST':
@@ -33,28 +20,28 @@ def ajax_search_model(request):
     models = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
     if brand_id:
       models = models.filter(brand_id=brand_id)
-    data = [{'id': m.id, 'name': m.dev_model} for m in models]
+    data = [{'id': m.id, 'name': m.model} for m in models]
   return JsonResponse(data, safe=False)
 
-@csrf_protect
+@csrf_exempt
 def ajax_search_edifice(request):
   data = []
   if request.method == 'POST':
     location_id = request.POST.get('location_id')
     edifices = Edifice.objects.filter(location_id=location_id)
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
+    data = [{'id': e.id, 'name': e.model} for e in edifices]
   return JsonResponse(data, safe=False)
 
-@csrf_protect
+@csrf_exempt
 def ajax_search_dependency(request):
   data = []
   if request.method == 'POST':
     location_id = request.POST.get('location_id')
     dependencies = Dependency.objects.filter(location_id=location_id)
-    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+    data = [{'id': d.id, 'name': d.model} for d in dependencies]
   return JsonResponse(data, safe=False)
 
-@csrf_protect
+@csrf_exempt
 def ajax_search_office(request):
   data = []
   if request.method == 'POST':
@@ -62,10 +49,10 @@ def ajax_search_office(request):
     dependency_id = request.POST.get('dependency_id')
     offices = Office.objects.all()
     if edifice_id:
-      offices = offices.filter(loc__edifice_id=edifice_id)
+      offices = offices.filter(edifice_id=edifice_id)
     if dependency_id:
       offices = offices.filter(dependency_id=dependency_id)
-    data = [{'id': o.id, 'name': o.office} for o in offices]
+    data = [{'id': o.id, 'name': o.model} for o in offices]
   return JsonResponse(data, safe=False)
 
 class SwitchListView(ListView):
@@ -73,6 +60,7 @@ class SwitchListView(ListView):
   template_name = 'switch/list.html'
 
   @method_decorator(login_required)
+  @method_decorator(csrf_exempt)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
@@ -112,26 +100,6 @@ class SwitchCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    self.object = form.save(commit=False)
-    self.object.save()
-
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      data = {
-        'success': True,
-        'message': 'Switch creada exitosamente',
-      }
-      return JsonResponse(data)
-    else:
-      return super().form_valid(form)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        errors = form.errors.as_json()
-        return JsonResponse({'error': errors}, status=400)
-    else:
-        return super().form_invalid(form)
-
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['page_title'] = 'Switchs'
@@ -145,7 +113,7 @@ class SwitchCreateView(CreateView):
     context['dev_type_id'] = 'SWITCH'
     return context
 
-class SwitchUpdateView(UpdateView):
+class SwitchUpadateView(UpdateView):
   model = Switch
   form_class = SwitchForm
   template_name = 'switch/create.html'

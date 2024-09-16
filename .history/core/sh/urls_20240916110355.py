@@ -1,5 +1,6 @@
 from django.urls import path
 
+from core.homepage import views
 from core.sh.views.connection_type.views import Connection_TypeCreateView, Connection_TypeDeleteView, Connection_TypeListView, Connection_TypeUpadateView
 from core.sh.views.device.views import DeviceCreateView, DeviceDeleteView, DeviceListView, DeviceUpdateView
 from core.sh.views.office.views import OfficeCreateView, OfficeListView, OfficeDeleteView, OfficeUpadateView
@@ -19,7 +20,7 @@ from core.sh.views.employee.views import EmployeeListView, EmployeeCreateView, E
 from core.sh.views.rack.views import RackCreateView, RackDeleteView, RackListView, RackUpadateView
 from core.sh.views.suply.views import SuplyCreateView, SuplyDeleteView, SuplyListView, SuplyUpadateView
 from core.sh.views.suply_type.views import SuplyTypeCreateView, SuplyTypeDeleteView, SuplyTypeListView, SuplyTypeUpadateView
-from core.sh.views.switch import views as switch_views
+from core.sh.views.switch.views import SwitchCreateView, SwitchDeleteView, SwitchListView, SwitchUpadateView
 from core.sh.views.switch_port.views import Switch_PortCreateView, Switch_PortDeleteView, Switch_PortListView, Switch_PortUpadateView
 from core.sh.views.tehcs.views import TechsDeleteView, TechsListView, TechsCreateView, TechsUpadateView
 from core.sh.views.dashboard.views import DashboardView
@@ -74,17 +75,16 @@ urlpatterns = [
   path('rack/edit/<int:pk>/', RackUpadateView.as_view(), name='rack_edit'),
   path('rack/delete/<int:pk>/', RackDeleteView.as_view(), name='rack_delete'),
   # Switchs
-  path('switch/list/', switch_views.SwitchListView.as_view(), name='switch_list'),
-  path('switch/add/', switch_views.SwitchCreateView.as_view(), name='switch_add'),
-  path('switch/edit/<int:pk>/', switch_views.SwitchUpdateView.as_view(), name='switch_edit'),
-  path('switch/delete/<int:pk>/', switch_views.SwitchDeleteView.as_view(), name='switch_delete'),
-  # Ajax Routes
-  path('ajax/search_brand/', switch_views.ajax_search_brand, name='ajax_search_brand'),
-  path('ajax/search_model/', switch_views.ajax_search_model, name='ajax_search_model'),
-  path('ajax/search_edifice/', switch_views.ajax_search_edifice, name='ajax_search_edifice'),
-  path('ajax/search_dependency/', switch_views.ajax_search_dependency, name='ajax_search_dependency'),
-  path('ajax/search_office/', switch_views.ajax_search_office, name='ajax_search_office'),
-  # Switch Ports
+  path('switch/list/', SwitchListView.as_view(), name='switch_list'),
+  path('switch/add/', SwitchCreateView.as_view(), name='switch_add'),
+  path('switch/edit/<int:pk>/', SwitchUpadateView.as_view(), name='switch_edit'),
+  path('switch/delete/<int:pk>/', SwitchDeleteView.as_view(), name='switch_delete'),
+  # Other Routes
+  path('ajax/search_model/', views.ajax_search_model, name='ajax_search_model'),
+  path('ajax/search_edifice/', views.ajax_search_edifice, name='ajax_search_edifice'),
+  path('ajax/search_dependency/', views.ajax_search_dependency, name='ajax_search_dependency'),
+  path('ajax/search_office/', views.ajax_search_office, name='ajax_search_office'),
+  #Switch Ports
   path('switch_port/list/', Switch_PortListView.as_view(), name='switch_port_list'),
   path('switch_port/add/', Switch_PortCreateView.as_view(), name='switch_port_add'),
   path('switch_port/edit/<int:pk>/', Switch_PortUpadateView.as_view(), name='switch_port_edit'),

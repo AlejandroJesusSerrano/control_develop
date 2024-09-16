@@ -757,6 +757,8 @@ class SwitchForm(forms.ModelForm):
           dependency = self.instance.office.dependency
         )
         self.fields['office'].initial = self.insrance.office
+      else:
+        pass
 
   def clean(self):
     cleaned_data = super().clean()

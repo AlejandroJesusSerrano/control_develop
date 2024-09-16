@@ -405,34 +405,18 @@ class Switch(models.Model):
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
   switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
   office = models.ForeignKey(Office, related_name = 'switch_office', verbose_name = 'Oficina', on_delete = models.CASCADE, blank=True, null=True)
-  date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Fecha de Registro')
-  date_updated = models.DateTimeField(auto_now = True, verbose_name = 'Última Modificación')
+  date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
+  date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def save(self,*args, **kwargs):
-    try:
-      switch_dev_type = Dev_Type.objects.get(dev_type = 'SWITCH')
-    except Dev_Type.DoesNotExist:
-      switch_dev_type = Dev_Type.objects.create(dev_type = 'SWITCH')
-    except Dev_Type.MultipleObjectsReturned:
-      switch_dev_type = Dev_Type.objects.filter(dev_type = 'SWITCH').first()
-
-    if self.model.dev_type != switch_dev_type:
-      self.model.dev_type = switch_dev_type
-      self.model.dev_type.save()
-      self.model.save()
-
-    if self.serial_n:
-      self.serial_n = self.serial_n.upper()
-    if self.switch_rack_pos:
-      self.switch_rack_pos = self.switch_rack_pos.upper()
-
+    if self.model.dev_type.dev_type != 'SWITCH':
+        self.model.dev_type.dev_type = Dev_Type.objects.get(name='SWITCH')
+    self.serial_n = self.serial_n.upper()
+    self.switch_rack_pos = self.switch_rack_pos.upper()
     super(Switch, self).save(*args, **kwargs)
 
   def __str__(self):
-    if self.rack:
-      return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}' 
-    else:
-      return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
+    return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}' if self.rack else f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
 
   def toJSON(self):
     item = model_to_dict(self)

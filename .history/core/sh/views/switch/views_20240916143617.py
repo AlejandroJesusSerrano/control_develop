@@ -17,7 +17,7 @@ def ajax_search_brand(request):
   if request.method == 'POST':
     dev_type_name = request.POST.get('dev_type_name', 'SWITCH')
     try:
-      dev_type = Dev_Type.objects.get(dev_type=dev_type_name)
+      # dev_type = Dev_Type.objects.get(dev_type=dev_type_name)
       brands = Brand.objects.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
       data = [{'id': b.id, 'name': b.brand}for b in brands]
     except Dev_Type.DoesNotExist:
@@ -41,7 +41,7 @@ def ajax_search_edifice(request):
   data = []
   if request.method == 'POST':
     location_id = request.POST.get('location_id')
-    edifices = Edifice.objects.filter(location_id=location_id)
+    edifices = Edifice.objects.filter(office_locations__edifice__location=location_id)
     data = [{'id': e.id, 'name': e.edifice} for e in edifices]
   return JsonResponse(data, safe=False)
 
@@ -62,7 +62,7 @@ def ajax_search_office(request):
     dependency_id = request.POST.get('dependency_id')
     offices = Office.objects.all()
     if edifice_id:
-      offices = offices.filter(loc__edifice_id=edifice_id)
+      offices = offices.filter(edifice_id=edifice_id)
     if dependency_id:
       offices = offices.filter(dependency_id=dependency_id)
     data = [{'id': o.id, 'name': o.office} for o in offices]
@@ -111,26 +111,6 @@ class SwitchCreateView(CreateView):
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
-
-  def form_valid(self, form):
-    self.object = form.save(commit=False)
-    self.object.save()
-
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      data = {
-        'success': True,
-        'message': 'Switch creada exitosamente',
-      }
-      return JsonResponse(data)
-    else:
-      return super().form_valid(form)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        errors = form.errors.as_json()
-        return JsonResponse({'error': errors}, status=400)
-    else:
-        return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
