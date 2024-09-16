@@ -1,0 +1,67 @@
+{% extends 'form.html' %}
+{% load static %}
+
+{% block extra_refs %}
+<!-- Select2 -->
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
+<script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+{% endblock extra_refs %}
+
+{% block form %}
+
+<div class="form-group">
+  <label for="province_id">Provincia:</label>
+  {{ form.province }}
+  {% if form.province.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.province.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="location_id">Localidad:</label>
+  {{ form.location }}
+  {% if form.location.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.location.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="edifice_id">Edificio:</label>
+  {{ form.edifice }}
+  {% if form.edifice.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.edifice.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="floor">Piso:</label>
+  {{ form.floor }}
+  {% if form.floor.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.floor.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="wing">Ala:</label>
+  {{ form.wing }}
+  {% if form.wing.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.wing.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'office_loc/js/form.js' %}"></script>
+{% endblock form_scripts %}

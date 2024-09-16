@@ -219,7 +219,7 @@ class EdificeForm(forms.ModelForm):
       edifice = self.instance
 
       self.fields['location'].queryset = Location.objects.filter(
-        province = self.instance.location.province,
+        province = self.instance.location.province
       )
 
     else:
