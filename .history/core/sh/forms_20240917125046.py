@@ -744,7 +744,7 @@ class SwitchForm(forms.ModelForm):
       switch = self.instance
 
       dev_type = self.instance.model.dev_type
-      self.fields['brand'].queryset = Brand.objects.filter(models_brand__dev_type=dev_type).distinct()
+      self.fields['brand'].queryset = Brand.objects.filter(dev_model__brand__dev_type=dev_type).distinct()
       self.fields['brand'].initial = self.instance.model.brand
 
       if self.instance.model:

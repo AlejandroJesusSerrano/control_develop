@@ -51,6 +51,26 @@
 </div>
 
 <div class="form-group">
+  <label for="id_rack"> Rack:</label>
+  {{ form.rack }}
+  {% if form.rack.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.rack.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_switch_rack_pos">Posición en el Rack:</label>
+  {{ form.switch_rack_pos }}
+  {% if form.switch_rack_pos.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.switch_rack_pos.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
   <label for="id_location">Localidad:</label>
   {{ form.location }}
   {% if form.location.errors %}
@@ -86,26 +106,6 @@
   {% if form.office.errors %}
   <div class="invalid-feedback d-block">
     {{ form.office.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_rack"> Rack:</label>
-  {{ form.rack }}
-  {% if form.rack.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.rack.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_switch_rack_pos">Posición en el Rack:</label>
-  {{ form.switch_rack_pos }}
-  {% if form.switch_rack_pos.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.switch_rack_pos.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>

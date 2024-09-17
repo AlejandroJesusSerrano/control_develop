@@ -68,6 +68,15 @@ def ajax_search_office(request):
     data = [{'id': o.id, 'name': o.office} for o in offices]
   return JsonResponse(data, safe=False)
 
+@csrf_protect
+def ajax_search_rack(request):
+  data = []
+  if request.method == 'POST':
+    location_id = request.POST.get('location_id')
+    dependencies = Dependency.objects.filter(location_id=location_id)
+    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+  return JsonResponse(data, safe=False)
+
 class SwitchListView(ListView):
   model = Switch
   template_name = 'switch/list.html'
@@ -164,38 +173,8 @@ class SwitchUpdateView(UpdateView):
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
+    self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
-
-  def form_valid(self, form):
-    try:
-      self.object = form.save()
-
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        data = {
-          'success': True,
-          'message': 'Switch creada exitosamente',
-        }
-        return JsonResponse(data)
-      else:
-        return super().form_valid(form)
-    except Exception as e:
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
-      else:
-        form.add_error(None, str(e))
-        return self.form_invalid(form)
-
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      print(errors)
-      return JsonResponse({'error': errors}, status=400)
-    else:
-      return super().form_invalid(form)
-
-  def post(self, request, *args, **kwargs):
-    print("POST data: ", request.POST)
-    return super().post(request, *args, **kwargs)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -216,31 +195,29 @@ class SwitchUpdateView(UpdateView):
         brand=switch.model.brand
     )
 
-    if switch.office and switch.office.loc and switch.office.loc.edifice:
+    if switch.office and switch.office.edifice:
       context['form'].fields['edifice'].queryset = Edifice.objects.filter(
-        location=switch.office.loc.edifice.location
+        location=switch.office.edifice.location
     )
 
     if switch.office:
       context['form'].fields['office'].queryset = Office.objects.filter(
-        loc__edifice=switch.office.loc.edifice
+        edifice=switch.office.edifice
     )
 
 # Manejar inicialización segura de datos en el contexto
     context['form'].initial['brand'] = switch.model.brand.id if switch.model and switch.model.brand else None
     context['form'].initial['dev_type'] = switch.model.dev_type.id if switch.model and switch.model.dev_type else 'SWITCH'
     context['form'].initial['model'] = switch.model.id if switch.model else None
-
-    if switch.office and switch.office.loc and switch.office.loc.edifice:
-      context['form'].initial['location'] = switch.office.loc.edifice.location.id
-      context['form'].initial['edifice'] = switch.office.loc.edifice.id
+    context['form'].initial['location'] = switch.office.edifice.location.id if switch.office and switch.office.edifice else None
+    context['form'].initial['edifice'] = switch.office.edifice.id if switch.office and switch.office.edifice else None
     context['form'].initial['office'] = switch.office.id if switch.office else None
 
     context['form'].fields['model'].widget.attrs.update({
       'data-preselected': self.object.model.id if self.object.model else ''
     })
     context['form'].fields['edifice'].widget.attrs.update({
-      'data-preselected': self.object.office.loc.edifice.id if self.object.office.loc.edifice else ''
+      'data-preselected': self.object.office.edifice.id if self.object.office.edifice else ''
     })
     context['form'].fields['office'].widget.attrs.update({
       'data-preselected': self.object.office.id if self.object.office else ''

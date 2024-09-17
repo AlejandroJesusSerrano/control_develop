@@ -744,7 +744,7 @@ class SwitchForm(forms.ModelForm):
       switch = self.instance
 
       dev_type = self.instance.model.dev_type
-      self.fields['brand'].queryset = Brand.objects.filter(models_brand__dev_type=dev_type).distinct()
+      self.fields['brand'].queryset = Brand.objects.filter(dev_model__dev_type=dev_type).distinct()
       self.fields['brand'].initial = self.instance.model.brand
 
       if self.instance.model:
@@ -753,18 +753,15 @@ class SwitchForm(forms.ModelForm):
         brand = self.instance.model.brand
       )
 
-      if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice:
-        location = self.instance.office.loc.edifice.location
+      if self.instance.office:
+        location = self.instance.office.edifice.location
         self.fields['location'].initial = location
         self.fields['edifice'].queryset = Edifice.objects.filter(location=location)
-        self.fields['edifice'].initial = self.instance.office.loc.edifice
-
-      if self.instance.office:
-        location = self.instance.office.loc.edifice.location
+        self.fields['edifice'].initial = self.instance.office.edifice
         self.fields['dependency'].queryset = Dependency.objects.filter(location=location)
         self.fields['dependency'].initial = self.instance.office.dependency
         self.fields['office'].queryset = Office.objects.filter(
-          loc__edifice = self.instance.office.loc.edifice,
+          edifice = self.instance.office.edifice,
           dependency = self.instance.office.dependency
         )
         self.fields['office'].initial = self.instance.office

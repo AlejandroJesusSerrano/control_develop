@@ -449,7 +449,6 @@ class Switch(models.Model):
     db_table = 'switchs'
     ordering = ['id']
     unique_together = ('model', 'serial_n')
-    unique_together = ('rack', 'switch_rack_pos')
 
 class Switch_Port(models.Model):
   switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)

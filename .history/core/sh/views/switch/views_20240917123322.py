@@ -216,7 +216,7 @@ class SwitchUpdateView(UpdateView):
         brand=switch.model.brand
     )
 
-    if switch.office and switch.office.loc and switch.office.loc.edifice:
+    if switch.office and switch.office.loc.edifice:
       context['form'].fields['edifice'].queryset = Edifice.objects.filter(
         location=switch.office.loc.edifice.location
     )

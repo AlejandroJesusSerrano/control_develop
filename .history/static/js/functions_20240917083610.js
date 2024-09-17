@@ -36,30 +36,33 @@ function show_errors_in_form(errors) {
       fieldElement.addClass('is-invalid');
       let errorHtml = '<div class="invalid-feedback d-block">';
 
-      $.each(messages, function (index, errorObj) {
-        errorHtml += errorObj.message + '<br>';
+      $.each(messages, function (index, error) {
+        errorHtml += error + '<br>';
       });
 
       errorHtml += '</div>';
-      fieldElement.after(errorHtml)
+      fieldElement.after(errorHtml);
     }
   });
 }
 
 
 function message_error(msg) {
-  console.error('Errores recibidos: ', msg)
+  console.error('Errores recibidos: ', msg);
 
-  if (typeof msg === 'object' && msg.hasOwnProperty('error')) {
-    show_errors_in_form(msg.error);
-  } else if (typeof msg === 'object') {
-    show_errors_in_form(msg)
+  if (typeof msg === 'object' && msg.error) {
+    try {
+      let errors = JSON.parse(msg.error);
+      show_errors_in_form(msg.error);
+    } catch (e) {
+      console.error('Error al parsear los errores: ', e);
+      alert('Error: ' + msg.error);
+    }
   } else if (typeof msg === 'string') {
     alert(msg);
   } else {
     alert('Ha ocurrido un error inesperado en el servidor.');
   }
-
 }
 
 function updateOptions(url, data, selectElement, preselectedValue) {
@@ -93,13 +96,6 @@ function updateOptions(url, data, selectElement, preselectedValue) {
   }).fail(function (jqXHR, textStatus, errorThrown) {
     if (jqXHR.status == 403) {
       message_error('Error de seguridad: token CSRF inválido o no proporcionado.');
-    } else if (jqXHR.status === 400) {
-      let response = jqXHR.responseJSON;
-      if (response && response.errors) {
-        message_error(response);
-      } else {
-        message_error('Ha ocurrido un error en la validación del formulario.');
-      }
     } else {
       message_error(textStatus + ': ' + errorThrown);
     }
@@ -122,7 +118,11 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
         text: "Sí",
         btnClass: 'btn-primary',
         action: function () {
-
+          // formData.append('csrfmiddlewaretoken', csrftoken);
+          // depuracion de error
+          for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1])
+          }
           $.ajax({
             url: url,
             type: 'POST',
@@ -139,13 +139,6 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
           }).fail(function (jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 403) {
               message_error("Error de seguridad: token CSRF inválido no proporcionado.");
-            } else if (jqXHR.status === 400) {
-              let response = jqXHR.responseJSON;
-              if (response && response.error) {
-                message_error(response.error);
-              } else {
-                message_error('Ha ocurrido un error en la validación del formulario.');
-              }
             } else {
               message_error(textStatus + ': ' + errorThrown);
             }

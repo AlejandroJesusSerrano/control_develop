@@ -216,7 +216,7 @@ class SwitchUpdateView(UpdateView):
         brand=switch.model.brand
     )
 
-    if switch.office and switch.office.loc and switch.office.loc.edifice:
+    if switch.office and switch.office.loc.edifice:
       context['form'].fields['edifice'].queryset = Edifice.objects.filter(
         location=switch.office.loc.edifice.location
     )
@@ -230,17 +230,15 @@ class SwitchUpdateView(UpdateView):
     context['form'].initial['brand'] = switch.model.brand.id if switch.model and switch.model.brand else None
     context['form'].initial['dev_type'] = switch.model.dev_type.id if switch.model and switch.model.dev_type else 'SWITCH'
     context['form'].initial['model'] = switch.model.id if switch.model else None
-
-    if switch.office and switch.office.loc and switch.office.loc.edifice:
-      context['form'].initial['location'] = switch.office.loc.edifice.location.id
-      context['form'].initial['edifice'] = switch.office.loc.edifice.id
+    context['form'].initial['location'] = switch.office.loc.edifice.location.id if switch.office and switch.office.loc.edifice else None
+    context['form'].initial['edifice'] = switch.office.loc.edifice.id if switch.office and switch.office.loc.edifice else None
     context['form'].initial['office'] = switch.office.id if switch.office else None
 
     context['form'].fields['model'].widget.attrs.update({
       'data-preselected': self.object.model.id if self.object.model else ''
     })
     context['form'].fields['edifice'].widget.attrs.update({
-      'data-preselected': self.object.office.loc.edifice.id if self.object.office.loc.edifice else ''
+      'data-preselected': self.object.office.edifice.id if self.object.office.edifice else ''
     })
     context['form'].fields['office'].widget.attrs.update({
       'data-preselected': self.object.office.id if self.object.office else ''

@@ -25,14 +25,16 @@ $.ajaxSetup({
 
 
 function show_errors_in_form(errors) {
-
+  console.log("Errores recibidos en show_errors_in_form: ", errors);
   $('.is-invalid').removeClass('is-invalid');
   $('.invalid-feedback').remove();
 
   $.each(errors, function (field, messages) {
+    console.log("Campo con error: ", field)
     let fieldElement = $('[name="' + field + '"]');
 
     if (fieldElement.length > 0) {
+      console.log("Elemento del campo encontrado: ", fieldElement)
       fieldElement.addClass('is-invalid');
       let errorHtml = '<div class="invalid-feedback d-block">';
 
@@ -42,6 +44,9 @@ function show_errors_in_form(errors) {
 
       errorHtml += '</div>';
       fieldElement.after(errorHtml)
+
+    } else {
+      console.log("Campo no encontrado en el DOM: ", field);
     }
   });
 }
@@ -60,6 +65,8 @@ function message_error(msg) {
     alert('Ha ocurrido un error inesperado en el servidor.');
   }
 
+  console.log('Detalles del mensaje: ', msg)
+  console.log(errors)
 }
 
 function updateOptions(url, data, selectElement, preselectedValue) {
@@ -122,6 +129,9 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
         text: "Sí",
         btnClass: 'btn-primary',
         action: function () {
+          for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1])
+          }
 
           $.ajax({
             url: url,
@@ -141,8 +151,8 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
               message_error("Error de seguridad: token CSRF inválido no proporcionado.");
             } else if (jqXHR.status === 400) {
               let response = jqXHR.responseJSON;
-              if (response && response.error) {
-                message_error(response.error);
+              if (response && response.errors) {
+                message_error(response);
               } else {
                 message_error('Ha ocurrido un error en la validación del formulario.');
               }

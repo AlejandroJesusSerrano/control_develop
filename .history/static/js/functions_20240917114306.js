@@ -26,13 +26,17 @@ $.ajaxSetup({
 
 function show_errors_in_form(errors) {
 
+  console.log("Errores recibidos en show_errors_in_form: ", errors);
+
   $('.is-invalid').removeClass('is-invalid');
   $('.invalid-feedback').remove();
 
   $.each(errors, function (field, messages) {
+    console.log("Campo con error: ", field)
     let fieldElement = $('[name="' + field + '"]');
 
     if (fieldElement.length > 0) {
+      console.log("Elemento del campo encontrado: ", fieldElement)
       fieldElement.addClass('is-invalid');
       let errorHtml = '<div class="invalid-feedback d-block">';
 
@@ -41,7 +45,11 @@ function show_errors_in_form(errors) {
       });
 
       errorHtml += '</div>';
+      console.log("HTML del error a insertar: ", errorHtml);
       fieldElement.after(errorHtml)
+
+    } else {
+      console.log("Campo no encontrado en el DOM: ", field);
     }
   });
 }
@@ -60,6 +68,7 @@ function message_error(msg) {
     alert('Ha ocurrido un error inesperado en el servidor.');
   }
 
+  console.log('Detalles del mensaje: ', msg)
 }
 
 function updateOptions(url, data, selectElement, preselectedValue) {
@@ -122,6 +131,9 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
         text: "Sí",
         btnClass: 'btn-primary',
         action: function () {
+          for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1])
+          }
 
           $.ajax({
             url: url,
@@ -134,14 +146,17 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
             if (!data.hasOwnProperty('error')) {
               callback();
             } else {
+              console.log("Errores recibidos en respuesta AJAX: ", data.error);  // Debug adicional para verificar la respuesta
               message_error(data.error);
             }
           }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.log("Error en la llamada AJAX", textStatus, errorThrown);  // Debug para fallos de red
             if (jqXHR.status === 403) {
               message_error("Error de seguridad: token CSRF inválido no proporcionado.");
             } else if (jqXHR.status === 400) {
               let response = jqXHR.responseJSON;
               if (response && response.error) {
+                console.log("Respuesta 400 con errores: ", response);  // Debug para errores HTTP 400
                 message_error(response.error);
               } else {
                 message_error('Ha ocurrido un error en la validación del formulario.');

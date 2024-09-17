@@ -440,7 +440,6 @@ class Switch(models.Model):
     item['rack'] = self.rack.rack if self.rack else 'NO ESTA EN RACK'
     item['office'] = self.office.office if self.office else 'NO ESTA EN UNA OFICINA'
     item['model'] = self.model.dev_model if self.model else 'GENÉRICO'
-    item['switch_rack_pos'] = self.switch_rack_pos if self.rack else 'NO ESTA EN RACK'
     return item
 
   class Meta:
@@ -449,7 +448,6 @@ class Switch(models.Model):
     db_table = 'switchs'
     ordering = ['id']
     unique_together = ('model', 'serial_n')
-    unique_together = ('rack', 'switch_rack_pos')
 
 class Switch_Port(models.Model):
   switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)
