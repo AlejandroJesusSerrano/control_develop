@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from core.sh.views.connection_type.views import Connection_TypeCreateView, Connection_TypeDeleteView, Connection_TypeListView, Connection_TypeUpadateView
 from core.sh.views.device.views import DeviceCreateView, DeviceDeleteView, DeviceListView, DeviceUpdateView
@@ -29,27 +29,27 @@ from core.sh.views.wall_port.views import WallPortCreateView, WallPortDeleteView
 app_name = 'sh'
 
 urlpatterns = [
-  #* Home
+  # Home
   path('dashboard/', DashboardView.as_view(), name='dashboard'),
-
   # Provinces
   path('prov/list/', ProvinceListView.as_view(), name='province_list'),
   path('prov/add/', ProvinceCreateView.as_view(), name='province_add' ),
   path('prov/edit/<int:pk>/', ProvinceUpdateView.as_view(), name='province_edit' ),
   path('prov/delete/<int:pk>/', ProvinceDeleteView.as_view(), name='province_delete' ),
-  path('prov/form/', ProvinceFormView.as_view(), name = 'p_form'),
   # Location
   path('location/list/', LocationListView.as_view(), name='location_list'),
   path('location/add/', LocationCreateView.as_view(), name='location_add'),
   path('location/edit/<int:pk>/', LocationUpadateView.as_view(), name='location_edit'),
   path('location/delete/<int:pk>/', LocationDeleteView.as_view(), name='location_delete'),
+
   # Edifice
   path('edifice/list/', EdificeListView.as_view(), name='edifice_list'),
   path('edifice/add/', EdificeCreateView.as_view(), name='edifice_add'),
   path('edifice/edit/<int:pk>/', EdificeUpdateView.as_view(), name='edifice_edit'),
   path('edifice/delete/<int:pk>/', EdificeDeleteView.as_view(), name='edifice_delete'),
   # Edifice Ajax Route
-  path('ajax/search_location/', ajax_edifice_search_location, name='ajax_edifice_search_location'),
+  path('ajax/search_edifice_location/', ajax_edifice_search_location, name='ajax_search_edifice_location'),
+
   # Dependency
   path('dependency/list/', DependencyListView.as_view(), name='dependency_list'),
   path('dependency/add/', DependencyCreateView.as_view(), name='dependency_add'),
@@ -81,11 +81,11 @@ urlpatterns = [
   path('switch/edit/<int:pk>/', switch_views.SwitchUpdateView.as_view(), name='switch_edit'),
   path('switch/delete/<int:pk>/', switch_views.SwitchDeleteView.as_view(), name='switch_delete'),
   # Ajax Switch Routes
-  path('ajax/search_brand/', switch_views.ajax_search_brand, name='ajax_search_brand'),
-  path('ajax/search_model/', switch_views.ajax_search_model, name='ajax_search_model'),
-  path('ajax/search_edifice/', switch_views.ajax_search_edifice, name='ajax_search_edifice'),
-  path('ajax/search_dependency/', switch_views.ajax_search_dependency, name='ajax_search_dependency'),
-  path('ajax/search_office/', switch_views.ajax_search_office, name='ajax_search_office'),
+  path('ajax/search_switch_brand/', switch_views.ajax_switch_search_brand, name='ajax_search_switch_brand'),
+  path('ajax/search_switch_model/', switch_views.ajax_switch_search_model, name='ajax_search_switch_model'),
+  path('ajax/search_switch_edifice/', switch_views.ajax_switch_search_edifice, name='ajax_search_switch_edifice'),
+  path('ajax/search_switch_dependency/', switch_views.ajax_switch_search_dependency, name='ajax_search_switch_dependency'),
+  path('ajax/search_switch_office/', switch_views.ajax_switch_search_office, name='ajax_search_switch_office'),
   # Switch Ports
   path('switch_port/list/', Switch_PortListView.as_view(), name='switch_port_list'),
   path('switch_port/add/', Switch_PortCreateView.as_view(), name='switch_port_add'),
@@ -130,8 +130,6 @@ urlpatterns = [
   path('dev_model/delete/<int:pk>/', Dev_ModelsDeleteView.as_view(), name='dev_model_delete'),
   # Devices
   path('device/list/', DeviceListView.as_view(), name='device_list'),
-  #Tryng to start Select2
-  # path('device/add/', DeviceCreateView.as_view(), name='device_add'),
   path('device/add/', DeviceCreateView.as_view(), name='device_add'),
   path('device/edit/<int:pk>/', DeviceUpdateView.as_view(), name='device_edit'),
   path('device/delete/<int:pk>/', DeviceDeleteView.as_view(), name='device_delete'),

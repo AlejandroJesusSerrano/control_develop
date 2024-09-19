@@ -119,7 +119,7 @@ class SwitchCreateView(CreateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Switch creado exitosamente',
+          'message': 'Switch agregado exitosamente',
         }
         return JsonResponse(data)
       else:

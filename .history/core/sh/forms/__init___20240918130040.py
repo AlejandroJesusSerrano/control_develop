@@ -1,1 +1,0 @@
-from core.sh.forms.switch.forms import SwitchForm

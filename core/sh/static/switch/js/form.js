@@ -1,5 +1,3 @@
-// SELECT 2
-
 $(document).ready(function() {
   $('.select2').select2({
     theme:'bootstrap',
@@ -29,14 +27,14 @@ $(document).ready(function() {
 
 function updateBrandOptions(){
   const dev_type_name = 'SWITCH';
-  updateOptions('/sh/ajax/search_brand/', {
+  updateOptions('/sh/ajax/search_switch_brand/', {
     'dev_type_name': dev_type_name
   }, $('select[name="brand"]'), $('#id_brand').data('preselected'));
 }
 
 function updateModelOptions(brand_id) {
   const dev_type_name = 'SWITCH';
-  updateOptions('/sh/ajax/search_model/', {
+  updateOptions('/sh/ajax/search_switch_model/', {
     'brand_id': brand_id,
     'dev_type_name': dev_type_name
   }, $('select[name="model"]'), $('#id_model').data('preselected'));
@@ -44,11 +42,11 @@ function updateModelOptions(brand_id) {
 
 function updateLocationRelatedOptions(location_id) {
   if (location_id) {
-    updateOptions('/sh/ajax/search_edifice/', {
+    updateOptions('/sh/ajax/search_switch_edifice/', {
       'location_id': location_id,
-    }, $('select[name="edifice"]'), $('#id_dependency').data('preselected'));
+    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
 
-    updateOptions('/sh/ajax/search_dependency/', {
+    updateOptions('/sh/ajax/search_switch_dependency/', {
       'location_id': location_id,
     }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
   } else {
@@ -57,7 +55,7 @@ function updateLocationRelatedOptions(location_id) {
 }
 
 function updateOfficeOptions(edifice_id, dependency_id) {
-  updateOptions('/sh/ajax/search_office/', {
+  updateOptions('/sh/ajax/search_switch_office/', {
     'edifice_id': edifice_id,
     'dependency_id': dependency_id
   }, $('select[name="office"]'), $('#id_office').data('preselected'));
