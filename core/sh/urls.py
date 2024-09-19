@@ -6,10 +6,10 @@ from core.sh.views.office.views import OfficeCreateView, OfficeListView, OfficeD
 from core.sh.views.office_loc.views import Office_Loc_ListView, Office_Loc_CreateView, Office_Loc_UpdateView, Office_Loc_DeleteView
 from core.sh.views.patch_port.views import Patch_PortCreateView, Patch_PortDeleteView, Patch_PortListView, Patch_PortUpadateView
 from core.sh.views.patchera.views import PatcheraCreateView, PatcheraDeleteView, PatcheraListView, PatcheraUpadateView
-from core.sh.views.province.views import ProvinceDeleteView, ProvinceFormView, ProvinceListView, ProvinceCreateView, ProvinceUpdateView
+from core.sh.views.province.views import ProvinceDeleteView, ProvinceListView, ProvinceCreateView, ProvinceUpdateView
 from core.sh.views.location.views import LocationListView, LocationCreateView, LocationUpadateView, LocationDeleteView
 from core.sh.views.edifice.views import EdificeListView, EdificeCreateView, EdificeUpdateView, EdificeDeleteView, ajax_edifice_search_location
-from core.sh.views.dependency.views import DependencyListView, DependencyCreateView, DependencyUpadateView, DependencyDeleteView
+from core.sh.views.dependency.views import DependencyListView, DependencyCreateView, DependencyUpadateView, DependencyDeleteView, ajax_dependency_search_location
 from core.sh.views.brands.views import BrandListView, BrandCreateView, BrandUpadateView, BrandDeleteView
 from core.sh.views.dev_type.views import Dev_TypeListView, Dev_TypeCreateView, Dev_TypeUpadateView, Dev_TypeDeleteView
 from core.sh.views.dev_status.views import Dev_StatusCreateView, Dev_StatusDeleteView, Dev_StatusUpadateView, DevStatusListView
@@ -55,6 +55,9 @@ urlpatterns = [
   path('dependency/add/', DependencyCreateView.as_view(), name='dependency_add'),
   path('dependency/edit/<int:pk>/', DependencyUpadateView.as_view(), name='dependency_edit'),
   path('dependency/delete/<int:pk>/', DependencyDeleteView.as_view(), name='dependency_delete'),
+  # Dependency Ajax Route
+  path('ajax/search_dependency_location/', ajax_dependency_search_location, name='ajax_search_dependency_location'),
+
   # Office_Loc
   path('office_loc/list/', Office_Loc_ListView.as_view(), name='office_loc_list'),
   path('office_loc/add/', Office_Loc_CreateView.as_view(), name='office_loc_add'),

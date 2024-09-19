@@ -1,24 +1,30 @@
+from urllib import request
 from django.contrib.auth.decorators import login_required
-from django.db import IntegrityError
-from django.forms import BaseModelForm
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import DependencyForm
-from core.sh.models import Dependency, Location
+from core.sh.models import Dependency, Location, Province
 
+# Ajax View
+@csrf_protect
+def ajax_dependency_search_location(request):
+  data = []
+  if request.method == 'POST':
+    province_id = request.POST.get('province_id')
+    locations = Location.objects.filter(province_id=province_id)
+    data = [{'id': l.id, 'name': l.location} for l in locations]
+  return JsonResponse(data, safe=False)
 
 class DependencyListView(ListView):
   model = Dependency
   template_name = 'dependency/list.html'
 
   @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
@@ -27,13 +33,13 @@ class DependencyListView(ListView):
     try:
       action = request.POST['action']
       if action == 'searchdata':
-        data = []
-        for i in Dependency.objects.all():
-          data.append(i.toJSON())
+        dependencies = Dependency.objects.all()
+        data = [d.toJSON() for d in dependencies]
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
-      data['error'] = str(e)
+      data = {'error': str(e)}
+
     return JsonResponse(data, safe=False)
 
   def get_context_data(self, **kwargs):
@@ -56,41 +62,33 @@ class DependencyCreateView(CreateView):
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
-    print(request.POST)
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      data = {}
-      try:
-        action = request.POST.get('action')
+  def form_valid(self, form):
+    try:
+      self.object = form.save()
 
-        if action == 'search_location':
-          province_id = request.POST.get('province_id')
-          locations = Location.objects.filter(province_id=province_id)
-          data = [{'id': l.id, 'name': l.location} for l in locations]
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data= {
+          'success': True,
+          'message': 'Dependencia agregada correctamente',
+        }
+        return JsonResponse(data)
+      else:
+        return super().form_valid(form)
+    except Exception as e:
+      if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
 
-        else:
-          form = DependencyForm(request.POST)
-
-          if form.is_valid():
-            try:
-              form.save()
-              return JsonResponse({"success": "Dependencia guardada correctamente"})
-            except Exception as e:
-              return JsonResponse({"error": f"Error al intentar guardar la dependencia: {str(e)}"}, status=400)
-
-          else:
-            errors = form.errors.get_json_data()
-            return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
-
-        return JsonResponse(data, safe=False)
-
-      except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400, safe=False)
-
+  def form_invalid(self, form):
+    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({"error": errors}, status=400)
     else:
-      return super().post(request, *args, **kwargs)
+      return super().form_invlid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -102,7 +100,6 @@ class DependencyCreateView(CreateView):
     context['form_id'] = 'dependencyForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
-    context['saved'] = kwargs.get('saved', None)
     return context
 
 class DependencyUpadateView(UpdateView):
@@ -115,66 +112,31 @@ class DependencyUpadateView(UpdateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-      data = {}
-      try:
-        action = request.POST.get('action')
+  def form_valid(self, form):
+    try:
+      self.object = form.save()
 
-        if action == 'search_location':
-          province_id = request.POST.get('province_id')
-          locations = Location.objects.filter(province_id=province_id)
-          data = [{'id':l.id, 'name': l.location} for l in locations]
+      if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Dependencia actualizada exitosamente'
+        }
+        return JsonResponse(data)
+      else:
+        return super().form_valid(form)
 
-        else:
-          self.object = self.get_object()
-          form = self.get_form()
-          if form.is_valid():
-            try:
-              form.save()
-              return JsonResponse({"success": "Dependencia actualizada correctamente"}, status=200)
-            except Exception as e:
-              return JsonResponse({"error": f"Error al actualizar la dependencia de oficina: {str(e)}"}, status=400)
-          else:
-            errors = form.errors.get_json_data()
-            return JsonResponse({"error": "Formulario no válido", "form_errors": errors}, status=400)
-
-        return JsonResponse(data, safe=False)
-
-      except Exception as e:
-        data = {'error': str(e)}
-        return JsonResponse(data, safe=False)
-    else:
-      return super().post(request, *args, **kwargs)
-
+    except Exception as e:
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
   def form_invalid(self, form):
-    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
       errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
+      return JsonResponse({'error': errors}, status=400)
     else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
-
-
-  def handle_search_action(self, action, post_data):
-
-    data = []
-
-    if action == 'search_edifice':
-      province_id = post_data.get('province_id')
-      if province_id:
-        try:
-          province_id = int(province_id)
-          locations = Location.objects.filter(province_id=province_id)
-          data = [{'id':l.id, 'name': l.location} for l in locations]
-        except ValueError:
-          pass
-
-    return data
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -189,16 +151,22 @@ class DependencyUpadateView(UpdateView):
 
     dependency = self.get_object()
 
-    context['form'].fields['location'].queryset = Location.objects.filter(
-    province = dependency.location.province
-    )
+    if dependency.location and dependency.location.province:
+      context['form'].fields['province'].queryset = Province.objects.filter(
+        province=dependency.location.province
+      )
 
-    context['form'].initial['province'] = dependency.location.province.id if dependency.location.province else None
+    if dependency.location and dependency.location.province:
+      context['form'].initial['province'] = dependency.location.province.id
     context['form'].initial['location'] = dependency.location.id if dependency.location else None
 
+    context['form'].fields['province'].widget.attrs.update({
+      'data-preselected': self.object.location.province.id if self.object.location and self.object.location.province else ''
+      })
     context['form'].fields['location'].widget.attrs.update({
       'data-preselected': self.object.location.id if self.object.location else ''
-    })
+      })
+
 
     return context
 
