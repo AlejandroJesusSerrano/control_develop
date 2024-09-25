@@ -86,7 +86,7 @@ class DependencyCreateView(CreateView):
       else:
         return super().form_valid(form)
     except Exception as e:
-      if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'error': str(e)}, status=500)
       else:
         form.add_error(None, str(e))
