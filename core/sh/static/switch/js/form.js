@@ -73,3 +73,4 @@ function initializeFormSubmission(formSelector, actionType) {
     }, actionType)
   });
 }
+ 

@@ -186,7 +186,6 @@ class Edifice(models.Model):
     unique_together = ('location', 'edifice')
 
 class Dependency(models.Model):
-  location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='Localidad')
   edifice = models.ForeignKey(Edifice, on_delete=models.CASCADE, verbose_name='Edificio')
   dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia', unique=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
@@ -201,8 +200,10 @@ class Dependency(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
+    item['province'] = self.edifice.location.province.province
+    item['location'] = self.edifice.location.location
+    item['edifice'] = self.edifice.edifice
     item['dependency'] = self.dependency
-    item['location'] = self.location.location
     return item
 
   class Meta:
@@ -210,7 +211,7 @@ class Dependency(models.Model):
     verbose_name_plural = 'Dependencias'
     db_table = 'dependencia'
     ordering = ['id']
-    unique_together = ('location', 'dependency')
+    unique_together = ('edifice', 'dependency')
 
 class Office_Loc(models.Model):
 
@@ -399,7 +400,7 @@ class Patch_Port(models.Model):
     item = model_to_dict(self)
     item['rack'] = self.patch.rack.rack
     item['patch'] = self.patch.patch
-    return item
+    return item 
 
   class Meta:
     verbose_name = 'Puerto Patchera'

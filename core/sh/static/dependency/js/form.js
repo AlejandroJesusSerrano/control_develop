@@ -1,4 +1,4 @@
-$(document).ready(function() { 
+$(document).ready(function() {
   $('.select2').select2({
     theme:'bootstrap',
   });
@@ -8,6 +8,11 @@ $(document).ready(function() {
     updateLocationOptions(province_id);
   });
 
+  $('select[name="location"]').on('change', function(){
+    const location_id = $(this).val();
+    updateEdificeOptions(location_id);
+  });
+
   initializeFormSubmission('#myform', 'edit');
 
 });
@@ -15,8 +20,16 @@ $(document).ready(function() {
 function updateLocationOptions(province_id) {
   if (province_id) {
     updateOptions('/sh/ajax/search_dependency_location/', {
-    'province_id': province_id,
+      'province_id': province_id,
     }, $('select[name="location"]'), $('#id_location').data('preselected'));
+  }
+};
+
+function updateEdificeOptions(location_id) {
+  if (location_id) {
+    updateOptions('/sh/ajax/search_dependency_edifice/', {
+      'location_id': location_id,
+    }, $('select[name="edifice"'), $('#id_edifice').data('preselected'));
   }
 };
 

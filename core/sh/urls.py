@@ -9,7 +9,7 @@ from core.sh.views.patchera.views import PatcheraCreateView, PatcheraDeleteView,
 from core.sh.views.province.views import ProvinceDeleteView, ProvinceListView, ProvinceCreateView, ProvinceUpdateView
 from core.sh.views.location.views import LocationListView, LocationCreateView, LocationUpadateView, LocationDeleteView
 from core.sh.views.edifice.views import EdificeListView, EdificeCreateView, EdificeUpdateView, EdificeDeleteView, ajax_edifice_search_location
-from core.sh.views.dependency.views import DependencyListView, DependencyCreateView, DependencyUpadateView, DependencyDeleteView, ajax_dependency_search_location
+from core.sh.views.dependency.views import DependencyListView, DependencyCreateView, DependencyDeleteView, DependencyUpdateView, ajax_dependency_search_edifice, ajax_dependency_search_location
 from core.sh.views.brands.views import BrandListView, BrandCreateView, BrandUpadateView, BrandDeleteView
 from core.sh.views.dev_type.views import Dev_TypeListView, Dev_TypeCreateView, Dev_TypeUpadateView, Dev_TypeDeleteView
 from core.sh.views.dev_status.views import Dev_StatusCreateView, Dev_StatusDeleteView, Dev_StatusUpadateView, DevStatusListView
@@ -53,10 +53,11 @@ urlpatterns = [
   # Dependency
   path('dependency/list/', DependencyListView.as_view(), name='dependency_list'),
   path('dependency/add/', DependencyCreateView.as_view(), name='dependency_add'),
-  path('dependency/edit/<int:pk>/', DependencyUpadateView.as_view(), name='dependency_edit'),
+  path('dependency/edit/<int:pk>/', DependencyUpdateView.as_view(), name='dependency_edit'),
   path('dependency/delete/<int:pk>/', DependencyDeleteView.as_view(), name='dependency_delete'),
   # Dependency Ajax Route
   path('ajax/search_dependency_location/', ajax_dependency_search_location, name='ajax_search_dependency_location'),
+  path('ajax/search_dependency_edifice/', ajax_dependency_search_edifice, name='ajax_search_dependency_edifice'),
 
   # Office_Loc
   path('office_loc/list/', Office_Loc_ListView.as_view(), name='office_loc_list'),

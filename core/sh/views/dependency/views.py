@@ -8,7 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import DependencyForm
-from core.sh.models import Dependency, Location, Province
+from core.sh.models import Dependency, Edifice, Location, Province
 
 # Ajax View
 @csrf_protect
@@ -18,6 +18,15 @@ def ajax_dependency_search_location(request):
     province_id = request.POST.get('province_id')
     locations = Location.objects.filter(province_id=province_id)
     data = [{'id': l.id, 'name': l.location} for l in locations]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_dependency_search_edifice(request):
+  data = []
+  if request.method == 'POST':
+    location_id = request.POST.get('location_id')
+    edifices = Edifice.objects.filter(location_id=location_id)
+    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
   return JsonResponse(data, safe=False)
 
 class DependencyListView(ListView):
@@ -55,7 +64,7 @@ class DependencyListView(ListView):
     return context
 
 class DependencyCreateView(CreateView):
-  model: Dependency
+  model = Dependency
   form_class = DependencyForm
   template_name = 'dependency/create.html'
   success_url = reverse_lazy('sh:dependency_list')
@@ -88,7 +97,7 @@ class DependencyCreateView(CreateView):
       errors = form.errors.get_json_data()
       return JsonResponse({"error": errors}, status=400)
     else:
-      return super().form_invlid(form)
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -102,7 +111,7 @@ class DependencyCreateView(CreateView):
     context['bg_color'] = 'bg-primary'
     return context
 
-class DependencyUpadateView(UpdateView):
+class DependencyUpdateView(UpdateView):
   model = Dependency
   form_class = DependencyForm
   template_name = 'dependency/create.html'
@@ -151,22 +160,18 @@ class DependencyUpadateView(UpdateView):
 
     dependency = self.get_object()
 
-    if dependency.location and dependency.location.province:
-      context['form'].fields['province'].queryset = Province.objects.filter(
-        province=dependency.location.province
-      )
+    if dependency.edifice and dependency.edifice.location:
+      province = dependency.edifice.location.province
+      context['form'].fields['province'].queryset = Province.objects.all()
+      context['form'].initial['province'] = province.id
 
-    if dependency.location and dependency.location.province:
-      context['form'].initial['province'] = dependency.location.province.id
-    context['form'].initial['location'] = dependency.location.id if dependency.location else None
+      location = dependency.edifice.location
+      context['form'].fields['location'].queryset = Location.objects.filter(province=province)
+      context['form'].initial['location'] = location.id
 
-    context['form'].fields['province'].widget.attrs.update({
-      'data-preselected': self.object.location.province.id if self.object.location and self.object.location.province else ''
-      })
-    context['form'].fields['location'].widget.attrs.update({
-      'data-preselected': self.object.location.id if self.object.location else ''
-      })
-
+      edifice = dependency.edifice
+      context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
+      context['form'].initial['edifice'] = edifice.id
 
     return context
 
