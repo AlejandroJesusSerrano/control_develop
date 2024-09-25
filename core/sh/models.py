@@ -231,8 +231,11 @@ class Office_Loc(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
+    item['province'] = self.edifice.location.province.province
     item['location'] = self.edifice.location.location
     item['edifice'] = self.edifice.edifice
+    item['floor'] = self.floor
+    item['wing'] = self.wing
     return item
 
   class Meta:
@@ -240,6 +243,7 @@ class Office_Loc(models.Model):
     verbose_name_plural = 'Locaciones de Oficinas'
     db_table = 'locaciones_oficinas'
     ordering = ['id']
+    unique_together = ('edifice', 'floor', 'wing')
 
 class Office(models.Model):
   dependency = models.ForeignKey(Dependency, related_name = 'offices_dependencies', verbose_name = 'Dependencia', on_delete=models.CASCADE)
