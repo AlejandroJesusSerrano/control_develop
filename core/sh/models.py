@@ -217,13 +217,13 @@ class Office_Loc(models.Model):
 
   edifice = models.ForeignKey(Edifice, related_name = 'office_loc_edifice', verbose_name = 'Edificio', on_delete = models.CASCADE)
   floor = models.CharField(max_length = 2, verbose_name ='Piso')
-  wing = models.CharField(max_length = 50, verbose_name = 'Ala')
+  wing = models.CharField(max_length = 50, verbose_name = 'Ala', null=False, blank=False)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def save(self, *args, **kwargs):
     self.wing = self.wing.upper()
-    self.floor = self.floor
+    self.floor = self.floor.upper()
     super(Office_Loc, self).save(*args, **kwargs)
 
   def __str__(self):
@@ -231,9 +231,10 @@ class Office_Loc(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['province'] = self.edifice.location.province.province
-    item['location'] = self.edifice.location.location
-    item['edifice'] = self.edifice.edifice
+    if self.edifice and self.edifice.location and self.edifice.location.province:
+      item['province'] = self.edifice.location.province.province
+      item['location'] = self.edifice.location.location
+      item['edifice'] = self.edifice.edifice
     item['floor'] = self.floor
     item['wing'] = self.wing
     return item
@@ -243,7 +244,9 @@ class Office_Loc(models.Model):
     verbose_name_plural = 'Locaciones de Oficinas'
     db_table = 'locaciones_oficinas'
     ordering = ['id']
-    unique_together = ('edifice', 'floor', 'wing')
+    constraints = [
+        models.UniqueConstraint(fields=['edifice', 'floor', 'wing'], name='unique_edifice_floor_wing')
+    ]
 
 class Office(models.Model):
   dependency = models.ForeignKey(Dependency, related_name = 'offices_dependencies', verbose_name = 'Dependencia', on_delete=models.CASCADE)

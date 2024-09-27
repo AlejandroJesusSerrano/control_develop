@@ -140,6 +140,7 @@ class DependencyUpdateView(UpdateView):
       else:
         form.add_error(None, str(e))
         return self.form_invalid(form)
+
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
       errors = form.errors.get_json_data()

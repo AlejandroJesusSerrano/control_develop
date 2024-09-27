@@ -15,7 +15,7 @@ class Office_Loc_Form(forms.ModelForm):
   location=forms.ModelChoiceField(
     queryset=Location.objects.none(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=False
+    required=True
   )
 
   class Meta:
@@ -30,13 +30,14 @@ class Office_Loc_Form(forms.ModelForm):
           }),
       'floor': TextInput(
         attrs={
-          'class': 'form-control', 'placeholder': 'Ingre el Piso'
+          'class': 'form-control', 'placeholder': 'Ingrese el Piso'
           }),
       'wing': TextInput(
         attrs={
           'class': 'form-control', 'placeholder': 'Ingrese el Ala'
           }),
     }
+
     help_texts = {
       'floor': '* Ingrese el piso ingresando 2 numeros, ej. 01, y PB para Planta baja',
       'wing': '* En caso de no haber una desigancion del ala, se recomienda ingresar el nombre de la calle a la que mira la misma'
@@ -46,7 +47,7 @@ class Office_Loc_Form(forms.ModelForm):
     super(Office_Loc_Form, self).__init__(*args, **kwargs)
 
     self.fields['province'].queryset = Province.objects.all()
-    self.fields['location'].queryset = Location.objects.all()
+    self.fields['location'].queryset = Location.objects.none()
     self.fields['edifice'].queryset = Edifice.objects.none()
 
     if 'province' in self.data:
@@ -81,9 +82,9 @@ class Office_Loc_Form(forms.ModelForm):
 
     edifice = self.cleaned_data.get('edifice')
     floor = self.cleaned_data.get('floor')
-    wing = self.cleaned_data.get('wing').upper()
+    wing = self.cleaned_data.get('wing')
 
-    if Office_Loc.objects.filter(edifice=edifice,floor=floor, wing=wing).exists():
+    if Office_Loc.objects.filter(edifice=edifice, floor=floor, wing=wing).exists():
       self.add_error('floor', f"Ya esta cargado el piso '{floor}' en este edificio")
       self.add_error('wing', f"Ya se encuentra registreada el ala: '{wing}', en el piso: '{floor}' de este edificio")
 

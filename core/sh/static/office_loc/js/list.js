@@ -14,15 +14,17 @@ $(document).ready(function(){
     },
     columns: [
       {"data": "id"},
+      {"data": "province"},
       {"data": "location"},
       {"data": "edifice"},
       {"data": "floor"},
       {"data": "wing"},
       {"data": null, "defaultContent": ""},
     ],
+
     columnDefs: [
       {
-        targets: [5],
+        targets: [6],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

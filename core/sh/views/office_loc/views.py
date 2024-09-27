@@ -11,7 +11,7 @@ from core.sh.models import Edifice, Location, Office_Loc, Province
 
 # Ajax View
 @csrf_protect
-def ajax_dependency_search_location(request):
+def ajax_office_loc_search_location(request):
   data = []
   if request.method == 'POST':
     province_id = request.POST.get('province_id')
@@ -20,7 +20,7 @@ def ajax_dependency_search_location(request):
   return JsonResponse(data, safe=False)
 
 @csrf_protect
-def ajax_dependency_search_edifice(request):
+def ajax_office_loc_search_edifice(request):
   data = []
   if request.method == 'POST':
     location_id = request.POST.get('location_id')
@@ -159,7 +159,7 @@ class Office_Loc_UpdateView(UpdateView):
 
     office_loc = self.get_object()
 
-    if office_loc.edifice and office_loc.edifice.location:
+    if office_loc.edifice and office_loc.edifice.location and office_loc.edifice.location.province:
       province = office_loc.edifice.location.province
       context['form'].fields['province'].queryset = Province.objects.all()
       context['form'].initial['province'] = province.id
@@ -169,8 +169,8 @@ class Office_Loc_UpdateView(UpdateView):
       context['form'].initial['location'] = location.id
 
       edifice = office_loc.edifice
-      context['form'].fields['location'].queryset = Edifice.objects.filter(location=location)
-      context['form'].initial['location'] = edifice.id
+      context['form'].fields['edifice'].queryset = Edifice.objects.filter(edifice=edifice)
+      context['form'].initial['edifice'] = edifice.id
 
     return context
 
