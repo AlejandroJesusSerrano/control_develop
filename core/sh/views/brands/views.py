@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required 
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.http import JsonResponse
@@ -57,23 +57,33 @@ class BrandCreateView(CreateView):
     return super().dispatch(request, *args, **kwargs)
 
   def form_valid(self, form):
-    form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
+    try:
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Marca agregada exitosamente',
+        }
+        return JsonResponse(data)
+      else:
+        return super().form_valid(form)
+    except Exception as e:
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status = 500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
 
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
       errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
+      return JsonResponse({'error': errors}, status=400)
     else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+      return super().form_invalid(form)
+
+  def post(self, request, *args, **kwargs):
+    return super().post(request, *args, **kwargs)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -96,27 +106,33 @@ class BrandUpadateView(UpdateView):
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
   def form_valid(self, form):
-    form.save()
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      return JsonResponse({'success':True})
-    else:
-      return redirect(self.success_url)
+    try:
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Marca actualizada exitosamente'
+        }
+        return JsonResponse(data)
+      else:
+        return super().form_valid(form)
+    except Exception as e:
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
 
   def form_invalid(self, form):
     if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
       errors = form.errors.get_json_data()
-      return JsonResponse({
-        "error": "Formulario no válido",
-        "form_errors": errors
-      }, status=400)
+      return JsonResponse({"error": errors}, status=400)
     else:
-      context = self.get_context_data(form=form)
-      context['saved'] = False
-      return self.render_to_response(context)
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)

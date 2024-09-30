@@ -127,7 +127,7 @@ class Office_Loc_UpdateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Locacion de oficina agregada correctamente'
+          'message': 'Locacion de oficina actualiza correctamente'
         }
         return JsonResponse(data)
       else:
@@ -160,6 +160,7 @@ class Office_Loc_UpdateView(UpdateView):
     office_loc = self.get_object()
 
     if office_loc.edifice and office_loc.edifice.location and office_loc.edifice.location.province:
+
       province = office_loc.edifice.location.province
       context['form'].fields['province'].queryset = Province.objects.all()
       context['form'].initial['province'] = province.id
@@ -169,7 +170,7 @@ class Office_Loc_UpdateView(UpdateView):
       context['form'].initial['location'] = location.id
 
       edifice = office_loc.edifice
-      context['form'].fields['edifice'].queryset = Edifice.objects.filter(edifice=edifice)
+      context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
       context['form'].initial['edifice'] = edifice.id
 
     return context

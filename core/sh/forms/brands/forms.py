@@ -8,14 +8,14 @@ class BrandForm(forms.ModelForm):
 
   class Meta:
     model = Brand
-    fields = ('brand',)
+    fields = '__all__'
     widgets = {
       'brand': TextInput(
         attrs={
           'class': 'form-control',
           'placeholder': 'Ingrese una Marca'
         }
-      )
+      ),
     }
 
   def clean(self):
@@ -23,6 +23,7 @@ class BrandForm(forms.ModelForm):
 
     if Brand.objects.filter(brand__iexact=brand).exists():
       self.add_error('brand', f"La marca ya se encuentra registrada")
+
     cleaned_data = super().clean()
     return cleaned_data
 

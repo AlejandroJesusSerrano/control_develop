@@ -2,7 +2,7 @@ from django.urls import include, path
 
 from core.sh.views.connection_type.views import Connection_TypeCreateView, Connection_TypeDeleteView, Connection_TypeListView, Connection_TypeUpadateView
 from core.sh.views.device.views import DeviceCreateView, DeviceDeleteView, DeviceListView, DeviceUpdateView
-from core.sh.views.office.views import OfficeCreateView, OfficeListView, OfficeDeleteView, OfficeUpadateView
+from core.sh.views.office.views import OfficeCreateView, OfficeListView, OfficeDeleteView, OfficeUpdateView, ajax_load_dependency, ajax_load_edifices, ajax_load_loc, ajax_office_search_location
 from core.sh.views.office_loc.views import Office_Loc_ListView, Office_Loc_CreateView, Office_Loc_UpdateView, Office_Loc_DeleteView, ajax_office_loc_search_edifice, ajax_office_loc_search_location
 from core.sh.views.patch_port.views import Patch_PortCreateView, Patch_PortDeleteView, Patch_PortListView, Patch_PortUpadateView
 from core.sh.views.patchera.views import PatcheraCreateView, PatcheraDeleteView, PatcheraListView, PatcheraUpadateView
@@ -71,8 +71,14 @@ urlpatterns = [
   # Office
   path('office/list/', OfficeListView.as_view(), name='office_list'),
   path('office/add/', OfficeCreateView.as_view(), name='office_add'),
-  path('office/edit/<int:pk>/', OfficeUpadateView.as_view(), name='office_edit'),
+  path('office/edit/<int:pk>/', OfficeUpdateView.as_view(), name='office_edit'),
   path('office/delete/<int:pk>/', OfficeDeleteView.as_view(), name='office_delete'),
+  # Office Ajax Routes
+  path('ajax/search_office_location/', ajax_office_search_location, name='ajax_search_office_location'),
+  path('ajax/load_dependency/', ajax_load_dependency, name='ajax_load_dependency'),
+  path('ajax/load_edifice/', ajax_load_edifices, name='ajax_load_edifice'),
+  path('ajax/load_loc/', ajax_load_loc, name='ajax_load_loc'),
+
   # Connection Type
   path('connection_type/list/', Connection_TypeListView.as_view(), name='connection_type_list'),
   path('connection_type/add/', Connection_TypeCreateView.as_view(), name='connection_type_add'),

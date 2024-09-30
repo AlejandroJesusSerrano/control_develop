@@ -14,6 +14,7 @@ $(document).ready(function(){
     },
     columns: [
       {"data": "id"},
+      {"data": "province"},
       {"data": "location"},
       {"data": "edifice"},
       {"data": "office"},
@@ -22,7 +23,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
-        targets: [5],
+        targets: [6],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

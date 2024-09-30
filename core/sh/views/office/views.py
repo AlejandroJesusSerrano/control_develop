@@ -4,33 +4,68 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import OfficeForm
-from core.sh.models import Dependency, Edifice, Office, Office_Loc
+from core.sh.models import Dependency, Edifice, Location, Office, Office_Loc, Province
 
+# Ajax View
+@csrf_protect
+def ajax_office_search_location(request):
+  data = []
+  if request.method == 'POST':
+    province_id = request.POST.get('province_id')
+    locations = Location.objects.filter(province_id=province_id)
+    data = [{'id': l.id, 'name': l.location} for l in locations]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_load_dependency(request):
+  data = []
+  if request.method == 'POST':
+    location_id = request.POST.get('location_id')
+    dependencies = Dependency.objects.filter(edifice__location_id=location_id)
+    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_load_edifices(request):
+  data = []
+  if request.method == 'POST':
+    location_id = request.POST.get('location_id')
+    edifices = Edifice.objects.filter(location_id=location_id)
+    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_load_loc(request):
+  data = []
+  if request.method == 'POST':
+    edifice_id = request.POST.get('edifice_id')
+    locs = Office_Loc.objects.filter(edifice_id=edifice_id)
+    data = [{'id': fw.id, 'name': f'Piso: {fw.floor} / Ala: {fw.wing}'} for fw in locs]
+  return JsonResponse(data, safe=False)
 
 class OfficeListView(ListView):
   model = Office
   template_name = 'office/list.html'
 
-  # @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
+  @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
   def post (self, request, *args, **kwargs):
     data = {}
     try:
-      action = request.POST['action']
+      action = request.POST.get('action')
       if action == 'searchdata':
-        data = []
-        for i in Office.objects.all():
-          data.append(i.toJSON())
+        offices = Office.objects.all()
+        data = [o.toJSON() for o in offices]
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
-      data['error'] = str(e)
+      data = {'error': str(e)}
+
     return JsonResponse(data, safe=False)
 
   def get_context_data(self, **kwargs):
@@ -55,55 +90,31 @@ class OfficeCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-      data = {}
-      try:
-        action = request.POST.get('action')
-        if action == 'search_dependency':
-          location_id = request.POST.get('location_id')
+  def form_valid(self, form):
+    try:
+      self.object = form.save()
 
-          dependencies = Dependency.objects.all()
-          if location_id:
-            dependencies = dependencies.filter(location_id=location_id)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Oficina agregada correctamente'
+        }
+        return JsonResponse(data)
+      else:
+        return super().form_valid(form)
+    except Exception as e:
+      if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
 
-          data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
-
-        elif action == 'search_edifice':
-          location_id = request.POST.get('location_id')
-          if location_id:
-            edifices = Edifice.objects.filter(location_id=location_id)
-            data = [{'id':e.id, 'name': e.edifice} for e in edifices]
-          else:
-            data = []
-
-        elif action == 'search_loc':
-          edifice_id = request.POST.get('edifice_id')
-          if edifice_id:
-            office_locs = Office_Loc.objects.filter(edifice_id=edifice_id)
-            data = [{'id': ol.id, 'name': f"Piso {ol.floor} - Ala {ol.wing}"} for ol in office_locs]
-          else:
-            data = []
-
-        else:
-          form = OfficeForm(request.POST)
-          if form.is_valid():
-            try:
-              form.save()
-              return JsonResponse({"success": "Oficina guardada correctamente"}, status=200)
-            except Exception as e:
-              return JsonResponse({"error":f"Error al guardar la Oficina: {str(e)}"}, status=400)
-          else:
-            errors = form.errors.get_json_data()
-            return JsonResponse({"error": "Formulario no valido", "form_errors":errors}, status=400)
-
-        return JsonResponse(data, safe=False)
-
-      except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400, safe=False)
-
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error': errors}, status=400)
     else:
-      return super().post(request, *args, **kwargs)
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -117,7 +128,7 @@ class OfficeCreateView(CreateView):
     context['bg_color'] = 'bg-primary'
     return context
 
-class OfficeUpadateView(UpdateView):
+class OfficeUpdateView(UpdateView):
   model = Office
   form_class = OfficeForm
   template_name = 'office/create.html'
@@ -125,109 +136,34 @@ class OfficeUpadateView(UpdateView):
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-      data = {}
-      try:
-        action = request.POST.get('action')
+  def form_valid(self, form):
+    try:
+      self.object = form.save()
 
-        if action == 'search_dependency':
-          location_id = request.POST.get('location_id')
-
-          dependencies = Dependency.objects.all()
-          if location_id:
-            dependencies = dependencies.filter(location_id=location_id)
-
-          data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
-
-        elif action == 'search_edifice':
-          location_id = request.POST.get('location_id')
-          if location_id:
-            edifices = Edifice.objects.filter(location_id=location_id)
-            data = [{'id':e.id, 'name': e.edifice} for e in edifices]
-          else:
-            data = []
-
-        elif action == 'search_loc':
-          edifice_id = request.POST.get('edifice_id')
-          if edifice_id:
-            office_locs = Office_Loc.objects.filter(edifice_id=edifice_id)
-            data = [{'id': ol.id, 'name': f"Piso {ol.floor} - Ala {ol.wing}"} for ol in office_locs]
-          else:
-            data = []
-
-        else:
-          form = OfficeForm(request.POST)
-          if form.is_valid():
-            try:
-              form.save()
-              return JsonResponse({"success": "Oficina guardada correctamente"}, status=200)
-            except Exception as e:
-              return JsonResponse({"error":f"Error al guardar la Oficina: {str(e)}"}, status=400)
-          else:
-            errors = form.errors.get_json_data()
-            return JsonResponse({"error": "Formulario no valido", "form_errors":errors}, status=400)
-
-        return JsonResponse(data, safe=False)
-
-      except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400, safe=False)
-
-    else:
-      return super().post(request, *args, **kwargs)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Oficina actualizada correctamente'
+        }
+        return JsonResponse(data)
+      else:
+        return super().form_valid(form)
+    except Exception as e:
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
 
   def form_invalid(self, form):
-    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        errors = form.errors.get_json_data()
-        return JsonResponse({
-            "error": "Formulario no válido",
-            "form_errors": errors
-        }, status=400)
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error':errors}, status=400)
     else:
-        context = self.get_context_data(form=form)
-        context['saved'] = False
-        return self.render_to_response(context)
+      return super().form_invalid(form)
 
-
-  def handle_search_action(self, action, post_data):
-
-    data = []
-
-    if action =='search_dependency':
-      location_id = post_data.get('location_id')
-      dependencies = Dependency.objects.all()
-      if location_id:
-        try:
-          location_id = int(location_id)
-          dependencies = dependencies.filter(location_id=location_id)
-          data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
-        except ValueError:
-          pass
-
-    elif action == 'search_edifice':
-      location_id = post_data.get('location_id')
-      if location_id:
-        try:
-          location_id = int(location_id)
-          edifices = Edifice.objects.filter(location_id=location_id)
-          data = [{'id':e.id, 'name': e.edifice} for e in edifices]
-        except ValueError:
-          pass
-
-    elif action == 'search_loc':
-      edifice_id = post_data.get('edifice_id')
-      if edifice_id:
-        try:
-          edifice_id = int(edifice_id)
-          office_locs = Office_Loc.objects.filter(edifice_id=edifice_id)
-          data = [{'id': ol.id, 'name': f"Piso {ol.floor} - Ala {ol.wing}"} for ol in office_locs]
-        except ValueError:
-          pass
-
-    return data
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -242,32 +178,27 @@ class OfficeUpadateView(UpdateView):
 
       office = self.get_object()
 
-      context['form'].fields['dependency'].queryset = Dependency.objects.filter(
-        location = office.dependency.location
-      )
+      if office.loc and office.loc.edifice and office.loc.edifice.location and office.loc.edifice.location.province and office.dependency:
 
-      context['form'].fields['edifice'].queryset = Edifice.objects.filter(
-        location = office.loc.edifice.location,
-      )
+        province = office.loc.edifice.location.province
+        context['form'].fields['province'].queryset = Province.objects.all()
+        context['form'].initial['province'] = province.id
 
-      context['form'].fields['loc'].queryset = Office_Loc.objects.filter(
-        edifice=office.loc.edifice
-      )
+        location = office.loc.edifice.location
+        context['form'].fields['location'].queryset = Location.objects.filter(province=province)
+        context['form'].initial['location'] = location.id
 
-      context['form'].initial['location'] = office.dependency.location.id if office.dependency.location else None
-      context['form'].initial['dependency'] = office.dependency.id if office.dependency else None
-      context['form'].initial['edifice'] = office.loc.edifice.id if office.loc.edifice.location else None
-      context['form'].initial['loc'] = office.loc.id if office.loc.edifice else None
+        edifice = office.loc.edifice
+        context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
+        context['form'].initial['edifice'] = edifice.id
 
-      context['form'].fields['dependency'].widget.attrs.update({
-        'data-preselected': self.object.dependency.id if self.object.dependency else ''
-      })
-      context['form'].fields['edifice'].widget.attrs.update({
-        'data-preselected': self.object.loc.edifice.id if self.object.loc.edifice else ''
-      })
-      context['form'].fields['loc'].widget.attrs.update({
-        'data-preselected': self.object.loc.id if self.object.loc else ''
-      })
+        dependency = office.dependency
+        context['form'].fields['dependency'].queryset = Dependency.objects.filter(edifice__location=location)
+        context['form'].initial['dependency'] = dependency.id
+
+        wing_floor = office.loc
+        context['form'].fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice)
+        context['form'].initial['loc'] = wing_floor.id
 
       return context
 

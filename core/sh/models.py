@@ -251,7 +251,7 @@ class Office_Loc(models.Model):
 class Office(models.Model):
   dependency = models.ForeignKey(Dependency, related_name = 'offices_dependencies', verbose_name = 'Dependencia', on_delete=models.CASCADE)
   loc = models.ForeignKey(Office_Loc, related_name = 'office_location', verbose_name = 'Piso/Ala', on_delete = models.CASCADE)
-  office = models.CharField(max_length = 50, verbose_name = 'Oficina')
+  office = models.CharField(max_length = 75, verbose_name = 'Oficina')
   description = models.TextField(verbose_name='Descripcion', blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
@@ -269,12 +269,15 @@ class Office(models.Model):
       item['province'] = self.loc.edifice.location.province.province
       item['location'] = self.loc.edifice.location.location
       item['edifice'] = self.loc.edifice.edifice
-      item['floor'] = self.loc.floor
-      item['wing'] = self.loc.wing
+      floor_wings = Office_Loc.objects.all()
+      loc_data = [
+        {'floor': l.floor, 'wing': l.wing}
+        for l in floor_wings
+      ]
+      item['loc'] = loc_data
     item['dependency'] = self.dependency.dependency
     item['office'] = self.office
     return item
-
 
   class Meta:
     verbose_name = 'Oficina'
@@ -282,7 +285,7 @@ class Office(models.Model):
     db_table = 'oficina'
     ordering = ['id']
     constraints = [
-      models.UniqueConstraint(fields=['loc', 'dependency'])
+      models.UniqueConstraint(fields=['loc', 'dependency'], name = 'unique_loc_dependency')
     ]
 
 class Employee_Status(models.Model):
