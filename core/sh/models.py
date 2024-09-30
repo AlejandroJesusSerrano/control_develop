@@ -265,10 +265,12 @@ class Office(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['location'] = self.loc.edifice.location.location
-    item['edifice'] = self.loc.edifice.edifice
-    item['floor'] = self.loc.floor
-    item['wing'] = self.loc.wing
+    if self.loc and self.loc.edifice and self.loc.edifice.location and self.loc.edifice.location.province:
+      item['province'] = self.loc.edifice.location.province.province
+      item['location'] = self.loc.edifice.location.location
+      item['edifice'] = self.loc.edifice.edifice
+      item['floor'] = self.loc.floor
+      item['wing'] = self.loc.wing
     item['dependency'] = self.dependency.dependency
     item['office'] = self.office
     return item
@@ -279,6 +281,9 @@ class Office(models.Model):
     verbose_name_plural = 'Oficinas'
     db_table = 'oficina'
     ordering = ['id']
+    constraints = [
+      models.UniqueConstraint(fields=['loc', 'dependency'])
+    ]
 
 class Employee_Status(models.Model):
   status = models.CharField(max_length=35, verbose_name='Estado Empleado')

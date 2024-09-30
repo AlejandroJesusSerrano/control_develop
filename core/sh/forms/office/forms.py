@@ -1,14 +1,20 @@
-from django.forms import *
+from django.forms import * 
 from django import forms
 from django.forms import Select, TextInput, Textarea
 
-from core.sh.models import Dependency, Edifice, Location, Office, Office_Loc
+from core.sh.models import Dependency, Edifice, Location, Office, Office_Loc, Province
 
 class OfficeForm(forms.ModelForm):
+  province = forms.ModelChoiceField(
+    queryset=Province.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control selct2'}),
+    required=True
+  )
+
   location=forms.ModelChoiceField(
     queryset=Location.objects.all(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=False
+    required=True
   )
 
   edifice=forms.ModelChoiceField(
@@ -21,7 +27,7 @@ class OfficeForm(forms.ModelForm):
   class Meta:
     model = Office
     fields = [
-      'edifice','dependency', 'loc', 'office', 'description'
+      'province', 'location', 'edifice', 'dependency', 'loc', 'office', 'description'
       ]
     widgets = {
       'edifice': Select(attrs={'class': 'form-control select2'}),
@@ -37,25 +43,33 @@ class OfficeForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super(OfficeForm, self).__init__(*args, **kwargs)
 
+    self.fields['province'].queryset = Province.objects.all()
     self.fields['dependency'].queryset = Dependency.objects.none()
     self.fields['loc'].queryset = Office_Loc.objects.none()
+    self.fields['edifice'].queryset = Edifice.objects.none()
+    self.fields['location'].queryset = Location.objects.none()
 
     if self.instance.pk:
-      office = self.instance
+      self.fields['province'].initial = self.instance.loc.edifice.location.provice
+      selected_province = self.instance.loc.edifice.location.province
 
-      self.fields['dependency'].queryset = Dependency.objects.filter(
-        location = self.instance.dependency.location
-      )
+      self.fields['location'].queryset = Location.objects.filter(province=selected_province)
+      self.fields['location'].initial = self.instance.loc.edifice.location
+      selected_location = self.instance.loc.edifice.location
 
-      self.fields['edifice'].queryset = Edifice.objects.filter(
-        location = self.instance.loc.edifice.location
-      )
+      self.fields['dependency'].queryset = Dependency.objects.filter(location = selected_location)
+      self.fields['dependency'].initial = self.instance.dependency
 
-      self.fields['loc'].queryset = Office_Loc.objects.filter(
-        edifice = self.instance.loc.edifice
-      )
+      self.fields['edifice'].queryset = Edifice.objects.filter(location = selected_location)
+      self.fields['edifice'].initial = self.instance.loc.edifice
+
+      self.fields['loc'].queryset = Office_Loc.objects.filter(edifice = self.instance.loc.edifice)
+      self.fields['loc'].initial = self.instance.loc
 
     else:
+      if 'province' in self.data:
+        try:
+
 
       if 'location' in self.data:
         try:
