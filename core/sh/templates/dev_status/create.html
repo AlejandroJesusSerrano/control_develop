@@ -1,1 +1,20 @@
 {% extends 'form.html' %}
+
+{% load static %}
+
+{% block form %}
+  <div class="form-group">
+    <label for="id_dev_status">Estado de Dispositivo: </label>
+    {{form.dev_status}}
+    {% if form.dev_status.errors %}
+    <div class="invalid-feedback d-block">
+      {{form.dev_status.errors|join:"<br>"}}
+    </div>
+    {% endif %}
+  </div>
+
+  {% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'dev_status' %}"></script>
+{% endblock form_scripts %}

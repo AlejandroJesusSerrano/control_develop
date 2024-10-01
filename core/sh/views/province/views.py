@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
 
 from core.sh.forms import ProvinceForm
@@ -14,7 +13,6 @@ class ProvinceListView(ListView):
   model = Province
   template_name='province/list.html'
 
-  @method_decorator(csrf_exempt)
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
      return super().dispatch(request, *args, **kwargs)
@@ -66,9 +64,9 @@ class ProvinceCreateView(CreateView):
         }
         return JsonResponse(data)
       else:
-        return super(). form_valid(form)
+        return super().form_valid(form)
     except Exception as e:
-      if self.request.headers.get('x.requested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'error': str(e)}, status=500)
       else:
         form.add_error(None, str(e))
@@ -80,9 +78,6 @@ class ProvinceCreateView(CreateView):
       return JsonResponse({'error': errors}, status=400)
     else:
       return super().form_invalid(form)
-
-  def post(self, request, *args, **kwargs):
-    return super().post(request, *args, **kwargs)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)

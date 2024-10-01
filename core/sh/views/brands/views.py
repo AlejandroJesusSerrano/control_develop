@@ -1,11 +1,10 @@
-from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 
 from core.sh.forms.brands.forms import BrandForm
 from core.sh.models import Brand
@@ -16,7 +15,6 @@ class BrandListView(ListView):
   template_name = 'brand/list.html'
 
   @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 

@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 
 from core.sh.forms import Dev_TypeForm
 from core.sh.models import Dev_Type
@@ -15,7 +14,6 @@ class Dev_TypeListView(ListView):
   template_name = 'dev_type/list.html'
 
   @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
@@ -55,18 +53,31 @@ class Dev_TypeCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
+  def form_valid(self, form):
     try:
-      action = request.POST.get('action')
-      if action == 'add':
-        form = self.get_form()
-        data = form.save()
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Tipo de Dispositivo agregado correctamente',
+        }
+        return JsonResponse(data)
       else:
-        data['error'] = 'Acción no válida'
+        return super().form_valid(form)
     except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error': errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -91,18 +102,31 @@ class Dev_TypeUpadateView(UpdateView):
     self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
+  def form_valid(self, form):
     try:
-      action = request.POST.get('action')
-      if action == 'edit':
-        form = self.get_form()
-        data = form.save()
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'succes': True,
+          'message': 'Tipo de Dispositivo actualizado exitosamente'
+        }
+        return JsonResponse(data)
       else:
-        data['error'] = 'Accion no válida'
+        return super().form_valid(form)
     except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error':str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error': errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)

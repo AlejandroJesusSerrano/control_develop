@@ -53,6 +53,10 @@ class Dev_Status(models.Model):
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Regilstro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
+  def save(self, *args, **kwargs):
+    self.dev_status = self.dev_status.upper()
+    super(Dev_Type, self).save(*args, **kwargs)
+
   def __str__(self):
     return self.dev_status
 
@@ -74,6 +78,10 @@ class Dev_Model(models.Model):
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
+  def save(self, *args, **kwargs):
+    self.dev_model = self.dev_model.upper()
+    super(Dev_Model, self).save(*args, **kwargs)
+
   def __str__(self):
     return self.dev_model
 
@@ -89,6 +97,9 @@ class Dev_Model(models.Model):
     verbose_name_plural = 'Modelos'
     db_table = 'modelo'
     ordering = ['id']
+    constraints = [
+        models.UniqueConstraint(fields=['dev_type', 'brand', 'dev_model'], name='unique_dev_type_brand_model')
+    ]
 
 class Techs(models.Model):
   name = models.CharField(max_length = 75, verbose_name = 'Nombre')
