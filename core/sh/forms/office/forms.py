@@ -7,7 +7,7 @@ from core.sh.models import Dependency, Edifice, Location, Office, Office_Loc, Pr
 class OfficeForm(forms.ModelForm):
   province = forms.ModelChoiceField(
     queryset=Province.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control selct2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
     required=True
   )
 

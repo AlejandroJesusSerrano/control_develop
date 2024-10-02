@@ -2,7 +2,7 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
 
-from core.sh.models import Dependency, Edifice, Location, Office, Brand, Rack, Dev_Model, Switch
+from core.sh.models import Dependency, Edifice, Location, Office, Brand, Rack, Dev_Model, Switch, Province
 
 class SwitchForm(forms.ModelForm):
   brand=forms.ModelChoiceField(
@@ -13,6 +13,12 @@ class SwitchForm(forms.ModelForm):
 
   model=forms.ModelChoiceField(
     queryset=Dev_Model.objects.none(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=True
+  )
+
+  province=forms.ModelChoiceField(
+    queryset=Province.objects.all(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
     required=True
   )
@@ -48,6 +54,7 @@ class SwitchForm(forms.ModelForm):
       'office': Select(attrs={'class': 'form-control select2'}),
       'dependency': Select(attrs={'class': 'form-control select2'}),
       'edifice': Select(attrs={'class': 'form-control select2'}),
+      'province': Select(attrs={'class': 'form-control select2'}),
       'location': Select(attrs={'class': 'form-control select2'})
     }
     help_texts = {
@@ -60,14 +67,31 @@ class SwitchForm(forms.ModelForm):
 
     self.fields['brand'].queryset = Brand.objects.all()
     self.fields['model'].queryset = Dev_Model.objects.all()
-    self.fields['office'].queryset = Office.objects.all()
-    self.fields['dependency'].queryset = Dependency.objects.all()
-    self.fields['edifice'].queryset = Edifice.objects.all()
-    self.fields['location'].queryset = Location.objects.all()
+    self.fields['province'].queryset = Province.objects.all()
+    self.fields['office'].queryset = Office.objects.none()
+    self.fields['dependency'].queryset = Dependency.objects.none()
+    self.fields['edifice'].queryset = Edifice.objects.none()
+    self.fields['location'].queryset = Location.objects.none()
     self.fields['rack'].queryset = Rack.objects.all()
 
     if self.instance.pk:
-      switch = self.instance
+
+      self.fields['province'].initial = self.instance.office.loc.edifice.location.province
+      selected_province = self.instance.office.loc.edifice.location.province
+
+      self.fields['location'].queryset = Location.objects.filter(province=selected_province)
+      self.fields['location'].initial = self.instance.office.loc.edifice.location
+      selected_location = self.instance.office.loc.edifice.location
+
+      self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location=selected_location)
+      self.fields['dependency'].initial = self.instance.dependency
+
+      self.fields['edifice'].queryset = Edifice.objects.filter(location=selected_location)
+      self.fields['edifice'].initial = self.instance.office.loc.edifice
+      selected_edifice = self.instance.office.loc.edifice
+
+      self.fields['office'].queryset = Office.objects.filter(edifice=selected_edifice)
+      self.fields['office'].initial = self.instance.office
 
       dev_type = self.instance.model.dev_type
       self.fields['brand'].queryset = Brand.objects.filter(models_brand__dev_type=dev_type).distinct()
@@ -90,10 +114,41 @@ class SwitchForm(forms.ModelForm):
         self.fields['dependency'].queryset = Dependency.objects.filter(location=location)
         self.fields['dependency'].initial = self.instance.office.dependency
         self.fields['office'].queryset = Office.objects.filter(
-          loc__edifice = self.instance.office.loc.edifice,
+          edifice = self.instance.office.loc.edifice,
           dependency = self.instance.office.dependency
         )
         self.fields['office'].initial = self.instance.office
+
+    else:
+      if 'province' in self.data:
+        try:
+          province_id = int(self.data.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+        except (ValueError, TypeError):
+          pass
+      else:
+        self.fields['location'].queryset = Location.objects.none()
+
+
+      if 'location' in self.data:
+        try:
+          location_id = int(self.data.get('location'))
+          self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location_id=location_id)
+          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id)
+        except (ValueError, TypeError):
+          pass
+      else:
+        self.fields['dependency'].queryset = Dependency.objects.none()
+        self.fields['edifice'].queryset = Edifice.objects.none()
+
+      if 'edifice'in self.data:
+        try:
+          edifice_id = int(self.data.get('edifice'))
+          self.fields['office'].queryset = Office.objects.filter(loc__edifice_id=edifice_id)
+        except(ValueError, TypeError):
+          pass
+      else:
+        self.fields['edifice'].queryset = Edifice.objects.none()
 
   def clean(self):
     cleaned_data = super().clean()

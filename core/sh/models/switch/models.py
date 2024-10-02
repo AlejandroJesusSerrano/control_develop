@@ -38,7 +38,7 @@ class Switch(models.Model):
 
   def __str__(self):
     if self.rack:
-      return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}' 
+      return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}'
     else:
       return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
 
@@ -56,5 +56,7 @@ class Switch(models.Model):
     verbose_name_plural = 'Switches'
     db_table = 'switchs'
     ordering = ['id']
-    unique_together = ('model', 'serial_n')
-    unique_together = ('rack', 'switch_rack_pos')
+    constraints = [
+      models.UniqueConstraint(fields=['model', 'serial_n'], name='unique_model_serial'),
+      models.UniqueConstraint(fields=['rack', 'switch_rack_pos'], name='unique_rack_switch_rack_pos')
+    ]

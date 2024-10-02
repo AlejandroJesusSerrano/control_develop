@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms.switch.forms import SwitchForm
-from core.sh.models import Brand, Dependency, Dev_Model, Dev_Type, Edifice, Office, Switch
+from core.sh.models import Brand, Dependency, Dev_Model, Dev_Type, Edifice, Office, Switch, Location
 
 # Ajax views
 
@@ -37,6 +37,15 @@ def ajax_switch_search_model(request):
   return JsonResponse(data, safe=False)
 
 @csrf_protect
+def ajax_switch_search_location(request):
+  data = []
+  if request.method == 'POST':
+    province_id = request.POST.get('province_id')
+    locations = Location.objects.filter(province_id=province_id)
+    data = [{'id': l.id, 'name': l.location} for l in locations]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
 def ajax_switch_search_edifice(request):
   data = []
   if request.method == 'POST':
@@ -50,7 +59,7 @@ def ajax_switch_search_dependency(request):
   data = []
   if request.method == 'POST':
     location_id = request.POST.get('location_id')
-    dependencies = Dependency.objects.filter(location_id=location_id)
+    dependencies = Dependency.objects.filter(edifice__location_id=location_id)
     data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
   return JsonResponse(data, safe=False)
 
@@ -217,7 +226,7 @@ class SwitchUpdateView(UpdateView):
 
     if switch.office:
       context['form'].fields['office'].queryset = Office.objects.filter(
-        loc__edifice=switch.office.loc.edifice
+        edifice=switch.office.loc.edifice
     )
 
 # Manejar inicialización segura de datos en el contexto

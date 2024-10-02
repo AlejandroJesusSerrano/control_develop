@@ -9,6 +9,7 @@ class Rack(models.Model):
 
   def save(self,*args, **kwargs):
     self.rack = self.rack.upper()
+    self.details = self.details.upper()
     super(Rack, self).save(*args, **kwargs)
 
   def __str__(self):
