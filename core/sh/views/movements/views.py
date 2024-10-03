@@ -10,7 +10,7 @@ from core.sh.forms import OfficeForm
 from core.sh.models import Office
 
 
-class OfficeListView(ListView):
+class MovementsListView(ListView):
   model = Office
   template_name = 'office/list.html'
 
@@ -45,7 +45,7 @@ class OfficeListView(ListView):
     context['table_id'] = 'office_table'
     return context
 
-class OfficeCreateView(CreateView):
+class MovementsCreateView(CreateView):
   model: Office
   form_class = OfficeForm
   template_name = 'office/create.html'
@@ -80,7 +80,7 @@ class OfficeCreateView(CreateView):
     context['bg_color'] = 'bg-primary'
     return context
 
-class OfficeUpadateView(UpdateView):
+class MovementsUpadateView(UpdateView):
   model = Office
   form_class = OfficeForm
   template_name = 'office/create.html'
@@ -116,7 +116,7 @@ class OfficeUpadateView(UpdateView):
       context['bg_color'] = 'bg-warning'
       return context
 
-class OfficeDeleteView(DeleteView):
+class MovementsDeleteView(DeleteView):
   model = Office
   template_name = 'office/delete.html'
   success_url = reverse_lazy('sh:office_list')

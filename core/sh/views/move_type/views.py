@@ -12,7 +12,7 @@ from core.sh.forms import ProvinceForm
 from core.sh.models import Province
 
 
-class ProvinceListView(ListView):
+class Move_Type_ListView(ListView):
   model = Province
   template_name='province/list.html'
 
@@ -47,7 +47,7 @@ class ProvinceListView(ListView):
     context['table_id'] = 'province_table'
     return context
 
-class ProvinceCreateView(CreateView):
+class Move_Type_CreateView(CreateView):
   model = Province
   form_class = ProvinceForm
   template_name = 'province/create.html'
@@ -82,7 +82,7 @@ class ProvinceCreateView(CreateView):
       context['bg_color'] = 'bg-primary'
       return context
 
-class ProvinceUpdateView(UpdateView):
+class Move_Type_UpdateView(UpdateView):
   model = Province
   form_class = ProvinceForm
   template_name = 'province/create.html'
@@ -118,7 +118,7 @@ class ProvinceUpdateView(UpdateView):
       context['bg_color'] = 'bg-warning'
       return context
 
-class ProvinceDeleteView(DeleteView):
+class Move_Type_DeleteView(DeleteView):
     model = Province
     template_name = 'province/delete.html'
     success_url = reverse_lazy('sh:province_list')
@@ -146,31 +146,3 @@ class ProvinceDeleteView(DeleteView):
         context['bg_color'] = 'bg-danger'
         context['action'] = 'delete'
         return context
-
-class ProvinceFormView(FormView):
-  form_class = ProvinceForm
-  template_name = 'province/create.html'
-  success_url = reverse_lazy('sh:province_list')
-
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
-
-  def form_valid(self, form):
-    print(form.is_valid())
-    print(form)
-    return super().form_valid(form)
-
-  def form_invalid(self, form):
-    print(form.is_valid())
-    print(form.errors)
-    return super().form_invalid(form)
-
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['title'] = 'Form | Province'
-    context['entity'] = 'Provincias'
-    context['list_url'] = reverse_lazy('sh:province_list')
-    context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
-    return context
