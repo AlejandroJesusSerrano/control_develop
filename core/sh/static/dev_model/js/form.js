@@ -1,5 +1,3 @@
-// SHOW ERRORS IN FORM
-
 function show_errors_in_form(errors){
   $('.is-invalid').removeClass('is-invalid');
   $('.invalid-feedback').remove();
@@ -20,3 +18,9 @@ function show_errors_in_form(errors){
     }
   });
 }
+
+$(document).ready(function() {
+  $('.select2').select2({
+    theme:'bootstrap',
+  });
+});

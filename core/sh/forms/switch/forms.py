@@ -84,13 +84,13 @@ class SwitchForm(forms.ModelForm):
       selected_location = self.instance.office.loc.edifice.location
 
       self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location=selected_location)
-      self.fields['dependency'].initial = self.instance.dependency
+      self.fields['dependency'].initial = self.instance.office.dependency
 
       self.fields['edifice'].queryset = Edifice.objects.filter(location=selected_location)
       self.fields['edifice'].initial = self.instance.office.loc.edifice
       selected_edifice = self.instance.office.loc.edifice
 
-      self.fields['office'].queryset = Office.objects.filter(edifice=selected_edifice)
+      self.fields['office'].queryset = Office.objects.filter(loc__edifice=selected_edifice)
       self.fields['office'].initial = self.instance.office
 
       dev_type = self.instance.model.dev_type
@@ -111,10 +111,10 @@ class SwitchForm(forms.ModelForm):
 
       if self.instance.office:
         location = self.instance.office.loc.edifice.location
-        self.fields['dependency'].queryset = Dependency.objects.filter(location=location)
+        self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location=location)
         self.fields['dependency'].initial = self.instance.office.dependency
         self.fields['office'].queryset = Office.objects.filter(
-          edifice = self.instance.office.loc.edifice,
+          loc__edifice = self.instance.office.loc.edifice,
           dependency = self.instance.office.dependency
         )
         self.fields['office'].initial = self.instance.office
@@ -160,7 +160,9 @@ class SwitchForm(forms.ModelForm):
     if Switch.objects.filter(model=model, serial_n=serial_n).exists():
       self.add_error('model', f"Ya se encuentra cargado este modelo de Switch")
       self.add_error('serial_n', f"El número de serie ya se encuentra registrado y asociado al mismo modelo")
-    if Switch.objects.filter(rack=rack, switch_rack_pos=switch_rack_pos).exists():
-      self.add_error('rack', f"El switch ya se encuentra en el Rack seleccionado")
-      self.add_error('switch_rack_pos', f"La posicion seleccionada en el Rack, ya se encuentra ocupada")
+
+    if rack and switch_rack_pos:
+      if Switch.objects.filter(rack=rack, switch_rack_pos=switch_rack_pos).exists():
+        self.add_error('rack', f"El switch ya se encuentra en el Rack seleccionado")
+        self.add_error('switch_rack_pos', f"La posicion seleccionada en el Rack, ya se encuentra ocupada")
     return cleaned_data

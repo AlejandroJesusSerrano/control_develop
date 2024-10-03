@@ -29,4 +29,6 @@ class Edifice(models.Model):
     verbose_name_plural = 'Edificios'
     db_table = 'edificios'
     ordering = ['id']
-    unique_together = ('location', 'edifice')
+    constraints = [
+        models.UniqueConstraint(fields=['edifice', 'location'], name='unique_edifice_location')
+    ]

@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required 
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
@@ -225,8 +225,8 @@ class SwitchUpdateView(UpdateView):
     )
 
     if switch.office:
-      context['form'].fields['office'].queryset = Office.objects.filter(
-        edifice=switch.office.loc.edifice
+      context['form'].fields['office'].queryset = Office.objects.select_related('loc__edifice').filter(
+        loc__edifice=switch.office.loc.edifice
     )
 
 # Manejar inicialización segura de datos en el contexto
@@ -237,7 +237,7 @@ class SwitchUpdateView(UpdateView):
     if switch.office and switch.office.loc and switch.office.loc.edifice:
       context['form'].initial['location'] = switch.office.loc.edifice.location.id
       context['form'].initial['edifice'] = switch.office.loc.edifice.id
-    context['form'].initial['office'] = switch.office.id if switch.office else None
+      context['form'].initial['office'] = switch.office.id if switch.office else None
 
     context['form'].fields['brand'].widget.attrs.update({
       'data-preselected': self.object.model.brand.id if self.object.model and self.object.model.brand else ''
