@@ -6,36 +6,32 @@ from core.sh.models import Patchera
 
 class PatcheraForm(forms.ModelForm):
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for form in self.visible_fields():
-      form.field.widget.attrs['class'] = 'form-control m-1'
-    self.fields['patch'].widget.attrs['autofocus'] = True
-
   class Meta:
     model = Patchera
-    fields = '__all__'
-    widget = {
+    fields = ['rack', 'patch']
+    widgets = {
       'rack': Select(
         attrs={
-          'placeholder': 'Seleccione el Rack donde se encuentra la Patchera'
+          'class': 'form-control select2'
         }
       ),
       'patch': TextInput(
         attrs={
-          'placeholder': 'Ingrese el número de orden de la patchera en el rack'
+          'class': 'form-control',
+          'placeholder': 'Ingrese el número de la patchera'
         }
       )
     }
+    help_texts = {
+      'patch': '* El número de la patchera, se refiere a la posición de la misma en el Rack'
+    }
 
-  def save(self, commit=True):
-    data={}
-    form = super()
-    try:
-      if form.is_valid():
-        form.save()
-      else:
-        data['error'] = form.errors.get_json_data()
-    except Exception as e:
-      data['error'] = str(e)
-    return data
+  def clean(self):
+    rack = self.cleaned_data.get('rack')
+    patch = self.cleaned_data.get('patch')
+
+    if Patchera.objects.filter(rack=rack, patch=patch).exists():
+      self.add_error('patch', f"la posición ingresada en el rack '{rack}', ya se encuentra registrada. Ingrese una diferente")
+
+    cleaned_data = super().clean()
+    return cleaned_data

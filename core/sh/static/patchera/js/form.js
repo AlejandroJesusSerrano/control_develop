@@ -1,4 +1,8 @@
-// SHOW ERRORS IN FORM
+$(document).ready(function() {
+  $('.select2').select2({
+    theme:'bootstrap',
+  });
+})
 
 function show_errors_in_form(errors){
   $('.is-invalid').removeClass('is-invalid');
