@@ -80,7 +80,7 @@ class MovementsCreateView(CreateView):
     context['bg_color'] = 'bg-primary'
     return context
 
-class MovementsUpadateView(UpdateView):
+class MovementsUpdateView(UpdateView):
   model = Office
   form_class = OfficeForm
   template_name = 'office/create.html'
