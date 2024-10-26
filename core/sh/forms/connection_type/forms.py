@@ -1,36 +1,28 @@
 from django.forms import *
 from django import forms
-from django.forms import ModelForm, TextInput
+from django.forms import TextInput
 
-from core.sh.models import Connection_Type, Rack
+from core.sh.models import Connection_Type
 
 class ConnectionTypeForm(forms.ModelForm):
-
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for form in self.visible_fields():
-      form.field.widget.attrs['class'] = 'form-control m-1'
-    self.fields['connection_type'].widget.attrs['autofocus'] = True
 
   class Meta:
     model = Connection_Type
     fields = '__all__'
-    widget = {
+    widgets = {
       'connection_type': TextInput(
         attrs={
-          'placeholder': 'Ingrese el Tipo de Conexión'
+          'class': 'form-control',
+          'placeholder': 'Ingrese un Tipo de Conexion'
         }
-      )
+      ),
     }
 
-  def save(self, commit=True):
-    data={}
-    form = super()
-    try:
-      if form.is_valid():
-        form.save()
-      else:
-        data['error'] = form.errors.get_json_data()
-    except Exception as e:
-      data['error'] = str(e)
-    return data
+  def clean(self):
+    connection_type = self.cleaned_data.get('connection_type').upper()
+
+    if Connection_Type.objects.filter(connection_type__iexact=connection_type).exists():
+      self.add_error('connection_type', f"El Tipo de Conexión '{connection_type}' ya se encuentra registrado. Ingrese uno diferente")
+
+    cleaned_data = super().clean()
+    return cleaned_data

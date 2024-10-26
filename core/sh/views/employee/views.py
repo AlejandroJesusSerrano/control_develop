@@ -4,18 +4,68 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import EmployeeForm
-from core.sh.models import Employee
+from core.sh.models.dependency.models import Dependency
+from core.sh.models.edifice.models import Edifice
+from core.sh.models.employee.models import Employee
+from core.sh.models.location.models import Location
+from core.sh.models.office.models import Office
+from core.sh.models.office_loc.models import Office_Loc
+from core.sh.models.province.models import Province
 
+# Ajax Views
+@csrf_protect
+def ajax_employee_search_location(request):
+  data=[]
+  if request.method == 'POST':
+    province_id = request.POST.get('province_id')
+    locations = Location.objects.filter(province_id=province_id)
+    data = [{'id': l.id, 'name': l.location} for l in locations]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_employee_load_dependency(request):
+  data=[]
+  if request.method == 'POST':
+    location_id = request.POST.get('location_id')
+    dependencies = Dependency.objects.filter(edifice__location_id=location_id)
+    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_employee_load_edifices(request):
+  data=[]
+  if request.method == 'POST':
+    location_id = request.POST.get('location_id')
+    edifices = Edifice.objects.filter(location_id=location_id)
+    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_employee_load_loc(request):
+  data = []
+  if request.method == 'POST':
+    edifice_id = request.POST.get('edifice_id')
+    locs = Office_Loc.objects.filter(edifice_id=edifice_id)
+    data = [{'id': fw.id, 'name': f'Piso: {fw.floor} / Ala: {fw.wing}'} for fw in locs]
+  return JsonResponse(data, safe=False)
+
+@csrf_protect
+def ajax_employee_load_office(request):
+  data=[]
+  if request.method == 'POST':
+    loc_id = request.POST.get('loc_id')
+    offices = Office.objects.filter(loc_id=loc_id)
+    data = [{'id': o.id, 'name': o.office} for o in offices]
+  return JsonResponse(data, safe=False)
 
 class EmployeeListView(ListView):
   model = Employee
   template_name = 'employee/list.html'
 
   @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
@@ -55,18 +105,31 @@ class EmployeeCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data = {}
+  def form_valid(self, form):
     try:
-      action = request.POST.get('action')
-      if action == 'add':
-        form = self.get_form()
-        data = form.save()
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Empleado agregado correctamente'
+        }
+        return JsonResponse(data)
       else:
-        data['error'] = 'Acción no válida'
+        return super().form_valid(form)
     except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+      if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error': errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -88,21 +151,33 @@ class EmployeeUpadateView(UpdateView):
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data = {}
+  def form_valid(self, form):
     try:
-      action = request.POST.get('action')
-      if action == 'edit':
-        form = self.get_form()
-        data = form.save()
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Oficina actualizada correctamente'
+        }
+        return JsonResponse(data)
       else:
-        data['error'] = 'Accion no válida'
+        return super().form_valid(form)
     except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error':errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -114,6 +189,35 @@ class EmployeeUpadateView(UpdateView):
     context['form_id'] = 'employeeForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-warning'
+
+    employee = self.get_object()
+
+    if employee.office and employee.office.loc and employee.office.loc.edifice and employee.office.loc.edifice.location and employee.office.loc.edifice.location.province and employee.office.dependency:
+
+      province = employee.office.loc.edifice.location.province
+      context['form'].fields['province'].queryset = Province.objects.all()
+      context['form'].initial['province'] = province.id
+
+      location = employee.office.loc.edifice.location
+      context['form'].fields['location'].queryset = Location.objects.filter(province=province)
+      context['form'].initial['location'] = location.id
+
+      edifice = employee.office.loc.edifice
+      context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
+      context['form'].initial['edifice'] = edifice.id
+
+      dependency = employee.office.dependency
+      context['form'].fields['dependency'].queryset = Dependency.objects.filter(edifice__location=location)
+      context['form'].initial['dependency'] = dependency.id
+
+      loc = employee.office.loc
+      context['form'].fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice)
+      context['form'].initial['loc'] = loc.id
+
+      office = employee.office
+      context['form'].fields['office'].queryset = Office.objects.filter(loc=loc)
+      context['form'].initial['office'] = office.id
+
     return context
 
 class EmployeeDeleteView(DeleteView):

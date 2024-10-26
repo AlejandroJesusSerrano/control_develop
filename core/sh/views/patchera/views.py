@@ -108,7 +108,7 @@ class PatcheraUpadateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Provincia actualizada exitosamente'
+          'message': 'Patchera actualizada exitosamente'
         }
         return JsonResponse(data)
       else:

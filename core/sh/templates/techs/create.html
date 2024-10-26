@@ -1,1 +1,29 @@
 {% extends 'form.html' %}
+{% load static %}
+
+{% block form %}
+
+<div class="form-group">
+  <label for="id_name">Nombre del Tecnico:</label>
+  {{form.name}}
+  {% if form.name.errors %}
+    <div class="invalid-feedback d-block">
+      {{form.name.errors|join:"<br>"}}
+    </div>
+  {% endif %}
+</div>
+<div class="form-group">
+  <label for="id_last_name">Apellido del Tecnico:</label>
+  {{form.last_name}}
+  {% if form.last_name.errors %}
+    <div class="invalid-feedback d-block">
+      {{form.last_name.errors|join:"<br>"}}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'techs/js/form.js' %}"></script>
+{% endblock form_scripts %}

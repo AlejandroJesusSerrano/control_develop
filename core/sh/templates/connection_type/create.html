@@ -1,1 +1,19 @@
 {% extends 'form.html' %}
+{% load static %}
+
+{% block form %}
+<div class="form-group">
+  <label for="connection_type_id">Tipo de Conexión:</label>
+  {{ form.connection_type }}
+  {% if form.connection_type.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.connection_type.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'form_basic.js' %}"></script>
+{% endblock form_scripts %}
