@@ -160,7 +160,7 @@ class EmployeeUpadateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Oficina actualizada correctamente'
+          'message': 'Empleado actualizado correctamente'
         }
         return JsonResponse(data)
       else:

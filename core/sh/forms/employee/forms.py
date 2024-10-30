@@ -84,7 +84,7 @@ class EmployeeForm(forms.ModelForm):
       self.fields['location'].initial = self.instance.office.loc.edifice.location
       selected_location = self.instance.office.loc.edifice.location
 
-      self.fields['edifice'].queryset = Edifice.objects.filter      (location=selected_location)
+      self.fields['edifice'].queryset = Edifice.objects.filter(location=selected_location)
       self.fields['edifice'].initial = self.instance.office.loc.edifice
 
       self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location=selected_location)

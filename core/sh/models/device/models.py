@@ -21,6 +21,11 @@ class Device(models.Model):
   switch_port = models.OneToOneField(Switch_Port, related_name='device_switch_port', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
   employee = models.ManyToManyField(Employee, related_name='device_employee', verbose_name='Empleado', blank=True)
 
+  def save(self, *args, **kwargs):
+    self.serial_n = self.serial_n.upper()
+    self.net_name = self.net_name.upper()
+    super (Device, self).save(*args, **kwargs)
+
   def __str__(self):
     employees = self.employee.all()
     empl_str = ', '.join([f"{empl.employee_last_name}, {empl.employee_name}, Oficina: {empl.office.office}" for empl in employees])

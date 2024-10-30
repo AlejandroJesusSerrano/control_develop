@@ -1,4 +1,4 @@
-{% extends 'form.html' %} 
+{% extends 'form.html' %}
 {% load static %}
 
 {% block extra_refs %}
@@ -9,6 +9,66 @@
 {% endblock extra_refs %}
 
 {% block form %}
+
+<div class="form-group">
+  <label for="id_province">Provincia:</label>
+  {{ form.province }}
+  {% if form.province.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.province.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_location">Localidad:</label>
+  {{ form.location }}
+  {% if form.location.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.location.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_dependency">Dependencia:</label>
+  {{ form.dependency }}
+  {% if form.dependency.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.dependency.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_edifice">Edificio:</label>
+  {{ form.edifice }}
+  {% if form.edifice.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.edifice.errors|join:"<br>" }}
+  </div>
+{% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_loc">Ubicación:</label>
+  {{ form.loc }}
+  {% if form.loc.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.loc.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_office">Oficina:</label>
+  {{ form.office }}
+  {% if form.office.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.office.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
 
 <div class="form-group">
   <label for="id_dev_type">Tipo de Dispositivo:</label>
@@ -29,6 +89,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_dev_model">Modelo de Dispositivo:</label>
   {{ form.dev_model }}
@@ -38,6 +99,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_connection_type">Tipo de Conexión:</label>
   {{ form.connection }}
@@ -47,6 +109,7 @@
   </div>
 {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_ip">Ip:</label>
   {{ form.ip }}
@@ -56,6 +119,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_net_name">Nombre en la Red:</label>
   {{ form.net_name }}
@@ -65,6 +129,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_dev_status">Estado:</label>
   {{ form.dev_status }}
@@ -74,6 +139,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_serial_n">S/N°:</label>
   {{ form.serial_n }}
@@ -83,24 +149,7 @@
   </div>
   {% endif %}
 </div>
-<div class="form-group">
-  <label for="id_dependency">Dependencia:</label>
-  {{ form.dependency }}
-  {% if form.dependency.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.dependency.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-<div class="form-group">
-  <label for="id_office">Oficina:</label>
-  {{ form.office }}
-  {% if form.office.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.office.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
+
 <div class="form-group">
   <label for="id_wall_port">Boca de Pared:</label>
   {{ form.wall_port }}
@@ -110,6 +159,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_switch_port">Boca Switch:</label>
   {{ form.switch_port }}
@@ -119,6 +169,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_employee">Empleado:</label>
   {{ form.employee }}
