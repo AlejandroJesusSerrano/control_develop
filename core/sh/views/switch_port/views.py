@@ -4,17 +4,21 @@ from django.http import HttpRequest, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import SwitchPortForm
 from core.sh.models import Switch_Port
+from core.sh.models.dependency.models import Dependency
+from core.sh.models.edifice.models import Edifice
+from core.sh.models.location.models import Location
+from core.sh.models.office.models import Office
+from core.sh.models.office_loc.models import Office_Loc
 
 class Switch_PortListView(ListView):
   model = Switch_Port
   template_name = 'switch_port/list.html'
 
   @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
@@ -54,18 +58,31 @@ class Switch_PortCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
+  def form_valid(self, form):
     try:
-      action = request.POST.get('action')
-      if action == 'add':
-        form = self.get_form()
-        data = form.save()
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Dispositivo agregado correctamente'
+        }
+        return JsonResponse(data)
       else:
-        data['error'] = 'Acción no válida'
+        return super().form_valid(form)
     except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error': errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -90,18 +107,31 @@ class Switch_PortUpadateView(UpdateView):
     self.object = self.get_object()
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
+  def form_valid(self, form):
     try:
-      action = request.POST.get('action')
-      if action == 'edit':
-        form = self.get_form()
-        data = form.save()
+      self.object = form.save()
+
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Dispositivo actualizado correctamente'
+        }
+        return JsonResponse(data)
       else:
-        data['error'] = 'Accion no válida'
+        return super().form_valid(form)
     except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error':errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)

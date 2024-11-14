@@ -32,21 +32,21 @@ $(document).ready(function() {
 
 function updateBrandOptions(){
   const dev_type_name = 'SWITCH';
-  updateOptions('/sh/ajax/search_switch_brand/', {
+  updateOptions('/sh/ajax/load_brand/', {
     'dev_type_name': dev_type_name
   }, $('select[name="brand"]'), $('#id_brand').data('preselected'));
 }
 
 function updateModelOptions(brand_id) {
   const dev_type_name = 'SWITCH';
-  updateOptions('/sh/ajax/search_switch_model/', {
+  updateOptions('/sh/ajax/load_model/', {
     'brand_id': brand_id,
     'dev_type_name': dev_type_name
   }, $('select[name="model"]'), $('#id_model').data('preselected'));
 }
 
 function updateLocationOptions(province_id) {
-  updateOptions('/sh/ajax/search_switch_location/', {
+  updateOptions('/sh/ajax/load_location/', {
     'province_id': province_id,
   },$('select[name="location"]'), $('#id_location').data('preselected'));
 }

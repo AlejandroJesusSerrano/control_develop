@@ -41,7 +41,7 @@ $(document).ready(function() {
 
 function updateLocationOptions(province_id){
   if (province_id) {
-    updateOptions('/sh/ajax/search_device_location/', {
+    updateOptions('/sh/ajax/load_location/', {
       'province_id': province_id,
     }, $('select[name="location"]'), $('#id_location').data('preselected'));
   }

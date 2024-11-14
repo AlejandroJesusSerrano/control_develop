@@ -15,52 +15,6 @@ from core.sh.models.office.models import Office
 from core.sh.models.office_loc.models import Office_Loc
 from core.sh.models.province.models import Province
 
-# Ajax Views
-@csrf_protect
-def ajax_employee_search_location(request):
-  data=[]
-  if request.method == 'POST':
-    province_id = request.POST.get('province_id')
-    locations = Location.objects.filter(province_id=province_id)
-    data = [{'id': l.id, 'name': l.location} for l in locations]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_employee_load_dependency(request):
-  data=[]
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    dependencies = Dependency.objects.filter(edifice__location_id=location_id)
-    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_employee_load_edifices(request):
-  data=[]
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    edifices = Edifice.objects.filter(location_id=location_id)
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_employee_load_loc(request):
-  data = []
-  if request.method == 'POST':
-    edifice_id = request.POST.get('edifice_id')
-    locs = Office_Loc.objects.filter(edifice_id=edifice_id)
-    data = [{'id': fw.id, 'name': f'Piso: {fw.floor} / Ala: {fw.wing}'} for fw in locs]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_employee_load_office(request):
-  data=[]
-  if request.method == 'POST':
-    loc_id = request.POST.get('loc_id')
-    offices = Office.objects.filter(loc_id=loc_id)
-    data = [{'id': o.id, 'name': o.office} for o in offices]
-  return JsonResponse(data, safe=False)
-
 class EmployeeListView(ListView):
   model = Employee
   template_name = 'employee/list.html'

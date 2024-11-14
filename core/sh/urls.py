@@ -3,7 +3,7 @@ from django.urls import include, path
 urlpatterns = []
 
 
-from .url_modules.brands_urls import urlpatterns as brands_urls
+from .url_modules.brands_urls import urlpatterns as brands_url
 from .url_modules.connection_type_url import urlpatterns as connection_type_url
 from .url_modules.dahsboard_urls import urlpatterns as dashboard_url
 from .url_modules.dependency_url import urlpatterns as dependency_url
@@ -29,8 +29,9 @@ from .url_modules.switch_url import urlpatterns as switch_url
 from .url_modules.switch_port_url import urlpatterns as switch_port_url
 from .url_modules.techs_url import urlpatterns as techs_url
 from .url_modules.wall_port_url import urlpatterns as wall_port_url
+from .url_modules.ajax_urls import urlpatterns as ajax_url
 
-urlpatterns += brands_urls
+urlpatterns += brands_url
 urlpatterns += connection_type_url
 urlpatterns += dashboard_url
 urlpatterns += dependency_url
@@ -56,3 +57,4 @@ urlpatterns += switch_url
 urlpatterns += switch_port_url
 urlpatterns += techs_url
 urlpatterns += wall_port_url
+urlpatterns += ajax_url

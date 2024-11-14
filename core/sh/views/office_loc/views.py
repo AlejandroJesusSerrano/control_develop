@@ -9,25 +9,6 @@ from django.views.decorators.csrf import csrf_protect
 from core.sh.forms import Office_Loc_Form
 from core.sh.models import Edifice, Location, Office_Loc, Province
 
-# Ajax View
-@csrf_protect
-def ajax_office_loc_search_location(request):
-  data = []
-  if request.method == 'POST':
-    province_id = request.POST.get('province_id')
-    locations = Location.objects.filter(province_id=province_id)
-    data = [{'id': l.id, 'name': l.location} for l in locations]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_office_loc_search_edifice(request):
-  data = []
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    edifices = Edifice.objects.filter(location_id=location_id)
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-  return JsonResponse(data, safe=False)
-
 class Office_Loc_ListView(ListView):
   model = Office_Loc
   template_name = 'office_loc/list.html'

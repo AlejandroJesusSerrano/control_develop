@@ -1,6 +1,4 @@
-// SELECT 2
-
-$(document).ready(function() { 
+$(document).ready(function() {
   $('.select2').select2({
     theme:'bootstrap',
   });
@@ -20,17 +18,13 @@ $(document).ready(function() {
     updateWingFloorOptions(edifice_id);
   })
 
-  $('select[name="loc"]').on('change', function(){
-    const loc_id = $(this).val();
-    updateOfficeOptions(loc_id)
-  })
-
   initializeFormSubmission('#myform', 'edit');
+
 });
 
 function updateLocationOptions(province_id){
   if (province_id) {
-    updateOptions('/sh/ajax/load_location/', {
+    updateOptions('/sh/ajax/search_office_location/', {
       'province_id': province_id,
     }, $('select[name="location"]'), $('#id_location').data('preselected'));
   }
@@ -45,7 +39,7 @@ function updateLocationsreferredOptions(location_id) {
       $('#id_dependency').data('preselected'),
     );
     updateOptions(
-      '/sh/ajax/load_edifices/',
+      '/sh/ajax/load_edifice/',
       {'location_id': location_id},
       $('select[name="edifice"]'),
       $('#id_edifice').data('preselected'),
@@ -60,14 +54,6 @@ function updateWingFloorOptions(edifice_id) {
     }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
   }
 };
-
-function updateOfficeOptions(loc_id) {
-  if (loc_id) {
-    updateOptions('/sh/ajax/load_office/', {
-      'loc_id': loc_id
-    }, $('select[name="office"]'), $('#id_office').data('preselected'));
-  }
-}
 
 function initializeFormSubmission(formSelector, actionType) {
   $(formSelector).on('submit', function(e) {

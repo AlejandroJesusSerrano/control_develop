@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required 
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
@@ -8,74 +8,6 @@ from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms.switch.forms import SwitchForm
 from core.sh.models import Brand, Dependency, Dev_Model, Dev_Type, Edifice, Office, Switch, Location
-
-# Ajax views
-
-@csrf_protect
-def ajax_switch_search_brand(request):
-  data=[]
-  if request.method == 'POST':
-    dev_type_name = request.POST.get('dev_type_name', 'SWITCH')
-    try:
-      dev_type = Dev_Type.objects.get(dev_type=dev_type_name)
-      brands = Brand.objects.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
-      data = [{'id': b.id, 'name': b.brand}for b in brands]
-    except Dev_Type.DoesNotExist:
-      pass
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_switch_search_model(request):
-  data = []
-  if request.method == 'POST':
-    brand_id = request.POST.get('brand_id')
-    dev_type_id = request.POST.get('dev_type_id')
-    models = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
-    if brand_id:
-      models = models.filter(brand_id=brand_id)
-    data = [{'id': m.id, 'name': m.dev_model} for m in models]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_switch_search_location(request):
-  data = []
-  if request.method == 'POST':
-    province_id = request.POST.get('province_id')
-    locations = Location.objects.filter(province_id=province_id)
-    data = [{'id': l.id, 'name': l.location} for l in locations]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_switch_search_edifice(request):
-  data = []
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    edifices = Edifice.objects.filter(location_id=location_id)
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_switch_search_dependency(request):
-  data = []
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    dependencies = Dependency.objects.filter(edifice__location_id=location_id)
-    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_switch_search_office(request):
-  data = []
-  if request.method == 'POST':
-    edifice_id = request.POST.get('edifice_id')
-    dependency_id = request.POST.get('dependency_id')
-    offices = Office.objects.all()
-    if edifice_id:
-      offices = offices.filter(loc__edifice_id=edifice_id)
-    if dependency_id:
-      offices = offices.filter(dependency_id=dependency_id)
-    data = [{'id': o.id, 'name': o.office} for o in offices]
-  return JsonResponse(data, safe=False)
 
 class SwitchListView(ListView):
   model = Switch

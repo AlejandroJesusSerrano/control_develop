@@ -5,29 +5,9 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import DependencyForm
 from core.sh.models import Dependency, Edifice, Location, Province
-
-# Ajax View
-@csrf_protect
-def ajax_dependency_search_location(request):
-  data = []
-  if request.method == 'POST':
-    province_id = request.POST.get('province_id')
-    locations = Location.objects.filter(province_id=province_id)
-    data = [{'id': l.id, 'name': l.location} for l in locations]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_dependency_search_edifice(request):
-  data = []
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    edifices = Edifice.objects.filter(location_id=location_id)
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-  return JsonResponse(data, safe=False)
 
 class DependencyListView(ListView):
   model = Dependency

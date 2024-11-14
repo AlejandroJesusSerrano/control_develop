@@ -24,7 +24,7 @@ $(document).ready(function() {
 
 function updateLocationOptions(province_id){
   if (province_id) {
-    updateOptions('/sh/ajax/search_office_location/', {
+    updateOptions('/sh/ajax/load_location/', {
       'province_id': province_id,
     }, $('select[name="location"]'), $('#id_location').data('preselected'));
   }
@@ -39,7 +39,7 @@ function updateLocationsreferredOptions(location_id) {
       $('#id_dependency').data('preselected'),
     );
     updateOptions(
-      '/sh/ajax/load_edifice/',
+      '/sh/ajax/load_edifices/',
       {'location_id': location_id},
       $('select[name="edifice"]'),
       $('#id_edifice').data('preselected'),

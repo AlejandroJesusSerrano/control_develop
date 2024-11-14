@@ -14,90 +14,6 @@ from core.sh.models.location.models import Location
 from core.sh.models.office_loc.models import Office_Loc
 from core.sh.models.province.models import Province
 
-#Ajax Views
-
-@csrf_protect
-def ajax_device_search_location(request):
-  data=[]
-  if request.method == 'POST':
-    province_id = request.POST.get('province_id')
-    locations = Location.objects.filter(province_id=province_id)
-    data = [{'id': l.id, 'name': l.location} for l in locations]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_dependency(request):
-  data=[]
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    dependencies = Dependency.objects.filter(edifice__location_id=location_id)
-    data = [{'id': d.id, 'name': d.dependency} for d in dependencies]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_edifices(request):
-  data=[]
-  if request.method == 'POST':
-    location_id = request.POST.get('location_id')
-    edifices = Edifice.objects.filter(location_id=location_id)
-    data = [{'id': e.id, 'name': e.edifice} for e in edifices]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_loc(request):
-  data = []
-  if request.method == 'POST':
-    edifice_id = request.POST.get('edifice_id')
-    locs = Office_Loc.objects.filter(edifice_id=edifice_id)
-    data = [{'id': fw.id, 'name': f'Piso: {fw.floor} / Ala: {fw.wing}'} for fw in locs]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_office(request):
-  data=[]
-  if request.method == 'POST':
-    loc_id = request.POST.get('loc_id')
-    offices = Office.objects.filter(loc_id=loc_id)
-    data = [{'id': o.id, 'name': o.office} for o in offices]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_wall_port(request):
-  data=[]
-  if request.method == 'POST':
-    office_id = request.POST.get('office_id')
-    wall_ports = Wall_Port.objects.filter(office_id=office_id)
-    data = [{'id': w.id, 'name': w.wall_port} for w in wall_ports]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_switch_port(request):
-  data=[]
-  if request.method == 'POST':
-    office_id = request.POST.get('office_id')
-    switch_ports = Switch_Port.objects.filter(switch__office_id=office_id)
-    data = [{'id': s.id, 'name': f'Puerto: {s.port_id}, Switch: {s.switch}'} for s in switch_ports]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_employee(request):
-  data=[]
-  if request.method == 'POST':
-    office_id = request.POST.get('office_id')
-    employees = Employee.objects.filter(office_id=office_id)
-    data = [{'id': e.id, 'name': f'{e.employee_last_name}, {e.employee_name}'} for e in employees]
-  return JsonResponse(data, safe=False)
-
-@csrf_protect
-def ajax_device_load_model(request):
-  data=[]
-  if request.method == 'POST':
-    brand_id = request.POST.get('brand_id')
-    dev_type_id = request.POST.get('dev_type_id')
-    models = Dev_Model.objects.filter(brand_id=brand_id, dev_type_id=dev_type_id)
-    data = [{'id': m.id, 'name': m.dev_model} for m in models]
-  return JsonResponse(data, safe=False)
-
 class DeviceListView(ListView):
   model = Device
   template_name = 'device/list.html'
@@ -155,7 +71,7 @@ class DeviceCreateView(CreateView):
       else:
         return super().form_valid(form)
     except Exception as e:
-      if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'error': str(e)}, status=500)
       else:
         form.add_error(None, str(e))
