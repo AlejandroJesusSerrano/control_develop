@@ -4,15 +4,9 @@ from django.http import HttpRequest, JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import SwitchPortForm
 from core.sh.models import Switch_Port
-from core.sh.models.dependency.models import Dependency
-from core.sh.models.edifice.models import Edifice
-from core.sh.models.location.models import Location
-from core.sh.models.office.models import Office
-from core.sh.models.office_loc.models import Office_Loc
 
 class Switch_PortListView(ListView):
   model = Switch_Port
@@ -143,6 +137,11 @@ class Switch_PortUpadateView(UpdateView):
       context['form_id'] = 'switch_portForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-warning'
+
+      switch_port = self.get_object()
+
+      
+
       return context
 
 class Switch_PortDeleteView(DeleteView):

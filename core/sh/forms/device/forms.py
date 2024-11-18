@@ -79,111 +79,120 @@ class DeviceForm(forms.ModelForm):
     super(DeviceForm, self).__init__(*args, **kwargs)
 
     self.fields['province'].queryset = Province.objects.all()
-    self.fields['location'].queryset = Location.objects.none()
-    self.fields['dependency'].queryset = Dependency.objects.none()
-    self.fields['loc'].queryset = Office_Loc.objects.none()
-    self.fields['dev_model'].queryset = Dev_Model.objects.none()
-    self.fields['office'].queryset = Office.objects.none()
-    self.fields['wall_port'].queryset = Wall_Port.objects.none()
-    self.fields['switch_port'].queryset = Switch_Port.objects.none()
-    self.fields['employee'].queryset = Employee.objects.none()
+    self.fields['location'].queryset = Location.objects.all()
+    self.fields['dependency'].queryset = Dependency.objects.all()
+    self.fields['loc'].queryset = Office_Loc.objects.all()
+    self.fields['dev_model'].queryset = Dev_Model.objects.all()
+    self.fields['office'].queryset = Office.objects.all()
+    self.fields['wall_port'].queryset = Wall_Port.objects.all()
+    self.fields['switch_port'].queryset = Switch_Port.objects.all()
+    self.fields['employee'].queryset = Employee.objects.all()
 
     if self.instance.pk:
-      device = self.instance
 
-      self.fields['province'].initial = self.instance.office.loc.edifice.location.province
-      selected_province = self.instance.office.loc.edifice.location.province
-
-      self.fields['location'].queryset = Location.objects.filter(province=selected_province)
-      self.fields['location'].initial = self.instance.office.loc.edifice.location
-      selected_location = self.instance.office.loc.edifice.location
-
-      self.fields['edifice'].queryset = Edifice.objects.filter(location=selected_location)
-      self.fields['edifice'].initial = self.instance.office.loc.edifice
-      selelcted_edifice = self.instance.office.loc.edifice
-
-      self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location=selected_location)
-      self.fields['dependency'].initial = self.instance.office.dependency
-
-      self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=selelcted_edifice)
-      self.fields['loc'].initial = self.instance.office.loc
-      selected_loc = self.instance.office.loc
-
-      self.fields['office'].queryset = Office.objects.filter(loc=selected_loc)
-      self.fields['office'].initial = self.instance.office
-      selected_office = self.instance.office
+      self.initial['province'] = self.instance.office.loc.edifice.location.province
+      self.initial['location'] = self.instance.office.loc.edifice.location
+      self.initial['dependency'] = self.instance.office.dependency
+      self.initial['edifice'] = self.instance.office.loc.edifice
+      self.initial['loc'] = self.instance.office.loc
+      self.initial['office'] = self.instance.office
+      self.initial['brand'] = self.instance.dev_model.brand
+      self.initial['dev_type'] = self.instance.dev_model.dev_type
+      self.initial['dev_model'] = self.instance.dev_model
+      self.initial['employee'] = [e.id for e in self.instance.employee.all()]
 
       self.fields['dev_model'].queryset = Dev_Model.objects.filter(
         brand = self.instance.dev_model.brand,
         dev_type = self.instance.dev_model.dev_type
       )
 
-      self.fields['office'].queryset = Office.objects.filter(
-        dependency = self.instance.office.dependency
-      )
+      self.fields['wall_port'].queryset = Wall_Port.objects.filter(office = self.instance.office)
+      self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office = self.instance.office)
 
-      self.fields['wall_port'].queryset = Wall_Port.objects.filter(office=selected_office)
-      self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office=selected_office)
-      self.fields['employee'].queryset = Employee.objects.filter(office=selected_office)
-      self.initial['employee'] = [e.id for e in device.employee.all()]
+      self.fields['employee'].queryset = Employee.objects.filter(office=self.instance.office)
 
     else:
-      if 'province' in self.data:
-        try:
-          province_id = int(self.data.get('province'))
-          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
-        except (ValueError, TypeError):
-          pass
+      selected_province = self.data.get('province')
+      selected_location = self.data.get('location')
+      selected_dependency = self.data.get('dependency')
+      selected_edifice = self.data.get('edifice')
+      selected_loc = self.data.get('loc')
+      selected_office = self.data.get('office')
+      selected_brand = self.data.get('brand')
+      selected_dev_type = self.data.get('dev_type')
+
+      try:
+        selected_province = int(selected_province) if selected_province else None
+      except (ValueError, TypeError):
+        selected_province = None
+
+      try:
+        selected_location = int(selected_location) if selected_location else None
+      except (ValueError, TypeError):
+        selected_location = None
+
+      try:
+        selected_dependency = int(selected_dependency) if selected_dependency else None
+      except (ValueError, TypeError):
+        selected_dependency = None
+
+      try:
+        selected_edifice = int(selected_edifice) if selected_edifice else None
+      except (ValueError, TypeError):
+        selected_edifice = None
+
+      try:
+        selected_loc = int(selected_loc) if selected_loc else None
+      except (ValueError, TypeError):
+        selected_loc = None
+
+      try:
+        selected_office = int(selected_office) if selected_office else None
+      except (ValueError, TypeError):
+        selected_office = None
+
+      try:
+        selected_brand = int(selected_brand) if selected_brand else None
+      except (ValueError, TypeError):
+        selected_brand = None
+
+      try:
+        selected_dev_type = int(selected_dev_type) if selected_dev_type else None
+      except (ValueError, TypeError):
+        selected_dev_type = None
+
+      office_filters = {}
+      if selected_province:
+        office_filters['loc__edifice__location__province_id'] = selected_province
+      if selected_location:
+        office_filters['loc__edifice__location_id'] = selected_location
+      if selected_edifice:
+        office_filters['loc__edifice_id'] = selected_edifice
+      if selected_loc:
+        office_filters['loc_id'] = selected_loc
+      if selected_dependency:
+        office_filters['dependency_id'] = selected_dependency
+
+      self.fields['office'].queryset = Office.objects.filter(**office_filters).distinct()
+
+      dev_model_filters = {}
+      if selected_brand:
+        dev_model_filters['brand_id'] = selected_brand
+      if selected_dev_type:
+        dev_model_filters['dev_type_id'] = selected_dev_type
+
+      self.fields['dev_model'].queryset = Dev_Model.objects.filter(**dev_model_filters).distinct()
+
+      if selected_office:
+        self.fields['wall_port'].queryset = Wall_Port.objects.filter(office_id=selected_office)
+        self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office_id = selected_office)
+        self.fields['employee'].queryset = Employee.objects.filter(office_id = selected_office)
+
       else:
-        self.fields['location'].queryset = Location.objects.none()
-
-      if 'location' in self.data:
-        try:
-          location_id = int(self.data.get('location'))
-          self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location_id=location_id)
-          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id)
-        except (ValueError, TypeError):
-          pass
-      else:
-        self.fields['dependency'].queryset = Dependency.objects.none()
-        self.fields['edifice'].queryset = Edifice.objects.none()
-
-      if 'edifice' in self.data:
-        try:
-          edifice_id = int(self.data.get('edifice'))
-          self.fields['loc'].queryset = Office_Loc.objects.filter(edifice_id=edifice_id)
-        except(ValueError, TypeError):
-          pass
-      else:
-        self.fields['loc'].queryset = Office_Loc.objects.none()
-
-      if 'loc' in self.data:
-        try:
-          loc_id = int(self.data.get('loc'))
-          self.fields['office'].queryset = Office.objects.filter(loc_id=loc_id)
-        except(ValueError, TypeError):
-          pass
-      else:
-        self.fields['office'].queryset = Office.objects.none()
-
-      if 'office' in self.data:
-        try:
-          office_id = int(self.data.get('office'))
-          self.fields['wall_port'].queryset = Wall_Port.objects.filter(office_id=office_id)
-          self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office_id=office_id)
-          self.fields['employee'].queryset = Employee.objects.filter(office_id=office_id)
-        except (ValueError, TypeError):
-          pass
-
-      if 'brand' in self.data and 'dev_type' in self.data:
-        try:
-          brand_id = int(self.data.get('brand'))
-          dev_type_id = int(self.data.get('dev_type'))
-          self.fields['dev_model'].queryset = Dev_Model.objects.filter(brand_id=brand_id, dev_type_id=dev_type_id)
-        except (ValueError, TypeError):
-          pass
+        self.fields['wall_port'].queryset = Wall_Port.objects.all()
+        self.fields['switch_port'].queryset = Switch_Port.objects.all()
+        self.fields['employee'].queryset = Employee.objects.all()
 
   def clean(self):
     cleaned_data = super().clean()
-    print("cleaned data: ", cleaned_data)
     return cleaned_data

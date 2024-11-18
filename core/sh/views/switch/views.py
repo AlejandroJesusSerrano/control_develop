@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms.switch.forms import SwitchForm
 from core.sh.models import Brand, Dependency, Dev_Model, Dev_Type, Edifice, Office, Switch, Location
@@ -161,7 +160,6 @@ class SwitchUpdateView(UpdateView):
         loc__edifice=switch.office.loc.edifice
     )
 
-# Manejar inicialización segura de datos en el contexto
     context['form'].initial['brand'] = switch.model.brand.id if switch.model and switch.model.brand else None
     context['form'].initial['dev_type'] = switch.model.dev_type.id if switch.model and switch.model.dev_type else 'SWITCH'
     context['form'].initial['model'] = switch.model.id if switch.model else None

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #Libs
     'widget_tweaks',
+    'smart_selects',
     #Apps
     'core.sh',
     'core.homepage',
