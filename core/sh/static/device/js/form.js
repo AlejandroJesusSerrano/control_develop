@@ -101,7 +101,7 @@ function updateOfficeRelatedOptions(office_id) {
 }
 
 function updateModelsOptions(brand_id, dev_type_id) {
-  if (brand_id && dev_type_id) {
+  if (brand_id || dev_type_id) {
     updateOptions('/sh/ajax/load_model/',
       {
         'brand_id': brand_id,
@@ -110,6 +110,8 @@ function updateModelsOptions(brand_id, dev_type_id) {
       $('select[name="dev_model"]'),
       $('#id_dev_model').data('preselected')
     )
+  } else {
+    $('select[name="dev_model"]').empty();
   }
 }
 

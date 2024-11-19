@@ -161,37 +161,47 @@ class DeviceForm(forms.ModelForm):
       except (ValueError, TypeError):
         selected_dev_type = None
 
-      office_filters = {}
       if selected_province:
-        office_filters['loc__edifice__location__province_id'] = selected_province
+        self.fields['location'].queryset = Location.objects.filter(province_id = selected_province)
+        self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location__province_id = selected_province).distinct()
+        self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id = selected_province)
+        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice__location__province_id = selected_province)
+        self.fields['office'].queryset = Office.objects.filter(loc__edifice__location__province_id = selected_province).distinct()
+
       if selected_location:
-        office_filters['loc__edifice__location_id'] = selected_location
+        self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location_id = selected_location).distinct()
+        self.fields['edifice'].queryset = Edifice.objects.filter(location_id = selected_location)
+        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice__location_id = selected_location)
+        self.fields['office'].queryset = Office.objects.filter(loc__edifice__location_id = selected_location).distinct()
+
       if selected_edifice:
-        office_filters['loc__edifice_id'] = selected_edifice
-      if selected_loc:
-        office_filters['loc_id'] = selected_loc
+        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice_id = selected_edifice)
+        self.fields['office'].queryset = Office.objects.filter(loc__edifice_id = selected_edifice).distinct()
+
       if selected_dependency:
-        office_filters['dependency_id'] = selected_dependency
+        self.fields['office'].queryset = self.fields['office'].queryset.filter(dependency_id = selected_dependency).distinct()
 
-      self.fields['office'].queryset = Office.objects.filter(**office_filters).distinct()
+      if selected_office:
+        self.fields['wall_port'].queryset = Wall_Port.objects.filter(office_id = selected_office)
+        self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office_id = selected_office)
+        self.fields['employee'].queryset = Employee.objects.filter(office_id = selected_office)
+      else:
+        self.fields['wall_port'].queryset = Wall_Port.objects.all()
+        self.fields['switch_port'].queryset = Switch_Port.objects.all()
+        self.fields['employee'].queryset = Employee.objects.all()
 
-      dev_model_filters = {}
-      if selected_brand:
-        dev_model_filters['brand_id'] = selected_brand
-      if selected_dev_type:
-        dev_model_filters['dev_type_id'] = selected_dev_type
-
-      self.fields['dev_model'].queryset = Dev_Model.objects.filter(**dev_model_filters).distinct()
+      if selected_brand or selected_dev_type:
+        dev_model_filters = {}
+        if selected_brand:
+          dev_model_filters['brand_id'] = selected_brand
+        if selected_dev_type:
+          dev_model_filters['dev_type_id'] = selected_dev_type
+        self.fields['dev_model'].queryset = Dev_Model.objects.filter(**dev_model_filters).distinct()
 
       if selected_office:
         self.fields['wall_port'].queryset = Wall_Port.objects.filter(office_id=selected_office)
         self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office_id = selected_office)
         self.fields['employee'].queryset = Employee.objects.filter(office_id = selected_office)
-
-      else:
-        self.fields['wall_port'].queryset = Wall_Port.objects.all()
-        self.fields['switch_port'].queryset = Switch_Port.objects.all()
-        self.fields['employee'].queryset = Employee.objects.all()
 
   def clean(self):
     cleaned_data = super().clean()
