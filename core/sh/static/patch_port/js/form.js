@@ -3,20 +3,19 @@ $(document).ready(function() {
     theme:'bootstrap',
   });
 
-  $('select[name="province"]').on('change', function(){
-    const province_id = $(this).val();
-    updateLocationsOptions(province_id);
+  $('select[name="rack"]').on('change', function(){
+    const rack_id = $(this).val();
+    updateRackOptions(rack_id);
   });
 
   initializeFormSubmission('#myform', 'edit');
-
 });
 
-function updateLocationsOptions(province_id) {
-  if (province_id) {
-    updateOptions('/sh/ajax/load_location/', {
-      'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+function updateRackOptions(rack_id){
+  if (rack_id) {
+    updateOptions('/sh/ajax/load_patchera/', {
+      'rack_id': rack_id,
+    }, $('select[name="patch"]'), $('#id_patch').data('preselected'));
   }
 };
 
@@ -28,7 +27,7 @@ function initializeFormSubmission(formSelector, actionType) {
 
     submit_with_ajax($(this).attr('action'), formData, function() {
       console.log('Formulario enviado y procesado con éxito');
-      window.location.href = '/sh/edifice/list';
+      window.location.href = '/sh/patch_port/list';
     }, actionType)
   });
 }

@@ -10,17 +10,8 @@ class PatcheraForm(forms.ModelForm):
     model = Patchera
     fields = ['rack', 'patch']
     widgets = {
-      'rack': Select(
-        attrs={
-          'class': 'form-control select2'
-        }
-      ),
-      'patch': TextInput(
-        attrs={
-          'class': 'form-control',
-          'placeholder': 'Ingrese el número de la patchera'
-        }
-      )
+      'rack': Select(attrs={'class': 'form-control select2'}),
+      'patch': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de la patchera'})
     }
     help_texts = {
       'patch': '* El número de la patchera, se refiere a la posición de la misma en el Rack'

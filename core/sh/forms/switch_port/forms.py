@@ -101,7 +101,6 @@ class SwitchPortForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SwitchPortForm, self).__init__(*args, **kwargs)
 
-        # Inicializar querysets con todos los objetos
         self.fields['province'].queryset = Province.objects.all()
         self.fields['location'].queryset = Location.objects.all()
         self.fields['dependency'].queryset = Dependency.objects.all()
@@ -120,7 +119,6 @@ class SwitchPortForm(forms.ModelForm):
         self.fields['switch_out'].queryset = Switch.objects.all()
 
         if self.instance.pk:
-            # Manejo de instancia existente (edición)
             switch = self.instance.switch
             if switch:
                 office = switch.office
@@ -144,7 +142,7 @@ class SwitchPortForm(forms.ModelForm):
                     self.fields['office'].queryset = Office.objects.filter(loc=loc)
                     self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location=location)
 
-                dev_model = switch.dev_model
+                dev_model = switch.model
                 if dev_model:
                     brand = dev_model.brand
                     dev_type = dev_model.dev_type
@@ -163,22 +161,17 @@ class SwitchPortForm(forms.ModelForm):
                     self.fields['patchera'].queryset = Patchera.objects.filter(rack=rack)
                     self.initial['patchera'] = self.instance.patchera if hasattr(self.instance, 'patchera') else None
 
-                # Establecer valores iniciales para 'patch_port_out' y 'patch_port_in' si es necesario
                 self.initial['patch_port_out'] = self.instance.patch_port_out
                 self.initial['patch_port_in'] = self.instance.patch_port_in
 
-                # Establecer valores iniciales para 'switch_in' y 'switch_out' si es necesario
                 self.initial['switch_in'] = self.instance.switch_in
                 self.initial['switch_out'] = self.instance.switch_out
 
-            # Filtrar 'patch_port_out' y 'patch_port_in' basados en 'patchera'
             if self.initial.get('patchera'):
                 self.fields['patch_port_out'].queryset = Patch_Port.objects.filter(patchera=self.initial['patchera'])
                 self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera=self.initial['patchera'])
 
         else:
-            # Manejo de nueva instancia (creación)
-            # Obtener los valores seleccionados del formulario
             selected_province = self.data.get('province')
             selected_location = self.data.get('location')
             selected_dependency = self.data.get('dependency')
@@ -191,7 +184,6 @@ class SwitchPortForm(forms.ModelForm):
             selected_patchera = self.data.get('patchera')
             selected_switch = self.data.get('switch')
 
-            # Convertir los valores a enteros si es posible
             def to_int(value):
                 try:
                     return int(value)
@@ -210,7 +202,6 @@ class SwitchPortForm(forms.ModelForm):
             selected_patchera = to_int(selected_patchera)
             selected_switch = to_int(selected_switch)
 
-            # Filtrar los campos dependientes
             if selected_province:
                 self.fields['location'].queryset = Location.objects.filter(province_id=selected_province)
                 self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id=selected_province)
@@ -258,7 +249,6 @@ class SwitchPortForm(forms.ModelForm):
                 self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera_id=selected_patchera)
 
             if selected_switch:
-                # Si necesitas filtrar otros campos basados en el switch seleccionado, agrégalos aquí
                 pass
 
     def clean(self):

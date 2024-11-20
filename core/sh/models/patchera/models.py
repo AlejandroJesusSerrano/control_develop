@@ -26,3 +26,6 @@ class Patchera(models.Model):
     verbose_name_plural = 'Patcheras'
     db_table = 'patchs'
     ordering = ['id']
+    constraints = [
+        models.UniqueConstraint(fields=['rack', 'patch'], name='unique_rack_patch')
+    ]

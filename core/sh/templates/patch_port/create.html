@@ -1,1 +1,47 @@
 {% extends 'form.html' %}
+{% load static %}
+
+{% block extra_refs %}
+<!-- Select2 -->
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
+<script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+{% endblock extra_refs %}
+
+{% block form %}
+
+<div class="form-group">
+  <label for="id_rack">Rack:</label>
+  {{ form.rack }}
+  {% if form.rack.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.rack.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_patchera">Patchera:</label>
+  {{ form.patch }}
+  {% if form.patch.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.patch.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_port">Puerto:</label>
+  {{ form.port }}
+  {% if form.port.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.port.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'patch_port/js/form.js' %}"></script>
+{% endblock form_scripts %}

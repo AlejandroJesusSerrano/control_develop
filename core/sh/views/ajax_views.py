@@ -75,7 +75,7 @@ def ajax_load_switch(request):
 def ajax_load_patchera(request):
     rack_id = request.POST.get('rack_id')
     patcheras = Patchera.objects.filter(rack_id=rack_id)
-    data = [{'id': patchera.id, 'name': patchera.name} for patchera in patcheras]
+    data = [{'id': patch.id, 'name': patch.patch} for patch in patcheras]
     return JsonResponse(data, safe=False)
 
 @csrf_protect

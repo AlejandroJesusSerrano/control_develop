@@ -14,8 +14,8 @@ class Patch_Port(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['rack'] = self.patch.rack.rack
     item['patch'] = self.patch.patch
+    item['rack'] = str(self.patch.rack)
     return item
 
   class Meta:
@@ -23,3 +23,6 @@ class Patch_Port(models.Model):
     verbose_name_plural = 'Puertos Patcheras'
     db_table = 'patchs_ports'
     ordering = ['id']
+    constraints = [
+        models.UniqueConstraint(fields=['patch', 'port'], name='unique_patch_port')
+    ]

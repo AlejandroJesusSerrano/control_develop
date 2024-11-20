@@ -21,7 +21,7 @@ class Switch_Port(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['rack'] = self.switch.rack.rack if self.switch and self.switch.rack else 'NO RACK'
-    item['switch'] = str(self.switch.brand) +'-> '+str(self.switch.ports_q)+'-> Rack Pos: '+str(self.switch.switch_rack_pos)
+    item['switch'] = str(self.switch.model.brand) +'-> '+str(self.switch.ports_q)+'-> Rack Pos: '+str(self.switch.switch_rack_pos)
     item['patch_out'] = 'SI' if self.patch_port_out else 'NO'
     item['patch_port_out'] = str(self.patch_port_out.patch.rack.rack) +' patchera: '+str(self.patch_port_out.patch.patch)+'puerto: '+str(self.patch_port_out.port) if self.patch_port_out and self.patch_port_out.patch else 'NO PATCH'
     item['patch_in'] = 'SI' if self.patch_port_in else 'NO'
