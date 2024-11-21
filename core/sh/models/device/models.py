@@ -1,15 +1,11 @@
 from django.db import models
 from django.forms import model_to_dict
 
-from core.sh.models.patch_port.models import Patch_Port
-
 from ..connection_type.models import Connection_Type
 from ..dev_status.models import Dev_Status
 from ..dev_model.models import Dev_Model
 from ..employee.models import Employee
 from ..office.models import Office
-from ..switch_port.models import Switch_Port
-from ..wall_port.models import Wall_Port
 
 class Device(models.Model):
   dev_model = models.ForeignKey(Dev_Model, related_name='device_model', verbose_name='Modelo de Dispositivo', on_delete=models.CASCADE)
@@ -19,9 +15,9 @@ class Device(models.Model):
   serial_n = models.CharField(max_length=20, verbose_name='S/N°', unique=True)
   net_name = models.CharField(max_length=11, verbose_name='ID en la Red', blank=True, null=True, unique=True)
   office = models.ForeignKey(Office, related_name='device_office', verbose_name='Oficina', on_delete=models.CASCADE)
-  wall_port_in = models.OneToOneField(Wall_Port, related_name='device_wall_port', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
-  switch_port_in = models.OneToOneField(Switch_Port, related_name='device_switch_port', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
-  patch_port_in = models.OneToOneField(Patch_Port, related_name='device_patch_port', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
+  wall_port_in = models.OneToOneField('sh.Wall_Port', related_name='device_wall_port', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
+  switch_port_in = models.OneToOneField('sh.Switch_Port', related_name='device_switch_port', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
+  patch_port_in = models.OneToOneField('sh.Patch_Port', related_name='device_patch_port', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
   employee = models.ManyToManyField(Employee, related_name='device_employee', verbose_name='Empleado', blank=True)
 
   def save(self, *args, **kwargs):
@@ -40,7 +36,7 @@ class Device(models.Model):
     item['brand'] = self.dev_model.brand.brand
     item['model'] = self.dev_model.dev_model
     item['w_port'] = self.wall_port.wall_port if self.wall_port else 'No se conecta a puerto de pared'
-    item['s_port'] = f"Switch: {self.switch_port.switch.switch_rack_pos} / Puerto: {self.switch_port.port_id}" if self.switch_port else 'No se conecta a Switch intermedio'
+    item['s_port'] = f"Switch: {self.switch_port_in.switch.switch_rack_pos} / Puerto: {self.switch_port_in.port_id}" if self.switch_port_in else 'No se conecta a Switch intermedio'
     item['office'] = self.office.office
     employees = self.employee.all()
     employee_data = [

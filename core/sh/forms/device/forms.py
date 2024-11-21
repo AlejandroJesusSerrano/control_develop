@@ -61,7 +61,7 @@ class DeviceForm(forms.ModelForm):
   class Meta:
     model = Device
     fields = [
-      'province', 'location', 'dependency', 'edifice', 'loc', 'dev_model', 'connection', 'ip', 'net_name', 'dev_status', 'serial_n', 'office', 'wall_port', 'switch_port', 'employee'
+      'province', 'location', 'dependency', 'edifice', 'loc', 'dev_model', 'connection', 'ip', 'net_name', 'dev_status', 'serial_n', 'office', 'wall_port_in', 'switch_port_in', 'employee'
     ]
     widgets = {
       'connection': Select(attrs={'class': 'form-control select2'}),
@@ -70,8 +70,8 @@ class DeviceForm(forms.ModelForm):
       'dev_status': Select(attrs={'class': 'form-control select2'}),
       'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
       'office': Select(attrs={'class': 'form-control select2'}),
-      'wall_port': Select(attrs={'class': 'form-control select2'}),
-      'switch_port': Select(attrs={'class': 'form-control select2'}),
+      'wall_port_in': Select(attrs={'class': 'form-control select2'}),
+      'switch_port_in': Select(attrs={'class': 'form-control select2'}),
       'employee': SelectMultiple(attrs={'class': 'form-control select2'}),
     }
 
@@ -84,8 +84,8 @@ class DeviceForm(forms.ModelForm):
     self.fields['loc'].queryset = Office_Loc.objects.all()
     self.fields['dev_model'].queryset = Dev_Model.objects.all()
     self.fields['office'].queryset = Office.objects.all()
-    self.fields['wall_port'].queryset = Wall_Port.objects.all()
-    self.fields['switch_port'].queryset = Switch_Port.objects.all()
+    self.fields['wall_port_in'].queryset = Wall_Port.objects.all()
+    self.fields['switch_port_in'].queryset = Switch_Port.objects.all()
     self.fields['employee'].queryset = Employee.objects.all()
 
     if self.instance.pk:
@@ -106,8 +106,8 @@ class DeviceForm(forms.ModelForm):
         dev_type = self.instance.dev_model.dev_type
       )
 
-      self.fields['wall_port'].queryset = Wall_Port.objects.filter(office = self.instance.office)
-      self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office = self.instance.office)
+      self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office = self.instance.office)
+      self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office = self.instance.office)
 
       self.fields['employee'].queryset = Employee.objects.filter(office=self.instance.office)
 
@@ -182,12 +182,12 @@ class DeviceForm(forms.ModelForm):
         self.fields['office'].queryset = self.fields['office'].queryset.filter(dependency_id = selected_dependency).distinct()
 
       if selected_office:
-        self.fields['wall_port'].queryset = Wall_Port.objects.filter(office_id = selected_office)
-        self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office_id = selected_office)
+        self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office_id = selected_office)
+        self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office_id = selected_office)
         self.fields['employee'].queryset = Employee.objects.filter(office_id = selected_office)
       else:
-        self.fields['wall_port'].queryset = Wall_Port.objects.all()
-        self.fields['switch_port'].queryset = Switch_Port.objects.all()
+        self.fields['wall_port_in'].queryset = Wall_Port.objects.all()
+        self.fields['switch_port_in'].queryset = Switch_Port.objects.all()
         self.fields['employee'].queryset = Employee.objects.all()
 
       if selected_brand or selected_dev_type:
@@ -199,8 +199,8 @@ class DeviceForm(forms.ModelForm):
         self.fields['dev_model'].queryset = Dev_Model.objects.filter(**dev_model_filters).distinct()
 
       if selected_office:
-        self.fields['wall_port'].queryset = Wall_Port.objects.filter(office_id=selected_office)
-        self.fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office_id = selected_office)
+        self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office_id=selected_office)
+        self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office_id = selected_office)
         self.fields['employee'].queryset = Employee.objects.filter(office_id = selected_office)
 
   def clean(self):

@@ -2,13 +2,12 @@ from django.db import models
 from django.forms import model_to_dict
 
 from ..office.models import Office
-from ..switch_port.models import Switch_Port
 
 class Wall_Port(models.Model):
     office = models.ForeignKey(Office, related_name='office_wall_port', verbose_name='Oficina', on_delete=models.CASCADE)
     wall_port = models.CharField(max_length=8, verbose_name='Boca Pared')
-    switch_port_in = models.OneToOneField(Switch_Port, related_name='wall_switch_port_in', verbose_name='Puerto del Switch Padre', on_delete=models.CASCADE, null=True, blank=True)
-    patch_port_in = models.OneToOneField(Patch_Port, related_name='switch_patch_port_in', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
+    switch_port_in = models.OneToOneField('Switch_Port', related_name='wall_switch_port_in', verbose_name='Puerto del Switch Padre', on_delete=models.CASCADE, null=True, blank=True)
+    patch_port_in = models.OneToOneField('Patch_Port', related_name='switch_patch_port_in', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
     details = models.TextField(verbose_name='Observaciones', null=True, blank=True)
     date_creation = models.DateTimeField(auto_now=True, verbose_name='Fecha de Registro')
     date_updated = models.DateTimeField(auto_now_add=True, verbose_name='Última Modificación')

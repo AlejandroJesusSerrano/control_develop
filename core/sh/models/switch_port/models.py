@@ -1,11 +1,8 @@
 from django.db import models
 from django.forms import model_to_dict
 
-from ..patch_port.models import Patch_Port
-from ..switch.models import Switch
-
 class Switch_Port(models.Model):
-  switch = models.ForeignKey(Switch, related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)
+  switch = models.ForeignKey('switch.Switch', related_name = 'ports_switch', verbose_name = 'Switch', on_delete = models.CASCADE)
   port_id = models.CharField(max_length = 3, verbose_name = 'Puerto del Switch', unique=True)
   obs = models.TextField(verbose_name = 'observaciones', null = True, blank = True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
