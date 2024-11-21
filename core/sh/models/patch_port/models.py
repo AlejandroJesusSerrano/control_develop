@@ -3,9 +3,10 @@ from django.forms import model_to_dict
 
 from ..patchera.models import Patchera
 
-class Patch_Port(models.Model):
-  patch = models.ForeignKey(Patchera, related_name = 'patchera_port', verbose_name = 'Patchera', on_delete = models.CASCADE)
+class Patch_Port(models.Model): 
+  patchera = models.ForeignKey(Patchera, related_name = 'patchera_port', verbose_name = 'Patchera', on_delete = models.CASCADE)
   port = models.CharField(max_length = 2, verbose_name='Puerto')
+  switch_port_in = models.OneToOneField(Switch_Port, related_name='switch_switch_port_in', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 

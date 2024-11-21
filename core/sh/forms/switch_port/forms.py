@@ -10,69 +10,69 @@ from core.sh.models import (
 class SwitchPortForm(forms.ModelForm):
 
     province = forms.ModelChoiceField(
-        queryset=Province.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Province.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     location = forms.ModelChoiceField(
-        queryset=Location.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Location.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     dependency = forms.ModelChoiceField(
-        queryset=Dependency.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Dependency.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     edifice = forms.ModelChoiceField(
-        queryset=Edifice.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Edifice.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     loc = forms.ModelChoiceField(
-        queryset=Office_Loc.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Office_Loc.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     office = forms.ModelChoiceField(
-        queryset=Office.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Office.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     brand = forms.ModelChoiceField(
-        queryset=Brand.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Brand.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     dev_type = forms.ModelChoiceField(
-        queryset=Dev_Type.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Dev_Type.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     dev_model = forms.ModelChoiceField(
-        queryset=Dev_Model.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Dev_Model.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     rack = forms.ModelChoiceField(
-        queryset=Rack.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Rack.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     patchera = forms.ModelChoiceField(
-        queryset=Patchera.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
-        required=False
+        queryset = Patchera.objects.all(),
+        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        required = False
     )
 
     class Meta:

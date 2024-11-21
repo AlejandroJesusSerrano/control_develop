@@ -5,7 +5,7 @@ from ..rack.models import Rack
 
 class Patchera(models.Model):
   rack = models.ForeignKey(Rack, related_name = 'patchera_rack', verbose_name = 'Rack', on_delete = models.CASCADE)
-  patch = models.CharField(max_length = 2, verbose_name='Patchera')
+  patchera = models.CharField(max_length = 2, verbose_name='Patchera')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 

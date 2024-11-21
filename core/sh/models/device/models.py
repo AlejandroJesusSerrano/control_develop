@@ -1,6 +1,8 @@
 from django.db import models
 from django.forms import model_to_dict
 
+from core.sh.models.patch_port.models import Patch_Port
+
 from ..connection_type.models import Connection_Type
 from ..dev_status.models import Dev_Status
 from ..dev_model.models import Dev_Model
@@ -17,8 +19,9 @@ class Device(models.Model):
   serial_n = models.CharField(max_length=20, verbose_name='S/N°', unique=True)
   net_name = models.CharField(max_length=11, verbose_name='ID en la Red', blank=True, null=True, unique=True)
   office = models.ForeignKey(Office, related_name='device_office', verbose_name='Oficina', on_delete=models.CASCADE)
-  wall_port = models.OneToOneField(Wall_Port, related_name='device_wall_port', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
-  switch_port = models.OneToOneField(Switch_Port, related_name='device_switch_port', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
+  wall_port_in = models.OneToOneField(Wall_Port, related_name='device_wall_port', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
+  switch_port_in = models.OneToOneField(Switch_Port, related_name='device_switch_port', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
+  patch_port_in = models.OneToOneField(Patch_Port, related_name='device_patch_port', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
   employee = models.ManyToManyField(Employee, related_name='device_employee', verbose_name='Empleado', blank=True)
 
   def save(self, *args, **kwargs):
