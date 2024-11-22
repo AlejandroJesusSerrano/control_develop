@@ -17,10 +17,10 @@ class PatchPortForm(forms.ModelForm):
   class Meta:
     model = Patch_Port
     fields = [
-      'rack', 'patch', 'port'
+      'rack', 'patchera', 'port'
       ]
     widgets = {
-      'patch': Select(attrs={'class': 'form-control select2'}),
+      'patchera': Select(attrs={'class': 'form-control select2'}),
       'port': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de puerto'})
     }
 
@@ -28,11 +28,11 @@ class PatchPortForm(forms.ModelForm):
     super(PatchPortForm, self).__init__(*args, **kwargs)
 
     self.fields['rack'].queryset = Rack.objects.all()
-    self.fields['patch'].queryset = Patchera.objects.all()
+    self.fields['patchera'].queryset = Patchera.objects.all()
 
     if self.instance.pk:
       self.initial['rack'] = self.instance.patch.rack
-      self.initial['patch'] = self.instance.patch
+      self.initial['patchera'] = self.instance.patch
 
     else:
       selected_rack = self.data.get('rack')
@@ -43,18 +43,18 @@ class PatchPortForm(forms.ModelForm):
         selected_rack = None
 
       if selected_rack:
-        self.fields['patch'].queryset = Patchera.objects.filter(rack_id = selected_rack)
+        self.fields['patchera'].queryset = Patchera.objects.filter(rack_id = selected_rack)
 
 
   def clean(self):
     cleaned_data = super().clean()
 
     rack = self.cleaned_data.get('rack')
-    patch = self.cleaned_data.get('patch')
+    patchera = self.cleaned_data.get('patchera')
     port = self.cleaned_data.get('port')
 
 
-    if Patch_Port.objects.filter(patch=patch, port=port).exists():
-      self.add_error('port', f"* El número de puerto '{port}' que quiere ingresar, ya se encuentra registrado en la patchera: '{patch}' del Rack '{rack}'")
+    if Patch_Port.objects.filter(patchera=patchera, port=port).exists():
+      self.add_error('port', f"* El número de puerto '{port}' que quiere ingresar, ya se encuentra registrado en la patchera: '{patchera}' del Rack '{rack}'")
 
     return cleaned_data

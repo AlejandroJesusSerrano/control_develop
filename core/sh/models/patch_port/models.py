@@ -6,17 +6,17 @@ from ..patchera.models import Patchera
 class Patch_Port(models.Model):
   patchera = models.ForeignKey(Patchera, related_name = 'patchera_port', verbose_name = 'Patchera', on_delete = models.CASCADE)
   port = models.CharField(max_length = 2, verbose_name='Puerto')
-  switch_port_in = models.OneToOneField('Switch_Port', related_name='switch_switch_port_in', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
+  switch_port_in = models.OneToOneField('sh.Switch_Port', related_name='patch_port_switch_port_in', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def __str__(self):
-    return f'PUERTO: {self.port} PATCHERA: {self.patch} DEL RACK: {self.patch.rack}'
+    return f'PUERTO: {self.port} PATCHERA: {self.patchera} DEL RACK: {self.patchera.rack}'
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['patch'] = self.patch.patch
-    item['rack'] = str(self.patch.rack)
+    item['patch'] = self.patchera.patchera
+    item['rack'] = str(self.patchera.rack)
     return item
 
   class Meta:
@@ -25,5 +25,5 @@ class Patch_Port(models.Model):
     db_table = 'patchs_ports'
     ordering = ['id']
     constraints = [
-        models.UniqueConstraint(fields=['patch', 'port'], name='unique_patch_port')
+        models.UniqueConstraint(fields=['patchera', 'port'], name='unique_patchera_port')
     ]

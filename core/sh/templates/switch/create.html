@@ -94,6 +94,16 @@
 </div>
 
 <div class="form-group">
+  <label for="id_loc">Locacion de la oficina:</label>
+  {{ form.loc }}
+  {% if form.loc.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.loc.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
   <label for="id_office">Oficina:</label>
   {{ form.office }}
   {% if form.office.errors %}

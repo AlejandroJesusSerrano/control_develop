@@ -7,6 +7,7 @@ from core.sh.models import (
     Office, Office_Loc, Switch_Port, Wall_Port, Rack, Switch,
     Patchera, Patch_Port
 )
+from core.sh.models.brands.models import Brand
 
 @csrf_protect
 @require_POST
@@ -58,6 +59,18 @@ def ajax_load_rack(request):
 
 @csrf_protect
 @require_POST
+def ajax_load_brand(request):
+    dev_type_name = request.POST.get('dev_type_name')
+    data = []
+    if dev_type_name:
+        brands = Brand.objects.filter(models_brand__dev_type__dev_type = dev_type_name).distinct()
+    else:
+        brands = Brand.objects.none()
+    data = [{'id': b.id, 'name': b.brand} for b in brands]
+    return JsonResponse(data, safe=False)
+
+@csrf_protect
+@require_POST
 def ajax_load_switch(request):
     office_id = request.POST.get('office_id')
     rack_id = request.POST.get('rack_id')
@@ -89,24 +102,20 @@ def ajax_load_patch_ports(request):
 @csrf_protect
 @require_POST
 def ajax_load_model(request):
-    def to_int(value):
-        try:
-            return int(value)
-        except (ValueError, TypeError):
-            return None
 
-    brand_id = to_int(request.POST.get('brand_id'))
-    dev_type_id = to_int(request.POST.get('dev_type_id'))
+    brand_id = request.POST.get('brand_id')
+    dev_type_name = request.POST.get('dev_type_name')
 
     filters = {}
-    if brand_id is not None:
+    if brand_id:
         filters['brand_id'] = brand_id
-    if dev_type_id is not None:
-        filters['dev_type_id'] = dev_type_id
+    if dev_type_name:
+        filters['dev_type__dev_type'] = dev_type_name
 
     models = Dev_Model.objects.filter(**filters).distinct()
     data = [{'id': model.id, 'name': model.dev_model} for model in models]
     return JsonResponse(data, safe=False)
+
 
 @csrf_protect
 @require_POST

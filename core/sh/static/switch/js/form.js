@@ -54,11 +54,11 @@ function updateLocationOptions(province_id) {
 
 function updateLocationRelatedOptions(location_id) {
   if (location_id) {
-    updateOptions('/sh/ajax/search_switch_edifice/', {
+    updateOptions('/sh/ajax/load_edifices/', {
       'location_id': location_id,
     }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
 
-    updateOptions('/sh/ajax/search_switch_dependency/', {
+    updateOptions('/sh/ajax/load_dependency/', {
       'location_id': location_id,
     }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
   } else {
@@ -67,7 +67,7 @@ function updateLocationRelatedOptions(location_id) {
 }
 
 function updateOfficeOptions(edifice_id, dependency_id) {
-  updateOptions('/sh/ajax/search_switch_office/', {
+  updateOptions('/sh/ajax/load_office/', {
     'edifice_id': edifice_id,
     'dependency_id': dependency_id
   }, $('select[name="office"]'), $('#id_office').data('preselected'));

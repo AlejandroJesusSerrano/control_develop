@@ -2,49 +2,64 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
 
-from core.sh.models import Dependency, Edifice, Location, Office, Brand, Rack, Dev_Model, Switch, Province
+from models.brands.models import Brand
+from models.dependency.models import Dependency
+from models.dev_model.models import Dev_Model
+from models.edifice.models import Edifice
+from models.location.models import Location
+from models.office.models import Office
+from models.office_loc.models import Office_Loc
+from models.province.models import Province
+from models.rack.models import Rack
+from models.switch.models import Switch
 
 class SwitchForm(forms.ModelForm):
-  brand=forms.ModelChoiceField(
-    queryset=Brand.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+  brand = forms.ModelChoiceField(
+    queryset = Brand.objects.none(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
   )
 
-  model=forms.ModelChoiceField(
-    queryset=Dev_Model.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+  model = forms.ModelChoiceField(
+    queryset = Dev_Model.objects.none(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
   )
 
-  province=forms.ModelChoiceField(
-    queryset=Province.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+  province = forms.ModelChoiceField(
+    queryset = Province.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
   )
 
-  location=forms.ModelChoiceField(
-    queryset=Location.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+  location = forms.ModelChoiceField(
+    queryset = Location.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
   )
 
-  dependency=forms.ModelChoiceField(
-    queryset=Dependency.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+  dependency = forms.ModelChoiceField(
+    queryset = Dependency.objects.none(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
   )
 
-  edifice=forms.ModelChoiceField(
-    queryset=Edifice.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+  edifice = forms.ModelChoiceField(
+    queryset = Edifice.objects.none(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
+  )
+
+  loc = forms.ModelChoiceField(
+    queryset = Office_Loc.objects.none(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
   )
 
   class Meta:
     model = Switch
     fields = [
-      'brand', 'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'office', 'dependency', 'edifice', 'location'
+      'brand', 'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'loc', 'office', 'dependency', 'edifice', 'location'
       ]
     widgets = {
       'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
@@ -59,7 +74,7 @@ class SwitchForm(forms.ModelForm):
     }
     help_texts = {
       'ports_q': '* Ingrese solo números',
-      'switch_rack_pos': '* Ingrese el número de posición del switch en el rack'
+      'switch_rack_pos': '* Ingrese el número de posición del switch en el rack, en caso de encontrarse en uno'
     }
 
   def __init__(self, *args, **kwargs):
@@ -71,6 +86,7 @@ class SwitchForm(forms.ModelForm):
     self.fields['office'].queryset = Office.objects.none()
     self.fields['dependency'].queryset = Dependency.objects.none()
     self.fields['edifice'].queryset = Edifice.objects.none()
+    self.fields['loc'].queryset = Office_Loc.objects.none()
     self.fields['location'].queryset = Location.objects.none()
     self.fields['rack'].queryset = Rack.objects.all()
 
@@ -90,6 +106,9 @@ class SwitchForm(forms.ModelForm):
       self.fields['edifice'].initial = self.instance.office.loc.edifice
       selected_edifice = self.instance.office.loc.edifice
 
+      self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=selected_edifice)
+      self.fields['loc'].initial = self.instance.loc
+
       self.fields['office'].queryset = Office.objects.filter(loc__edifice=selected_edifice)
       self.fields['office'].initial = self.instance.office
 
@@ -106,8 +125,15 @@ class SwitchForm(forms.ModelForm):
       if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice:
         location = self.instance.office.loc.edifice.location
         self.fields['location'].initial = location
+
         self.fields['edifice'].queryset = Edifice.objects.filter(location=location)
         self.fields['edifice'].initial = self.instance.office.loc.edifice
+
+        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice_id)
+        self.fields['loc'].initial = self.instance.office.loc
+
+        self.fields['office'].queryset = Office.objects.filter(loc=loc_id)
+
 
       if self.instance.office:
         location = self.instance.office.loc.edifice.location
@@ -144,11 +170,20 @@ class SwitchForm(forms.ModelForm):
       if 'edifice'in self.data:
         try:
           edifice_id = int(self.data.get('edifice'))
-          self.fields['office'].queryset = Office.objects.filter(loc__edifice_id=edifice_id)
+          self.fields['loc'].queryset = Office_Loc.objects.filter(edifice_id=edifice_id)
         except(ValueError, TypeError):
           pass
       else:
         self.fields['edifice'].queryset = Edifice.objects.none()
+
+      if 'loc' in self.data:
+        try:
+          loc_id = int(self.data.get('loc'))
+          self.fields['office'].queryset = Office.objects.filter(loc_id=loc_id)
+        except(ValueError, TypeError):
+          pass
+      else:
+        self.filds['loc'].queryset = Office_Loc.objects.none()
 
   def clean(self):
     cleaned_data = super().clean()

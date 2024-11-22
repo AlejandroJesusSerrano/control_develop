@@ -14,7 +14,7 @@ class Patchera(models.Model):
     super(Patchera, self).save(*args, **kwargs)
 
   def __str__(self):
-    return self.patch
+    return self.patchera
 
   def toJSON(self):
     item = model_to_dict(self)
@@ -27,5 +27,5 @@ class Patchera(models.Model):
     db_table = 'patchs'
     ordering = ['id']
     constraints = [
-        models.UniqueConstraint(fields=['rack', 'patch'], name='unique_rack_patch')
+        models.UniqueConstraint(fields=['rack', 'patchera'], name='unique_rack_patchera')
     ]

@@ -2,10 +2,20 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput, Textarea
 
-from core.sh.models import (
-    Switch_Port, Brand, Dependency, Dev_Model, Dev_Type, Edifice, Location,
-    Office, Office_Loc, Patchera, Province, Rack, Switch, Patch_Port
-)
+from core.sh.models.brands.models import Brand
+from core.sh.models.dependency.models import Dependency
+from core.sh.models.dev_model.models import Dev_Model
+from core.sh.models.dev_type.models import Dev_Type
+from core.sh.models.edifice.models import Edifice
+from core.sh.models.location.models import Location
+from core.sh.models.office.models import Office
+from core.sh.models.office_loc.models import Office_Loc
+from core.sh.models.patchera.models import Patchera
+from core.sh.models.province.models import Province
+from core.sh.models.rack.models import Rack
+from core.sh.models.switch.models import Switch
+from core.sh.models.switch_port.models import Switch_Port
+
 
 class SwitchPortForm(forms.ModelForm):
 
@@ -80,22 +90,12 @@ class SwitchPortForm(forms.ModelForm):
         fields = [
             'province', 'location', 'dependency', 'edifice', 'loc', 'office',
             'brand', 'dev_type', 'dev_model', 'rack', 'patchera', 'switch',
-            'port_id', 'patch_port_out', 'patch_port_in', 'switch_in', 'switch_out', 'obs'
+            'port_id', 'obs'
         ]
         widgets = {
             'switch': Select(attrs={'class': 'form-control select2'}),
             'port_id': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de puerto'}),
-            'patch_port_out': Select(attrs={'class': 'form-control select2'}),
-            'patch_port_in': Select(attrs={'class': 'form-control select2'}),
-            'switch_in': Select(attrs={'class': 'form-control select2'}),
-            'switch_out': Select(attrs={'class': 'form-control select2'}),
             'obs': Textarea(attrs={'class': 'form-control', 'placeholder': 'Ingrese detalles particulares, si los hubiese'})
-        }
-        help_texts = {
-            'patch_port_in': '* En caso de que la boca se alimente desde una patchera, seleccione el puerto aquí',
-            'patch_port_out': '* En caso de que la boca alimente a una patchera, seleccione el puerto aquí',
-            'switch_in': '* En caso de que la boca se alimente directamente desde un switch, selecciónelo aquí',
-            'switch_out': '* En caso de que la boca vaya a un switch que distribuya la conexión, selecciónelo aquí'
         }
 
     def __init__(self, *args, **kwargs):
@@ -113,10 +113,6 @@ class SwitchPortForm(forms.ModelForm):
         self.fields['rack'].queryset = Rack.objects.all()
         self.fields['patchera'].queryset = Patchera.objects.all()
         self.fields['switch'].queryset = Switch.objects.all()
-        self.fields['patch_port_out'].queryset = Patch_Port.objects.all()
-        self.fields['patch_port_in'].queryset = Patch_Port.objects.all()
-        self.fields['switch_in'].queryset = Switch.objects.all()
-        self.fields['switch_out'].queryset = Switch.objects.all()
 
         if self.instance.pk:
             switch = self.instance.switch
@@ -160,16 +156,6 @@ class SwitchPortForm(forms.ModelForm):
                     self.initial['rack'] = rack
                     self.fields['patchera'].queryset = Patchera.objects.filter(rack=rack)
                     self.initial['patchera'] = self.instance.patchera if hasattr(self.instance, 'patchera') else None
-
-                self.initial['patch_port_out'] = self.instance.patch_port_out
-                self.initial['patch_port_in'] = self.instance.patch_port_in
-
-                self.initial['switch_in'] = self.instance.switch_in
-                self.initial['switch_out'] = self.instance.switch_out
-
-            if self.initial.get('patchera'):
-                self.fields['patch_port_out'].queryset = Patch_Port.objects.filter(patchera=self.initial['patchera'])
-                self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera=self.initial['patchera'])
 
         else:
             selected_province = self.data.get('province')
@@ -244,13 +230,16 @@ class SwitchPortForm(forms.ModelForm):
                     switch_filters['rack_id'] = selected_rack
                 self.fields['switch'].queryset = Switch.objects.filter(**switch_filters).distinct()
 
-            if selected_patchera:
-                self.fields['patch_port_out'].queryset = Patch_Port.objects.filter(patchera_id=selected_patchera)
-                self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera_id=selected_patchera)
-
             if selected_switch:
                 pass
 
     def clean(self):
         cleaned_data = super().clean()
+        switch = cleaned_data.get('switch')
+        port_id = cleaned_data.get('port_id')
+
+        if Switch_Port.objects.filter(switch=switch, port_id=port_id).exists():
+            self.add_error('switch', f"Ya existe un puerto '{port_id}' en el switch seleccionado.")
+            self.add_error('port_id', f"El puerto '{port_id}' ya está registrado para el switch especificado.")
+
         return cleaned_data

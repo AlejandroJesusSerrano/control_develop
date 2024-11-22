@@ -16,9 +16,9 @@ class Switch(models.Model):
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
   switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
   office = models.ForeignKey(Office, related_name = 'switch_office', verbose_name = 'Oficina', on_delete = models.CASCADE, blank=True, null=True)
-  wall_port_in = models.OneToOneField(Wall_Port, related_name='switch_wall_port_in', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
-  switch_port_in = models.OneToOneField('Switch_Port', related_name='switch_switch_port_in', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
-  patch_port_in = models.OneToOneField(Patch_Port, related_name='switch_patch_port_in', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
+  wall_port_in = models.OneToOneField('sh.Wall_Port', related_name='switch_wall_port_in', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
+  switch_port_in = models.OneToOneField('sh.Switch_Port', related_name='switch_switch_port_in', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
+  patch_port_in = models.OneToOneField('sh.Patch_Port', related_name='switch_patch_port_in', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
   date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now = True, verbose_name = 'Última Modificación')
 
@@ -51,9 +51,10 @@ class Switch(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['brand'] = self.model.brand.brand if self.model and self.model.brand else 'GENÉRICO'
+    item['serial_n'] = self.serial_n if self.serial_n else 'GENÉRICO SIN S/N°'
+    item['ports_q'] = self.ports_q
     item['rack'] = self.rack.rack if self.rack else 'NO ESTA EN RACK'
     item['office'] = self.office.office if self.office else 'NO ESTA EN UNA OFICINA'
-    item['model'] = self.model.dev_model if self.model else 'GENÉRICO'
     item['switch_rack_pos'] = self.switch_rack_pos if self.rack else 'NO ESTA EN RACK'
     return item
 

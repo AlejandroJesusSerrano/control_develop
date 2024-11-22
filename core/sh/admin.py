@@ -62,8 +62,8 @@ class DeviceAdmin(admin.ModelAdmin):
     'employee__employee_last_name',
     'employee__employee_name',
     'office__office',
-    'wall_port__wall_port',
-    'switch_port__port_id'
+    'wall_port_in__wall_port',
+    'switch_port_in__port_id'
     ]
 
   list_filter = [
@@ -75,8 +75,8 @@ class DeviceAdmin(admin.ModelAdmin):
     'net_name',
     'employee__employee_last_name',
     'office__office',
-    'wall_port__wall_port',
-    'switch_port__port_id'
+    'wall_port_in__wall_port',
+    'switch_port_in__port_id'
     ]
 
   ordering = [
@@ -86,8 +86,8 @@ class DeviceAdmin(admin.ModelAdmin):
     'serial_n',
     'net_name',
     'office__office',
-    'wall_port__wall_port',
-    'switch_port__port_id'
+    'wall_port_in__wall_port',
+    'switch_port_in__port_id'
     ]
 
   def get_type(self,obj):
@@ -127,25 +127,25 @@ admin.site.register(Rack, RackAdmin)
 
 class PatchAdmin(admin.ModelAdmin):
 
-  list_display = ('rack', 'patch', 'date_creation', 'date_updated')
+  list_display = ('rack', 'patchera', 'date_creation', 'date_updated')
   list_instances = True
-  search_fields = ['rack__rack', 'patch']
-  ordering = ['rack__rack', 'patch']
+  search_fields = ['rack__rack', 'patchera']
+  ordering = ['rack__rack', 'patchera']
 
 admin.site.register(Patchera, PatchAdmin)
 
 class PatchPortAdmin(admin.ModelAdmin):
 
-  list_display = ('get_patchPortRack', 'patch', 'port', 'date_creation', 'date_updated')
+  list_display = ('get_patchPortRack', 'patchera', 'port', 'date_creation', 'date_updated')
   list_instances = True
-  search_fields = ['patch__rack__rack', 'patch__patch', 'port']
-  list_filter = ['patch__rack__rack']
-  ordering = ['patch__rack__rack', 'patch__patch', 'patch']
+  search_fields = ['patchera__rack__rack', 'patchera__patchera', 'port']
+  list_filter = ['patchera__rack__rack']
+  ordering = ['patchera__rack__rack', 'patchera__patchera', 'port']
 
   def get_patchPortRack(self, obj):
     return obj.patch.rack.rack
   get_patchPortRack.short_description = 'Rack'
-  get_patchPortRack.admin_order_field = 'patch__rack__rack'
+  get_patchPortRack.admin_order_field = 'patchera__rack__rack'
 
 admin.site.register(Patch_Port, PatchPortAdmin)
 
@@ -161,11 +161,11 @@ admin.site.register(Switch, SwitchAdmin)
 
 class SwitchPortAdmin(admin.ModelAdmin):
 
-  list_display = ('get_switchRack', 'get_switchRackPos', 'get_switch_brand', 'get_switch_ports', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out', 'obs')
+  list_display = ('get_switchRack', 'get_switchRackPos', 'get_switch_brand', 'get_switch_ports', 'port_id', 'obs')
   list_instances = True
-  search_fields = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
-  list_filter = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
-  ordering = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id','patch_port_out', 'patch_port_in', 'switch_in', 'switch_out']
+  search_fields = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id']
+  list_filter = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id']
+  ordering = ['switch__rack__rack', 'switch__switch_rack_pos', 'switch__model__brand__brand', 'switch__ports_q', 'port_id']
 
   def get_switchRack(self, obj):
     return obj.switch.rack.rack
@@ -191,11 +191,11 @@ admin.site.register(Switch_Port, SwitchPortAdmin)
 
 class WallPortAdmin(admin.ModelAdmin):
 
-  list_display = ('get_wallOffice', 'get_wallOfficeFloor', 'get_wallOfficeWing', 'wall_port', 'switch_port_in', 'switch_port_out', 'details',)
+  list_display = ('get_wallOffice', 'get_wallOfficeFloor', 'get_wallOfficeWing', 'wall_port', 'switch_port_in', 'details',)
   list_instances = True
-  search_fields = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in', 'switch_port_out']
-  list_filter = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in', 'switch_port_out']
-  ordering = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in', 'switch_port_out']
+  search_fields = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in']
+  list_filter = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in']
+  ordering = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in']
 
   def get_wallOffice(self, obj):
     return obj.office.office
