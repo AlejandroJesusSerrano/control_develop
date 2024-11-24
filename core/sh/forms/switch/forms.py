@@ -2,16 +2,16 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
 
-from models.brands.models import Brand
-from models.dependency.models import Dependency
-from models.dev_model.models import Dev_Model
-from models.edifice.models import Edifice
-from models.location.models import Location
-from models.office.models import Office
-from models.office_loc.models import Office_Loc
-from models.province.models import Province
-from models.rack.models import Rack
-from models.switch.models import Switch
+from core.sh.models.brands.models import Brand
+from core.sh.models.dependency.models import Dependency
+from core.sh.models.dev_model.models import Dev_Model
+from core.sh.models.edifice.models import Edifice
+from core.sh.models.location.models import Location
+from core.sh.models.office.models import Office
+from core.sh.models.office_loc.models import Office_Loc
+from core.sh.models.province.models import Province
+from core.sh.models.rack.models import Rack
+from core.sh.models.switch.models import Switch
 
 class SwitchForm(forms.ModelForm):
   brand = forms.ModelChoiceField(

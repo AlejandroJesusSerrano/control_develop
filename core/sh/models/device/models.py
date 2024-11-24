@@ -37,7 +37,7 @@ class Device(models.Model):
     item['model'] = self.dev_model.dev_model
     item['w_port'] = self.wall_port_in.wall_port if self.wall_port else 'No se conecta a puerto de pared'
     item['s_port'] = (
-      f"Switch: {self.switch_port_in.switch.switch_rack_pos} / Puerto: {self.switch_port_in.port_id}" 
+      f"Switch: {self.switch_port_in.switch.switch_rack_pos} / Puerto: {self.switch_port_in.port_id}"
       if self.switch_port_in else 'No se conecta a Switch intermedio'
       )
     item['p_port'] = (

@@ -106,11 +106,11 @@ class DeviceAdmin(admin.ModelAdmin):
   get_employee.short_description = 'Empleado'
 
   def get_wallPort(self, obj):
-    return obj.wall_port.wall_port if obj.wall_port else 'No se conecta a boca de Pared'
+    return obj.wall_port_in.wall_port if obj.wall_port_in else 'No se conecta a boca de Pared'
   get_wallPort.short_description = 'Boca Pared'
 
   def get_switchPort(self, obj):
-    return obj.switch_port.port_id if obj.switch_port else 'No hay switch intermedio'
+    return obj.switch_port_in.port_id if obj.switch_port_in else 'No hay switch intermedio'
   get_switchPort.short_description = 'Boca Switch'
 
 admin.site.register(Device, DeviceAdmin)
