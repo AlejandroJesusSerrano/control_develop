@@ -9,7 +9,7 @@ class Switch_Port(models.Model):
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def __str__(self):
-    return f'{self.switch.rack}  - PUERTO: {self.port_id} - EXTENSION INGRESO: {self.switch_in} - SALIDA A EXTENSION: {self.switch_out}'
+    return f'{self.switch.rack} POSICION: {self.switch.switch_rack_pos} - PUERTO: {self.port_id}'
 
   def toJSON(self):
     item = model_to_dict(self)

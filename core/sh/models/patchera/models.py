@@ -10,7 +10,7 @@ class Patchera(models.Model):
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def save(self, *args, **kwargs):
-    self.patch = self.patch.upper()
+    self.patchera = self.patchera.upper()
     super(Patchera, self).save(*args, **kwargs)
 
   def __str__(self):

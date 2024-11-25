@@ -13,7 +13,7 @@ class Wall_Port(models.Model):
     date_updated = models.DateTimeField(auto_now_add=True, verbose_name='Última Modificación')
 
     def __str__(self):
-        switch_info = f"-> SWITCH: {self.switch_port_in.switch.brand} DE {self.switch_port_in.switch.ports_q} BOCAS EN EL PUERTO {self.switch_port_in.port_id}" if self.switch_port_in else 'NO SWITCH'
+        switch_info = f"-> SWITCH: {self.switch_port_in.switch.model.brand} DE {self.switch_port_in.switch.ports_q} BOCAS EN EL PUERTO {self.switch_port_in.port_id}" if self.switch_port_in else 'NO SWITCH'
         switch_port_in_info = f"SWITCH/RACK: {self.switch_port_in.switch.switch_rack_pos} -> PUERTO: {self.switch_port_in.port_id} -> RACK: {self.switch_port_in.switch.rack}" if self.switch_port_in else "NO VIENE DE SWITCH"
         patch_port_in_info = f"RACK: {self.patch_port_in.patchera.rack} -> PATCHERA: {self.patch_port_in.patchera} PUERTO: {self.patch_port_in}" if self.patch_port_in else "NO VIENE DE PATCHERA"
         return f'BOCA: {self.wall_port} EN OFICINA {self.office.office} -> INGRESO A LA BOCA DESDE: {patch_port_in_info}' if self.patch_port_in else f'BOCA: {self.wall_port} EN OFICINA {self.office.office} -> INGRESO A LA BOCA DESDE: {switch_info} -> {switch_port_in_info}'
@@ -22,16 +22,20 @@ class Wall_Port(models.Model):
         item = model_to_dict(self)
         item['office'] = self.office.office
         item['wall_port'] = self.wall_port
-        if self.switch_port_in and self.switch_port_in.switch and self.switch_port_in.switch.rack:
-            item['switch_port_in'] = f"RACK: {self.switch_port_in.switch.rack} -> SWITCH: {self.switch_port_in.switch.switch_rack_pos} -> PUERTO: {self.switch_port_in.port_id}"
-        elif self.switch_port_in and self.switch_port_in.switch:
-            item['switch_port_in'] = f"SWITCH: {self.switch_port_in.switch.switch_rack_pos} -> PUERTO: {self.switch_port_in.port_id}"
+
+        if self.switch_port_in and self.switch_port_in.switch:
+            if self.switch_port_in.switch.rack:
+                item['switch_port_in'] = f"RACK: {self.switch_port_in.switch.rack} -> SWITCH: {self.switch_port_in.switch.switch_rack_pos} -> PUERTO: {self.switch_port_in.port_id}"
+            else:
+                item['switch_port_in'] = f"SWITCH SIN RACK: {self.switch_port_in.switch.switch_rack_pos} -> PUERTO: {self.switch_port_in.port_id}"
         else:
-            item['switch_port_in'] = 'NO SWITCH'
-        if self.patch_port_in and self.patch_port_in.switch and self.patch_port_in.switch.switch_rack_pos:
-            item['patch_port_in'] = f"RACK: {self.patch_port_in.switch.rack} -> SWITCH: {self.patch_port_in.switch.switch_rack_pos}"
+            item['switch_port_in'] = None
+
+        if self.patch_port_in and self.patch_port_in.patchera:
+            item['patch_port_in'] = f"RACK: {self.patch_port_in.patchera.rack} -> PATCHERA: {self.patch_port_in.patchera} -> PUERTO: {self.patch_port_in.port}"
         else:
-            item['patch_port_in'] = 'NO SWITCH'
+            item['patch_port_in'] = None
+
         item['details'] = self.details if self.details else 'SIN DETALLES'
         return item
 

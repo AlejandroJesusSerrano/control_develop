@@ -178,20 +178,26 @@ class SwitchPortAdmin(admin.ModelAdmin):
   get_switchRackPos.admin_order_field = 'switch__switch_rack_pos'
 
   def get_switch_brand(self, obj):
-    return obj.switch.brand.brand
+    return obj.switch.model.brand.brand
   get_switch_brand.short_description = 'Marca Switch'
-  get_switch_brand.admin_order_field = 'switch__brand__brand'
+  get_switch_brand.admin_order_field = 'switch__model__brand__brand'
 
   def get_switch_ports(self, obj):
     return obj.switch.ports_q
   get_switch_ports.short_description = 'Cantidad de Puertos'
   get_switch_ports.admin_order_field = 'switch__ports_q'
 
+  def get_queryset(self, request):
+    return super().get_queryset(request).select_related(
+      'switch__rack',
+      'switch__model__brand'
+    )
+
 admin.site.register(Switch_Port, SwitchPortAdmin)
 
 class WallPortAdmin(admin.ModelAdmin):
 
-  list_display = ('get_wallOffice', 'get_wallOfficeFloor', 'get_wallOfficeWing', 'wall_port', 'switch_port_in', 'details',)
+  list_display = ('get_wallOffice', 'get_wallOfficeFloor', 'get_wallOfficeWing', 'wall_port', 'patch_port_in', 'switch_port_in', 'details',)
   list_instances = True
   search_fields = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in']
   list_filter = ['office__office', 'office__loc__floor', 'office__loc__wing', 'wall_port', 'switch_port_in']

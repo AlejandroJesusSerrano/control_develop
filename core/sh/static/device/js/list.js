@@ -21,6 +21,7 @@ $(document).ready(function(){
       {"data": "ip"},
       {"data": "w_port"},
       {"data": "s_port"},
+      {"data": "p_port"},
       {"data": "office"},
       {
         "data": "employee",
@@ -32,7 +33,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
-        targets: [9],
+        targets: [10],
         class: 'text-center align-middle',
         orderable: false,
         render: function(data, type, row){

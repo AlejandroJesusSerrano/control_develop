@@ -17,20 +17,34 @@ $(document).ready(function(){
       {"data": "id"},
       {"data": "office"},
       {"data": "wall_port"},
+      {"data": "patch_port_in"},
       {"data": "switch_port_in"},
-      {"data": "switch_port_out"},
       {"data": "details"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [6],
+        targets: [-1],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){
           let buttons = '<a href="/sh/wall_port/edit/'+row.id+'/" type="button" class="btn btn-warning"><i class="fas fa-edit"></i></a> ';
           buttons += '<a href="/sh/wall_port/delete/'+row.id+'/" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a> ';
           return buttons
+        }
+      },
+      {
+        // Renderizado para columna de switch
+        targets: [4],
+        render: function(data, type, row) {
+            return data || '<span class="badge bg-secondary">Sin conexión a switch</span>';
+        }
+      },
+      {
+        // Renderizado para columna de patchera
+        targets: [3],
+        render: function(data, type, row) {
+            return data || '<span class="badge bg-secondary">Sin conexión a patchera</span>';
         }
       }
     ],
