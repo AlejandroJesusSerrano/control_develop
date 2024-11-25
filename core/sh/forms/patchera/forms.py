@@ -22,7 +22,7 @@ class PatcheraForm(forms.ModelForm):
     patchera = self.cleaned_data.get('patchera')
 
     if Patchera.objects.filter(rack=rack, patchera=patchera).exists():
-      self.add_error('patch', f"la posición ingresada en el rack '{rack}', ya se encuentra registrada. Ingrese una diferente")
+      self.add_error('patchera', f"la posición ingresada en el rack '{rack}', ya se encuentra registrada. Ingrese una diferente")
 
     cleaned_data = super().clean()
     return cleaned_data

@@ -16,7 +16,7 @@ $(document).ready(function(){
     columns: [
       {"data": "id"},
       {"data": "rack"},
-      {"data": "patch"},
+      {"data": "patchera"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [

@@ -27,7 +27,7 @@ function updateLocationOptions(province_id) {
 
 function updateEdificeOptions(location_id) {
   if (location_id) {
-    updateOptions('/sh/ajax/load_edifice/', {
+    updateOptions('/sh/ajax/load_edifices/', {
       'location_id': location_id,
     }, $('select[name="edifice"'), $('#id_edifice').data('preselected'));
   }

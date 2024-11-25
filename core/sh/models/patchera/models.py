@@ -19,6 +19,7 @@ class Patchera(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['rack'] = self.rack.rack
+    item['patchera'] = self.patchera
     return item
 
   class Meta:

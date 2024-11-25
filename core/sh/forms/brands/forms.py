@@ -13,7 +13,8 @@ class BrandForm(forms.ModelForm):
       'brand': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese una Marca'
+          'placeholder': 'Ingrese una Marca',
+          'autofocus': True
         }
       ),
     }

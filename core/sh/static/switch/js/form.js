@@ -22,8 +22,19 @@ $(document).ready(function() {
 
   $('select[name="edifice"]').on('change', function(){
     const edifice_id = $(this).val();
+    updateLocOptions(edifice_id)
+  });
+
+  $('select[name="loc"]').on('change', function(){
+    const loc_id = $(this).val();
     const dependency_id = $('select[name="dependency"]').val();
-    updateOfficeOptions(edifice_id, dependency_id)
+    filterOffices(loc_id, dependency_id);
+  });
+
+  $('select[name="dependency"]').on('change', function(){
+    const dependency_id = $(this).val();
+    const loc_id = $('select[name="loc"]').val();
+    filterOffices(loc_id, dependency_id);
   });
 
   initializeFormSubmission('#myform', 'edit');
@@ -66,11 +77,24 @@ function updateLocationRelatedOptions(location_id) {
   }
 }
 
-function updateOfficeOptions(edifice_id, dependency_id) {
-  updateOptions('/sh/ajax/load_office/', {
-    'edifice_id': edifice_id,
-    'dependency_id': dependency_id
-  }, $('select[name="office"]'), $('#id_office').data('preselected'));
+function updateLocOptions(edifice_id) {
+  if (edifice_id) {
+    updateOptions('/sh/ajax/load_loc/', {
+      'edifice_id': edifice_id,
+    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
+  }
+}
+
+function filterOffices(loc_id, dependency_id) {
+  if (loc_id || dependency_id) {
+    const data = {};
+    if (loc_id) data.loc_id = loc_id;
+    if (dependency_id) data.dependency_id = dependency_id;
+
+    updateOptions('sh/ajax/load_office/', data,
+      $('select[name="office"]'), $('id_office').data('preselected')
+    );
+  }
 }
 
 function initializeFormSubmission(formSelector, actionType) {

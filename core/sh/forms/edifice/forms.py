@@ -39,13 +39,22 @@ class EdificeForm(forms.ModelForm):
     self.fields['location'].queryset = Location.objects.all()
 
     if self.instance.pk:
-      edifice = self.instance
 
-      if self.instance.location:
+      if self.instance.location and self.instance.location.province:
         province = self.instance.location.province
         self.fields['province'].initial = province
+
         self.fields['location'].queryset = Location.objects.filter(province=province)
         self.fields['location'].initial = self.instance.location
+
+    else:
+
+      if 'province' in self.data:
+        try:
+          province_id = int(self.data.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+        except (ValueError, TypeError):
+          pass
 
   def clean(self):
     cleaned_data = super().clean()
@@ -53,12 +62,20 @@ class EdificeForm(forms.ModelForm):
     location = self.cleaned_data.get('location')
     edifice = self.cleaned_data.get('edifice')
 
-    if self.instance.pk:
-      if Edifice.objects.filter(location=location, edifice=edifice).exclude(pk=self.instance.pk).exists():
+    if not edifice:
+      self.add_error('edifice', "El nombre del edificio no puede estar vacío")
+      return cleaned_data
+
+    if location:
+      duplicate_query = Edifice.objects.filter(
+        location = location,
+        edifice = edifice.upper()
+      )
+
+      if self.instance.pk:
+        duplicate_query = duplicate_query.exclude(pk=self.instance.pk)
+
+      if  duplicate_query.exists():
         self.add_error('edifice', f"Ya existe el edificio '{edifice}' en la localidad seleccionada")
-      else:
-        if Edifice.objects.filter(location=location, edifice=edifice).exists():
-          self.add_error('edifice', f"Ya existe el edificio '{edifice}' en la localidad seleccionada")
-    else:
-      self.add_error('edifice', "El nombre del edificio no puede estar vacío.")
+
     return cleaned_data

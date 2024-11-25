@@ -44,10 +44,17 @@ def ajax_load_loc(request):
 @csrf_protect
 @require_POST
 def ajax_load_office(request):
-    loc_id = request.POST.get('loc_id')
-    offices = Office.objects.filter(loc_id=loc_id)
-    data = [{'id': office.id, 'name': office.office} for office in offices]
-    return JsonResponse(data, safe=False)
+    filters = {}
+    if 'loc_id' in request.POST:
+        filters['loc_id'] = request.POST.get('loc_id')
+    if 'dependency_id' in request.POST:
+        filters['dependency_id'] = request.POST.get('dependency_id')
+
+    offices = Office.objects.filter(**filters)
+    return JsonResponse([{
+        'id': office.id,
+        'text': str(office.office)
+        } for office in offices], safe = False)
 
 @csrf_protect
 @require_POST

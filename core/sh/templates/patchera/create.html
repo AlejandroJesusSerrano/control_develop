@@ -21,13 +21,13 @@
 
 <div class="form-group">
   <label for="id_patch">Patchera:</label>
-  {{ form.patch }}
-  {% if form.patch.help_text %}
-    <small class="form-text text-muted">{{form.patch.help_text}}</small>
+  {{ form.patchera }}
+  {% if form.patchera.help_text %}
+    <small class="form-text text-muted">{{form.patchera.help_text}}</small>
   {% endif %}
-  {% if form.patch.errors %}
+  {% if form.patchera.errors %}
     <div class="invalid-feedback d-block">
-      {{ form.patch.errors|join:"<br>" }}
+      {{ form.patchera.errors|join:"<br>" }}
     </div>
   {% endif %}
 </div>

@@ -13,16 +13,17 @@ class Dev_TypeForm(forms.ModelForm):
       'dev_type': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese un Tipo de Dispositivo'
+          'placeholder': 'Ingrese un Tipo de Dispositivo',
+          'autofocus': True
         }
       ),
     }
 
-    def clean(self):
-      dev_type = self.cleaned_data.get('dev_type')
+  def clean(self):
+    dev_type = self.cleaned_data.get('dev_type').upper()
 
-      if Dev_Type.objects.filter(dev_type__iexact=dev_type).exists():
-        self.add_error('dev_type', f"El tipo de desipositivo {dev_type} ya se encuentra registrado")
-      cleaned_data = super().clean()
-      return cleaned_data
+    if Dev_Type.objects.filter(dev_type__iexact=dev_type).exists():
+      self.add_error('dev_type', f"El tipo de desipositivo {dev_type} ya se encuentra registrado")
+    cleaned_data = super().clean()
+    return cleaned_data
 

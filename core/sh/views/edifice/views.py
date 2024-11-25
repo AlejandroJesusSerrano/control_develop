@@ -78,7 +78,7 @@ class EdificeCreateView(CreateView):
         return super().form_valid(form)
     except Exception as e:
       if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': str(e)}, status=400)
       else:
         form.add_error(None, str(e))
         return self.form_invalid(form)
@@ -152,18 +152,12 @@ class EdificeUpdateView(UpdateView):
     edifice = self.get_object()
 
     if edifice.location and edifice.location.province:
-      context['form'].fields['province'].queryset = Province.objects.filter(
-        province=edifice.location.province
-      )
-
-    if edifice.location and edifice.location.province:
       context['form'].initial['province'] = edifice.location.province.id
-    context['form'].initial['location'] = edifice.location.id if edifice.location else None
-
-    context['form'].fields['province'].widget.attrs.update({
+      context['form'].initial['location'] = edifice.location.id if edifice.location else None
+      context['form'].fields['province'].widget.attrs.update({
       'data-preselected': self.object.location.province.id if self.object.location and self.object.location.province else ''
       })
-    context['form'].fields['location'].widget.attrs.update({
+      context['form'].fields['location'].widget.attrs.update({
       'data-preselected': self.object.location.id if self.object.location else ''
       })
 
