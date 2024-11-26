@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 
 from core.sh.models import (
     Dependency, Dev_Model, Edifice, Employee, Location,
@@ -10,51 +10,65 @@ from core.sh.models import (
 from core.sh.models.brands.models import Brand
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_location(request):
-    province_id = request.POST.get('province_id')
-    locations = Location.objects.filter(province_id=province_id)
+    province_id = request.GET.get('province_id')
+    locations = Location.objects.filter(province_id=province_id) or request.POST.get('province_id')
     data = [{'id': loc.id, 'name': loc.location} for loc in locations]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_dependency(request):
-    location_id = request.POST.get('location_id')
-    dependencies = Dependency.objects.filter(edifice__location_id=location_id).distinct()
+    location_id = request.GET.get('location_id') or request.POST.get('location_id')
+    edifice_id = request.GET.get('edifice_id') or request.POST.get('edifice_id')
+
+    dependencies = Dependency.objects.all()
+    if location_id:
+        dependencies = dependencies.filter(edifice__location_id = location_id)
+    if edifice_id:
+        dependencies = dependencies.filter(edifice_id=edifice_id)
+
+    dependencies = dependencies.distinct()
     data = [{'id': dep.id, 'name': dep.dependency} for dep in dependencies]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_edifices(request):
-    location_id = request.POST.get('location_id')
+    location_id = request.GET.get('location_id') or request.POST.get('location_id')
     edifices = Edifice.objects.filter(location_id=location_id)
     data = [{'id': edif.id, 'name': edif.edifice} for edif in edifices]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_loc(request):
-    edifice_id = request.POST.get('edifice_id')
+    edifice_id = request.POST.get('edifice_id') or request.POST.get('edifice_id')
+    dependency_id = request.POST.get('dependency_id') or request.POST.get('depenedency_id')
+
     locs = Office_Loc.objects.filter(edifice_id=edifice_id)
+    if dependency_id:
+        locs = locs.filter(office__dependency_id = dependency_id)
+
     data = [{'id': loc.id, 'name': f'Piso: {loc.floor} / Ala: {loc.wing}'} for loc in locs]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_office(request):
     filters = {}
-    if 'loc_id' in request.POST:
-        filters['loc_id'] = request.POST.get('loc_id')
-    if 'dependency_id' in request.POST:
-        filters['dependency_id'] = request.POST.get('dependency_id')
+    loc_id = request.GET.get('loc_id') or request.POST.get('loc_id')
+    dependency_id = request.GET.get('dependency_id') or request.POST.get('dependency_id')
 
-    offices = Office.objects.filter(**filters)
-    return JsonResponse([{
-        'id': office.id,
-        'text': str(office.office)
-        } for office in offices], safe = False)
+    if loc_id:
+        filters['loc_id'] = loc_id
+    if dependency_id:
+        filters['dependency_id'] = dependency_id
+
+    offices = Office.objects.filter(**filters).distinct()
+    data = [{'id': office.id, 'name': str(office.office)} for office in offices]
+    return JsonResponse(data, safe=False)
 
 @csrf_protect
 @require_POST
