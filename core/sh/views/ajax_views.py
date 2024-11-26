@@ -12,7 +12,7 @@ from core.sh.models.brands.models import Brand
 @csrf_protect
 @require_http_methods(["GET", "POST"])
 def ajax_load_location(request):
-    province_id = request.GET.get('province_id')
+    province_id = request.GET.get('province_id') or request.POST.get('province_id')
     locations = Location.objects.filter(province_id=province_id) or request.POST.get('province_id')
     data = [{'id': loc.id, 'name': loc.location} for loc in locations]
     return JsonResponse(data, safe=False)
@@ -49,7 +49,7 @@ def ajax_load_loc(request):
 
     locs = Office_Loc.objects.filter(edifice_id=edifice_id)
     if dependency_id:
-        locs = locs.filter(office__dependency_id = dependency_id)
+        locs = locs.filter(office_location__dependency_id = dependency_id)
 
     data = [{'id': loc.id, 'name': f'Piso: {loc.floor} / Ala: {loc.wing}'} for loc in locs]
     return JsonResponse(data, safe=False)

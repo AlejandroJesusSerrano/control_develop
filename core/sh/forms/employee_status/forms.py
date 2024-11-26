@@ -13,7 +13,8 @@ class EmployeeStatusForm(forms.ModelForm):
       'status': TextInput(
         attrs={
           'class': 'form-control',
-          'placehoder': 'Ingrese un Estado para los Empleados'
+          'placehoder': 'Ingrese un Estado para los Empleados',
+          'autofocus': True
         }
       )
     }

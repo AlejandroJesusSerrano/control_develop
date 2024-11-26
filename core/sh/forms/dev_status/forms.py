@@ -13,7 +13,8 @@ class Dev_StatusForm(forms.ModelForm):
       'dev_status': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese un Estado para el Dispositivo'
+          'placeholder': 'Ingrese un Estado para el Dispositivo',
+          'autofocus': True
         }
       ),
     }

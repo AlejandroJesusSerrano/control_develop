@@ -13,7 +13,8 @@ class SuplyTypeForm(ModelForm):
         'suply_type': TextInput(
           attrs={
             'class': 'form-control',
-            'placeholder': 'Ingrese el tipo de insumo'
+            'placeholder': 'Ingrese el tipo de insumo',
+            'autofocus': True
           }
         )
       }
