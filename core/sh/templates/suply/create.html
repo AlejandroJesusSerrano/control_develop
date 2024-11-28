@@ -1,1 +1,72 @@
 {% extends 'form.html' %}
+{% load static %}
+
+{% block extra_refs %}
+<!-- Select2 -->
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker.min.css'%}">
+
+<script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+<script src="{% static 'lib/bootstrap-datepicker-1.9.0-dist/js/bootstrap-datepicker.min.js' %}"></script>
+{% endblock extra_refs %}
+
+{% block form %}
+
+<div class="form-group">
+  <label for="id_brand">Marca de Impresora:</label>
+  {{ form.brand }}
+  {% if form.brand.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.brand.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_dev_model">Modelo:</label>
+  {{ form.dev_model }}
+  {% if form.dev_model.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.dev_model.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_suply_type">Tipo de Insumo:</label>
+  {{ form.suply_type }}
+  {% if form.suply_type.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.suply_type.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_serial_suply">Número de Serie:</label>
+  {{ form.serial_suply }}
+  {% if form.serial_suply.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.serial_suply.errors|join:"<br>" }}
+  </div>
+{% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_date_in">Fecha de Ingreso al Stock:</label>
+  {{ form.date_in }}
+  {% if form.date_in.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.date_in.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'suply/js/form.js' %}"></script>
+{% endblock form_scripts %}
+
+

@@ -27,3 +27,6 @@ class Suply(models.Model):
     verbose_name_plural = 'Insumos'
     db_table = 'insumos'
     ordering = ['id']
+    constraints = [
+      models.UniqueConstraint(fields=['suply_type', 'dev_model', 'serial_suply'], name='unique_type_model_serial')
+    ]
