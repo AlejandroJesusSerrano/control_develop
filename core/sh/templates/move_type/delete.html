@@ -4,7 +4,15 @@
 <div class="card-body table-responsive">
   <div class="alert alert-danger alert-dismissible">
     <h5><i class="icon fas fa-triangle-exclamation"></i> Atención!</h5>
-      Estas por eliminar el registro Nro: {{object.number_id}}, {{del_title}} {{object.province}}.
+      Estas por eliminar el registro Nro: {{object.id}}:
+      <ul>
+        <li>
+          {{del_title}} {{object.move}}
+        </li>
+        <li>
+          Detalle: {{object.details}}.
+        </li>
+      </ul>
       ¿Deseas continuar?
     </div>
 </div>

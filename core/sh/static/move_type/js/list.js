@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
 
-  $('#province_table').DataTable({
+  $('#move_type_table').DataTable({
     responsive: true,
     autoWidth:false,
     destroy: true,
@@ -16,9 +16,9 @@ $(document).ready(function() {
     },
     columns: [
       { "data": "id" },
-      { "data": "number_id" },
-      { "data": "province" },
-      { "data": "province" },
+      { "data": "move" },
+      { "data": "details" },
+      { "data": "" },
     ],
     columnDefs: [
       {
@@ -26,8 +26,8 @@ $(document).ready(function() {
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){
-          let buttons = '<a href="/sh/prov/edit/'+row.id+'/" type="button" class="btn btn-warning"><i class="fas fa-edit"></i></a> ';
-          buttons += '<a href="/sh/prov/delete/'+row.id+'/" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a> ';
+          let buttons = '<a href="/sh/move_type/edit/'+row.id+'/" type="button" class="btn btn-warning"><i class="fas fa-edit"></i></a> ';
+          buttons += '<a href="/sh/move_type/delete/'+row.id+'/" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></a> ';
           return buttons;
         },
       },

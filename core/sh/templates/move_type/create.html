@@ -1,1 +1,33 @@
 {% extends 'form.html' %}
+
+{% load static %}
+
+{% block form %}
+<div class="form-group">
+  <label for="id_move">Movimiento:</label>
+  {{ form.move }}
+  {% if form.move.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.move.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_details">Detalles:</label>
+  {{ form.details }}
+  {% if form.details.help_text %}
+    <small class="form-text text-muted">{{form.details.help_text}}</small>
+  {% endif %}
+  {% if form.details.errors %}
+    <div class="invalid-feedback d-block">
+      {{ form.details.errors|join:"<br>" }}
+    </div>
+  {% endif %}
+</div>
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'move_type/js/form.js' %}"></script>
+{% endblock form_scripts %}
+

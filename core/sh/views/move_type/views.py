@@ -5,16 +5,16 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView
-from django.contrib import messages
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-from core.sh.forms import ProvinceForm
-from core.sh.models import Province
+
+from core.sh.forms.move_type.forms import MoveTypeForm
+from core.sh.models.move_type.models import Move_Type
 
 
 class Move_Type_ListView(ListView):
-  model = Province
-  template_name='province/list.html'
+  model = Move_Type
+  template_name='move_type/list.html'
 
   @method_decorator(csrf_exempt)
   @method_decorator(login_required)
@@ -27,7 +27,7 @@ class Move_Type_ListView(ListView):
       action = request.POST['action']
       if action == 'searchdata':
         data = []
-        for i in Province.objects.all():
+        for i in Move_Type.objects.all():
           data.append(i.toJSON())
       else:
         data['error'] = 'Ha ocurrido un error'
@@ -37,21 +37,21 @@ class Move_Type_ListView(ListView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Provincias'
-    context['title'] = 'Listado de Provincias'
-    context['btn_add_id'] = 'province_add'
-    context['create_url'] = reverse_lazy('sh:province_add')
-    context['list_url'] = reverse_lazy('sh:province_list')
-    context['entity'] = 'Provincias'
-    context['nav_icon'] = 'fa-solid fa-earth-americas'
-    context['table_id'] = 'province_table'
+    context['page_title'] = 'Tipos de Movimientos'
+    context['title'] = 'Listado de Tipos de Movimientos'
+    context['btn_add_id'] = 'move_type_add'
+    context['create_url'] = reverse_lazy('sh:move_type_add')
+    context['list_url'] = reverse_lazy('sh:move_type_list')
+    context['entity'] = 'Tipos de Movimientos'
+    context['nav_icon'] = 'fa-solid fa-arrows-turn-to-dots'
+    context['table_id'] = 'move_type_table'
     return context
 
 class Move_Type_CreateView(CreateView):
-  model = Province
-  form_class = ProvinceForm
-  template_name = 'province/create.html'
-  success_url = reverse_lazy('sh:province_list')
+  model = Move_Type
+  form_class = MoveTypeForm
+  template_name = 'move_type/create.html'
+  success_url = reverse_lazy('sh:move_type_list')
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
@@ -72,21 +72,21 @@ class Move_Type_CreateView(CreateView):
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
-      context['page_title'] = 'Provincias'
-      context['title'] = 'Agregar una Provincia'
-      context['btn_add_id'] = 'prov_add'
-      context['entity'] = 'Provincias'
-      context['list_url'] = reverse_lazy('sh:province_list')
-      context['form_id'] = 'provForm'
+      context['page_title'] = 'Tipos de Movimientos'
+      context['title'] = 'Agregar una Tipo de Movimiento'
+      context['btn_add_id'] = 'move_t_add'
+      context['entity'] = 'Tipos de Movimientos'
+      context['list_url'] = reverse_lazy('sh:move_type_list')
+      context['form_id'] = 'move_tForm'
       context['action'] = 'add'
       context['bg_color'] = 'bg-primary'
       return context
 
 class Move_Type_UpdateView(UpdateView):
-  model = Province
-  form_class = ProvinceForm
-  template_name = 'province/create.html'
-  success_url = reverse_lazy('sh:province_list')
+  model = Move_Type
+  form_class = MoveTypeForm
+  template_name = 'move_type/create.html'
+  success_url = reverse_lazy('sh:move_type_list')
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
@@ -108,20 +108,20 @@ class Move_Type_UpdateView(UpdateView):
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
-      context['page_title'] = 'Provincias'
-      context['title'] = 'Editar Datos de una Provincia'
-      context['btn_add_id'] = 'prov_add'
-      context['entity'] = 'Provincias'
-      context['list_url'] = reverse_lazy('sh:province_list')
-      context['form_id'] = 'provForm'
+      context['page_title'] = 'Tipos de Movimientos'
+      context['title'] = 'Editar Datos de una Tipo de Movimiento'
+      context['btn_add_id'] = 'move_t_add'
+      context['entity'] = 'Tipos de Movimientos'
+      context['list_url'] = reverse_lazy('sh:move_type_list')
+      context['form_id'] = 'move_tForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-warning'
       return context
 
 class Move_Type_DeleteView(DeleteView):
-    model = Province
-    template_name = 'province/delete.html'
-    success_url = reverse_lazy('sh:province_list')
+    model = Move_Type
+    template_name = 'move_type/delete.html'
+    success_url = reverse_lazy('sh:move_type_list')
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -138,11 +138,11 @@ class Move_Type_DeleteView(DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Provincias'
-        context['title'] = 'Eliminar una Provincia'
-        context['del_title'] = 'Provincia: '
-        context['list_url'] = reverse_lazy('sh:province_list')
-        context['form_id'] = 'provForm'
+        context['page_title'] = 'Tipos de Movimientos'
+        context['title'] = 'Eliminar una Tipo de Movimiento'
+        context['del_title'] = 'Tipo de Movimiento: '
+        context['list_url'] = reverse_lazy('sh:move_type_list')
+        context['form_id'] = 'move_tForm'
         context['bg_color'] = 'bg-danger'
         context['action'] = 'delete'
         return context

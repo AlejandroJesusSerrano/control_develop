@@ -6,22 +6,29 @@ from core.sh.models import Move_Type
 
 class MoveTypeForm(forms.ModelForm):
 
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for form in self.visible_fields():
-      form.field.widget.attrs['class'] = 'form-control m-1'
-    self.fields['move'].widget.attrs['autofocus'] = True
-
   class Meta:
       model = Move_Type
-      fields = '__all__'
-      widget = {
+      fields = [
+        'move', 'details'
+      ]
+      widgets = {
         'move': TextInput(
           attrs={
-            'placeholder': 'Ingrese el tipo de movimiento'
+            'placeholder': 'Ingrese el tipo de movimiento',
+            'class': 'form-control',
+            'autofocus': True
+          }),
+        'details': TextInput(
+          attrs={
+            'class': 'form-control',
+            'placeholder': 'Agregue algún detalle específico al respecto, de ser necesario'
           }
         )
       }
+      help_texts = {
+        'details': 'El detalle no debe superar los 150 caracteres'
+      }
+
 
   def save(self, commit=True):
     data={}
