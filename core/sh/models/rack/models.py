@@ -1,7 +1,10 @@
 from django.db import models
 from django.forms import model_to_dict
 
+from ..office.models import Office
+
 class Rack(models.Model):
+  office = models.ForeignKey(Office, related_name='rack_office', verbose_name='oficina', on_delete=models.CASCADE)
   rack = models.CharField(max_length = 6, verbose_name = 'Rack', unique=True)
   details = models.TextField(verbose_name = 'Detalle')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')

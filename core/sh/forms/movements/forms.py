@@ -3,14 +3,14 @@ from django import forms
 from django.forms import ModelForm, Select, Textarea, DateInput
 
 from core.sh.models import Movements
+from core.sh.models.brands.models import Brand
 
 class MovementsForm(ModelForm):
-
-  def __init__(self, *args, **kwargs):
-    super().__init__(*args, **kwargs)
-    for form in self.visible_fields():
-      form.field.widget.attrs['class'] = 'form-control m-1'
-    self.fields['port_id'].widget.attrs['autofocus'] = True
+  brand = forms.ModelChoiceField(
+    queryset = Brand.objects.all(),
+    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    required = False
+  )
 
   class Meta:
       model = Movements

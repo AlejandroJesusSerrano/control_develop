@@ -1,1 +1,143 @@
 {% extends 'form.html' %}
+{% load static %}
+
+{% block extra_refs %}
+<!-- Select2 -->
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
+<script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+{% endblock extra_refs %}
+
+{% block form %}
+
+<div class="form-group">
+  <label for="id_brand">Provincia:</label>
+  {{ form.province }}
+  {% if form.province.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.province.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_model">Localidad:</label>
+  {{ form.location }}
+  {% if form.location.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.location.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_dependency">Dependencia:</label>
+  {{ form.dependency }}
+  {% if form.dependency.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.dependency.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_edifice">Edificio:</label>
+  {{ form.edifice }}
+  {% if form.edifice.help_text %}
+  <small class="form-text text-muted">{{form.edifice.help_text}}</small>
+  {% endif %}
+  {% if form.edifice.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.edifice.errors|join:"<br>" }}
+  </div>
+{% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_loc">Locacion de Officina:</label>
+  {{ form.loc }}
+  {% if form.loc.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.loc.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_office">Oficina:</label>
+  {{ form.office }}
+  {% if form.office.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.office.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_rack">Rack:</label>
+  {{ form.rack }}
+  {% if form.rack.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.rack.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_switch">Switch de Ingreso:</label>
+  {{ form.switch }}
+  {% if form.switch.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.switch.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_switch_port_in">Puerto del Switch de Ingreso:</label>
+  {{ form.switch_port_in }}
+  {% if form.switch_port_in.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.switch_port_in.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_patchera">Patchera de Ingreso:</label>
+  {{ form.patchera }}
+  {% if form.patchera.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.patchera.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_patch_port_in">Puerto de la Patchera de Ingreso:</label>
+  {{ form.patch_port_in }}
+  {% if form.patch_port_in.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.patch_port_in.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<div class="form-group">
+  <label for="id_details">Detalles:</label>
+  {{ form.details }}
+  {% if form.details.help_text %}
+  <small class="form-text text-muted">{{form.details.help_text}}</small>
+  {% endif %}
+  {% if form.details.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.details.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+  <script src="{% static 'wall_port/js/form.js' %}"></script>
+{% endblock form_scripts %}

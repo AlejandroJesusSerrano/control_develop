@@ -4,7 +4,6 @@ from django.forms import Select, TextInput, Textarea
 
 from core.sh.models import Wall_Port
 from core.sh.models.dependency.models import Dependency
-from core.sh.models.dev_model.models import Dev_Model
 from core.sh.models.edifice.models import Edifice
 from core.sh.models.location.models import Location
 from core.sh.models.office.models import Office
@@ -49,7 +48,7 @@ class WallPortForm(forms.ModelForm):
   )
 
   office = forms.ModelChoiceField(
-    queryset = Dev_Model.objects.all(),
+    queryset = Office.objects.all(),
     widget = forms.Select(attrs = {'class': 'form-control select2'}),
     required = False
   )
@@ -60,13 +59,13 @@ class WallPortForm(forms.ModelForm):
     required = False
   )
 
-  patchera_in = forms.ModelChoiceField(
+  patchera = forms.ModelChoiceField(
     queryset = Patchera.objects.all(),
     widget = forms.Select(attrs = {'class': 'form-control select2'}),
     required  = False
   )
 
-  switch_in = forms.ModelChoiceField(
+  switch = forms.ModelChoiceField(
     queryset = Switch.objects.all(),
     widget = forms.Select(attrs = {'class': 'form-control select2'}),
     required = False
@@ -75,7 +74,7 @@ class WallPortForm(forms.ModelForm):
 
   class Meta:
     model = Wall_Port
-    fields = 'province', 'location', 'dependency', 'edifice', 'loc', 'office', 'rack', 'switch_in', 'patchera_in'
+    fields = 'province', 'location', 'dependency', 'edifice', 'loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in', 'details', 'wall_port'
     widgets = {
       'office': Select(attrs={'class': 'form-control select2', 'placeholder': 'Seleccione la Oficina'}),
       'wall_port': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el puerto/boca de la pared'}),
@@ -97,20 +96,21 @@ class WallPortForm(forms.ModelForm):
       self.fields['patch_port_in'].queryset = Patch_Port.objects.all()
 
       if self.instance.pk:
-        self.initial['province'] = self.office.loc.edfice.location.province
-        self.initial['location'] = self.office.loc.edifice.location
-        self.initial['dependency'] = self.office.dependency
-        self.initial['edifice']= self.office.loc.edifice
-        self.initial['loc'] = self.office.loc
-        self.initial['office']= self.office
-        if self.switch_port_in:
-          self.initial['rack']= self.switch_port_in.switch.rack
+        self.initial['province'] = self.instance.office.loc.edifice.location.province
+        self.initial['location'] = self.instance.office.loc.edifice.location
+        self.initial['dependency'] = self.instance.office.dependency
+        self.initial['edifice']= self.instance.office.loc.edifice
+        self.initial['loc'] = self.instance.office.loc
+        self.initial['office']= self.instance.office
+        if self.instance.switch_port_in:
+          self.initial['rack']= self.instance.switch_port_in.switch.rack
         elif self.patch_port_in:
-          self.initial['rack']= self.patch_port_in.patchera.rack
+          self.initial['rack']= self.instance.patch_port_in.patchera.rack
         else:
           'No llega a Rack'
-        self.initial['patch_port_in'] = self.patch_port_in
-        self.initial['switch_port_in'] = self.switch_port_in
+
+        self.initial['patch_port_in'] = self.instance.patch_port_in
+        self.initial['switch_port_in'] = self.instance.switch_port_in
 
       else:
         selected_province = self.data.get('province')
@@ -120,16 +120,14 @@ class WallPortForm(forms.ModelForm):
         selected_loc = self.data.get('loc')
         selected_office = self.data.get('office')
         selected_rack = self.data.get('rack')
-        selected_patchera_in = self.data.get('patchera_in')
-        selected_patchera_out = self.data.get('patchera_out')
-        selected_switch_in = self.data.get('switch_in')
-        selected_switch_out = self.data.get('switch_out')
+        selected_patchera = self.data.get('patchera')
+        selected_switch = self.data.get('switch')
 
-      def to_int(value):
-        try:
-          return int(value)
-        except (ValueError, TypeError):
-          return None
+        def to_int(value):
+          try:
+            return int(value)
+          except (ValueError, TypeError):
+            return None
 
       selected_province = to_int(selected_province)
       selected_location = to_int(selected_location)
@@ -138,10 +136,8 @@ class WallPortForm(forms.ModelForm):
       selected_loc = to_int(selected_loc)
       selected_office = to_int(selected_office)
       selected_rack = to_int(selected_rack)
-      selected_patchera_in = to_int(selected_patchera_in)
-      selected_patchera_out = to_int(selected_patchera_out)
-      selected_switch_in = to_int(selected_switch_in)
-      selected_switch_out = to_int(selected_switch_out)
+      selected_patchera = to_int(selected_patchera)
+      selected_switch = to_int(selected_switch)
 
       if selected_province:
         self.fields['location'].queryset = Location.objects.filter(province_id=selected_province)
@@ -167,10 +163,8 @@ class WallPortForm(forms.ModelForm):
         self.fields['office'].queryset = self.fields['office'].queryset.filter(dependency_id=selected_dependency).distinct()
 
       if selected_rack:
-        self.fields['patchera_in'].queryset = Patchera.objects.filter(rack_id=selected_rack)
-        self.fields['patchera_out'].queryset = Patchera.objects.filter(rack_id=selected_rack)
-        self.fields['switch_in'].queryset = Switch.objects.filter(rack_id=selected_rack)
-        self.fields['switch_out'].queryset = Switch.objects.filter(rack_id=selected_rack)
+        self.fields['patchera'].queryset = Patchera.objects.filter(rack_id=selected_rack)
+        self.fields['switch'].queryset = Switch.objects.filter(rack_id=selected_rack)
 
     def clean(self):
       cleaned_data = super().clean()

@@ -9,13 +9,18 @@ class RackForm(forms.ModelForm):
   class Meta:
     model = Rack
     fields = [
-      'rack', 'details'
+      'rack', 'office', 'details'
               ]
     widgets = {
       'rack': TextInput(
         attrs={
           'class': 'form-control',
           'placeholder': 'Ingrese el Nombre del Rack'
+        }
+      ),
+      'office': Select(
+        attrs={
+          'class': 'form-control select2'
         }
       ),
       'details': Textarea(
