@@ -11,7 +11,7 @@ class OfficeForm(forms.ModelForm):
 
   province = forms.ModelChoiceField(
     queryset = Province.objects.all(),
-    widget = autocomplete.Select2(
+    widget = autocomplete.ModelSelect2(
       url = 'dal:province-autocomplete',
       attrs = {
         'class': 'form-control',
@@ -23,7 +23,7 @@ class OfficeForm(forms.ModelForm):
 
   location = forms.ModelChoiceField(
     queryset = Location.objects.all(),
-    widget = autocomplete.Select2(
+    widget = autocomplete.ModelSelect2(
       url='dal:location-autocomplete',
       forward=['province'],
       attrs={
@@ -36,7 +36,7 @@ class OfficeForm(forms.ModelForm):
 
   edifice = forms.ModelChoiceField(
     queryset = Edifice.objects.all(),
-    widget = autocomplete.Select2(
+    widget = autocomplete.ModelSelect2(
       url='dal:edifice-autocomplete',
       forward=['province', 'location'],
       attrs={

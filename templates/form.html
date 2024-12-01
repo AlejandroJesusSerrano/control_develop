@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block extra_refs %}
-<link href="{% static 'autocomplete_light/vendor/select2/css/select2.min.css' %}" rel="stylesheet" />
-<link href="{% static 'autocomplete_light/select2.css' %}" rel="stylesheet" />
+  <link href="{% static 'autocomplete_light/vendor/select2/css/select2.min.css' %}" rel="stylesheet" />
+  <link href="{% static 'autocomplete_light/select2.css' %}" rel="stylesheet" />
 {% endblock extra_refs %}
 
 {% block content %}
@@ -63,11 +63,11 @@
 </form>
 
 {% block form_scripts %}
- <!-- JavaScript de Select2 -->
- <script src="{% static 'autocomplete_light/vendor/select2/js/select2.full.min.js' %}"></script>
- <!-- JavaScript de DAL -->
- <script src="{% static 'autocomplete_light/autocomplete_light.js' %}"></script>
- <!-- ... otras inclusiones ... -->
+<script src="{% static 'autocomplete_light/vendor/jquery/jquery.min.js' %}"></script>
+<!-- JavaScript de Select2 -->
+<script src="{% static 'autocomplete_light/vendor/select2/js/select2.full.min.js' %}"></script>
+<!-- JavaScript de DAL -->
+<script src="{% static 'autocomplete_light/autocomplete_light.js' %}"></script>
 
 <script>
   let form_id = "{{form_id}}"
