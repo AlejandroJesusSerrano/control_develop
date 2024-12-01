@@ -62,6 +62,8 @@ class EdificeForm(forms.ModelForm):
     location = self.cleaned_data.get('location')
     edifice = self.cleaned_data.get('edifice')
 
+    qs = Edifice.objects.filter(location=location, edifice=edifice)
+
     if not edifice:
       self.add_error('edifice', "El nombre del edificio no puede estar vacío")
       return cleaned_data
@@ -73,9 +75,9 @@ class EdificeForm(forms.ModelForm):
       )
 
       if self.instance.pk:
-        duplicate_query = duplicate_query.exclude(pk=self.instance.pk)
+        qs = qs.exclude(pk = self.instance.pk)
 
-      if  duplicate_query.exists():
+      if  qs.exists():
         self.add_error('edifice', f"Ya existe el edificio '{edifice}' en la localidad seleccionada")
 
     return cleaned_data

@@ -2,7 +2,7 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
 
-from core.sh.models import Dependency, Edifice, Location, Province
+from core.sh.models import Dependency, Location, Province
 
 class DependencyForm(forms.ModelForm):
   province=forms.ModelChoiceField(
@@ -11,19 +11,13 @@ class DependencyForm(forms.ModelForm):
     required=True
   )
 
-  location=forms.ModelChoiceField(
-    queryset=Location.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
-  )
-
   class Meta:
     model = Dependency
     fields = [
-      'province', 'location', 'edifice', 'dependency'
+      'province', 'location',  'dependency'
     ]
     widgets = {
-      'edifice': Select(
+      'location': Select(
         attrs={
           'class': 'form-control select2'
         }),
@@ -38,7 +32,6 @@ class DependencyForm(forms.ModelForm):
 
     self.fields['province'].queryset = Province.objects.all()
     self.fields['location'].queryset = Location.objects.none()
-    self.fields['edifice'].queryset = Edifice.objects.none()
 
     if 'province' in self.data:
       try:
@@ -48,32 +41,23 @@ class DependencyForm(forms.ModelForm):
         pass
 
     elif self.instance.pk:
-      if self.instance.edifice and self.instance.edifice.location:
-        province = self.instance.edifice.location.province
+      if self.instance.location:
+        province = self.instance.location.province
         self.fields['province'].initial = province
         self.fields['location'].queryset = Location.objects.filter(province=province)
-        self.fields['location'].initial = self.instance.edifice.location
-
-    if 'location' in self.data:
-      try:
-        location_id = int(self.data.get('location'))
-        self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id)
-      except (ValueError, TypeError):
-        pass
-
-    elif self.instance.pk:
-      if self.instance.edifice:
-        location = self.instance.edifice.location
-        self.fields['edifice'].queryset = Edifice.objects.filter(location=location)
-        self.fields['edifice'].initial = self.instance.edifice
+        self.fields['location'].initial = self.instance.location
 
   def clean(self):
     cleaned_data = super().clean()
 
-    edifice = self.cleaned_data.get('edifice')
+    location = self.cleaned_data.get('location')
     dependency = self.cleaned_data.get('dependency')
 
-    if Dependency.objects.filter(edifice=edifice, dependency=dependency).exists():
+    qs = Dependency.objects.filter(location=location, dependency=dependency)
+    if self.instance.pk:
+      qs = qs.exclude(pk = self.instance.pk)
+
+    if qs.exists():
       self.add_error('dependency', f"Ya existe la dependencia '{dependency}' en la localidad y provincia seleccionadas")
 
     return cleaned_data

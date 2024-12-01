@@ -191,6 +191,12 @@ function submit_with_ajax(url, formData, callback, actionType = 'add') {
   confirmAndSend(url, title, icon, content, type, formData, callback);
 }
 
+function clearDependentFields(fields){
+  fields.forEach(field => {
+    $(field).val(null).trigger('change');
+  });
+}
+
 
 $(document).ready(function () {
   $('#submitButton').on('click', function (e) {

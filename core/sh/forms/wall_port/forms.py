@@ -74,7 +74,7 @@ class WallPortForm(forms.ModelForm):
 
   class Meta:
     model = Wall_Port
-    fields = 'province', 'location', 'dependency', 'edifice', 'loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in', 'details', 'wall_port'
+    fields = 'province', 'location', 'edifice', 'dependency', 'loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in', 'details', 'wall_port'
     widgets = {
       'office': Select(attrs={'class': 'form-control select2', 'placeholder': 'Seleccione la Oficina'}),
       'wall_port': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el puerto/boca de la pared'}),
@@ -85,6 +85,7 @@ class WallPortForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
       super(WallPortForm, self).__init__(*args, **kwargs)
+
       self.fields['province'].queryset = Province.objects.all()
       self.fields['location'].queryset = Location.objects.all()
       self.fields['dependency'].queryset = Dependency.objects.all()

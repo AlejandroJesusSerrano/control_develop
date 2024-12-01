@@ -6,7 +6,9 @@ $(document).ready(function() {
   $('select[name="province"]').on('change', function() {
     const province_id = $(this).val();
     clearSelects(['location', 'edifice', 'dependency', 'loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in']);
+    if (province_id){
     updateLocationOptions(province_id);
+    }
   });
 
   $('select[name="location"]').on('change', function() {
@@ -21,26 +23,19 @@ $(document).ready(function() {
     const edifice_id = $(this).val();
     clearSelects(['loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in']);
     if (edifice_id) {
-      updateDependencyOptions(edifice_id);
+      const dependency_id = $('select[name="dependency"]').val();
+      updateLocOptions(edifice_id, dependency_id);
     }
   });
 
   $('select[name="dependency"]').on('change', function() {
     const dependency_id = $(this).val();
     const edifice_id = $('select[name="edifice"]').val();
-    const location_id = $('select[name="location"]').val();
-
     clearSelects(['loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in']);
 
-    if (dependency_id) {
-      if (edifice_id) {
+    if (dependency_id && edifice_id) {
         updateLocOptions(edifice_id, dependency_id);
       }
-      else if (location_id) {
-        updateOfficeOptions(null, dependency_id);
-      }
-      clearSelects(['office']);
-    }
   });
 
   $('select[name="loc"]').on('change', function() {

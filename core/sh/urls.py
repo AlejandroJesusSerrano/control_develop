@@ -1,6 +1,8 @@
 from django.urls import include, path
 
-urlpatterns = []
+urlpatterns = [
+  path('dal/', include(('core.sh.url_modules.dal_urls', 'dal'), namespace='dal'))
+]
 
 
 from .url_modules.brands_urls import urlpatterns as brands_url

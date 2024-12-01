@@ -3,57 +3,31 @@ $(document).ready(function() {
     theme:'bootstrap',
   });
 
-  $('select[name="province"]').on('change', function(){
-    const province_id = $(this).val();
-    updateLocationOptions(province_id);
+  $('#id_province').on('change', function(){
+    clearDependentFields([
+      '#id_location',
+      '#id_edifice',
+      '#id_dependency',
+      '#id_loc'
+    ]);
   });
 
-  $('select[name="location"]').on('change', function(){
-    const location_id = $(this).val();
-    updateLocationsreferredOptions(location_id);
+  $('#id_location').on('change', function(){
+    clearDependentFields([
+      '#id_edifice',
+      '#id_dependency',
+      '#id_loc'
+    ]);
   });
 
-  $('select[name="edifice"]').on('change', function(){
-    const edifice_id = $(this).val();
-    updateWingFloorOptions(edifice_id);
-  })
+  $('#id_edifice').on('change', function(){
+    clearDependentFields(['#id_loc']);
+  });
 
   initializeFormSubmission('#myform', 'edit');
 
 });
 
-function updateLocationOptions(province_id){
-  if (province_id) {
-    updateOptions('/sh/ajax/load_location/', {
-      'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
-  }
-};
-
-function updateLocationsreferredOptions(location_id) {
-  if (location_id) {
-    updateOptions(
-      '/sh/ajax/load_dependency/',
-      {'location_id': location_id},
-      $('select[name="dependency"]'),
-      $('#id_dependency').data('preselected'),
-    );
-    updateOptions(
-      '/sh/ajax/load_edifices/',
-      {'location_id': location_id},
-      $('select[name="edifice"]'),
-      $('#id_edifice').data('preselected'),
-    );
-  }
-};
-
-function updateWingFloorOptions(edifice_id) {
-  if (edifice_id) {
-    updateOptions('/sh/ajax/load_loc/', {
-      'edifice_id': edifice_id,
-    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
-  }
-};
 
 function initializeFormSubmission(formSelector, actionType) {
   $(formSelector).on('submit', function(e) {

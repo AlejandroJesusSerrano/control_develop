@@ -1,10 +1,10 @@
 from django.db import models
 from django.forms import model_to_dict
 
-from ..edifice.models import Edifice
+from core.sh.models.location.models import Location
 
 class Dependency(models.Model):
-  edifice = models.ForeignKey(Edifice, on_delete=models.CASCADE, verbose_name='Edificio')
+  location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='Localidad')
   dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
@@ -18,9 +18,8 @@ class Dependency(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['province'] = self.edifice.location.province.province
-    item['location'] = self.edifice.location.location
-    item['edifice'] = self.edifice.edifice
+    item['province'] = self.location.province.province
+    item['location'] = self.location.location
     item['dependency'] = self.dependency
     return item
 
@@ -29,4 +28,6 @@ class Dependency(models.Model):
     verbose_name_plural = 'Dependencias'
     db_table = 'dependencia'
     ordering = ['id']
-    unique_together = ('edifice', 'dependency')
+    constraints = [
+      models.UniqueConstraint(fields=['dependency', 'location'], name='unique_dependency_location')
+    ]

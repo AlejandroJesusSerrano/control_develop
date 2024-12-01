@@ -9,13 +9,13 @@ class Office_Loc_Form(forms.ModelForm):
   province = forms.ModelChoiceField(
     queryset=Province.objects.all(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+    required=False
   )
 
   location=forms.ModelChoiceField(
     queryset=Location.objects.none(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+    required=False
   )
 
   class Meta:
@@ -47,8 +47,8 @@ class Office_Loc_Form(forms.ModelForm):
     super(Office_Loc_Form, self).__init__(*args, **kwargs)
 
     self.fields['province'].queryset = Province.objects.all()
-    self.fields['location'].queryset = Location.objects.none()
-    self.fields['edifice'].queryset = Edifice.objects.none()
+    self.fields['location'].queryset = Location.objects.all()
+    self.fields['edifice'].queryset = Edifice.objects.all()
 
     if 'province' in self.data:
       try:

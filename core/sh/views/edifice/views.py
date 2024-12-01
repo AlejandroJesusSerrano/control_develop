@@ -116,7 +116,7 @@ class EdificeUpdateView(UpdateView):
     try:
       self.object = form.save()
 
-      if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
           'message': 'Edificio actualizado exitosamente'

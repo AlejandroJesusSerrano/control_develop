@@ -7,7 +7,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 
 from core.sh.forms import DependencyForm
-from core.sh.models import Dependency, Edifice, Location, Province
+from core.sh.models import Dependency, Location, Province
 
 class DependencyListView(ListView):
   model = Dependency
@@ -105,7 +105,7 @@ class DependencyUpdateView(UpdateView):
     try:
       self.object = form.save()
 
-      if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
           'message': 'Dependencia actualizada exitosamente'
@@ -141,18 +141,14 @@ class DependencyUpdateView(UpdateView):
 
     dependency = self.get_object()
 
-    if dependency.edifice and dependency.edifice.location:
-      province = dependency.edifice.location.province
+    if dependency and dependency.location:
+      province = dependency.location.province
       context['form'].fields['province'].queryset = Province.objects.all()
       context['form'].initial['province'] = province.id
 
-      location = dependency.edifice.location
+      location = dependency.location
       context['form'].fields['location'].queryset = Location.objects.filter(province=province)
       context['form'].initial['location'] = location.id
-
-      edifice = dependency.edifice
-      context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
-      context['form'].initial['edifice'] = edifice.id
 
     return context
 

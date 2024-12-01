@@ -57,7 +57,7 @@ class OfficeCreateView(CreateView):
     try:
       self.object = form.save()
 
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         data = {
           'success': True,
           'message': 'Oficina agregada correctamente'
@@ -66,14 +66,14 @@ class OfficeCreateView(CreateView):
       else:
         return super().form_valid(form)
     except Exception as e:
-      if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'error': str(e)}, status=500)
       else:
         form.add_error(None, str(e))
         return self.form_invalid(form)
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
       errors = form.errors.get_json_data()
       return JsonResponse({'error': errors}, status=400)
     else:
@@ -105,7 +105,7 @@ class OfficeUpdateView(UpdateView):
     try:
       self.object = form.save()
 
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         data = {
           'success': True,
           'message': 'Oficina actualizada correctamente'
@@ -114,14 +114,14 @@ class OfficeUpdateView(UpdateView):
       else:
         return super().form_valid(form)
     except Exception as e:
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({'error': str(e)}, status=500)
       else:
         form.add_error(None, str(e))
         return self.form_invalid(form)
 
   def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
       errors = form.errors.get_json_data()
       return JsonResponse({'error':errors}, status=400)
     else:
