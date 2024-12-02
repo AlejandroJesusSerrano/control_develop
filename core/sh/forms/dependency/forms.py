@@ -8,7 +8,8 @@ class DependencyForm(forms.ModelForm):
   province=forms.ModelChoiceField(
     queryset=Province.objects.all(),
     widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True
+    required=True,
+    label = "Provincia",
   )
 
   class Meta:
@@ -16,6 +17,7 @@ class DependencyForm(forms.ModelForm):
     fields = [
       'province', 'location',  'dependency'
     ]
+
     widgets = {
       'location': Select(
         attrs={
@@ -31,21 +33,18 @@ class DependencyForm(forms.ModelForm):
     super(DependencyForm, self).__init__(*args, **kwargs)
 
     self.fields['province'].queryset = Province.objects.all()
-    self.fields['location'].queryset = Location.objects.none()
+    self.fields['location'].queryset = Location.objects.all().order_by('location')
 
     if 'province' in self.data:
       try:
         province_id = int(self.data.get('province'))
-        self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
+        if province_id:
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
       except (ValueError, TypeError):
         pass
 
     elif self.instance.pk:
-      if self.instance.location:
-        province = self.instance.location.province
-        self.fields['province'].initial = province
-        self.fields['location'].queryset = Location.objects.filter(province=province)
-        self.fields['location'].initial = self.instance.location
+      self.fields['location'].queryset = Location.objects.all().order_by('location')
 
   def clean(self):
     cleaned_data = super().clean()

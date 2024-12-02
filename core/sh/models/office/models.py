@@ -1,12 +1,29 @@
 from django.db import models
 from django.forms import model_to_dict
+from smart_selects.db_fields import ChainedForeignKey
 
 from ..dependency.models import Dependency
 from ..office_loc.models import Office_Loc
 
 class Office(models.Model):
-  dependency = models.ForeignKey(Dependency, related_name = 'offices_dependencies', verbose_name = 'Dependencia', on_delete=models.CASCADE)
-  loc = models.ForeignKey(Office_Loc, related_name = 'office_location', verbose_name = 'Piso/Ala', on_delete = models.CASCADE)
+  dependency = models.ForeignKey(
+    Dependency,
+    related_name = 'offices_dependencies',
+    verbose_name = 'Dependencia',
+    on_delete=models.CASCADE
+  )
+
+  loc = ChainedForeignKey(
+    Office_Loc,
+    related_name = 'office_location',
+    verbose_name = 'Piso/Ala',
+    chained_field='dependency',
+    chained_model_field='dependency',
+    show_all = False,
+    auto_choose = True,
+    on_delete = models.CASCADE
+  )
+
   office = models.CharField(max_length = 75, verbose_name = 'Oficina')
   description = models.TextField(verbose_name='Descripcion', blank=True, null=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')

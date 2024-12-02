@@ -1,10 +1,21 @@
 from django.db import models
+from smart_selects.db_fields import ChainedForeignKey
 from django.forms import model_to_dict
 
 from core.sh.models.location.models import Location
 
 class Dependency(models.Model):
-  location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='Localidad')
+  location = ChainedForeignKey(
+    Location,
+    chained_field = "location",
+    chained_model_field = "location",
+    show_all = False,
+    auto_choose = True,
+    sort=True,
+    on_delete=models.CASCADE,
+    verbose_name='Localidad'
+  )
+
   dependency = models.CharField(max_length = 75, verbose_name = 'Dependencia')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
@@ -29,5 +40,7 @@ class Dependency(models.Model):
     db_table = 'dependencia'
     ordering = ['id']
     constraints = [
-      models.UniqueConstraint(fields=['dependency', 'location'], name='unique_dependency_location')
+      models.UniqueConstraint(
+        fields=['dependency', 'location'], name='unique_dependency_location'
+        )
     ]

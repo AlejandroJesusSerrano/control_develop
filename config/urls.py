@@ -26,8 +26,7 @@ urlpatterns = [
     path('login/', include('core.login.urls')),
     path('admin/', admin.site.urls),
     path('sh/', include(('core.sh.urls', 'sh'), namespace='sh')),
-    path('dal/', include(('core.sh.url_modules.dal_urls', 'dal'), namespace='dal')),
-    # path('select2', include('dal.urls')),
+    path('chaining/', include('smart_selects.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

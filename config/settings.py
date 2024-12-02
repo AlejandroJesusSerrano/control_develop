@@ -33,8 +33,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'dal',
-    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #Libs
     'widget_tweaks',
+    'smart_selects',
     #Apps
     'core.sh',
     'core.homepage',
