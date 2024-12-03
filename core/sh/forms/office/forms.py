@@ -5,6 +5,7 @@ from core.sh.models import Office
 from core.sh.models.dependency.models import Dependency
 from core.sh.models.edifice.models import Edifice
 from core.sh.models.location.models import Location
+from core.sh.models.office_loc.models import Office_Loc
 from core.sh.models.province.models import Province
 
 class OfficeForm(forms.ModelForm):
@@ -47,38 +48,50 @@ class OfficeForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-    # Filtrado dinámico: inicializar valores vacíos en cascada
-    self.fields['location'].queryset = Location.objects.none()
-    self.fields['edifice'].queryset = Edifice.objects.none()
-    self.fields['dependency'].queryset = Dependency.objects.none()
+    self.fields['location'].queryset = Location.objects.all()
+    self.fields['edifice'].queryset = Edifice.objects.all()
+    self.fields['dependency'].queryset = Dependency.objects.all()
 
-        # Cargar datos si hay valores previos (en caso de edición)
+    if self.instance.pk:
+
+      if self.instance.loc and self.instance.loc.edifice and self.isntance.loc.edifice.location:
+        province = self.instance.loc.edifice.location.province
+        self.fields['location'].queryset = Location.objects.filter(province = province).order_by('location')
+        self.fields['edifice'].queryset = Edifice.objects.filter(location = self.instance.loc.edifice.location).order_by('edifice')
+        self.fields['dependency'].queryset = Dependency.objects.filter(location = self.instance.edifice.location).order_by('dependency')
+
+
     if 'province' in self.data:
-        try:
-            province_id = int(self.data.get('province'))
-            self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('name')
-        except (ValueError, TypeError):
-            pass  # Provincia no seleccionada, mantener queryset vacío
+      try:
+        province_id = int(self.data.get('province'))
+        self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
+        self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
+        self.fields['dependency'].queryset = Dependency.objects.filter(location__province_id = province_id).order_by('dependency')
+      except (ValueError, TypeError):
+        pass  # Provincia no seleccionada, mantener queryset vacío
+
     elif self.instance.pk:
-        self.fields['location'].queryset = self.instance.location.province.location_set.order_by('name')
+        self.fields['location'].queryset = self.instance.loc.edifice.location.province.location_set.order_by('location')
 
     if 'location' in self.data:
-        try:
-            location_id = int(self.data.get('location'))
-            self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id).order_by('name')
-        except (ValueError, TypeError):
-            pass  # Localidad no seleccionada, mantener queryset vacío
+      try:
+        location_id = int(self.data.get('location'))
+        self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id).order_by('edifice')
+        self.fields['dependency'].queryset = Dependency.objects.filter(location_id=location_id).order_by('dependency')
+      except (ValueError, TypeError):
+        pass
     elif self.instance.pk:
-        self.fields['edifice'].queryset = self.instance.edifice.location.edifice_set.order_by('name')
+        self.fields['edifice'].queryset = Edifice.objects.filter(location = self.instance.loc.edifice.location).order_by('edifice')
+        self.fields['dependency'].queryset = Dependency.objects.filter(location = self.instance.loc.edifice.location).order_by('dependency')
 
     if 'edifice' in self.data:
         try:
             edifice_id = int(self.data.get('edifice'))
-            self.fields['dependency'].queryset = Dependency.objects.filter(edifice_id=edifice_id).order_by('name')
+            self.fields['loc'].queryset = Dependency.objects.filter(edifice_id=edifice_id).order_by('loc')
         except (ValueError, TypeError):
-            pass  # Edificio no seleccionado, mantener queryset vacío
+            pass
     elif self.instance.pk:
-        self.fields['dependency'].queryset = self.instance.edifice.dependency_set.order_by('name')
+        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=self.instance.loc.edifice).order_by('loc')
 
   def clean(self):
     cleaned_data = super().clean()

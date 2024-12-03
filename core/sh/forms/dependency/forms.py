@@ -5,11 +5,10 @@ from django.forms import Select, TextInput
 from core.sh.models import Dependency, Location, Province
 
 class DependencyForm(forms.ModelForm):
-  province=forms.ModelChoiceField(
-    queryset=Province.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=True,
-    label = "Provincia",
+  province = ModelChoiceField(
+    queryset = Province.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
   )
 
   class Meta:
@@ -19,13 +18,9 @@ class DependencyForm(forms.ModelForm):
     ]
 
     widgets = {
-      'location': Select(
-        attrs={
-          'class': 'form-control select2'
-        }),
-      'dependency': TextInput(
-        attrs={
-          'class': 'form-control', 'placeholder': 'Ingrese la dependencia'
+      'province': forms.Select(attrs={"class": "form-control select2"}),
+      'location': Select(attrs={"class": "form-control select2"}),
+      'dependency': TextInput(attrs={"class": "form-control", "placeholder": "Ingrese la dependencia"
         }),
     }
 
