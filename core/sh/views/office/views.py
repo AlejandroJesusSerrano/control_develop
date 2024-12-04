@@ -156,7 +156,7 @@ class OfficeUpdateView(UpdateView):
         context['form'].initial['edifice'] = edifice.id
 
         dependency = office.dependency
-        context['form'].fields['dependency'].queryset = Dependency.objects.filter(edifice__location=location)
+        context['form'].fields['dependency'].queryset = Dependency.objects.filter(location=location)
         context['form'].initial['dependency'] = dependency.id
 
         wing_floor = office.loc

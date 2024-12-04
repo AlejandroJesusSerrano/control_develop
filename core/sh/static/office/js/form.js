@@ -3,31 +3,58 @@ $(document).ready(function() {
     theme:'bootstrap',
   });
 
-  $('#id_province').on('change', function(){
-    clearDependentFields([
-      '#id_location',
-      '#id_edifice',
-      '#id_dependency',
-      '#id_loc'
-    ]);
+  $('select[name="province"]').on('change', function(){
+    const province_id = $(this).val();
+    updateLocationsOptions(province_id);
   });
 
-  $('#id_location').on('change', function(){
-    clearDependentFields([
-      '#id_edifice',
-      '#id_dependency',
-      '#id_loc'
-    ]);
-  });
+  $('select[name="location"]').on('change', function(){
+    const location_id = $(this).val();
+    updateLocationReferedOptions(location_id)
+  })
 
-  $('#id_edifice').on('change', function(){
-    clearDependentFields(['#id_loc']);
-  });
+  $('select[name="edifice"]').on('change', function(){
+    const edifice_id = $(this).val();
+    updateEdificeOptions(edifice_id);
+  })
 
-  initializeFormSubmission('#myform', 'edit');
-
+    initializeFormSubmission('#myform', 'edit');
 });
 
+function updateLocationsOptions(province_id) {
+  if (province_id) {
+    updateOptions('/sh/ajax/load_location/', {
+      'province_id': province_id,
+    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+  } else {
+    clearDependentFields(['#id_location', '#id_edifice', '#id_dependency', '#id_loc'])
+  }
+};
+
+function updateLocationReferedOptions(location_id) {
+  if (location_id) {
+    updateOptions('/sh/ajax/load_dependency/', {
+      'location_id': location_id,
+    }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
+
+    updateOptions('/sh/ajax/load_edifices/', {
+      'location_id': location_id,
+    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
+  } else {
+    clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc'])
+  }
+}
+
+function updateEdificeOptions(edifice_id) {
+  if (edifice_id) {
+    console.log("edifice_id", edifice_id)
+    updateOptions('/sh/ajax/load_loc/', {
+      'edifice_id': edifice_id,
+    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
+  } else {
+    clearDependentFields(['#id_loc'])
+  }
+}
 
 function initializeFormSubmission(formSelector, actionType) {
   $(formSelector).on('submit', function(e) {
