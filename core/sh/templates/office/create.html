@@ -29,20 +29,20 @@
   {% endif %}
 </div>
 <div class="form-group">
-  <label for="id_edifice">Edificio:</label>
-  {{ form.edifice }}
-  {% if form.edifice.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.edifice.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-<div class="form-group">
   <label for="id_dependency">Dependencia:</label>
   {{ form.dependency }}
   {% if form.dependency.errors %}
   <div class="invalid-feedback d-block">
     {{ form.dependency.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+<div class="form-group">
+  <label for="id_edifice">Edificio:</label>
+  {{ form.edifice }}
+  {% if form.edifice.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.edifice.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>

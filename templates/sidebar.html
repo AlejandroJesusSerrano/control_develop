@@ -95,6 +95,48 @@
               </a>
               <ul class="nav nav-treeview">
                 <li class="nav-item">
+                  <a href="{% url 'sh:brand_list' %}" class="nav-link">
+                    <i class="fa-solid fa-copyright"></i>
+                    <p>Marcas de Dispositivos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'sh:dev_type_list' %}" class="nav-link">
+                    <i class="fa-solid fa-computer"></i>
+                    <p>Tipos de Dispositivos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'sh:dev_model_list' %}" class="nav-link">
+                    <i class="fa-solid fa-computer"></i>
+                    <p>Modelos de Dispositivos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'sh:suply_type_list' %}" class="nav-link">
+                    <i class="fa fa-boxes-stacked"></i>
+                    <p>Tipos de Insumos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'sh:connection_type_list' %}" class="nav-link">
+                    <i class="fa-solid fa-ethernet"></i>
+                    <p>Tipos de Conexión</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'sh:move_type_list' %}" class="nav-link">
+                    <i class="fa-solid fa-arrows-turn-to-dots"></i>
+                    <p>Tipo de Movimiento</p>
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'sh:dev_status_list' %}" class="nav-link">
+                    <i class="fa-solid fa-computer"></i>
+                    <p>Estados de los Dispositivos</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="{% url 'sh:rack_list' %}" class="nav-link">
                     <i class="fa-solid fa-server"></i>
                     <p>Racks</p>
@@ -110,48 +152,6 @@
                   <a href="{% url 'sh:patchera_list' %}" class="nav-link">
                     <i class="fa-solid fa-ethernet"></i>
                     <p>Patcheras</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:connection_type_list' %}" class="nav-link">
-                    <i class="fa-solid fa-ethernet"></i>
-                    <p>Tipos de Conexión</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:brand_list' %}" class="nav-link">
-                    <i class="fa-solid fa-copyright"></i>
-                    <p>Marcas de Dispositivos</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:suply_type_list' %}" class="nav-link">
-                    <i class="fa fa-boxes-stacked"></i>
-                    <p>Tipos de Insumos</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:dev_type_list' %}" class="nav-link">
-                    <i class="fa-solid fa-computer"></i>
-                    <p>Tipos de Dispositivos</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:dev_status_list' %}" class="nav-link">
-                    <i class="fa-solid fa-computer"></i>
-                    <p>Estados de los Dispositivos</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:dev_model_list' %}" class="nav-link">
-                    <i class="fa-solid fa-computer"></i>
-                    <p>Modelos de Dispositivos</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:move_type_list' %}" class="nav-link">
-                    <i class="fa-solid fa-arrows-turn-to-dots"></i>
-                    <p>Tipo de Movimiento</p>
                   </a>
                 </li>
               </ul>

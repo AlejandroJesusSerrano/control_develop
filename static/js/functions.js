@@ -106,6 +106,46 @@ function updateOptions(url, data, selectElement, preselectedValue) {
   });
 }
 
+function updateProvinceRelatedFields(params) {
+  $.ajax({
+    url: '/sh/ajax/load_related/',
+    data: params,
+    success: function (response) {
+      if (response.locations) {
+        updateOptions(response.locations, $('select[name="location"]'));
+      }
+      if (response.edifices) {
+        updateOptions(response.edifices, $('select[name="edifice"]'));
+      }
+      if (response.dependencies) {
+        updateOptions(response.dependencies, $('select[name="dependency"]'));
+      }
+      if (response.locs) {
+        updateOptions(response.locs, $('select[name="loc"]'));
+      }
+      if (response.offices) {
+        updateOptions(response.offices, $('select[name="office"]'));
+      }
+    },
+    error: function () {
+      message_error('Error al cargar los datos relacionados.');
+    },
+  });
+}
+
+// Manejar el cambio de campo para el filtrado dinámico
+function handleFieldChange(fields) {
+  const params = {};
+  fields.forEach(field => {
+    const fieldValue = $(`select[name="${field}"]`).val();
+    if (fieldValue) {
+      params[`${field}_id`] = fieldValue;
+    }
+  });
+  updateProvinceRelatedFields(params);
+}
+
+
 
 function confirmAndSend(url, title, icon, content, type, formData, callback) {
   $.confirm({
@@ -197,6 +237,18 @@ function clearDependentFields(fields){
   });
 }
 
+function initializeFormSubmission(formSelector, actionType) {
+  $(formSelector).on('submit', function (e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    submit_with_ajax($(this).attr('action'), formData, function () {
+      console.log('Formulario enviado y procesado con éxito');
+      window.location.reload();
+    }, actionType);
+  });
+}
 
 $(document).ready(function () {
   $('#submitButton').on('click', function (e) {

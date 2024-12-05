@@ -2,7 +2,7 @@ from django.db import models
 from django.forms import model_to_dict
 
 class Suply_Type(models.Model):
-  suply_type = models.CharField(max_length = 20, verbose_name = 'Tipo de Insumo', unique=True)
+  suply_type = models.CharField(max_length = 23, verbose_name = 'Tipo de Insumo', unique=True)
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 

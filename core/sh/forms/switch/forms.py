@@ -90,66 +90,92 @@ class SwitchForm(forms.ModelForm):
 
     if self.instance.pk:
 
-      if self.instance.office and self.instance.office.loc:
-        office = self.instance.office
-        loc = office.loc
-        edifice = loc.edifice
-        location = edifice.location
-        province = location.province
+      if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice and self.instance.office.loc.edifice.location and self.instance.office.loc.edifice.location.province and self.instance.office.dependency and self.instance.office.dependency.location:
 
+        province = self.isntance.office.loc.edifice.location.province
 
-        self.fields['province'].initial = province
-        self.fields['location'].initial = location
-        self.fields['edifice'].initial = edifice
-        self.fields['loc'].initial = loc
-        self.fields['office'].initial = office
+        self.fields['location'].queryset = Location.objects.filter(province=province).order_by('location')
+        self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.office.loc.edifice.location).order_by('edifice')
+        self.fields['dependency'].queryset = Dependency.filter(location=self.instance.office.dependency.location).order_by('dependency')
+        self.fields['loc'].queryset = Office_Loc.filter(edifice=self.instance.office.loc.edifice).order_by('loc')
+        self.fields['office'].queryset = Office.filter(loc=self.instance.office.loc).order_by('office')
 
-        self.fields['location'].queryset = Location.objects.filter(province=province)
-        self.fields['edifice'].queryset = Edifice.objects.filter(location=location)
-        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice)
-        self.fields['office'].queryset = Office.objects.filter(loc=loc)
-
-    else:
-      if self.data:
-        try:
-          if 'province' in self.data:
+        if 'province' in self.data:
+          try:
             province_id = int(self.data.get('province'))
-            self.fields['location'].queryset = Location.objects.filter(
-              province_id=province_id
-            )
+            self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
+            self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
+            self.fields['dependency'].queryet = Dependency.objects.filter(location__province_id=province_id).order_by('dependency')
+            self.fields['loc'].queryset = Office_Loc.objects.filter(edifice__location__province_id=province_id).order_by('loc')
+            self.fields['office'].queryset = Office.objects.filter(loc__edifice__location__province_id=province_id) and self.fields['office'].queryset == Office.objects.filter(dependency__location__province=province_id)
+          except (ValueError, TypeError):
+            pass
 
-          if 'location' in self.data:
+        elif self.instance.pk:
+          self.fields['location'].queryset = self.instance.office.edifice.location.province.location_set.order_by('location')
+
+        if 'location' in self.data:
+          try:
             location_id = int(self.data.get('location'))
-            self.fields['edifice'].queryset = Edifice.objects.filter(
-              location_id=location_id
-            )
-            self.fields['dependency'].queryset = Dependency.objects.filter(
-              edifice__location_id=location_id
-            )
+            self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id).order_by('edifice')
+            self.fields['dependency'].queryset = Dependency.objects.filter(location_id=location_id).order_by('dependency')
+            self.fields['loc'].queryset = Office_Loc.objects.filter(edifice__location_id=location_id).order_by('loc')
+            self.fields['office'].queryset = Office.objects.filter(loc__edifice__location_id=location_id) and self.fields['office'].queryset == Office.objects.filter(dependency__location_id=location_id)
+          except (ValueError, TypeError):
+            pass
 
-          if 'edifice' in self.data:
-            edifice_id = int(self.data.get('edifice'))
-            self.fields['loc'].queryset = Office_Loc.objects.filter(
-              edifice_id=edifice_id
-            )
+        elif self.instance.pk:
+          self.fields['edifice'].queryset = self.instance.office.edifice.location.edifice_set.order_by('edifice')
+          self.fields['dependency'].queryset = self.instance.office.dependency.location.depenendency_set.order_by('dependency')
 
-          if 'loc' in self.data:
-              loc_id = int(self.data.get('loc'))
-              self.fields['office'].queryset = Office.objects.select_related(
-                'loc', 'dependency'
-              ).filter(
-                loc_id=loc_id
-              )
+    if self.data:
+      try:
+        if 'province' in self.data:
+          province_id = int(self.data.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(
+            province_id=province_id
+          ).order_by('location')
 
-          if 'dependency' in self.data:
+        if 'location' in self.data:
+          location_id = int(self.data.get('location'))
+          self.fields['edifice'].queryset = Edifice.objects.filter(
+            location_id=location_id
+          ).order_by('edifice')
+          self.fields['dependency'].queryset = Dependency.objects.filter(
+            location_id=location_id
+          ).order_by('depdendency')
+
+        if 'edifice' in self.data:
+          edifice_id = int(self.data.get('edifice'))
+          self.fields['loc'].queryset = Office_Loc.objects.filter(
+            edifice_id=edifice_id
+          ).order_by('office_location')
+
+        office_queryset = Office.objects.all()
+
+        if 'dependency' in self.data and 'edifice' in self.data:
             dependency_id = int(self.data.get('dependency'))
-            self.fields['office'].queryset = self.fields['office'].queryset.filter(
-              dependency_id=dependency_id
+            edifice_id = int(self.data.get('edifice'))
+            office_queryset = Office.objects.filter(
+              dependency_id=dependency_id,
+              loc__edifice_id=edifice_id
             )
+        elif 'dependency' in self.data:
+          dependency_id = int(self.data.get('dependency'))
+          office_queryset = Office.objects.filter(
+            dependency_id=dependency_id
+          )
+        elif 'edifice' in self.data:
+          edifice_id = int(self.data.get('edifice'))
+          office_queryset = Office.objects.filter(
+            loc__edifice_id=edifice_id
+          )
 
-        except (ValueError, TypeError) as e:
-          print(f"ERROR en filtrado: {e}")
-          pass
+        self.fields['office'].queryset = office_queryset.order_by('office')
+
+      except (ValueError, TypeError) as e:
+        print(f"Error en filtrado: {e}")
+        pass
 
   def clean(self):
     cleaned_data = super().clean()

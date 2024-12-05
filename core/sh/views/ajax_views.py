@@ -10,6 +10,72 @@ from core.sh.models import (
 from core.sh.models.brands.models import Brand
 
 @csrf_protect
+@require_http_methods(['GET', 'POST'])
+
+def ajax_load_province_related(request):
+    province_id = request.GET.get('province_id')
+    location_id = request.GET.get('location_id')
+    edifice_id = request.GET.get('edifice_id')
+    dependency_id = request.GET.get('dependency_id')
+    loc_id = request.GET.get('loc_id')
+
+    data = {
+        'provinces': [],
+        'locations': [],
+        'edifices': [],
+        'dependencies': [],
+        'locs': [],
+        'offices': [],
+    }
+
+    if province_id:
+        locations = Location.objects.filter(province_id=province_id).order_by('location')
+        data['locations'] = [{'id': loc.id, 'name': loc.location} for loc in locations]
+
+        edifices = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
+        data['edifices'] = [{'id': edif.id, 'name': edif.edifice} for edif in edifices]
+
+        dependencies = Dependency.objects.filter(location__province_id=province_id).order_by('dependency')
+        data['dependencies'] = [{'id': dep.id, 'name': dep.dependency} for dep in dependencies]
+
+        locs = Office_Loc.objects.filter(edifice__location__province_id=province_id).order_by('floor', 'wing')
+        data['locs'] = [{'id': loc.id, 'name': f'Piso: {loc.floor} / Ala: {loc.wing}'} for loc in locs]
+
+    # Filtrar por Localidad
+    if location_id:
+        edifices = Edifice.objects.filter(location_id=location_id).order_by('edifice')
+        data['edifices'] = [{'id': edif.id, 'name': edif.edifice} for edif in edifices]
+
+        dependencies = Dependency.objects.filter(location_id=location_id).order_by('dependency')
+        data['dependencies'] = [{'id': dep.id, 'name': dep.dependency} for dep in dependencies]
+
+        locs = Office_Loc.objects.filter(edifice__location_id=location_id).order_by('floor', 'wing')
+        data['locs'] = [{'id': loc.id, 'name': f'Piso: {loc.floor} / Ala: {loc.wing}'} for loc in locs]
+
+        offices = Office.objects.filter(dependency__location_id=location_id).order_by('office')
+        data['offices'] = [{'id': office.id, 'name': office.office} for office in offices]
+
+    # Filtrar por Edificio
+    if edifice_id:
+        locs = Office_Loc.objects.filter(edifice_id=edifice_id).order_by('floor', 'wing')
+        data['locs'] = [{'id': loc.id, 'name': f'Piso: {loc.floor} / Ala: {loc.wing}'} for loc in locs]
+
+        offices = Office.objects.filter(loc__edifice_id=edifice_id).order_by('office')
+        data['offices'] = [{'id': office.id, 'name': office.office} for office in offices]
+
+    # Filtrar por Dependencia
+    if dependency_id:
+        offices = Office.objects.filter(dependency_id=dependency_id).order_by('office')
+        data['offices'] = [{'id': office.id, 'name': office.office} for office in offices]
+
+    # Filtrar por Locación
+    if loc_id:
+        offices = Office.objects.filter(loc_id=loc_id).order_by('office')
+        data['offices'] = [{'id': office.id, 'name': office.office} for office in offices]
+
+    return JsonResponse(data, safe=False)
+
+@csrf_protect
 @require_http_methods(["GET", "POST"])
 def ajax_load_location(request):
     province_id = request.GET.get('province_id') or request.POST.get('province_id')
@@ -56,14 +122,14 @@ def ajax_load_loc(request):
     location_id = request.GET.get('location_id') or request.POST.get('location_id')
     province_id = request.GET.get('province_id') or request.POST.get('province_id')
 
+    locs = Office_Loc.objects.all()
+
     if province_id:
         locs = Office_Loc.objects.filter(edifice__location__province_id = province_id)
-    elif location_id:
+    if location_id:
         locs = Office_Loc.objects.filter(edifice__location_id = location_id)
-    elif edifice_id:
+    if edifice_id:
         locs = Office_Loc.objects.filter(edifice_id = edifice_id)
-    else:
-        locs = Office_Loc.objects.none()
 
     data = [{'id': l.id, 'name': f'Piso: {l.floor} / Ala: {l.wing}'} for l in locs]
     return JsonResponse(data, safe=False)
