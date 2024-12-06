@@ -12,61 +12,70 @@ $(document).ready(function() {
   });
 
   $('select[name="province"]').on('change', function() {
-    const province_id = $(this).val();
-    updateLocationOptions(province_id);
+
+    clearSelects(['location', 'dependency', 'edifice', 'loc', 'office']);
+
+    updateLocationOptions();
+    updateDependencyOptions();
+    updateEdificeOptions();
+    updateLocOptions();
+    updateOfficeOptions();
   });
 
   $('select[name="location"]').on('change', function() {
-    const location_id = $(this).val();
-    if (location_id) {
-      updateLocationRelatedOptions(location_id);
-      // Limpiar selecciones dependientes
-      clearSelects(['edifice', 'dependency', 'loc', 'office']);
-    }
-  });
 
-  $('select[name="edifice"]').on('change', function() {
-    const edifice_id = $(this).val();
-    if (edifice_id) {
-      updateDependencyOptions(edifice_id);
-      clearSelects(['loc', 'office']);
-    }
+    clearSelects(['dependency', 'edifice', 'loc', 'office']);
+
+    updateDependencyOptions();
+    updateEdificeOptions();
+    updateLocOptions();
+    updateOfficeOptions();
   });
 
   $('select[name="dependency"]').on('change', function() {
-    const dependency_id = $(this).val();
-    const edifice_id = $('select[name="edifice"]').val();
-    const location_id = $('select[name="location"]').val();
 
-    if (dependency_id) {
-      // Si tenemos edificio, filtramos loc por edificio y dependency
-      if (edifice_id) {
-        updateLocOptions(edifice_id, dependency_id);
-      }
-      // Si no hay edificio pero hay location, podemos filtrar offices directamente
-      else if (location_id) {
-        updateOfficeOptions(null, dependency_id);
-      }
-      clearSelects(['office']);
-    }
+    clearSelects(['office']);
+
+    updateOfficeOptions();
+  });
+
+
+  $('select[name="edifice"]').on('change', function() {
+
+    clearSelects(['loc', 'office']);
+
+    updateLocOptions();
+    updateOfficeOptions();
   });
 
   $('select[name="loc"]').on('change', function() {
-    const loc_id = $(this).val();
-    const dependency_id = $('select[name="dependency"]').val();
-    if (loc_id && dependency_id) {
-      updateOfficeOptions(loc_id, dependency_id);
-    }
+    clearSelects(['office']);
+
+    updateOfficeOptions();
   });
 
-  function clearSelects(fields) {
-    fields.forEach(field => {
-      $(`select[name="${field}"]`).empty().append('<option value="">----------</option>').trigger('change');
-    });
-  }
-
   initializeFormSubmission('#myform', 'edit');
+
 });
+
+function clearSelects(fields) {
+  fields.forEach(field => {
+    $(`select[name="${field}"]`)
+    .empty()
+    .append('<option value="">----------</option>')
+    .trigger('change');
+  });
+}
+
+function getSelectedFilters(){
+  return {
+    province_id: $('select[name="province"]').val(),
+    location_id: $('select[name="location"]').val(),
+    dependency_id: $('select[name="dependency"]').val(),
+    edifice_id: $('select[name="edifice"]').val(),
+    loc_id: $('select[name="loc"]').val()
+  };
+}
 
 // Funciones de actualización
 function updateBrandOptions() {
@@ -84,54 +93,83 @@ function updateModelOptions(brand_id) {
   }, $('select[name="model"]'), $('#id_model').data('preselected'));
 }
 
-function updateLocationOptions(province_id) {
-  updateOptions('/sh/ajax/load_location/', {
-    'province_id': province_id,
-  }, $('select[name="location"]'), $('#id_location').data('preselected'));
+function updateLocationOptions() {
+  const { province_id } = getSelectedFilters();
+  if (province_id) {
+    updateOptions('/sh/ajax/load_location/', {
+      'province_id': province_id,
+    }, $('select[name="location"]'), $('#id_location').data('preselected'));
+  }
 }
 
-function updateLocationRelatedOptions(location_id) {
+function updateDependencyOptions() {
+  const { province_id, location_id } = getSelectedFilters();
+  let data = {};
   if (location_id) {
-    // Cargar edificios
-    updateOptions('/sh/ajax/load_edifices/', {
-      'location_id': location_id,
-    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
-
-    // Cargar dependencies iniciales basadas en location
-    updateOptions('/sh/ajax/load_dependency/', {
-      'location_id': location_id,
-    }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
+    data['location_id'] = location_id;
+  } else if (province_id) {
+    data['province_id'] = province_id;
+  }
+  if (Object.keys(data).length > 0) {
+    updateOptions('/sh/ajax/load_dependency/', data,
+      $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
   }
 }
 
-function updateDependencyOptions(edifice_id) {
+function updateEdificeOptions() {
+  const { province_id, location_id } = getSelectedFilters();
+  let data = {};
+  if (location_id) data['location_id'] = location_id;
+  else if (province_id) data['province_id'] = province_id;
+
+  if (Object.keys(data).length > 0) {
+    updateOptions('/sh/ajax/load_edifices/', data,
+      $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
+  }
+}
+
+function updateLocOptions() {
+  const { province_id, location_id, edifice_id } = getSelectedFilters();
+  let data = {};
+  // Prioridad: edifice > location > province
   if (edifice_id) {
-    updateOptions('/sh/ajax/load_dependency/', {
-      'edifice_id': edifice_id,
-    }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
+    data['edifice_id'] = edifice_id;
+  } else if (location_id) {
+    data['location_id'] = location_id;
+  } else if (province_id) {
+    data['province_id'] = province_id;
+  }
+
+  if (Object.keys(data).length > 0) {
+    updateOptions('/sh/ajax/load_loc/', data,
+      $('select[name="loc"]'), $('#id_loc').data('preselected'));
   }
 }
 
-function updateLocOptions(edifice_id, dependency_id) {
-  const data = {
-    'edifice_id': edifice_id
-  };
-  if (dependency_id) data.dependency_id = dependency_id;
+function updateOfficeOptions() {
+  const { province_id, location_id, dependency_id, edifice_id, loc_id } = getSelectedFilters();
 
-  updateOptions('/sh/ajax/load_loc/', data,
-    $('select[name="loc"]'),
-    $('#id_loc').data('preselected')
-  );
+  let data = {};
+  // Se envían todos los filtros disponibles al backend
+  if (province_id) data['province_id'] = province_id;
+  if (location_id) data['location_id'] = location_id;
+  if (dependency_id) data['dependency_id'] = dependency_id;
+  if (edifice_id) data['edifice_id'] = edifice_id;
+  if (loc_id) data['loc_id'] = loc_id;
+
+  if (Object.keys(data).length > 0) {
+    updateOptions('/sh/ajax/load_office/', data,
+      $('select[name="office"]'), $('#id_office').data('preselected'));
+  }
 }
 
-function updateOfficeOptions(loc_id, dependency_id) {
-  const data = {
-    'dependency_id': dependency_id
-  };
-  if (loc_id) data.loc_id = loc_id;
-
-  updateOptions('/sh/ajax/load_office/', data,
-    $('select[name="office"]'),
-    $('#id_office').data('preselected')
-  );
+function initializeFormSubmission(formSelector, actionType) {
+  $(formSelector).on('submit', function(e) {
+    e.preventDefault();
+    let formData = new FormData(this);
+    submit_with_ajax($(this).attr('action'), formData, function() {
+      console.log('Formulario enviado y procesado con éxito');
+      window.location.href = '/sh/switch/list';
+    }, actionType);
+  });
 }
