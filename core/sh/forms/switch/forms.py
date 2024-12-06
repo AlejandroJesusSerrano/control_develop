@@ -152,54 +152,6 @@ class SwitchForm(forms.ModelForm):
         elif self.instance.pk:
           self.fields['office'].queryset = self.instance.office.loc.office_set.order_by('office')
 
-    # if self.data:
-    #   try:
-    #     if 'province' in self.data:
-    #       province_id = int(self.data.get('province'))
-    #       self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
-    #       self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
-
-    #     if 'location' in self.data:
-    #       location_id = int(self.data.get('location'))
-    #       self.fields['edifice'].queryset = Edifice.objects.filter(
-    #         location_id=location_id
-    #       ).order_by('edifice')
-    #       self.fields['dependency'].queryset = Dependency.objects.filter(
-    #         location_id=location_id
-    #       ).order_by('depdendency')
-
-    #     if 'edifice' in self.data:
-    #       edifice_id = int(self.data.get('edifice'))
-    #       self.fields['loc'].queryset = Office_Loc.objects.filter(
-    #         edifice_id=edifice_id
-    #       ).order_by('office_location')
-
-    #     office_queryset = Office.objects.all()
-
-    #     if 'dependency' in self.data and 'edifice' in self.data:
-    #         dependency_id = int(self.data.get('dependency'))
-    #         edifice_id = int(self.data.get('edifice'))
-    #         office_queryset = Office.objects.filter(
-    #           dependency_id=dependency_id,
-    #           loc__edifice_id=edifice_id
-    #         )
-    #     elif 'dependency' in self.data:
-    #       dependency_id = int(self.data.get('dependency'))
-    #       office_queryset = Office.objects.filter(
-    #         dependency_id=dependency_id
-    #       )
-    #     elif 'edifice' in self.data:
-    #       edifice_id = int(self.data.get('edifice'))
-    #       office_queryset = Office.objects.filter(
-    #         loc__edifice_id=edifice_id
-    #       )
-
-    #     self.fields['office'].queryset = office_queryset.order_by('office')
-
-    #   except (ValueError, TypeError) as e:
-    #     print(f"Error en filtrado: {e}")
-    #     pass
-
   def clean(self):
     cleaned_data = super().clean()
     model = cleaned_data.get('model')
