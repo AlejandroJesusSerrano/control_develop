@@ -89,7 +89,7 @@ class SwitchForm(forms.ModelForm):
         self.fields['location'].queryset = Location.objects.filter(province=province).order_by('location')
         self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.office.loc.edifice.location).order_by('edifice')
         self.fields['dependency'].queryset = Dependency.objects.filter(location=self.instance.office.dependency.location).order_by('dependency')
-        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=self.instance.office.loc.edifice).order_by('loc')
+        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=self.instance.office.loc.edifice).order_by('office_location')
         self.fields['office'].queryset = Office.objects.filter(loc=self.instance.office.loc, dependency=self.instance.office.dependency).order_by('office')
 
         if 'province' in self.data:
@@ -98,7 +98,7 @@ class SwitchForm(forms.ModelForm):
             self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
             self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
             self.fields['dependency'].queryet = Dependency.objects.filter(location__province_id=province_id).order_by('dependency')
-            self.fields['loc'].queryset = Office_Loc.objects.filter(edifice__location__province_id=province_id).order_by('loc')
+            self.fields['loc'].queryset = Office_Loc.objects.filter(edifice__location__province_id=province_id).order_by('office_location')
             self.fields['office'].queryset = Office.objects.filter(
               loc__edifice__location__province_id=province_id,
               dependency__location__province_id=province_id
@@ -106,7 +106,7 @@ class SwitchForm(forms.ModelForm):
           except (ValueError, TypeError):
             pass
         elif self.instance.pk:
-          self.fields['location'].queryset = self.instance.office.edifice.location.province.location_set.order_by('location')
+          self.fields['location'].queryset = self.instance.office.loc.edifice.location.province.location_set.order_by('location')
 
         if 'location' in self.data:
           try:
@@ -131,7 +131,7 @@ class SwitchForm(forms.ModelForm):
           except (ValueError, TypeError):
             pass
         elif self.instance.pk:
-          self.fields['office'].queryset = self.instance.office.dependency.office_set.order_by('office')
+          self.fields['office'].queryset = self.instance.office.dependency.offices_dependencies.order_by('office')
 
         if 'edifice' in self.data:
           try:
@@ -141,7 +141,7 @@ class SwitchForm(forms.ModelForm):
           except (ValueError, TypeError):
             pass
         elif self.instance.pk:
-          self.fields['loc'].queryset = self.instance.office.oc.edifice.office_loc_edifice.order_by('office_location')
+          self.fields['loc'].queryset = self.instance.office.loc.edifice.office_loc_edifice.order_by('office_location')
 
         if 'loc' in self.data:
           try:
@@ -150,7 +150,7 @@ class SwitchForm(forms.ModelForm):
           except (ValueError, TypeError):
               pass
         elif self.instance.pk:
-          self.fields['office'].queryset = self.instance.office.loc.office_set.order_by('office')
+          self.fields['office'].queryset = self.instance.office.loc.office_location.order_by('office')
 
   def clean(self):
     cleaned_data = super().clean()
