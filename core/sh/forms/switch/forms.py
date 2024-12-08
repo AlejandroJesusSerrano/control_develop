@@ -85,6 +85,17 @@ class SwitchForm(forms.ModelForm):
       if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice and self.instance.office.loc.edifice.location and self.instance.office.loc.edifice.location.province and self.instance.office.dependency and self.instance.office.dependency.location:
 
         province = self.instance.office.loc.edifice.location.province
+        dependency = self.instance.office.dependency
+        location = self.instance.office.loc.edifice.location
+        edifice = self.instance.office.loc.edifice
+        loc = self.instance.office.loc
+
+        self.initial['province'] = province.id
+        self.initial['location'] = location.id
+        self.initial['dependency'] = dependency.id
+        self.initial['edifice'] = edifice.id
+        self.initial['loc'] = loc.id
+        self.initial['office'] = self.instance.office.id
 
         self.fields['location'].queryset = Location.objects.filter(province=province).order_by('location')
         self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.office.loc.edifice.location).order_by('edifice')
