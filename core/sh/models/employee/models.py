@@ -44,3 +44,6 @@ class Employee(models.Model):
     verbose_name_plural = 'Empleados'
     db_table = 'empleados'
     ordering = ['id']
+    constraints = [
+      models.UniqueConstraint(fields=['cuil', 'office'], name = 'unique_cuil_office')
+    ]

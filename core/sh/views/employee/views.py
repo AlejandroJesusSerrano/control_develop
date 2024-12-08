@@ -146,31 +146,27 @@ class EmployeeUpadateView(UpdateView):
 
     employee = self.get_object()
 
-    if employee.office and employee.office.loc and employee.office.loc.edifice and employee.office.loc.edifice.location and employee.office.loc.edifice.location.province and employee.office.dependency:
+    if employee.office and employee.office.loc and employee.office.loc.edifice:
+      context['form'].fields['edifice'].queryset = Edifice.objects.filter(
+        location=employee.office.loc.edifice.location
+    )
 
-      province = employee.office.loc.edifice.location.province
-      context['form'].fields['province'].queryset = Province.objects.all()
-      context['form'].initial['province'] = province.id
+    if employee.office:
+      context['form'].fields['office'].queryset = Office.objects.select_related('loc__edifice').filter(
+        loc__edifice=employee.office.loc.edifice
+    )
 
-      location = employee.office.loc.edifice.location
-      context['form'].fields['location'].queryset = Location.objects.filter(province=province)
-      context['form'].initial['location'] = location.id
+    if employee.office and employee.office.loc and employee.office.loc.edifice:
+      context['form'].initial['location'] = employee.office.loc.edifice.location.id
+      context['form'].initial['edifice'] = employee.office.loc.edifice.id
+      context['form'].initial['office'] = employee.office.id if employee.office else None
 
-      edifice = employee.office.loc.edifice
-      context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
-      context['form'].initial['edifice'] = edifice.id
-
-      dependency = employee.office.dependency
-      context['form'].fields['dependency'].queryset = Dependency.objects.filter(edifice__location=location)
-      context['form'].initial['dependency'] = dependency.id
-
-      loc = employee.office.loc
-      context['form'].fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice)
-      context['form'].initial['loc'] = loc.id
-
-      office = employee.office
-      context['form'].fields['office'].queryset = Office.objects.filter(loc=loc)
-      context['form'].initial['office'] = office.id
+    context['form'].fields['edifice'].widget.attrs.update({
+      'data-preselected': self.object.office.loc.edifice.id if self.object.office.loc.edifice else ''
+    })
+    context['form'].fields['office'].widget.attrs.update({
+      'data-preselected': self.object.office.id if self.object.office else ''
+    })
 
     return context
 
