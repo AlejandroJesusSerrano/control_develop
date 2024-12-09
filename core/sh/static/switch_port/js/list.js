@@ -18,16 +18,12 @@ $(document).ready(function(){
       {"data": "rack"},
       {"data": "switch"},
       {"data": "port_id"},
-      {"data": "patch_out"},
-      {"data": "patch_in"},
-      {"data": "switchIn"},
-      {"data": "switchOut"},
       {"data": "obs"},
       {"data": null,  "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [9],
+        targets: [5],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

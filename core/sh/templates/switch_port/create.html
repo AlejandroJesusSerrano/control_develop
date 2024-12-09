@@ -81,37 +81,6 @@
 </div>
 
 <div class="form-group">
-  <label for="id_dev_type">Tipo de Dispositivo:</label>
-  {{ form.dev_type }}
-  {% if form.dev_type.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.dev_type.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_brand">Marca:</label>
-  {{ form.brand }}
-  {% if form.brand.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.brand.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_dev_model">Modelo de Dispositivo:</label>
-  {{ form.dev_model }}
-  {% if form.dev_model.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.dev_model.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<!-- Campo 'switch' -->
-<div class="form-group">
   <label for="id_switch">Switch:</label>
   {{ form.switch }}
   {% if form.switch.errors %}
@@ -121,7 +90,6 @@
   {% endif %}
 </div>
 
-<!-- Campo 'port_id' -->
 <div class="form-group">
   <label for="id_port_id">Puerto del Switch:</label>
   {{ form.port_id }}
@@ -132,63 +100,6 @@
   {% endif %}
 </div>
 
-<!-- Campo 'patch_port_in' con help_text -->
-<div class="form-group">
-  <label for="id_patch_port_in">Puerto Patchera Entrada:</label>
-  {{ form.patch_port_in }}
-  {% if form.patch_port_in.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.patch_port_in.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-  {% if form.patch_port_in.help_text %}
-  <small class="form-text text-muted">{{ form.patch_port_in.help_text }}</small>
-  {% endif %}
-</div>
-
-<!-- Campo 'patch_port_out' con help_text -->
-<div class="form-group">
-  <label for="id_patch_port_out">Puerto Patchera Salida:</label>
-  {{ form.patch_port_out }}
-  {% if form.patch_port_out.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.patch_port_out.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-  {% if form.patch_port_out.help_text %}
-  <small class="form-text text-muted">{{ form.patch_port_out.help_text }}</small>
-  {% endif %}
-</div>
-
-<!-- Campo 'switch_in' con help_text -->
-<div class="form-group">
-  <label for="id_switch_in">Switch de Ingreso:</label>
-  {{ form.switch_in }}
-  {% if form.switch_in.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.switch_in.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-  {% if form.switch_in.help_text %}
-  <small class="form-text text-muted">{{ form.switch_in.help_text }}</small>
-  {% endif %}
-</div>
-
-<!-- Campo 'switch_out' con help_text -->
-<div class="form-group">
-  <label for="id_switch_out">Switch de Salida:</label>
-  {{ form.switch_out }}
-  {% if form.switch_out.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.switch_out.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-  {% if form.switch_out.help_text %}
-  <small class="form-text text-muted">{{ form.switch_out.help_text }}</small>
-  {% endif %}
-</div>
-
-<!-- Campo 'obs' -->
 <div class="form-group">
   <label for="id_obs">Observaciones:</label>
   {{ form.obs }}
