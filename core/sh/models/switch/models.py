@@ -44,7 +44,7 @@ class Switch(models.Model):
 
   def __str__(self):
     if self.rack:
-      return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}'
+      return f'{self.model.brand.brand} - {self.model.dev_model} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> DEL RACK: {self.rack} EN LA POSICION: {self.switch_rack_pos}'
     else:
       return f'{self.model.brand.brand} - PUERTOS: {self.ports_q} N°/S: {self.serial_n} -> OFICINA: {self.office}'
 

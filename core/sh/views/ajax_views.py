@@ -98,7 +98,7 @@ def ajax_load_office(request):
 def ajax_load_rack(request):
     office_id = request.POST.get('office_id')
     racks = Rack.objects.filter(office_id=office_id)
-    data = [{'id': rack.id, 'name': rack.name} for rack in racks]
+    data = [{'id': rack.id, 'name': rack.rack} for rack in racks]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -124,7 +124,7 @@ def ajax_load_switch(request):
     if rack_id:
         filters['rack_id'] = rack_id
     switches = Switch.objects.filter(**filters).distinct()
-    data = [{'id': switch.id, 'name': switch.name} for switch in switches]
+    data = [{'id': switch.id, 'name': f"{switch.model.dev_model} - PUERTOS: {switch.ports_q} - RACK POS: {switch.switch_rack_pos}  "} for switch in switches]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -132,7 +132,7 @@ def ajax_load_switch(request):
 def ajax_load_patchera(request):
     rack_id = request.POST.get('rack_id')
     patcheras = Patchera.objects.filter(rack_id=rack_id)
-    data = [{'id': patch.id, 'name': patch.patch} for patch in patcheras]
+    data = [{'id': patch.id, 'name': patch.patchera} for patch in patcheras]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -172,9 +172,13 @@ def ajax_load_wall_port(request):
 @csrf_protect
 @require_POST
 def ajax_load_switch_port(request):
-    office_id = request.POST.get('office_id')
-    switch_ports = Switch_Port.objects.filter(switch__office_id=office_id)
-    data = [{'id': s.id, 'name': f'Puerto: {s.port_id}, Switch: {s.switch}'} for s in switch_ports]
+    switch_id = request.POST.get('switch_id')
+    switch_ports = Switch_Port.objects.all()
+
+    if switch_id:
+        switch_ports = Switch_Port.objects.filter(switch_id=switch_id)
+
+    data = [{'id': sp.id, 'name': f'Puerto: {sp.port_id}, Switch: {sp.switch}'} for sp in switch_ports]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
