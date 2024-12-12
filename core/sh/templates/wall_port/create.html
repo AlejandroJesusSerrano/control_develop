@@ -9,96 +9,138 @@
 {% endblock extra_refs %}
 
 {% block form %}
+<button id="toggle-filters" class="btn btn-primary mb-3" type="button"> Busqueda Avanzada <i class="fas fa-search"></i></button>
+<div id="filter-cards" class="d-none">
+  <div class="row">
+  <!-- Tarjeta Filtros Geográficos -->
+    <div class="col-md-6">
+      <div class="card mt-5">
+        <div class="card-header {{bg_color}}">
+          Filtros Geográficos
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="id_brand">Provincia:</label>
+            {{ form.province }}
+            {% if form.province.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.province.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
 
-<div class="form-group">
-  <label for="id_brand">Provincia:</label>
-  {{ form.province }}
-  {% if form.province.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.province.errors|join:"<br>" }}
+          <div class="form-group">
+            <label for="id_model">Localidad:</label>
+            {{ form.location }}
+            {% if form.location.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.location.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_edifice">Edificio:</label>
+            {{ form.edifice }}
+            {% if form.edifice.help_text %}
+            <small class="form-text text-muted">{{form.edifice.help_text}}</small>
+            {% endif %}
+            {% if form.edifice.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.edifice.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_loc">Locacion de Officina:</label>
+            {{ form.loc }}
+            {% if form.loc.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.loc.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tarjeta Filtros Técnicos -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header {{bg_color}}">
+          Filtrar por Dependencia
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="id_rack">Dependencia:</label>
+            {{ form.dependency }}
+            {% if form.dependency.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.dependency.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-0">
+        <div class="card-header {{bg_color}}">
+          Filtrar por Equipos
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="id_rack">Rack:</label>
+            {{ form.rack }}
+            {% if form.rack.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.rack.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_switch">Switch de Ingreso:</label>
+            {{ form.switch }}
+            {% if form.switch.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.switch.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            <label for="id_patchera">Patchera de Ingreso:</label>
+            {{ form.patchera }}
+            {% if form.patchera.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.patchera.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% endif %}
 </div>
 
-<div class="form-group">
-  <label for="id_model">Localidad:</label>
-  {{ form.location }}
-  {% if form.location.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.location.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
 
-<div class="form-group">
-  <label for="id_dependency">Dependencia:</label>
-  {{ form.dependency }}
-  {% if form.dependency.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.dependency.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_edifice">Edificio:</label>
-  {{ form.edifice }}
-  {% if form.edifice.help_text %}
-  <small class="form-text text-muted">{{form.edifice.help_text}}</small>
-  {% endif %}
-  {% if form.edifice.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.edifice.errors|join:"<br>" }}
-  </div>
-{% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_loc">Locacion de Officina:</label>
-  {{ form.loc }}
-  {% if form.loc.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.loc.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
+<div class="form-group mt-3">
   <label for="id_office">Oficina:</label>
   {{ form.office }}
   {% if form.office.errors %}
   <div class="invalid-feedback d-block">
-    {{ form.office.errors|join:"<br>" }}
+    {{ form.officewall_port.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>
 
 <div class="form-group">
-  <label for="id_office">Puerto de la Pared:</label>
+  <label for="id_wall_port">Puerto de la Pared:</label>
   {{ form.wall_port }}
   {% if form.wall_port.errors %}
   <div class="invalid-feedback d-block">
     {{ form.wall_port.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_rack">Rack:</label>
-  {{ form.rack }}
-  {% if form.rack.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.rack.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_switch">Switch de Ingreso:</label>
-  {{ form.switch }}
-  {% if form.switch.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.switch.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>
@@ -109,16 +151,6 @@
   {% if form.switch_port_in.errors %}
   <div class="invalid-feedback d-block">
     {{ form.switch_port_in.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_patchera">Patchera de Ingreso:</label>
-  {{ form.patchera }}
-  {% if form.patchera.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.patchera.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>

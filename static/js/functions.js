@@ -62,8 +62,10 @@ function message_error(msg) {
 
 }
 
-function updateOptions(url, data, selectElement, preselectedValue) {
+function updateOptions(url, data, selectElement) {
   let options = '<option value="">----------</option>';
+
+  const preselectedValue = selectElement.data('preselected');
 
   $.ajax({
     url: url,
@@ -72,19 +74,20 @@ function updateOptions(url, data, selectElement, preselectedValue) {
     dataType: 'json',
   }).done(function (data) {
     if (typeof data === 'object' && !data.hasOwnProperty('error')) {
+
       $.each(data, function (key, value) {
-        options += '<option value="' + value.id + '">' + value.name + '</option>';
+        options += `<option value="${value.id}" ${value.id == preselectedValue ? 'selected' : ''}>${value.name}</option>`;
       });
+
       selectElement.html(options).trigger('change');
 
       selectElement.select2({
-        theme: 'bootstrap'
+        theme: 'bootstrap',
       });
 
       if (preselectedValue) {
-        selectElement.val(preselectedValue).trigger('change');
+        selectElement.val(preselectedValue).trigger('change.select2');
       }
-
     } else if (data.hasOwnProperty('error')) {
       message_error(data.error);
     } else {
@@ -199,6 +202,11 @@ function clearDependentFields(fields){
 
 
 $(document).ready(function () {
+  $('#toggle-filters').on('click', function (e) {
+    e.preventDefault();
+    $('#filter-cards').toggleClass('d-none')
+  });
+
   $('#submitButton').on('click', function (e) {
     e.preventDefault();
 
@@ -213,4 +221,12 @@ $(document).ready(function () {
 
     submit_with_ajax(url, formData, callback, 'add');
   });
+
+  $('.select2').each(function () {
+    const preselectedValue = $(this).data('preselected');
+    if (preselectedValue) {
+      $(this).val(preselectedValue).trigger('change.select2');
+    }
+  });
 });
+

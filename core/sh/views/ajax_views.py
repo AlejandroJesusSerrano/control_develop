@@ -97,6 +97,16 @@ def ajax_load_office(request):
 @require_POST
 def ajax_load_rack(request):
     office_id = request.POST.get('office_id')
+    racks = Rack.objects.all()
+    if office_id:
+        racks = racks.filter(office_id=office_id)
+    data = [{'id': rack.id, 'name': rack.rack} for rack in racks]
+    return JsonResponse(data, safe=False)
+
+@csrf_protect
+@require_POST
+def ajax_load_rack(request):
+    office_id = request.POST.get('office_id')
     racks = Rack.objects.filter(office_id=office_id)
     data = [{'id': rack.id, 'name': rack.rack} for rack in racks]
     return JsonResponse(data, safe=False)
@@ -139,8 +149,16 @@ def ajax_load_patchera(request):
 @require_POST
 def ajax_load_patch_ports(request):
     patchera_id = request.POST.get('patchera_id')
-    patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id)
-    data = [{'id': port.id, 'name': port.port_number} for port in patch_ports]
+    patch_ports = Patch_Port.objects.all()
+
+    try:
+        patchera_id = int(patchera_id)
+    except (ValueError, TypeError):
+        patchera_id = None
+    if patchera_id:
+        patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id)
+
+    data = [{'id': p.id, 'name': p.port} for p in patch_ports]
     return JsonResponse(data, safe=False)
 
 @csrf_protect

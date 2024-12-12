@@ -57,17 +57,33 @@ class SwitchForm(forms.ModelForm):
     required = False
   )
 
+  patchera = forms.ModelChoiceField(
+    queryset = Patchera.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
+  )
+
+  switch = forms.ModelChoiceField(
+    queryset = Switch.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    required = False
+  )
+
   class Meta:
     model = Switch
     fields = [
-      'brand', 'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'loc', 'office', 'dependency', 'edifice', 'location'
+      'brand', 'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'loc', 'office', 'dependency', 'edifice', 'location', 'wall_port_in', 'switch_port_in', 'patch_port_in'
       ]
     widgets = {
+      'model': Select(attrs={'class': 'form-control select2'}),
       'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
       'ports_q': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la cantidad de puertos del Switch'}),
       'rack': Select(attrs={'class': 'form-control select2'}),
       'switch_rack_pos': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la posición del Switch en el Rack'}),
-      'office': Select(attrs={'class': 'form-control select2'})
+      'office': Select(attrs={'class': 'form-control select2'}),
+      'wall_port_in': Select(attrs={'class': 'form-control select2'}),
+      'switch_port_in': Select(attrs={'class': 'form-control select2'}),
+      'patch_port_in': Select(attrs={'class': 'form-control select2'})
     }
 
     help_texts = {
@@ -76,7 +92,28 @@ class SwitchForm(forms.ModelForm):
     }
 
   def __init__(self, *args, **kwargs):
-    super(SwitchForm, self).__init__(*args, **kwargs)
+    super().__init__(*args, **kwargs)
+
+    self._set_initial_data_from_instance()
+
+    self._filter_querysets()
+
+  def _set_initial_data_from_instance(self):
+
+    if not self.instance.pk:
+      return
+
+    instance = self.instance
+
+    office = getattr(instance, 'office', None)
+    if office and hasattr(office, 'loc') and office.loc and hasattr(office.loc, 'edifice') and office.loc.edifice and hasattr(office.loc.edifice, 'location') and office.dependency and office.dependency.location:
+
+      province = office.loc.edifice.location.province
+      dependency = office.dependency
+      location = office.loc.edifice.location
+      edifice = office.loc.edifice
+      loc = office.loc
+
 
     self.fields['brand'].queryset = Brand.objects.all()
     self.fields['model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
@@ -92,8 +129,10 @@ class SwitchForm(forms.ModelForm):
         loc = self.instance.office.loc
         office = self.instance.office
         rack = self.instance.rack
-        patchera = self.instance.patchera
-        switch = self.instance.switch
+        patch_port_in = self.instance.patch_port_in
+        patchera = self.instance.patch_port_in.patchera
+        switch_port_in = self.instance.switch_port_in
+        switch = self.instance.switch_port_in.switch
 
         self.initial['province'] = province.id
         self.initial['location'] = location.id

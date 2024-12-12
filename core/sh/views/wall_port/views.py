@@ -5,9 +5,12 @@ from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.forms import model_to_dict
 
 from core.sh.forms import WallPortForm
 from core.sh.models import Wall_Port
+from core.sh.models.location.models import Location
+from core.sh.models.province.models import Province
 
 
 class WallPortListView(ListView):
@@ -59,14 +62,17 @@ class WallPortCreateView(CreateView):
     data={}
     try:
       action = request.POST.get('action')
+      form = self.get_form()
       if action == 'add':
-        form = self.get_form()
-        data = form.save()
+        if form.is_valid():
+          instance = form.save()
+          model_to_dict(instance)
+        #data = form.save()
       else:
         data['error'] = 'Acción no válida'
     except Exception as e:
       data['error'] = str(e)
-    return JsonResponse(data)
+    return JsonResponse(data, safe=False)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -78,6 +84,7 @@ class WallPortCreateView(CreateView):
     context['form_id'] = 'wall_portForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
+    context['filter_body_color'] = 'bg-secondary'
     return context
 
 class WallPortUpdateView(UpdateView):
@@ -97,7 +104,11 @@ class WallPortUpdateView(UpdateView):
       action = request.POST.get('action')
       if action == 'edit':
         form = self.get_form()
-        data = form.save()
+        if form.is_valid():
+          instance = form.save()
+          data = model_to_dict(instance)
+        else:
+          data ['error'] = form.errors
       else:
         data['error'] = 'Accion no válida'
     except Exception as e:
@@ -106,6 +117,20 @@ class WallPortUpdateView(UpdateView):
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
+
+      wall_port = self.get_object()
+
+      if wall_port.office and wall_port.office.loc and wall_port.office.loc.edifice and wall_port.office.loc.edifice.location and wall_port.office.loc.edifice.location.province and wall_port.office.dependency and ((wall_port.switch_port_in and wall_port.switch_port_in.switch and wall_port.switch_port_in.switch.rack) or (wall_port.switch_port_in and wall_port.switch_port_in.switch) or (wall_port.patch_port_in and wall_port.patch_port_in.patchera)):
+
+        province = wall_port.office.loc.edifice.location.province
+        context['form'].fields['province'].queryset = Province.objects.all()
+        context['form'].initial['province'] = province.id
+
+        location = wall_port.office.loc.edifice.location
+        context['form'].fields['location'].queryset = Location.objects.filter(province=province)
+        context['form'].initial['location'] = location.id
+
+
       context['page_title'] = 'Puertos de la Pared'
       context['title'] = 'Editar el Nombre de una Puerto de la Pared'
       context['btn_add_id'] = 'wall_port_add'
