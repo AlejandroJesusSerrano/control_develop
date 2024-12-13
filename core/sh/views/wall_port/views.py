@@ -18,7 +18,7 @@ class WallPortListView(ListView):
   template_name = 'wall_port/list.html'
 
   @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
+
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
@@ -58,21 +58,31 @@ class WallPortCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
+  def form_valid(self, form):
     try:
-      action = request.POST.get('action')
-      form = self.get_form()
-      if action == 'add':
-        if form.is_valid():
-          instance = form.save()
-          model_to_dict(instance)
-        #data = form.save()
+      self.object = form.save()
+
+      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Puerto de Pared agregado exitosamente'
+        }
+        return JsonResponse(data)
       else:
-        data['error'] = 'Acción no válida'
+        return super().form_valid(form)
     except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data, safe=False)
+      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+
+  def form_invalid(self, form):
+    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error': errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
