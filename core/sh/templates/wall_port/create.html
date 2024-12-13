@@ -9,12 +9,12 @@
 {% endblock extra_refs %}
 
 {% block form %}
-<button id="toggle-filters" class="btn btn-primary mb-3" type="button"> Busqueda Avanzada <i class="fas fa-search"></i></button>
-<div id="filter-cards" class="d-none">
+<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para oficinas <i class="fas fa-search"></i></button>
+<div id="filter-office-cards" class="d-none">
   <div class="row">
   <!-- Tarjeta Filtros Geográficos -->
-    <div class="col-md-6">
-      <div class="card mt-5">
+    <div class="container">
+      <div class="card mt-1">
         <div class="card-header {{bg_color}}">
           Filtros Geográficos
         </div>
@@ -61,12 +61,13 @@
             </div>
             {% endif %}
           </div>
+          <small class="form-text text-muted">* Recomendado para filtrar oficinas</small>
         </div>
       </div>
     </div>
 
     <!-- Tarjeta Filtros Técnicos -->
-    <div class="col-md-6">
+    <div class="container">
       <div class="card">
         <div class="card-header {{bg_color}}">
           Filtrar por Dependencia
@@ -81,10 +82,30 @@
             </div>
             {% endif %}
           </div>
+          <small class="form-text text-muted">* Recomendado para filtrar oficinas</small>
         </div>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="card mb-0">
+
+<div class="form-group mt-1">
+  <label for="id_office">Oficina:</label>
+  {{ form.office }}
+  {% if form.office.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.officewall_port.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
+
+<button id="toggle-ports-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para puertos <i class="fas fa-search"></i></button>
+<div id="filter-port-cards" class="d-none">
+  <div class="row">
+    <div class="container">
+      <div class="card mb-1">
+
         <div class="card-header {{bg_color}}">
           Filtrar por Equipos
         </div>
@@ -118,21 +139,11 @@
             </div>
             {% endif %}
           </div>
+          <small class="form-text text-muted">* Seleccionar Oficina para realizar el filtrado de puertos</small>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-
-<div class="form-group mt-3">
-  <label for="id_office">Oficina:</label>
-  {{ form.office }}
-  {% if form.office.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.officewall_port.errors|join:"<br>" }}
-  </div>
-  {% endif %}
 </div>
 
 <div class="form-group">

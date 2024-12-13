@@ -202,9 +202,14 @@ function clearDependentFields(fields){
 
 
 $(document).ready(function () {
-  $('#toggle-filters').on('click', function (e) {
+  $('#toggle-office-filters').on('click', function (e) {
     e.preventDefault();
-    $('#filter-cards').toggleClass('d-none')
+    $('#filter-office-cards').toggleClass('d-none')
+  });
+
+  $('#toggle-ports-filters').on('click', function (e) {
+    e.preventDefault();
+    $('#filter-port-cards').toggleClass('d-none')
   });
 
   $('#submitButton').on('click', function (e) {

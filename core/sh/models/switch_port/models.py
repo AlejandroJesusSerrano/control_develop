@@ -9,7 +9,8 @@ class Switch_Port(models.Model):
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def __str__(self):
-    return f'{self.switch.rack} POSICION: {self.switch.switch_rack_pos} - PUERTO: {self.port_id}'
+    if self.switch.rack:
+      return f'PUERTO: {self.port_id} - SWITCH {self.switch.model.brand} / {self.switch.model.dev_model}, POSICION {self.switch.switch_rack_pos}, RACK {self.switch.rack},  OFICINA {self.switch.rack.office}'
 
   def toJSON(self):
     item = model_to_dict(self)

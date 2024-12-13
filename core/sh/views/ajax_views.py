@@ -134,7 +134,8 @@ def ajax_load_switch(request):
     if rack_id:
         filters['rack_id'] = rack_id
     switches = Switch.objects.filter(**filters).distinct()
-    data = [{'id': switch.id, 'name': f"{switch.model.dev_model} - PUERTOS: {switch.ports_q} - RACK POS: {switch.switch_rack_pos}  "} for switch in switches]
+    data = [{'id': switch.id, 'name': f"{switch.model.brand.brand} DE {switch.ports_q} PUERTOS, SE ENCUENTRA EN LA POSICION {switch.switch_rack_pos}, DEL RACK {switch.rack},  DE LA OFICINA {switch.rack.office}"}for switch in switches]
+    # data = [{'id': switch.id, 'name': f"{switch.model.dev_model} - PUERTOS: {switch.ports_q} - RACK POS: {switch.switch_rack_pos}  "} for switch in switches]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
