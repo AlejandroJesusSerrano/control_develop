@@ -46,6 +46,25 @@ $(document).ready(function() {
     updateOfficeOptions();
   });
 
+  $('select[name="switch"]').on('change', function () {
+    const switch_id = $(this).val();
+    if (switch_id) {
+        updateOptions('/sh/ajax/load_switch_ports/', { switch_id }, $('select[name="switch_port_in"]'));
+    } else {
+        clearDependentFields(['select[name="switch_port_in"]']);
+    }
+  });
+
+// Actualización dinámica de Patch Ports
+  $('select[name="patchera"]').on('change', function () {
+    const patchera_id = $(this).val();
+    if (patchera_id) {
+        updateOptions('/sh/ajax/load_patch_ports/', { patchera_id }, $('select[name="patch_port_in"]'));
+    } else {
+        clearDependentFields(['select[name="patch_port_in"]']);
+    }
+  });
+
   initializeFormSubmission('#myform', 'edit');
 
 });

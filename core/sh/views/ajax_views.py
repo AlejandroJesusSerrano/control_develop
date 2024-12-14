@@ -105,14 +105,6 @@ def ajax_load_rack(request):
 
 @csrf_protect
 @require_POST
-def ajax_load_rack(request):
-    office_id = request.POST.get('office_id')
-    racks = Rack.objects.filter(office_id=office_id)
-    data = [{'id': rack.id, 'name': rack.rack} for rack in racks]
-    return JsonResponse(data, safe=False)
-
-@csrf_protect
-@require_POST
 def ajax_load_brand(request):
     dev_type_name = request.POST.get('dev_type_name')
     data = []
@@ -135,7 +127,6 @@ def ajax_load_switch(request):
         filters['rack_id'] = rack_id
     switches = Switch.objects.filter(**filters).distinct()
     data = [{'id': switch.id, 'name': f"{switch.model.brand.brand} DE {switch.ports_q} PUERTOS, SE ENCUENTRA EN LA POSICION {switch.switch_rack_pos}, DEL RACK {switch.rack},  DE LA OFICINA {switch.rack.office}"}for switch in switches]
-    # data = [{'id': switch.id, 'name': f"{switch.model.dev_model} - PUERTOS: {switch.ports_q} - RACK POS: {switch.switch_rack_pos}  "} for switch in switches]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -150,17 +141,12 @@ def ajax_load_patchera(request):
 @require_POST
 def ajax_load_patch_ports(request):
     patchera_id = request.POST.get('patchera_id')
-    patch_ports = Patch_Port.objects.all()
+    used_ports = Wall_Port.objects.exclude(patch_port_in=None).values_list('patch_port_in_id', flat=True)
+    patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ports)
 
-    try:
-        patchera_id = int(patchera_id)
-    except (ValueError, TypeError):
-        patchera_id = None
-    if patchera_id:
-        patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id)
-
-    data = [{'id': p.id, 'name': p.port} for p in patch_ports]
+    data = [{'id': p.id, 'name': f'Puerto: {p.port}'} for p in patch_ports]
     return JsonResponse(data, safe=False)
+
 
 @csrf_protect
 @require_POST
@@ -192,10 +178,8 @@ def ajax_load_wall_port(request):
 @require_POST
 def ajax_load_switch_port(request):
     switch_id = request.POST.get('switch_id')
-    switch_ports = Switch_Port.objects.all()
-
-    if switch_id:
-        switch_ports = Switch_Port.objects.filter(switch_id=switch_id)
+    used_ports = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
+    switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=used_ports)
 
     data = [{'id': sp.id, 'name': f'Puerto: {sp.port_id}, Switch: {sp.switch}'} for sp in switch_ports]
     return JsonResponse(data, safe=False)

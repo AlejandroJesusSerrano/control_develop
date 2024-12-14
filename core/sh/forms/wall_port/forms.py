@@ -98,7 +98,7 @@ class WallPortForm(forms.ModelForm):
           self.fields['office'].queryset = Office.objects.filter(location=self.instance.office.loc).order_by('office')
 
           if self.fields['rack']:
-            self.fields['rack'].queryset = Rack.objects.filter(location=self.instance.office).order_by('rack')
+            self.fields['rack'].queryset = Rack.objects.filter(location=self.instance.switch_port_in.switch.rack).order_by('rack')
             if self.fields['switch']:
               self.fields['switch'].queryset = Switch.objects.filter(location=self.instance.office.rack).order_by('switch')
               self.fields['switch_port_in'].queryset = Switch_Port(location=self.instance.office.rack.switch).order_by('switch_port_in')

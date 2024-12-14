@@ -14,7 +14,7 @@ class Patchera(models.Model):
     super(Patchera, self).save(*args, **kwargs)
 
   def __str__(self):
-    return self.patchera
+    return f'PATCHERA: {self.patchera} / RACK: {self.rack} / OFICINA: {self.rack.office}'
 
   def toJSON(self):
     item = model_to_dict(self)

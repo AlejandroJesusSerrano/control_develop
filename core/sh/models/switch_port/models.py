@@ -11,6 +11,8 @@ class Switch_Port(models.Model):
   def __str__(self):
     if self.switch.rack:
       return f'PUERTO: {self.port_id} - SWITCH {self.switch.model.brand} / {self.switch.model.dev_model}, POSICION {self.switch.switch_rack_pos}, RACK {self.switch.rack},  OFICINA {self.switch.rack.office}'
+    else:
+      return f'PUERTO: {self.port_id} - SWITCH {self.switch.model.brand} / {self.switch.model.dev_model}, OFICINA {self.switch.rack.office}'
 
   def toJSON(self):
     item = model_to_dict(self)

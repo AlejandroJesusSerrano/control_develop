@@ -104,6 +104,14 @@ class WallPortCreateView(CreateView):
     context['bg_color'] = 'bg-primary'
     context['filter_btn_color'] = 'btn-primary'
 
+    # Obtener los puertos no utilizados
+    used_switch_ports = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
+    used_patch_ports = Wall_Port.objects.exclude(patch_port_in=None).values_list('patch_port_in_id', flat=True)
+
+    # Ajustar los querysets para mostrar solo los disponibles
+    context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.exclude(id__in=used_switch_ports)
+    context['form'].fields['patch_port_in'].queryset = Patch_Port.objects.exclude(id__in=used_patch_ports)
+
     return context
 
 class WallPortUpdateView(UpdateView):
@@ -155,6 +163,15 @@ class WallPortUpdateView(UpdateView):
       context['filter_btn_color'] = 'btn-warning'
 
       wall_port = self.get_object()
+
+      # Obtener los puertos no utilizados, incluyendo el actual
+      used_switch_ports = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
+      used_patch_ports = Wall_Port.objects.exclude(patch_port_in=None).values_list('patch_port_in_id', flat=True)
+
+      if wall_port.switch_port_in:
+        used_switch_ports = used_switch_ports.exclude(id=wall_port.switch_port_in.id)
+      if wall_port.patch_port_in:
+        used_patch_ports = used_patch_ports.exclude(id=wall_port.patch_port_in.id)
 
       if (
         wall_port.office and
@@ -212,12 +229,12 @@ class WallPortUpdateView(UpdateView):
 
         switch_port_in = getattr(wall_port, 'switch_port_in', None)
         if switch_port_in:
-          context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch=switch)
+          context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.exclude(id__in=used_switch_ports)
           context['form'].initial['switch_port_in'] = switch_port_in.id
 
         patch_port_in = getattr(wall_port, 'patch_port_in', None)
         if patch_port_in:
-          context['form'].fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera=patchera)
+          context['form'].fields['patch_port_in'].queryset = Patch_Port.objects.exclude(id__in=used_patch_ports)
           context['form'].initial['patch_port_in'] = patch_port_in.id
 
       return context

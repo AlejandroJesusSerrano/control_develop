@@ -44,9 +44,9 @@ class Switch(models.Model):
 
   def __str__(self):
     if self.rack:
-      return f'{self.model.brand.brand} DE {self.ports_q} PUERTOS, POSICION {self.switch_rack_pos}, RACK {self.rack},  OFICINA {self.rack.office}'
+      return f'{self.model.brand.brand} {self.model.dev_model} DE {self.ports_q} PUERTOS / POSICION {self.switch_rack_pos} / RACK {self.rack} /  OFICINA {self.rack.office}'
     else:
-      return f'{self.model.brand.brand} DE {self.ports_q} PUERTOS: {self.serial_n} EN LA OFICINA: {self.office} - SIN RACK'
+      return f'{self.model.brand.brand} DE {self.ports_q} PUERTOS / {self.serial_n} EN LA OFICINA / {self.office} / SIN RACK'
 
   def toJSON(self):
     item = model_to_dict(self)
