@@ -16,7 +16,8 @@ class Edifice(models.Model):
     super(Edifice, self).save(*args, **kwargs)
 
   def __str__(self):
-    return  self.edifice
+    edifice_info = f"Edificio: {self.edifice} / Localidad: {self.location.location} / Provincia: {self.location.province}"
+    return edifice_info
 
   def toJSON(self):
     item = model_to_dict(self)

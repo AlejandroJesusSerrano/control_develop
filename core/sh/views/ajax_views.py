@@ -96,10 +96,31 @@ def ajax_load_office(request):
 @csrf_protect
 @require_POST
 def ajax_load_rack(request):
+    province_id = request.POST.get('province_id')
+    location_id = request.POST.get('location_id')
+    dependency_id = request.POST.get('dependency_id')
+    edifice_id = request.POST.get('edifice_id')
+    loc_id = request.POST.get('loc_id')
     office_id = request.POST.get('office_id')
-    racks = Rack.objects.all()
+    # racks = Rack.objects.all()
+
+    filters = {}
+
+    if province_id:
+        filters['office__loc__edifice__location__province_id']=province_id
+    if location_id:
+        filters['office__loc__edifice__location_id']=location_id
+    if dependency_id:
+        filters['office__dependency_id']=dependency_id
+    if edifice_id:
+        filters['office__loc__edifice_id']=edifice_id
+    if loc_id:
+        filters['office__loc_id']=loc_id
     if office_id:
-        racks = racks.filter(office_id=office_id)
+        filters['office_id']=office_id
+
+    racks = Rack.objects.filter(**filters).distinct()
+
     data = [{'id': rack.id, 'name': rack.rack} for rack in racks]
     return JsonResponse(data, safe=False)
 

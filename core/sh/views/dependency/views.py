@@ -89,6 +89,7 @@ class DependencyCreateView(CreateView):
     context['form_id'] = 'dependencyForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class DependencyUpdateView(UpdateView):
@@ -137,6 +138,7 @@ class DependencyUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:dependency_list')
     context['form_id'] = 'dependencyForm'
     context['action'] = 'edit'
+    context['filter_btn_color'] = 'btn-warning'
     context['bg_color'] = 'bg-warning'
 
     dependency = self.get_object()

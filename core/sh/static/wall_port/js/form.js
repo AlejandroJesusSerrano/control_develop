@@ -133,11 +133,26 @@ function updateSwitchOfficeOptions() {
 }
 
 function updateRackOptions() {
-  const { office_id } = getSelectedFilters(); // Obtener el ID de la oficina seleccionada
+  const { province_id, location_id, edifice_id, dependency_id, loc_id, office_id } = getSelectedFilters(); // Obtener el ID de la oficina seleccionada
+  let data = {}
   if (office_id) {
-    updateOptions('/sh/ajax/load_rack/', { 'office_id': office_id }, $('select[name="rack"]'), $('#id_rack').data('preselected'));
+    data = {office_id}
+  } else if (province_id) {
+    data = {province_id}
+  } else if (location_id) {
+    data = {location_id}
+  } else if (dependency_id) {
+    data = {dependency_id}
+  } else if (edifice_id) {
+    data = {edifice_id}
+  } else if (loc_id) {
+    data = {loc_id}
+  }
+
+  if (Object.keys(data).length > 0) {
+    updateOptions('/sh/ajax/load_rack/', data, $('select[name="rack"]'), $('#id_rack').data('preselected'));
   } else {
-    $('select[name="rack"]').empty().append('<option value="">----------</option>').trigger('change');
+    $('select[name="rack"]').empty().append('<option value="">----------</option>').trigger('change')
   }
 }
 

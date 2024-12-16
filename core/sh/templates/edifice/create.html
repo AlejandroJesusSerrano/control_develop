@@ -9,16 +9,31 @@
 {% endblock extra_refs %}
 
 {% block form %}
-
-<div class="form-group">
-  <label for="province_id">Provincia:</label>
-  {{ form.province }}
-  {% if form.province.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.province.errors|join:"<br>" }}
+<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtro para Localidad <i class="fas fa-search"></i></button>
+<div id="filter-office-cards" class="d-none">
+  <div class="row">
+  <!-- Tarjeta Filtros Geográficos -->
+    <div class="container">
+      <div class="card mt-1">
+        <div class="card-header {{bg_color}}">
+          Filtrar Localidad
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="id_brand">Provincia:</label>
+            {{ form.province }}
+            {% if form.province.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.province.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% endif %}
 </div>
+
 <div class="form-group">
   <label for="location_id">Localidad:</label>
   {{ form.location }}

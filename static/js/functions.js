@@ -204,12 +204,30 @@ function clearDependentFields(fields){
 $(document).ready(function () {
   $('#toggle-office-filters').on('click', function (e) {
     e.preventDefault();
-    $('#filter-office-cards').toggleClass('d-none')
+    const filterLocCards = $('#filter-office-cards')
+    filterLocCards.toggleClass('d-none')
+
+    $(this).toggleClass('active btn-primary btn-secondary')
+
+    if (filterLocCards.hasClass('d-none')) {
+      $(this).html('Filtros de oficinas <i class="fas fa-search"></i>');
+    } else {
+      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+    }
   });
 
   $('#toggle-ports-filters').on('click', function (e) {
     e.preventDefault();
-    $('#filter-port-cards').toggleClass('d-none')
+    const filterPortCards = $('#filter-port-cards')
+    filterPortCards.toggleClass('d-none')
+
+    $(this).toggleClass('active btn-primary btn-secondary')
+
+    if (filterPortCards.hasClass('d-none')) {
+      $(this).html('Filtros de oficinas <i class="fas fa-search"></i>');
+    } else {
+      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+    }
   });
 
   $('#submitButton').on('click', function (e) {

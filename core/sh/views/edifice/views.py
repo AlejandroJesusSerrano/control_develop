@@ -100,6 +100,7 @@ class EdificeCreateView(CreateView):
     context['form_id'] = 'edificeForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class EdificeUpdateView(UpdateView):
@@ -148,6 +149,7 @@ class EdificeUpdateView(UpdateView):
     context['form_id'] = 'edificeForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-warning'
+    context['filter_btn_color'] = 'btn-warning'
 
     edifice = self.get_object()
 
