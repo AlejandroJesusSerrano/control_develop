@@ -9,17 +9,17 @@
 {% endblock extra_refs %}
 
 {% block form %}
-<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para oficinas <i class="fas fa-search"></i></button>
-<div id="filter-office-cards" class="d-none">
-  <div class="row">
+  <button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para oficinas <i class="fas fa-search"></i></button>
+  <div id="filter-office-cards" class="d-none">
+    <div class="row">
+      <div class="container">
   <!-- Tarjeta Filtros Geográficos -->
-    <div class="container">
       <div class="card mt-1">
         <div class="card-header {{bg_color}}">
           Filtros por Ubicacion
         </div>
-        <div class="card-body">
-          <div class="form-group">
+        <div class="card-body row">
+          <div class="form-group col-12">
             <label for="id_brand">Provincia:</label>
             {{ form.province }}
             {% if form.province.errors %}
@@ -29,7 +29,7 @@
             {% endif %}
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-12">
             <label for="id_model">Localidad:</label>
             {{ form.location }}
             {% if form.location.errors %}
@@ -39,7 +39,7 @@
             {% endif %}
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-6">
             <label for="id_edifice">Edificio:</label>
             {{ form.edifice }}
             {% if form.edifice.help_text %}
@@ -52,8 +52,18 @@
             {% endif %}
           </div>
 
-          <div class="form-group">
-            <label for="id_loc">Locacion de Officina:</label>
+          <div class="form-group col-6">
+            <label for="id_loc">Dependencia:</label>
+            {{ form.dependency }}
+            {% if form.dependency.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.dependency.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-6">
+            <label for="id_loc">Locacion de Oficina:</label>
             {{ form.loc }}
             {% if form.loc.errors %}
             <div class="invalid-feedback d-block">
@@ -65,32 +75,10 @@
         </div>
       </div>
     </div>
-
-    <!-- Tarjeta Filtros Técnicos -->
-    <div class="container">
-      <div class="card">
-        <div class="card-header {{bg_color}}">
-          Filtrar por Dependencia
-        </div>
-        <div class="card-body">
-          <div class="form-group">
-            <label for="id_rack">Dependencia:</label>
-            {{ form.dependency }}
-            {% if form.dependency.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.dependency.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-          <small class="form-text text-muted">* Recomendado para filtrar oficinas</small>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
-
-<div class="form-group mt-1">
+<div class="form-group">
   <label for="id_office">Oficina:</label>
   {{ form.office }}
   {% if form.office.errors %}
@@ -99,6 +87,7 @@
   </div>
   {% endif %}
 </div>
+
 
 <button id="toggle-ports-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para puertos <i class="fas fa-search"></i></button>
 <div id="filter-port-cards" class="d-none">
@@ -109,8 +98,8 @@
         <div class="card-header {{bg_color}}">
           Filtrar por Conexión
         </div>
-        <div class="card-body">
-          <div class="form-group">
+        <div class="card-body row">
+          <div class="form-group col-12">
             <label for="id_rack">Rack:</label>
             {{ form.rack }}
             {% if form.rack.errors %}
@@ -120,7 +109,7 @@
             {% endif %}
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-6">
             <label for="id_switch">Switch de Ingreso:</label>
             {{ form.switch }}
             {% if form.switch.errors %}
@@ -130,7 +119,7 @@
             {% endif %}
           </div>
 
-          <div class="form-group">
+          <div class="form-group col-6">
             <label for="id_patchera">Patchera de Ingreso:</label>
             {{ form.patchera }}
             {% if form.patchera.errors %}

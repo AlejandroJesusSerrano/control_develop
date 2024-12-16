@@ -296,7 +296,7 @@ class WallPortForm(forms.ModelForm):
       cleaned_data = super().clean()
       office = cleaned_data.get('office')
       wall_port = cleaned_data.get('wall_port')
-      # Verifica el constraint de unicidad
+
       if Wall_Port.objects.filter(office=office, wall_port=wall_port).exists():
         self.add_error('wall_port', 'Esta boca de pared ya existe en la oficina seleccionada.')
       return cleaned_data
