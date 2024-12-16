@@ -153,7 +153,7 @@ class WallPortUpdateView(UpdateView):
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['page_title'] = 'Puertos de la Pared'
-      context['title'] = 'Editar el Nombre de una Puerto de la Pared'
+      context['title'] = 'Editar el Nombre de un Puerto de la Pared'
       context['btn_add_id'] = 'wall_port_add'
       context['entity'] = 'Puertos de la Pared'
       context['list_url'] = reverse_lazy('sh:wall_port_list')

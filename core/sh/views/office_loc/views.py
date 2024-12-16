@@ -89,6 +89,7 @@ class Office_Loc_CreateView(CreateView):
     context['form_id'] = 'office_locForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class Office_Loc_UpdateView(UpdateView):
@@ -137,6 +138,7 @@ class Office_Loc_UpdateView(UpdateView):
     context['form_id'] = 'office_locForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-warning'
+    context['filter_btn_color'] = 'btn-warning'
 
     office_loc = self.get_object()
 

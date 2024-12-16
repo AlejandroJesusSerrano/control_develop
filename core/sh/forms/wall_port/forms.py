@@ -74,12 +74,15 @@ class WallPortForm(forms.ModelForm):
 
   class Meta:
     model = Wall_Port
-    fields = 'province', 'location', 'edifice', 'dependency', 'loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in', 'details', 'wall_port'
+    fields = [
+      'province', 'location', 'edifice', 'dependency', 'loc', 'office', 'rack', 'switch', 'switch_port_in', 'patchera', 'patch_port_in', 'details', 'wall_port'
+      ]
+
     widgets = {
-      'office': Select(attrs={'class': 'form-control select2', 'placeholder': 'Seleccione la Oficina'}),
+      'office': Select(attrs={'class': 'form-control select2'}),
       'wall_port': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el puerto/boca de la pared'}),
-      'switch_port_in': Select(attrs={'class': 'form-control select2', 'placeholder': 'Seleccione el puerto del switch de origen'}),
-      'patch_port_in': Select(attrs={'class': 'form-control select2', 'placeholder': 'Seleccione el puerto de la patchera de origen'}),
+      'switch_port_in': Select(attrs={'class': 'form-control select2'}),
+      'patch_port_in': Select(attrs={'class': 'form-control select2'}),
       'details': Textarea(attrs={'class': 'form-control', 'placeholder': 'De ser necesario, ingrese detalles particulares'}),
     }
 
@@ -165,7 +168,7 @@ class WallPortForm(forms.ModelForm):
               pass
           elif self.instance.pk:
             self.fields['edifice'].queryset = self.instance.office.loc.edifice.location.edifice_location.order_by('edifice')
-            self.fields['edifice'].queryset = self.instance.office.dependency.location.dependency_location.order_by('dependency')
+            self.fields['dependency'].queryset = self.instance.office.dependency.location.dependency_location.order_by('dependency')
 
           if 'dependency' in self.data:
             try:

@@ -200,56 +200,26 @@ function clearDependentFields(fields){
   });
 }
 
+$('#submitButton').on('click', function (e) {
+  e.preventDefault();
 
-$(document).ready(function () {
-  $('#toggle-office-filters').on('click', function (e) {
-    e.preventDefault();
-    const filterLocCards = $('#filter-office-cards')
-    filterLocCards.toggleClass('d-none')
+  var form = $('#form');
+  var formData = new FormData(form[0]);
+  var url = form.attr('action');
 
-    $(this).toggleClass('active btn-primary btn-secondary')
+  var callback = function () {
+    alert('Operación realizada exitosamente.');
+    window.location.reload();
+  };
 
-    if (filterLocCards.hasClass('d-none')) {
-      $(this).html('Filtros de oficinas <i class="fas fa-search"></i>');
-    } else {
-      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
-    }
-  });
-
-  $('#toggle-ports-filters').on('click', function (e) {
-    e.preventDefault();
-    const filterPortCards = $('#filter-port-cards')
-    filterPortCards.toggleClass('d-none')
-
-    $(this).toggleClass('active btn-primary btn-secondary')
-
-    if (filterPortCards.hasClass('d-none')) {
-      $(this).html('Filtros de oficinas <i class="fas fa-search"></i>');
-    } else {
-      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
-    }
-  });
-
-  $('#submitButton').on('click', function (e) {
-    e.preventDefault();
-
-    var form = $('#form');
-    var formData = new FormData(form[0]);
-    var url = form.attr('action');
-
-    var callback = function () {
-      alert('Operación realizada exitosamente.');
-      window.location.reload();
-    };
-
-    submit_with_ajax(url, formData, callback, 'add');
-  });
-
-  $('.select2').each(function () {
-    const preselectedValue = $(this).data('preselected');
-    if (preselectedValue) {
-      $(this).val(preselectedValue).trigger('change.select2');
-    }
-  });
+  submit_with_ajax(url, formData, callback, 'add');
 });
+
+$('.select2').each(function () {
+  const preselectedValue = $(this).data('preselected');
+  if (preselectedValue) {
+    $(this).val(preselectedValue).trigger('change.select2');
+  }
+});
+
 

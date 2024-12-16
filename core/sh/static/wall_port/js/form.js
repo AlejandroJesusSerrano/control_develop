@@ -3,6 +3,34 @@ $(document).ready(function () {
     theme: 'bootstrap',
   });
 
+  $('#toggle-office-filters').on('click', function (e) {
+    e.preventDefault();
+    const filterLocCards = $('#filter-office-cards')
+    filterLocCards.toggleClass('d-none')
+
+    $(this).toggleClass('active btn-primary btn-secondary')
+
+    if (filterLocCards.hasClass('d-none')) {
+      $(this).html('Filtros de oficinas <i class="fas fa-search"></i>');
+    } else {
+      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+    }
+  });
+
+  $('#toggle-ports-filters').on('click', function (e) {
+    e.preventDefault();
+    const filterPortCards = $('#filter-port-cards')
+    filterPortCards.toggleClass('d-none')
+
+    $(this).toggleClass('active btn-primary btn-secondary')
+
+    if (filterPortCards.hasClass('d-none')) {
+      $(this).html('Filtros para puertos <i class="fas fa-search"></i>');
+    } else {
+      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+    }
+  });
+
   const selectMapping = {
     province: ['location', 'dependency', 'edifice', 'loc', 'office'],
     location: ['dependency', 'edifice', 'loc', 'office'],
@@ -87,6 +115,7 @@ $(document).ready(function () {
   });
 
   initializeFormSubmission('#myform', 'edit');
+
 });
 
 function updateLocationOptions() {
@@ -189,7 +218,7 @@ function getSelectedFilters() {
     office_id: $('select[name="office"]').val(),
     rack_id: $('select[name="rack"]').val(),
     switch_id: $('select[name="switch"]').val(),
-    patchera_id: $('select[name="patchera"]').val(),
+    patchera_id: $('select[name="patchera"]').val()
   };
 }
 

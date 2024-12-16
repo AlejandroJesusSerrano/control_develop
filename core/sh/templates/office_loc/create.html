@@ -1,4 +1,4 @@
-{% extends 'form.html' %} 
+{% extends 'form.html' %}
 {% load static %}
 
 {% block extra_refs %}
@@ -9,25 +9,41 @@
 {% endblock extra_refs %}
 
 {% block form %}
+  <button id="toggle-edifice-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para Edificios <i class="fas fa-search"></i></button>
+  <div id="filter-edifice-cards" class="d-none">
+    <div class="row">
+      <div class="container">
+  <!-- Tarjeta Filtros Geográficos -->
+      <div class="card mt-1">
+        <div class="card-header {{bg_color}}">
+          Filtros por Ubicacion
+        </div>
+        <div class="card-body row">
+          <div class="form-group col-12">
+            <label for="id_brand">Provincia:</label>
+            {{ form.province }}
+            {% if form.province.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.province.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
 
-<div class="form-group">
-  <label for="id_province">Provincia:</label>
-  {{ form.province }}
-  {% if form.province.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.province.errors|join:"<br>" }}
+          <div class="form-group col-12">
+            <label for="id_model">Localidad:</label>
+            {{ form.location }}
+            {% if form.location.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.location.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% endif %}
-</div>
-<div class="form-group">
-  <label for="id_location">Localidad:</label>
-  {{ form.location }}
-  {% if form.location.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.location.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
+
 <div class="form-group">
   <label for="id_edifice">Edificio:</label>
   {{ form.edifice }}
@@ -37,6 +53,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_floor">Piso:</label>
   {{ form.floor }}
@@ -49,6 +66,7 @@
   </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_connection_type">Ala:</label>
   {{ form.wing }}

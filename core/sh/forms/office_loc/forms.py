@@ -24,18 +24,9 @@ class Office_Loc_Form(forms.ModelForm):
       'province', 'location', 'edifice', 'floor', 'wing'
     ]
     widgets = {
-      'edifice': Select(
-        attrs={
-          'class': 'form-control select2'
-          }),
-      'floor': TextInput(
-        attrs={
-          'class': 'form-control', 'placeholder': 'Ingrese el Piso'
-          }),
-      'wing': TextInput(
-        attrs={
-          'class': 'form-control', 'placeholder': 'Ingrese el Ala'
-          }),
+      'edifice': Select(attrs={'class': 'form-control select2'}),
+      'floor': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el Piso'}),
+      'wing': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el Ala'}),
     }
 
     help_texts = {
@@ -44,38 +35,34 @@ class Office_Loc_Form(forms.ModelForm):
     }
 
   def __init__(self, *args, **kwargs):
-    super(Office_Loc_Form, self).__init__(*args, **kwargs)
+    super().__init__(*args, **kwargs)
 
-    self.fields['province'].queryset = Province.objects.all()
-    self.fields['location'].queryset = Location.objects.all()
-    self.fields['edifice'].queryset = Edifice.objects.all()
+    if self.instance.pk:
+      if self.instance.edifice.location and self.instance.edifice.location.province:
 
-    if 'province' in self.data:
-      try:
-        province_id = int(self.data.get('province'))
-        self.fields['location'].queryset = Location.objects.filter(province_id=province_id)
-      except (ValueError, TypeError):
-        pass
-
-    elif self.instance.pk:
-      if self.instance.edifice and self.instance.edifice.location:
         province = self.instance.edifice.location.province
-        self.fields['province'].initial = province
-        self.fields['location'].queryset = Location.objects.filter(province=province)
-        self.fields['location'].initial = self.instance.edifice.location
 
-    if 'location' in self.data:
-      try:
-        location_id = int(self.data.get('location'))
-        self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id)
-      except (ValueError, TypeError):
-        pass
+        self.fields['location'].queryset = Location.objects.filter(province=province).order_by('location')
+        self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.edifice.location).order_by('location')
 
-    elif self.instance.pk:
-      if self.instance.edifice:
-        location = self.instance.edifice.location
-        self.fields['edifice'].queryset = Edifice.objects.filter(location=location)
-        self.fields['edifice'].initial = self.instance.edifice
+      if 'province' in self.data:
+        try:
+          province_id = int(self.get('province'))
+          self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
+          self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
+        except (ValueError, TypeError):
+          pass
+      elif self.instance.pk:
+        self.fields['location'].queryset = self.instance.edifice.location.province.location_set.order_by('location')
+
+      if 'location' in self.data:
+        try:
+          location_id = int(self.get('location'))
+          self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id).order_by('edifice')
+        except (ValueError, TypeError):
+          pass
+      elif self.instance.pk:
+        self.fields['edifice'].queryset = self.instance.edifice.location.edifice_location.order_by('edifice')
 
   def clean(self):
     cleaned_data = super().clean()
