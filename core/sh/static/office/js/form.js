@@ -35,9 +35,9 @@ function updateLocationsOptions(province_id) {
       'province_id': province_id,
     }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
 
-    updateOptions('/sh/ajax/load_loc/', {
-      'province_id': province_id,
-    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
+      updateOptions('/sh/ajax/load_loc/', {
+        'province_id': province_id,
+      }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
   } else {
     clearDependentFields(['#id_location', '#id_edifice', '#id_dependency', '#id_loc'])
   }
