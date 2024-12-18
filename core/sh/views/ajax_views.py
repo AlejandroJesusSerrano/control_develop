@@ -138,11 +138,16 @@ def ajax_load_brand(request):
 def ajax_load_switch(request):
     office_id = request.POST.get('office_id')
     rack_id = request.POST.get('rack_id')
+
     filters = {}
     if office_id:
         filters['office_id'] = office_id
     if rack_id:
         filters['rack_id'] = rack_id
+
+    if not filters:
+        return JsonResponse([], safe=False)
+
     switches = Switch.objects.filter(**filters).distinct()
     data = [{'id': switch.id, 'name': f"{switch.model.brand.brand} DE {switch.ports_q} PUERTOS, SE ENCUENTRA EN LA POSICION {switch.switch_rack_pos}, DEL RACK {switch.rack},  DE LA OFICINA {switch.rack.office}"} for switch in switches]
     return JsonResponse(data, safe=False)
@@ -152,7 +157,7 @@ def ajax_load_switch(request):
 def ajax_load_patchera(request):
     rack_id = request.POST.get('rack_id')
     patcheras = Patchera.objects.filter(rack_id=rack_id)
-    data = [{'id': patch.id, 'name': patch.patchera} for patch in patcheras]
+    data = [{'id': patch.id, 'name': f'PATCHERA: {patch.patchera} / RACK: {patch.rack} / OFICINA: {patch.rack.office}'} for patch in patcheras]
     return JsonResponse(data, safe=False)
 
 @csrf_protect

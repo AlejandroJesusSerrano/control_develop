@@ -196,7 +196,7 @@ function submit_with_ajax(url, formData, callback, actionType = 'add') {
 
 function clearDependentFields(fields){
   fields.forEach(field => {
-    $(field).val(null).trigger('change');
+    $(field).val(null);
   });
 }
 

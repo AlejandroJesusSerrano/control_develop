@@ -28,7 +28,7 @@ function updateLocationsOptions(province_id) {
     }, $('select[name="location"]'), $('#id_location').data('preselected'));
 
     updateOptions('/sh/ajax/load_dependency/', {
-      province_id: province_id
+      'province_id': province_id
     }, $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
 
     updateOptions('/sh/ajax/load_edifices/', {
@@ -55,7 +55,7 @@ function updateLocationReferedOptions(location_id) {
 
     updateOptions('/sh/ajax/load_loc/', {
       'location_id': location_id,
-    }, $('select[name="loc"]'), $('#id:_loc').data('preselected'));
+    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
   } else {
     clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc'])
   }

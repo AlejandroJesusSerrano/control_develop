@@ -128,7 +128,7 @@ class WallPortForm(forms.ModelForm):
                     rack__office__loc__edifice__location__province_id=province_id
                     ).order_by('switch')
 
-              self.fields['patchera'] = Patchera.objects.filter(
+              self.fields['patchera'].queryset = Patchera.objects.filter(
                   rack__office__loc__edifice__location__province_id=province_id).order_by('patchera')
 
               self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
@@ -136,7 +136,7 @@ class WallPortForm(forms.ModelForm):
                     switch__rack__office__loc__edifice__location__province_id=province_id
                     ).order_by('port_id')
 
-              self.fields['patch_port_in'] = Patch_Port.objects.filter(patchera__rack__office__loc__edifice__location__province_id=province_id).order_by('patch_port')
+              self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack__office__loc__edifice__location__province_id=province_id).order_by('patch_port')
             except (ValueError, TypeError):
               pass
           elif self.instance.pk:
@@ -163,7 +163,7 @@ class WallPortForm(forms.ModelForm):
                 switch__office__loc__edifice__location_id=location_id
               ).order_by('switch_port')
 
-              self.fields['patch_port_in'] = Patch_Port.objects.filter(patchera__rack__office__loc__edifice__location_id=location_id).order_by('patch_port')
+              self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack__office__loc__edifice__location_id=location_id).order_by('patch_port')
             except (ValueError, TypeError):
               pass
           elif self.instance.pk:
@@ -189,7 +189,7 @@ class WallPortForm(forms.ModelForm):
                 switch__office__dependency_id=dependency_id
               ).order_by('switch_port_in')
 
-              self.fields['patch_port_in'] = Patch_Port.objects.filter(patchera__rack__office__dependency_id=dependency_id).order_by('patch_port_in')
+              self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack__office__dependency_id=dependency_id).order_by('patch_port_in')
             except(ValueError, TypeError):
               pass
           elif self.instance.pk:
@@ -214,7 +214,7 @@ class WallPortForm(forms.ModelForm):
                 switch__office__loc__edifice_id=edifice_id
               ).order_by('switch_port_in')
 
-              self.fields['patch_port_in'] = Patch_Port.objects.filter(patchera__rack__office__loc__edifice_id=edifice_id).order_by('patch_port_in')
+              self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack__office__loc__edifice_id=edifice_id).order_by('patch_port_in')
             except(ValueError, TypeError):
               pass
           elif self.instance.pk:

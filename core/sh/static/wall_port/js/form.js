@@ -68,12 +68,12 @@ $(document).ready(function () {
 
   $('select[name="patchera"]').on('change', function(){
     const patchera_id = $(this).val();
-    updatePatcheraPortOptions(patchera_id);
+    updatePatcheraOptions(patchera_id);
   })
 
-  $('select[name="switch"').on('change', function(){
+  $('select[name="switch"]').on('change', function(){
     const switch_id = $(this).val();
-    updateSwitchPortOptions(switch_id)
+    updateSwitchOptions(switch_id)
   })
 
 
@@ -116,7 +116,7 @@ function updateLocationOptions(province_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'province_id': province_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
     updateOptions('/sh/ajax/load_patchera/', {
       'province_id': province_id,
@@ -124,9 +124,9 @@ function updateLocationOptions(province_id) {
 
     updateOptions('/sh/ajax/load_patch_ports/', {
       'province_id': province_id,
-    }, $('select[name="patch_port"]'), $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_location', '#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port', '#id_patchera', '#id_patch_port'])
+    clearDependentFields(['#id_location', '#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 };
 
@@ -158,7 +158,7 @@ function updateLocationReferedOptions(location_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'location_id': location_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
     updateOptions('/sh/ajax/load_patchera/', {
       'location_id': location_id,
@@ -166,9 +166,9 @@ function updateLocationReferedOptions(location_id) {
 
     updateOptions('/sh/ajax/load_patch_ports/', {
       'location_id': location_id,
-    }, $('select[name="patch_port"]'), $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port', '#id_patchera', '#id_patch_port'])
+    clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 };
 
@@ -190,7 +190,7 @@ function updateDependencyOptions(dependency_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'dependency_id': dependency_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
     updateOptions('/sh/ajax/load_patchera/', {
       'dependency_id': dependency_id,
@@ -198,9 +198,9 @@ function updateDependencyOptions(dependency_id) {
 
     updateOptions('/sh/ajax/load_patch_ports/', {
       'dependency_id': dependency_id,
-    }, $('select[name="patch_port"]'), $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_office', '#id_rack', '#id_switch', '#id_switch_port', '#id_patchera', '#id_patch_port'])
+    clearDependentFields(['#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
@@ -221,7 +221,7 @@ function updateEdificeOptions(edifice_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'edifice_id': edifice_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
     updateOptions('/sh/ajax/load_patchera/', {
       'edifice_id': edifice_id,
@@ -229,9 +229,9 @@ function updateEdificeOptions(edifice_id) {
 
     updateOptions('/sh/ajax/load_patch_ports/', {
       'edifice_id': edifice_id,
-    }, $('select[name="patch_port"]'), $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port', '#id_patchera', '#id_patch_port'])
+    clearDependentFields(['#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
@@ -248,7 +248,7 @@ function updateLocOptions(loc_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'loc_id': loc_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
     updateOptions('/sh/ajax/load_patchera/', {
       'loc_id': loc_id,
@@ -256,9 +256,9 @@ function updateLocOptions(loc_id) {
 
     updateOptions('/sh/ajax/load_patch_ports/', {
       'loc_id': loc_id,
-    }, $('select[name="patch_port"]'), $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_office', '#id_rack', '#id_switch', '#id_switch_port', '#id_patchera', '#id_patch_port'])
+    clearDependentFields(['#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
@@ -275,7 +275,7 @@ function updateOfficeOptions(office_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'office_id': office_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
     updateOptions('/sh/ajax/load_patchera/', {
       'office_id': office_id,
@@ -283,9 +283,9 @@ function updateOfficeOptions(office_id) {
 
     updateOptions('/sh/ajax/load_patch_ports/', {
       'office_id': office_id,
-    }, $('select[name="patch_port"]'), $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_rack', '#id_switch', '#id_switch_port', '#id_patchera', '#id_patch_port'])
+    clearDependentFields(['#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
@@ -298,7 +298,7 @@ function updateRackOptions(rack_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'rack_id': rack_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
     updateOptions('/sh/ajax/load_patchera/', {
       'rack_id': rack_id,
@@ -306,9 +306,9 @@ function updateRackOptions(rack_id) {
 
     updateOptions('/sh/ajax/load_patch_ports/', {
       'rack_id': rack_id,
-    }, $('select[name="patch_port"]'), $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_rack', '#id_switch', '#id_switch_port', '#id_patchera', '#id_patch_port'])
+    clearDependentFields(['#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
@@ -317,30 +317,20 @@ function updateSwitchOptions(switch_id) {
 
     updateOptions('/sh/ajax/load_switch_port/', {
       'switch_id': switch_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
+    }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_switch_port'])
+    clearDependentFields(['#id_switch_port_in'])
   }
 }
 
-function updateSwitchPortOptions(switch_id) {
-  if (switch_id) {
-
-    updateOptions('/sh/ajax/load_switch_port/', {
-      'switch_id': switch_id,
-    }, $('select[name="switch_port"]'), $('#id_switch_port').data('preselected'));
-  } else {
-    clearDependentFields(['#id_switch_port'])
-  }
-}
-
-function updatePatcheraPortOptions(patchera_id) {
+function updatePatcheraOptions(patchera_id) {
   if (patchera_id) {
+
     updateOptions('/sh/ajax/load_patch_ports/', {
       'patchera_id': patchera_id,
-    }, $('#id_patch_port').data('preselected'));
+    }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
   } else {
-    clearDependentFields(['#id_patch_port'])
+    clearDependentFields(['#id_patch_port_in'])
   }
 }
 
