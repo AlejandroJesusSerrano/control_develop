@@ -69,12 +69,44 @@ $(document).ready(function () {
   $('select[name="patchera"]').on('change', function(){
     const patchera_id = $(this).val();
     updatePatcheraOptions(patchera_id);
-  })
+
+    if (patchera_id){
+      $('select[name="switch"]').val(null).trigger('change');
+      $('select[name="switch_port_in"]').val(null).trigger('change');
+
+      $('select[name="switch_port_in"]').closest('.form-group').hide();
+    } else {
+      $('select[name="switch_port_in"]').closest('.form-group').show();
+    }
+  });
 
   $('select[name="switch"]').on('change', function(){
     const switch_id = $(this).val();
     updateSwitchOptions(switch_id)
-  })
+
+    if (switch_id){
+      $('select[name="patchera"]').val(null).trigger('change');
+      $('select[name="patch_port_in"]').val(null).trigger('change');
+
+      $('select[name="patch_port_in"]').closest('.form-group').hide();
+    } else {
+      $('select[name="patch_port_in"]').closest('.form-group').show();
+    }
+  });
+
+  $('select[name="switch_port_in"]').on('change', function() {
+    const switch_port_val = $(this).val();
+    if (switch_port_val) {
+      $('select[name="patch_port_in"]').val(null).trigger('change');
+    }
+  });
+
+  $('select[name="patch_port_in"]').on('change', function() {
+    const patch_port_val = $(this).val();
+    if (patch_port_val) {
+      $('select[name="switch_port_in"]').val(null).trigger('change');
+    }
+  });
 
 
   initializeFormSubmission('#myform', 'edit');
@@ -207,6 +239,10 @@ function updateDependencyOptions(dependency_id) {
 function updateEdificeOptions(edifice_id) {
   if (edifice_id) {
 
+    updateOptions('/sh/ajax/load_loc/', {
+      'edifice_id': edifice_id
+    }, $('select[name="loc"]'), $('#id_loc').data('preselected'));
+
     updateOptions('/sh/ajax/load_office/', {
       'edifice_id': edifice_id,
     }, $('select[name="office"]'), $('#id_office').data('preselected'));
@@ -237,6 +273,10 @@ function updateEdificeOptions(edifice_id) {
 
 function updateLocOptions(loc_id) {
   if (loc_id) {
+
+    updateOptions('/sh/ajax/load_office/', {
+      'loc_id': loc_id
+    }, $('select[name="office"]'), $('#id_office').data('preselected'));
 
     updateOptions('/sh/ajax/load_rack/', {
       'loc_id': loc_id,

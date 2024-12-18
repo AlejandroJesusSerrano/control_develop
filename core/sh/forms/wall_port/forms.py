@@ -19,7 +19,7 @@ class WallPortForm(forms.ModelForm):
 
   province = forms.ModelChoiceField(
     queryset = Province.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2 bg-secondary'}),
     required = False
   )
 
