@@ -17,58 +17,40 @@ $(document).ready(function() {
     }
   });
 
-  const selectMapping = {
-    province: ['location', 'edifice'],
-    location: ['edifice']
-  };
-
-  $('select[name="province"], select[name="location"]').on('change', function(){
-    const fieldName = $(this).attr('name');
-    const fieldsToClear = selectMapping[fieldName] || [];
-    clearDependentFields(fieldsToClear.map(field => `select[name="${field}"]`));
-
-    switch (fieldName) {
-      case 'province':
-        updateLocationOptions();
-        updateEdificeOptions();
-        break;
-
-      case 'location':
-        updateEdificeOptions();
-        break;
-    }
-
+  $('select[name="province"]').on('change', function(){
+    const province_id = $(this).val();
+    updateProvinceOptions(province_id);
   });
 
-  initializeFormSubmission('#myform', 'edit');
+  $('select[name="location"]').on('change', function(){
+    const location_id = $(this).val();
+    updateEdificeOptions(location_id)
+  })
+
+  initializeFormSubmission('#myform', 'edit')
 
 });
 
-function updateLocationOptions() {
-  const { province_id } = getSelectedFilters();
+function updateProvinceOptions(province_id) {
   if (province_id) {
-    updateOptions('/sh/ajax/load_location/', { province_id }, $('select[name="location"]'), $('#id_location').data('preselected'));
-  }
-};
+    updateOptions('/sh/ajax/load_location/', {
+      'province_id': province_id,
+    }, $('select[name="location"]'), $('#id_location').data('preselected'));
 
-function updateEdificeOptions() {
-  const { province_id, location_id } = getSelectedFilters();
-  const data = location_id ? { location_id } : province_id ? { province_id }: {};
-  if (Object.keys(data).length > 0) {
-    updateOptions('/sh/ajax/load_edifices/', data, $('select[name="edifice"]'), $('#id_edifice').data ('preselected'));
-  }
-};
-
-function filterNonEmpty(obj) {
-  return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value));
+    updateOptions('/sh/ajax/load_edifices/', {
+      'province_id': province_id,
+    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
+  } else {
+    clearDependentFields(['#id_location', '#id_edifice'])
+  };
 }
 
-function getSelectedFilters() {
-  return {
-    province_id: $('select[name="province"]').val(),
-    location_id: $('select[name="location"]').val(),
-    edifice_id: $('select[name="edifice"]').val()
-  };
+function updateLocationOptions(location_id) {
+  if (location_id) {
+    updateOptions('/sh/ajax/load_edifices/', {
+      'location_id': location_id,
+    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
+  }
 }
 
 function initializeFormSubmission(formSelector, actionType) {

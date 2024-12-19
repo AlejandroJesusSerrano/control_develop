@@ -14,7 +14,8 @@ class Dev_TypeForm(forms.ModelForm):
         attrs={
           'class': 'form-control',
           'placeholder': 'Ingrese un Tipo de Dispositivo',
-          'autofocus': True
+          'autofocus': True,
+          'id': 'dev_type_input'
         }
       ),
     }

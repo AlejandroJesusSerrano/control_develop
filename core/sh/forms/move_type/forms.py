@@ -16,12 +16,14 @@ class MoveTypeForm(forms.ModelForm):
           attrs={
             'placeholder': 'Ingrese el tipo de movimiento',
             'class': 'form-control',
-            'autofocus': True
+            'autofocus': True, 
+            'id': 'id_move_input'
           }),
         'details': TextInput(
           attrs={
             'class': 'form-control',
-            'placeholder': 'Agregue algún detalle específico al respecto, de ser necesario'
+            'placeholder': 'Agregue algún detalle específico al respecto, de ser necesario',
+            'id': 'id_move_details_input'
           }
         )
       }

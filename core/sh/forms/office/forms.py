@@ -8,26 +8,26 @@ class OfficeForm(forms.ModelForm):
 
     province = forms.ModelChoiceField(
         queryset=Province.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
         required=False
     )
 
     location = forms.ModelChoiceField(
         queryset=Location.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_location'}),
         required=False
     )
 
     edifice = forms.ModelChoiceField(
         queryset=Edifice.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_edifice'}),
         required=False
     )
 
     dependency = forms.ModelChoiceField(
         queryset=Dependency.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
-        required=False
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dependency'}),
+        required=True
     )
 
     class Meta:
@@ -36,9 +36,21 @@ class OfficeForm(forms.ModelForm):
             'province', 'location', 'edifice', 'dependency', 'loc', 'office', 'description'
         ]
         widgets = {
-            'loc': Select(attrs={'class': 'form-control', 'data-placeholder': 'Seleccione la locación de la oficina'}),
-            'office': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese un nombre identificatorio para la Oficina'}),
-            'description': Textarea(attrs={'class':'form-control', 'placeholder': 'Ingrese una descripción de la oficina'})
+            'loc': Select(attrs={
+                'class': 'form-control',
+                'data-placeholder': 'Seleccione la locación de la oficina',
+                'id': 'id_loc'
+            }),
+            'office': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese un nombre identificatorio para la Oficina',
+                'id': 'id_office_input'
+            }),
+            'description': Textarea(attrs={
+                'class':'form-control',
+                'placeholder': 'Ingrese una descripción de la oficina',
+                'id': 'id_office_description_input'
+            })
         }
         help_texts = {
             'description': '* Este campo no es obligatorio, pero puede agregar detalles para individualizar la oficina, o agregar algún dato relevante de la misma.'
@@ -92,6 +104,7 @@ class OfficeForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+
         dependency = cleaned_data.get('dependency')
         office = cleaned_data.get('office')
 

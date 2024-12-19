@@ -14,7 +14,8 @@ class EmployeeStatusForm(forms.ModelForm):
         attrs={
           'class': 'form-control',
           'placehoder': 'Ingrese un Estado para los Empleados',
-          'autofocus': True
+          'autofocus': True,
+          'id': 'id_employee_status_input'
         }
       )
     }

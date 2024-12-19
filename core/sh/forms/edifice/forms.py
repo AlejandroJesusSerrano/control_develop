@@ -8,7 +8,7 @@ class EdificeForm(forms.ModelForm):
 
   province = forms.ModelChoiceField(
     queryset=Province.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id':'id_province'}),
     required=True
   )
 
@@ -18,16 +18,21 @@ class EdificeForm(forms.ModelForm):
               'province', 'location', 'edifice', 'address'
               ]
     widgets = {
-      'location': Select(attrs={'class': 'form-control select2'}),
+      'location': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_location'
+      }),
       'edifice': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese un nombre identificatorio para el Edificio'
+          'placeholder': 'Ingrese un nombre identificatorio para el Edificio',
+          'id': 'id_edifice_input'
         }),
       'address': Textarea(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Escriba el domiclio, en caso de tener mas de uno separar por ";"'
+          'placeholder': 'Escriba el domiclio, en caso de tener mas de uno separar por ";"',
+          'id': 'id_address_input'
         }
       )
     }

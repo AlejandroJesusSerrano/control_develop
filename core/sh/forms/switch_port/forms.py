@@ -19,49 +19,49 @@ class SwitchPortForm(forms.ModelForm):
 
     province = forms.ModelChoiceField(
         queryset = Province.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
         required = False
     )
 
     location = forms.ModelChoiceField(
         queryset = Location.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_location'}),
         required = False
     )
 
     dependency = forms.ModelChoiceField(
         queryset = Dependency.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dependency'}),
         required = False
     )
 
     edifice = forms.ModelChoiceField(
         queryset = Edifice.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_edifice'}),
         required = False
     )
 
     loc = forms.ModelChoiceField(
         queryset = Office_Loc.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc'}),
         required = False
     )
 
     office = forms.ModelChoiceField(
         queryset = Office.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_office'}),
         required = False
     )
 
     rack = forms.ModelChoiceField(
         queryset = Rack.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_rack'}),
         required = False
     )
 
     patchera = forms.ModelChoiceField(
         queryset = Patchera.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2'}),
+        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_patchera'}),
         required = False
     )
 
@@ -71,9 +71,20 @@ class SwitchPortForm(forms.ModelForm):
             'province', 'location', 'dependency', 'edifice', 'loc', 'office', 'rack', 'patchera', 'switch', 'port_id', 'obs'
         ]
         widgets = {
-            'switch': Select(attrs={'class': 'form-control select2'}),
-            'port_id': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de puerto'}),
-            'obs': Textarea(attrs={'class': 'form-control', 'placeholder': 'Ingrese detalles particulares, si los hubiese'})
+            'switch': Select(attrs={
+                'class': 'form-control select2',
+                'id':'id_switch'
+            }),
+            'port_id': TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese el número de puerto',
+                'id': 'id_port_id_input'
+            }),
+            'obs': Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ingrese detalles particulares, si los hubiese',
+                'id': 'id_obs_input'
+            })
         }
 
     def __init__(self, *args, **kwargs):

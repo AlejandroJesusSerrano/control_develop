@@ -10,7 +10,7 @@ class SuplyForm(forms.ModelForm):
 
   brand = forms.ModelChoiceField(
     queryset = Brand.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_brand'}),
     required = False
   )
 
@@ -20,10 +20,23 @@ class SuplyForm(forms.ModelForm):
       'brand', 'suply_type', 'dev_model', 'serial_suply', 'date_in'
     ]
     widgets = {
-      'suply_type': Select(attrs = {'class': 'form-control select2'}),
-      'dev_model': Select(attrs = {'class': 'form-control select2'}),
-      'serial_suply': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie del insumo'}),
-      'date_in': TextInput(attrs={'class': 'form-control', 'placeholder': 'Seleccione una fecha'}),
+      'suply_type': Select(attrs = {
+        'class': 'form-control select2',
+        'id': 'id_suply_type'
+      }),
+      'dev_model': Select(attrs = {
+        'class': 'form-control select2',
+        'id': 'id_input'
+      }),
+      'serial_suply': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el número de serie del insumo',
+        'id': 'id_serial_suply_input'
+      }),
+      'date_in': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Seleccione una fecha',
+        'id': 'id_suply_date_in_input'}),
     }
 
   def __init__(self, *args, **kwargs):

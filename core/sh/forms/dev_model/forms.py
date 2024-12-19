@@ -7,29 +7,35 @@ from core.sh.models import Dev_Model
 class Dev_ModelForm(ModelForm):
   class Meta:
     model = Dev_Model
+
     fields = [
       'dev_type', 'brand', 'dev_model', 'image'
-              ]
+    ]
+
     widgets = {
       'dev_type': Select(
         attrs={
           'class': 'form-control select2',
+          'id': 'id_dev_type'
         }
       ),
       'brand': Select(
         attrs={
           'class': 'form-control select2',
+          'id': 'id_brand'
         }
       ),
       'dev_model': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese el Modelo'
+          'placeholder': 'Ingrese el Modelo',
+          'id': 'id_dev_model_input'
         }
       ),
       'image': FileInput(
         attrs={
           'class': 'form-control-file',
+          'id': 'id_image_selector'
         }
       ),
     }

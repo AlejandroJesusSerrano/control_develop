@@ -17,55 +17,55 @@ from core.sh.models.patchera.models import Patchera
 class SwitchForm(forms.ModelForm):
   brand = forms.ModelChoiceField(
     queryset = Brand.objects.none(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_brand'}),
     required = False
   )
 
   model = forms.ModelChoiceField(
     queryset = Dev_Model.objects.none(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dev_model'}),
     required = False
   )
 
   province = forms.ModelChoiceField(
     queryset = Province.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
     required = False
   )
 
   location = forms.ModelChoiceField(
     queryset = Location.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_location'}),
     required = False
   )
 
   dependency = forms.ModelChoiceField(
     queryset = Dependency.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dependency'}),
     required = False
   )
 
   edifice = forms.ModelChoiceField(
     queryset = Edifice.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_edifice'}),
     required = False
   )
 
   loc = forms.ModelChoiceField(
     queryset = Office_Loc.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc'}),
     required = False
   )
 
   patchera = forms.ModelChoiceField(
     queryset = Patchera.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_patchera'}),
     required = False
   )
 
   switch = forms.ModelChoiceField(
     queryset = Switch.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_switch'}),
     required = False
   )
 
@@ -75,15 +75,41 @@ class SwitchForm(forms.ModelForm):
       'brand', 'model', 'serial_n', 'ports_q', 'rack', 'switch_rack_pos', 'loc', 'office', 'dependency', 'edifice', 'location', 'wall_port_in', 'switch_port_in', 'patch_port_in'
       ]
     widgets = {
-      'model': Select(attrs={'class': 'form-control select2'}),
-      'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
-      'ports_q': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la cantidad de puertos del Switch'}),
-      'rack': Select(attrs={'class': 'form-control select2'}),
-      'switch_rack_pos': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese la posición del Switch en el Rack'}),
-      'office': Select(attrs={'class': 'form-control select2'}),
-      'wall_port_in': Select(attrs={'class': 'form-control select2'}),
-      'switch_port_in': Select(attrs={'class': 'form-control select2'}),
-      'patch_port_in': Select(attrs={'class': 'form-control select2'})
+      'serial_n': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el número de serie',
+        'id': 'id_serial_n_input'
+      }),
+      'ports_q': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese la cantidad de puertos del Switch',
+        'id': 'id_ports_q_input'
+      }),
+      'rack': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_rack'
+      }),
+      'switch_rack_pos': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese la posición del Switch en el Rack',
+        'id': 'id_switch_rack_pos_input'
+      }),
+      'office': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_office'
+      }),
+      'wall_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_wall_port_in'
+      }),
+      'switch_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_switch_port_in'
+      }),
+      'patch_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_patch_port_in'
+      })
     }
 
     help_texts = {

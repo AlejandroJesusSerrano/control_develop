@@ -8,13 +8,13 @@ class Office_Loc_Form(forms.ModelForm):
 
   province = forms.ModelChoiceField(
     queryset=Province.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
     required=False
   )
 
   location=forms.ModelChoiceField(
     queryset=Location.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_location'}),
     required=False
   )
 
@@ -24,9 +24,20 @@ class Office_Loc_Form(forms.ModelForm):
       'province', 'location', 'edifice', 'floor', 'wing'
     ]
     widgets = {
-      'edifice': Select(attrs={'class': 'form-control select2'}),
-      'floor': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el Piso'}),
-      'wing': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el Ala'}),
+      'edifice': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'edifice'
+      }),
+      'floor': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el Piso',
+        'id': 'id_edifice_floor_input'
+      }),
+      'wing': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el Ala', 
+        'id': 'id_edifice_wing_input'
+      }),
     }
 
     help_texts = {
@@ -43,7 +54,7 @@ class Office_Loc_Form(forms.ModelForm):
         province = self.instance.edifice.location.province
 
         self.fields['location'].queryset = Location.objects.filter(province=province).order_by('location')
-        self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.edifice.location).order_by('location')
+        self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.edifice.location).order_by('edifice')
 
       if 'province' in self.data:
         try:

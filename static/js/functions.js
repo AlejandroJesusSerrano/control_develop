@@ -4,7 +4,7 @@ function getCookie(name) {
     const cookies = document.cookie.split(';');
     for (let c = 0; c < cookies.length; c++) {
       const cookie = cookies[c].trim();
-      // ¿Comienza esta cookie con el nombre que queremos?
+
       if (cookie.substring(0, name.length + 1) === (name + '=')) {
         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
         break;

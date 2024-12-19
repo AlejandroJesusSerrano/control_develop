@@ -7,7 +7,7 @@ from core.sh.models import Dependency, Location, Province
 class DependencyForm(forms.ModelForm):
   province = ModelChoiceField(
     queryset = Province.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
     required = False
   )
 
@@ -18,10 +18,16 @@ class DependencyForm(forms.ModelForm):
     ]
 
     widgets = {
-      'province': forms.Select(attrs={"class": "form-control select2"}),
-      'location': Select(attrs={"class": "form-control select2"}),
-      'dependency': TextInput(attrs={"class": "form-control", "placeholder": "Ingrese la dependencia"
-        }),
+      'location': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_location'
+      }),
+
+      'dependency': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese la dependencia',
+        'id': 'id_dependency_input'
+      }),
     }
 
   def __init__(self, *args, **kwargs):

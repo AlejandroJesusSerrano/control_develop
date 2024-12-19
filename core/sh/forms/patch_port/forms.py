@@ -10,7 +10,7 @@ class PatchPortForm(forms.ModelForm):
 
   rack = forms.ModelChoiceField(
     queryset = Rack.objects.all(),
-    widget = forms.Select(attrs={'class': 'form-control select2'}),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_rack'}),
     required = True
   )
 
@@ -20,8 +20,15 @@ class PatchPortForm(forms.ModelForm):
       'rack', 'patchera', 'port'
       ]
     widgets = {
-      'patchera': Select(attrs={'class': 'form-control select2'}),
-      'port': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de puerto'})
+      'patchera': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_patchera'
+      }),
+      'port': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el número de puerto',
+        'id': 'id_patch_port_input'
+      })
     }
 
   def __init__(self, *args, **kwargs):

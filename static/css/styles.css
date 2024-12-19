@@ -63,3 +63,49 @@ a {
 a:hover {
   color:#ffffff !important;
 }
+
+input[type="text"],
+.form-control{
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+  border: 1px solid #495057 !important;
+}
+
+input[type="text"]::placeholder {
+  color: #6c757d !important
+}
+
+input[type="text"]::selection {
+  background-color: #3f6791 !important; /* Fondo al seleccionar texto */
+  color: #ffffff !important; /* Texto claro */
+}
+
+input[type="text"]:focus {
+  background-color: #343a40 !important; /* Fondo oscuro al enfocar */
+  color: #f8f9fa !important; /* Texto claro */
+  border-color: #0dcaf0 !important; /* Borde de enfoque */
+}
+
+.ui-autocomplete {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+  border: 1px solid #495057 !important;
+}
+
+.ui-menu-item-wrapper {
+  background-color: #343a40 !important;
+  color: #f8f9fa !important;
+}
+
+.ui-menu-item-wrapper:hover {
+  background-color: #3f6791 !important;
+  color: #ffffff;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  background-color: #343a40 !important; /* un gris oscuro acorde a tu tema */
+  color: #fff !important;
+  transition: background-color 5000s ease-in-out 0s; /* evita el cambio de color */
+}

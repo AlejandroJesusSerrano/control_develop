@@ -9,31 +9,31 @@ class EmployeeForm(forms.ModelForm):
 
   province = forms.ModelChoiceField(
     queryset=Province.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
     required=False
   )
 
   location = forms.ModelChoiceField(
     queryset=Location.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_location'}),
     required=False
   )
 
   dependency = forms.ModelChoiceField(
     queryset=Dependency.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dependency'}),
     required=False
   )
 
   edifice = forms.ModelChoiceField(
     queryset=Edifice.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_edifice'}),
     required=False
   )
 
   loc = forms.ModelChoiceField(
     queryset=Office_Loc.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc'}),
     required=False
   )
 
@@ -43,15 +43,40 @@ class EmployeeForm(forms.ModelForm):
       'province', 'location', 'dependency', 'edifice', 'loc','employee_name', 'employee_last_name', 'cuil', 'status', 'user_pc', 'office', 'avatar'
     ]
     widgets = {
-      'employee_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el Nombre del Empleado'}),
-      'employee_last_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el Apellido del Empleado'}),
-      'cuil': NumberInput(attrs={'class':'form-control', 'placeholder': 'Ingrese el número de CUIL'}),
-      'status': Select(attrs={'class':'form-control select2'}),
-      'user_pc': TextInput(attrs={'class':'form-control', 'placeholder': 'Ingrese el usurio de acceso al pc del empleado'}),
-      'dependency': Select(attrs={'class':'form-control select2'}),
-      'office': Select(attrs={'class':'form-control select2'}),
-      'avatar': FileInput(attrs={'placeholder': 'Seleccione una imagen de perfil'}),
+      'employee_name': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el Nombre del Empleado', 
+        'id': 'id_employee_name_input'
+      }),
+      'employee_last_name': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el Apellido del Empleado',
+        'id': 'id_employee_last_name_input'
+      }),
+      'cuil': NumberInput(attrs={
+        'class':'form-control',
+        'placeholder': 'Ingrese el número de CUIL',
+        'id': 'id_cuil_input'
+      }),
+      'status': Select(attrs={
+        'class':'form-control select2', 
+        'id': 'id_employee_status'
+      }),
+      'user_pc': TextInput(attrs={
+        'class':'form-control',
+        'placeholder': 'Ingrese el usurio de acceso al pc del empleado',
+        'id': 'id_employee_user_pc_input'
+      }),
+      'office': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_office'
+      }),
+      'avatar': FileInput(attrs={
+        'placeholder': 'Seleccione una imagen de perfil', 
+        'id': 'id_avatar_image_input'
+      }),
     }
+
     help_texts = {
       'cuil': '* Ingrese solo los numeros, sin guiones ni puntos'
     }

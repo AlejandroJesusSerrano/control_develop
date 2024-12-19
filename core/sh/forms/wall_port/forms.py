@@ -19,55 +19,49 @@ class WallPortForm(forms.ModelForm):
 
   province = forms.ModelChoiceField(
     queryset = Province.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2 bg-secondary'}),
+    widget = forms.Select(attrs = {'class': 'form-control', 'id': 'id_province'}),
     required = False
   )
 
   location = forms.ModelChoiceField(
     queryset = Location.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_location'}),
     required = False
   )
 
   dependency = forms.ModelChoiceField(
     queryset = Dependency.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_dependency'}),
     required = False
   )
 
   edifice = forms.ModelChoiceField(
     queryset = Edifice.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_edifice'}),
     required = False
   )
 
   loc = forms.ModelChoiceField(
     queryset = Office_Loc.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
-    required = False
-  )
-
-  office = forms.ModelChoiceField(
-    queryset = Office.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_loc'}),
     required = False
   )
 
   rack = forms.ModelChoiceField(
     queryset = Rack.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_rack'}),
     required = False
   )
 
   patchera = forms.ModelChoiceField(
     queryset = Patchera.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_patchera'}),
     required  = False
   )
 
   switch = forms.ModelChoiceField(
     queryset = Switch.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_switch'}),
     required = False
   )
 
@@ -79,11 +73,28 @@ class WallPortForm(forms.ModelForm):
       ]
 
     widgets = {
-      'office': Select(attrs={'class': 'form-control select2'}),
-      'wall_port': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el puerto/boca de la pared'}),
-      'switch_port_in': Select(attrs={'class': 'form-control select2'}),
-      'patch_port_in': Select(attrs={'class': 'form-control select2'}),
-      'details': Textarea(attrs={'class': 'form-control', 'placeholder': 'De ser necesario, ingrese detalles particulares'}),
+      'office': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_office'
+      }),
+      'wall_port': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el puerto/boca de la pared',
+        'id': 'id_wall_port_input'
+      }),
+      'switch_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id':'id_switch_port_in'
+      }),
+      'patch_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_patch_port_in'
+      }),
+      'details': Textarea(attrs={
+        'class': 'form-control',
+        'placeholder': 'De ser necesario, ingrese detalles particulares',
+        'id': 'id_details_input'
+      }),
     }
 
     def __init__(self, *args, **kwargs):

@@ -8,10 +8,19 @@ class PatcheraForm(forms.ModelForm):
 
   class Meta:
     model = Patchera
-    fields = ['rack', 'patchera']
+    fields = [
+      'rack', 'patchera'
+    ]
     widgets = {
-      'rack': Select(attrs={'class': 'form-control select2'}),
-      'patchera': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de la patchera'})
+      'rack': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_rack'
+      }),
+      'patchera': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el número de la patchera',
+        'id': 'id_patchera_input'
+      })
     }
     help_texts = {
       'patchera': '* El número de la patchera, se refiere a la posición de la misma en el Rack'

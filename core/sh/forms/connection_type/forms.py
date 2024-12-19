@@ -13,7 +13,8 @@ class ConnectionTypeForm(forms.ModelForm):
       'connection_type': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese un Tipo de Conexion'
+          'placeholder': 'Ingrese un Tipo de Conexion',
+          'id': 'id_connection_type_input'
         }
       ),
     }

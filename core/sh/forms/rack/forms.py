@@ -15,18 +15,21 @@ class RackForm(forms.ModelForm):
       'rack': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese el Nombre del Rack'
+          'placeholder': 'Ingrese el Nombre del Rack',
+          'id': 'id_rack_input'
         }
       ),
       'office': Select(
         attrs={
-          'class': 'form-control select2'
+          'class': 'form-control select2',
+          'id': 'id_office'
         }
       ),
       'details': Textarea(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese detalles que ayuden a individualizar el Rack'
+          'placeholder': 'Ingrese detalles que ayuden a individualizar el Rack',
+          'id': 'id_rack_details_input'
         }
       )
     }

@@ -14,7 +14,8 @@ class SuplyTypeForm(ModelForm):
           attrs={
             'class': 'form-control',
             'placeholder': 'Ingrese el tipo de insumo',
-            'autofocus': True
+            'autofocus': True,
+            'id': 'id_suply_type_input'
           }
         )
       }

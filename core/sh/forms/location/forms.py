@@ -12,7 +12,8 @@ class LocationForm(forms.ModelForm):
     widgets = {
       'province': Select(
         attrs={
-          'class': 'form-control select2 bg-dark text-light',
+          'class': 'form-control select2',
+          'id': 'id_province',
           'autofocus': True
         }
       ),
@@ -20,7 +21,8 @@ class LocationForm(forms.ModelForm):
       'location': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese una localidad'
+          'placeholder': 'Ingrese una localidad',
+          'id': 'id_location_input'
         }
       )
     }

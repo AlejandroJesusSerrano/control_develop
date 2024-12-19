@@ -13,13 +13,15 @@ class TechsForm(forms.ModelForm):
       'name': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese el nombre del Técnico'
+          'placeholder': 'Ingrese el nombre del Técnico',
+          'id': 'id_tech_name_imput'
         }
       ),
       'last_name': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': 'Ingrese el apellido del Técnico'
+          'placeholder': 'Ingrese el apellido del Técnico',
+          'id': 'id_tech_last_name_imput'
         }
       )
     }

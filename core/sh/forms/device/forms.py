@@ -12,49 +12,49 @@ class DeviceForm(forms.ModelForm):
 
   province = forms.ModelChoiceField(
     queryset=Province.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
     required=False
   )
 
   location = forms.ModelChoiceField(
     queryset=Location.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_location'}),
     required=False
   )
 
   dependency = forms.ModelChoiceField(
     queryset=Dependency.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dependency'}),
     required=False
   )
 
   edifice = forms.ModelChoiceField(
     queryset=Edifice.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_edifice'}),
     required=False
   )
 
   loc = forms.ModelChoiceField(
     queryset=Office_Loc.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc'}),
     required=False
   )
 
   brand = forms.ModelChoiceField(
     queryset=Brand.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_brand'}),
     required=False
   )
 
   dev_type = forms.ModelChoiceField(
     queryset=Dev_Type.objects.all(),
-    widget=forms.Select(attrs={'class':'form-control select2'}),
+    widget=forms.Select(attrs={'class':'form-control select2', 'id': 'id_dev_type'}),
     required=False
   )
 
   dev_model = forms.ModelChoiceField(
     queryset=Dev_Model.objects.none(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dev_model'}),
     required=True
   )
 
@@ -64,15 +64,44 @@ class DeviceForm(forms.ModelForm):
       'province', 'location', 'dependency', 'edifice', 'loc', 'dev_model', 'connection', 'ip', 'net_name', 'dev_status', 'serial_n', 'office', 'wall_port_in', 'switch_port_in', 'employee'
     ]
     widgets = {
-      'connection': Select(attrs={'class': 'form-control select2'}),
-      'ip': TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese la dirección ip del dispositivo'}),
-      'net_name': TextInput(attrs={'class': 'form-control', 'placeholder': 'Si tuviera, ingrese el nombre de registro en la red del dispositivo'}),
-      'dev_status': Select(attrs={'class': 'form-control select2'}),
-      'serial_n': TextInput(attrs={'class': 'form-control', 'placeholder': 'Ingrese el número de serie'}),
-      'office': Select(attrs={'class': 'form-control select2'}),
-      'wall_port_in': Select(attrs={'class': 'form-control select2'}),
-      'switch_port_in': Select(attrs={'class': 'form-control select2'}),
-      'employee': SelectMultiple(attrs={'class': 'form-control select2'}),
+      'connection': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_connection'
+      }),
+      'ip': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Si tuviera, ingrese la dirección ip del dispositivo',
+        'id': 'id_ip_input'
+      }),
+      'net_name': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Si tuviera, ingrese el nombre de registro en la red del dispositivo',
+        'id': 'id_net_name_input'
+      }),
+      'dev_status': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_dev_status'
+      }),
+      'serial_n': TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese el número de serie',
+        'id': 'id_serial_n_input'
+      }),
+      'office': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_office'
+      }),
+      'wall_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_wall_port_in'
+      }),
+      'switch_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_switch_port_in'
+      }),
+      'employee': SelectMultiple(attrs={
+        'class': 'form-control select2',
+        'id': 'id_employee'}),
     }
 
   def __init__(self, *args, **kwargs):

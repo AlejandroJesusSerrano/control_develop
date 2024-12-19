@@ -14,7 +14,8 @@ class Dev_StatusForm(forms.ModelForm):
         attrs={
           'class': 'form-control',
           'placeholder': 'Ingrese un Estado para el Dispositivo',
-          'autofocus': True
+          'autofocus': True,
+          'id': 'id_dev_status_input'
         }
       ),
     }

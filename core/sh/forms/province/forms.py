@@ -14,14 +14,16 @@ class ProvinceForm(forms.ModelForm):
         attrs={
           'class': 'form-control',
           'placeholder': 'Ingrese el número correspondiente al Distrito',
-          'autofocus': True
+          'autofocus': True,
+          'id': 'id_province_number'
         }
       ),
 
       'province': TextInput(
         attrs={
           'class': 'form-control',
-          'placeholder': ' Ingrese el nombre del Distrito'
+          'placeholder': ' Ingrese el nombre del Distrito',
+          'id': 'id_province_input'
         }
       )
     }

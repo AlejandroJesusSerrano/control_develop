@@ -14,7 +14,8 @@ class BrandForm(forms.ModelForm):
         attrs={
           'class': 'form-control',
           'placeholder': 'Ingrese una Marca',
-          'autofocus': True
+          'autofocus': True,
+          'id': 'id_brand_input'
         }
       ),
     }

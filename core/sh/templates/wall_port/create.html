@@ -6,14 +6,15 @@
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
 <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
 {% endblock extra_refs %}
 
 {% block form %}
-  <button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para oficinas <i class="fas fa-search"></i></button>
-  <div id="filter-office-cards" class="d-none">
-    <div class="row">
-      <div class="container">
-  <!-- Tarjeta Filtros Geográficos -->
+<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para oficinas <i class="fas fa-search"></i></button>
+<div id="filter-office-cards" class="d-none">
+  <div class="row">
+    <div class="container">
+    <!-- Tarjeta Filtros Geográficos -->
       <div class="card mt-1">
         <div class="card-header {{bg_color}}">
           Filtros por Ubicacion
@@ -76,14 +77,14 @@
       </div>
     </div>
   </div>
-  </div>
+</div>
 
 <div class="form-group">
   <label for="id_office">Oficina:</label>
   {{ form.office }}
   {% if form.office.errors %}
   <div class="invalid-feedback d-block">
-    {{ form.officewall_port.errors|join:"<br>" }}
+    {{ form.office.errors|join:"<br>" }}
   </div>
   {% endif %}
 </div>
@@ -182,4 +183,5 @@
 
 {% block form_scripts %}
   <script src="{% static 'wall_port/js/form.js' %}"></script>
+  <script src="{% static 'js/filters.js' %}"></script>
 {% endblock form_scripts %}

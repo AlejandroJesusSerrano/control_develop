@@ -41,5 +41,5 @@ class Office(models.Model):
     db_table = 'oficina'
     ordering = ['id']
     constraints = [
-      models.UniqueConstraint(fields=['loc', 'dependency'], name = 'unique_loc_dependency')
+      models.UniqueConstraint(fields=['office', 'dependency'], name = 'unique_office_dependency')
     ]

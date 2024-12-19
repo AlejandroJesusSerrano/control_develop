@@ -44,7 +44,7 @@ class OfficeListView(ListView):
     return context
 
 class OfficeCreateView(CreateView):
-  model: Office
+  model = Office
   form_class = OfficeForm
   template_name = 'office/create.html'
   success_url = reverse_lazy('sh:office_list')
@@ -89,6 +89,7 @@ class OfficeCreateView(CreateView):
     context['form_id'] = 'officeForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class OfficeUpdateView(UpdateView):
@@ -138,6 +139,7 @@ class OfficeUpdateView(UpdateView):
       context['form_id'] = 'officeForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-custom-warning'
+      context['filter_btn_color'] = 'bg-custom-warning'
 
       office = self.get_object()
 
