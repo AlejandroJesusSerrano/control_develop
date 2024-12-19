@@ -23,6 +23,20 @@ $.ajaxSetup({
   }
 });
 
+$(document).ready(function () {
+  const body = $('body');
+  const sidebar = $('.main-sidebar');
+
+  // Detectar cuando el mouse entra en el sidebar
+  sidebar.hover(
+    function () {
+        if (body.hasClass('sidebar-mini')) {
+            body.removeClass('sidebar-collapse').addClass('sidebar-open');
+        }
+    },
+  );
+});
+
 
 function show_errors_in_form(errors) {
 
@@ -112,7 +126,7 @@ function updateOptions(url, data, selectElement) {
 
 function confirmAndSend(url, title, icon, content, type, formData, callback) {
   $.confirm({
-    theme: 'bootstrap',
+    theme: 'supervan',
     title: title,
     icon: icon,
     content: content,
@@ -157,7 +171,7 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
       },
       danger: {
         text: "No",
-        btnClass: 'btn-danger',
+        btnClass: 'bg-custom-danger',
         action: function () {
 
         }

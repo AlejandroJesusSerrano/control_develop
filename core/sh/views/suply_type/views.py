@@ -89,7 +89,7 @@ class SuplyTypeCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:suply_type_list')
     context['form_id'] = 'suplyTypeForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -138,7 +138,7 @@ class SuplyTypeUpadateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:suply_type_list')
     context['form_id'] = 'suplyTypeForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context['bg_color'] = 'bg-custom-warning'
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -167,6 +167,6 @@ class SuplyTypeDeleteView(DeleteView):
     context['del_title'] = 'Tipo de Insumo: '
     context['list_url'] = reverse_lazy('sh:suply_type_list')
     context['form_id'] = 'suplyTypeForm'
-    context['bg_color'] = 'bg-danger'
+    context['bg_color'] = 'bg-custom-danger'
     context['action'] = 'delete'
     return context

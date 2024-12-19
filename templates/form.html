@@ -50,7 +50,7 @@
           onclick="submit_with_ajax('{{ action_url }}', new FormData(document.getElementById('{{ form_id }}')), function() { window.location.href = '{{ list_url }}'; }, '{{ action }}')">
             <i class="fas fa-save"></i> Guardar Registro
           </button>
-          <a href="{{ list_url }}" type="submit" class="btn btn-danger" id="{{btn_add_id}}">
+          <a href="{{ list_url }}" type="submit" class="btn bg-custom-danger" id="{{btn_add_id}}">
             <i class="fas fa-circle-arrow-left"></i> Regresar a listado
           </a>
           {% endblock add_button %}

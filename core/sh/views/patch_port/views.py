@@ -88,7 +88,7 @@ class Patch_PortCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:patch_port_list')
     context['form_id'] = 'patch_portForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class Patch_PortUpadateView(UpdateView):
@@ -136,7 +136,7 @@ class Patch_PortUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:patch_port_list')
       context['form_id'] = 'patch_portForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class Patch_PortDeleteView(DeleteView):
@@ -164,6 +164,6 @@ class Patch_PortDeleteView(DeleteView):
         context['del_title'] = 'Puerto Patchera: '
         context['list_url'] = reverse_lazy('sh:patch_port_list')
         context['form_id'] = 'patch_portForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

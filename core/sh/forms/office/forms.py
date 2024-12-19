@@ -8,25 +8,25 @@ class OfficeForm(forms.ModelForm):
 
     province = forms.ModelChoiceField(
         queryset=Province.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
+        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
         required=False
     )
 
     location = forms.ModelChoiceField(
         queryset=Location.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
+        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
         required=False
     )
 
     edifice = forms.ModelChoiceField(
         queryset=Edifice.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
+        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
         required=False
     )
 
     dependency = forms.ModelChoiceField(
         queryset=Dependency.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2'}),
+        widget=forms.Select(attrs={'class': 'form-control select2 bg-dark text-light'}),
         required=False
     )
 

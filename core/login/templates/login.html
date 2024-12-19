@@ -23,7 +23,7 @@
 <div class="login-box">
 
   <div class="card card-outline card-primary">
-    <div class="card-header bg-primary text-center">
+    <div class="card-header bg-custom-primary text-center">
       <a href="{% url 'index' %}" class="h1"><b>Smart</b>HUNT</a>
     </div>
     <div class="card-body">
@@ -38,7 +38,7 @@
 
           {% if form.errors %}
 
-            <div class="alert alert-danger alert-dismissible">
+            <div class="alert bg-custom-danger alert-dismissible">
               <h5 class="text-center"><i class="icon fas fa-exclamation-triangle"></i> Revise la Informacion Ingresada!</h5>
               <div>
                 {% for field in form %}

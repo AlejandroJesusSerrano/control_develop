@@ -91,7 +91,7 @@ class LocationCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:location_list')
     context['form_id'] = 'locationForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -140,7 +140,7 @@ class LocationUpadateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:location_list')
     context['form_id'] = 'locationForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context['bg_color'] = 'bg-custom-warning'
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -169,6 +169,6 @@ class LocationDeleteView(DeleteView):
         context['del_title'] = 'Localidad: '
         context['list_url'] = reverse_lazy('sh:location_list')
         context['form_id'] = 'locationForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

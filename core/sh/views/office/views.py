@@ -88,7 +88,7 @@ class OfficeCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:office_list')
     context['form_id'] = 'officeForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class OfficeUpdateView(UpdateView):
@@ -137,7 +137,7 @@ class OfficeUpdateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:office_list')
       context['form_id'] = 'officeForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
 
       office = self.get_object()
 
@@ -190,6 +190,6 @@ class OfficeDeleteView(DeleteView):
         context['del_title'] = 'Oficina: '
         context['list_url'] = reverse_lazy('sh:office_list')
         context['form_id'] = 'officeForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

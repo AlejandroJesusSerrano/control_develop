@@ -20,3 +20,46 @@
 .align-middle {
   vertical-align: middle !important;
 }
+
+body {
+  background-color: #343a40 !important; /* Fondo oscuro */
+  color: #f8f9fa !important; /* Texto claro */
+}
+
+footer.main-footer {
+  background-color: #343a40 !important;
+  border-top: 1px solid #343a40 !important;
+  padding: 1.25rem;
+}
+
+.content-wrapper {
+  background-color: #454d55 !important; /* Asegura que el fondo coincida con el tema oscuro */
+  padding-bottom: 2rem !important; /* Agrega un margen interno inferior */
+}
+
+.bg-custom-primary {
+  background-color: #3f6791;
+  color: #ffffff;
+}
+
+.bg-custom-warning {
+  background-color: #f3b54b;
+  color:#2f3439
+}
+
+.bg-custom-danger {
+  background-color: #8f3234;
+  color: #d4d4d4
+}
+
+nav-link {
+  color: #cdf5ff !important;
+}
+
+a {
+  color:#cdf5ff
+}
+
+a:hover {
+  color:#ffffff !important;
+}

@@ -88,7 +88,7 @@ class Dev_TypeCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:dev_type_list')
     context['form_id'] = 'dev_typeForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class Dev_TypeUpadateView(UpdateView):
@@ -137,7 +137,7 @@ class Dev_TypeUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:dev_type_list')
       context['form_id'] = 'dev_typeForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class Dev_TypeDeleteView(DeleteView):
@@ -165,6 +165,6 @@ class Dev_TypeDeleteView(DeleteView):
         context['del_title'] = 'Tipo de Dispositivo: '
         context['list_url'] = reverse_lazy('sh:dev_type_list')
         context['form_id'] = 'dev_typeForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

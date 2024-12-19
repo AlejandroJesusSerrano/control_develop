@@ -89,7 +89,7 @@ class TechsCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:techs_list')
     context['form_id'] = 'techsForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class TechsUpadateView(UpdateView):
@@ -139,7 +139,7 @@ class TechsUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:techs_list')
       context['form_id'] = 'techsForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class TechsDeleteView(DeleteView):
@@ -167,6 +167,6 @@ class TechsDeleteView(DeleteView):
         context['del_title'] = 'Técnico: '
         context['list_url'] = reverse_lazy('sh:techs_list')
         context['form_id'] = 'techsForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

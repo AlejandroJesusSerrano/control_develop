@@ -79,7 +79,7 @@ class Move_Type_CreateView(CreateView):
       context['list_url'] = reverse_lazy('sh:move_type_list')
       context['form_id'] = 'move_tForm'
       context['action'] = 'add'
-      context['bg_color'] = 'bg-primary'
+      context['bg_color'] = 'bg-custom-primary'
       return context
 
 class Move_Type_UpdateView(UpdateView):
@@ -115,7 +115,7 @@ class Move_Type_UpdateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:move_type_list')
       context['form_id'] = 'move_tForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class Move_Type_DeleteView(DeleteView):
@@ -143,6 +143,6 @@ class Move_Type_DeleteView(DeleteView):
         context['del_title'] = 'Tipo de Movimiento: '
         context['list_url'] = reverse_lazy('sh:move_type_list')
         context['form_id'] = 'move_tForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

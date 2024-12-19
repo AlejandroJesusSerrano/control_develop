@@ -99,7 +99,7 @@ class EdificeCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:edifice_list')
     context['form_id'] = 'edificeForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
     return context
 
@@ -148,8 +148,8 @@ class EdificeUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:edifice_list')
     context['form_id'] = 'edificeForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
-    context['filter_btn_color'] = 'btn-warning'
+    context['bg_color'] = 'bg-custom-warning'
+    context['filter_btn_color'] = 'bg-custom-warning'
 
     edifice = self.get_object()
 
@@ -190,6 +190,6 @@ class EdificeDeleteView(DeleteView):
         context['del_title'] = 'Edificio: '
         context['list_url'] = reverse_lazy('sh:edifice_list')
         context['form_id'] = 'edificeForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

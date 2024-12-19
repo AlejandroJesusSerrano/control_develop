@@ -88,7 +88,7 @@ class Dev_ModelsCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:dev_model_list')
     context['form_id'] = 'dev_modelForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class Dev_ModelsUpadateView(UpdateView):
@@ -137,7 +137,7 @@ class Dev_ModelsUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:dev_model_list')
       context['form_id'] = 'dev_modelForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class Dev_ModelsDeleteView(DeleteView):
@@ -165,6 +165,6 @@ class Dev_ModelsDeleteView(DeleteView):
         context['del_title'] = 'Model de Dispositivo: '
         context['list_url'] = reverse_lazy('sh:dev_model_list')
         context['form_id'] = 'dev_modelForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

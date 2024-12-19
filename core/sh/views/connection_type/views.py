@@ -89,7 +89,7 @@ class Connection_TypeCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:connection_type_list')
     context['form_id'] = 'connection_typeForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class Connection_TypeUpadateView(UpdateView):
@@ -138,7 +138,7 @@ class Connection_TypeUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:connection_type_list')
       context['form_id'] = 'connection_typeForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class Connection_TypeDeleteView(DeleteView):
@@ -166,6 +166,6 @@ class Connection_TypeDeleteView(DeleteView):
         context['del_title'] = 'Tipo de Conexión: '
         context['list_url'] = reverse_lazy('sh:connection_type_list')
         context['form_id'] = 'connection_typeForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

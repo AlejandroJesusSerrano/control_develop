@@ -83,7 +83,7 @@ class Switch_PortCreateView(CreateView):
         context['list_url'] = reverse_lazy('sh:switch_port_list')
         context['form_id'] = 'switch_portForm'
         context['action'] = 'add'
-        context['bg_color'] = 'bg-primary'
+        context['bg_color'] = 'bg-custom-primary'
         return context
 
 class Switch_PortUpdateView(UpdateView):
@@ -131,7 +131,7 @@ class Switch_PortUpdateView(UpdateView):
         context['list_url'] = reverse_lazy('sh:switch_port_list')
         context['form_id'] = 'switch_portForm'
         context['action'] = 'edit'
-        context['bg_color'] = 'bg-warning'
+        context['bg_color'] = 'bg-custom-warning'
         return context
 
 class Switch_PortDeleteView(DeleteView):
@@ -161,6 +161,6 @@ class Switch_PortDeleteView(DeleteView):
         context['del_title'] = 'Puerto de Switch: '
         context['list_url'] = reverse_lazy('sh:switch_port_list')
         context['form_id'] = 'switch_portForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

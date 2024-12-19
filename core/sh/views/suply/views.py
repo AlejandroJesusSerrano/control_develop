@@ -90,7 +90,7 @@ class SuplyCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:suply_list')
     context['form_id'] = 'suplyForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class SuplyUpadateView(UpdateView):
@@ -139,7 +139,7 @@ class SuplyUpadateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:suply_list')
     context['form_id'] = 'suplyForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context['bg_color'] = 'bg-custom-warning'
 
     suply = self.get_object()
 
@@ -191,6 +191,6 @@ class SuplyDeleteView(DeleteView):
     context['del_title'] = 'Insumo: '
     context['list_url'] = reverse_lazy('sh:suply_list')
     context['form_id'] = 'suplyForm'
-    context['bg_color'] = 'bg-danger'
+    context['bg_color'] = 'bg-custom-danger'
     context['action'] = 'delete'
     return context

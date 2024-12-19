@@ -88,7 +88,7 @@ class PatcheraCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:patchera_list')
     context['form_id'] = 'patcheraForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class PatcheraUpadateView(UpdateView):
@@ -136,7 +136,7 @@ class PatcheraUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:patchera_list')
       context['form_id'] = 'patcheraForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class PatcheraDeleteView(DeleteView):
@@ -164,6 +164,6 @@ class PatcheraDeleteView(DeleteView):
         context['del_title'] = 'Patchera: '
         context['list_url'] = reverse_lazy('sh:patchera_list')
         context['form_id'] = 'patcheraForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

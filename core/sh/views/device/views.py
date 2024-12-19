@@ -93,7 +93,7 @@ class DeviceCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:device_list')
     context['form_id'] = 'deviceForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class DeviceUpdateView(UpdateView):
@@ -141,7 +141,7 @@ class DeviceUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:device_list')
     context['form_id'] = 'deviceForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context['bg_color'] = 'bg-custom-warning'
 
     device = self.get_object()
 
@@ -210,6 +210,6 @@ class DeviceDeleteView(DeleteView):
     context['del_title'] = 'Dispositivo: '
     context['list_url'] = reverse_lazy('sh:device_list')
     context['form_id'] = 'deviceForm'
-    context['bg_color'] = 'bg-danger'
+    context['bg_color'] = 'bg-custom-danger'
     context['action'] = 'delete'
     return context

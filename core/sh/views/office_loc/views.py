@@ -88,7 +88,7 @@ class Office_Loc_CreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:office_loc_list')
     context['form_id'] = 'office_locForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
     return context
 
@@ -137,8 +137,8 @@ class Office_Loc_UpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:office_loc_list')
     context['form_id'] = 'office_locForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
-    context['filter_btn_color'] = 'btn-warning'
+    context['bg_color'] = 'bg-custom-warning'
+    context['filter_btn_color'] = 'bg-custom-warning'
 
     office_loc = self.get_object()
 
@@ -183,6 +183,6 @@ class Office_Loc_DeleteView(DeleteView):
         context['del_title'] = 'Locación de Oficina: '
         context['list_url'] = reverse_lazy('sh:office_loc_list')
         context['form_id'] = 'office_locForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

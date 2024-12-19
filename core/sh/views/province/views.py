@@ -88,7 +88,7 @@ class ProvinceCreateView(CreateView):
       context['list_url'] = reverse_lazy('sh:province_list')
       context['form_id'] = 'provForm'
       context['action'] = 'add'
-      context['bg_color'] = 'bg-primary'
+      context['bg_color'] = 'bg-custom-primary'
       context['saved'] = kwargs.get('saved', None)
       return context
 
@@ -137,8 +137,8 @@ class ProvinceUpdateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:province_list')
       context['form_id'] = 'provForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
-      context['saved'] = kwargs.get('saved', None) 
+      context['bg_color'] = 'bg-custom-warning'
+      context['saved'] = kwargs.get('saved', None)
       return context
 
 class ProvinceDeleteView(DeleteView):
@@ -166,6 +166,6 @@ class ProvinceDeleteView(DeleteView):
         context['del_title'] = 'Provincia: '
         context['list_url'] = reverse_lazy('sh:province_list')
         context['form_id'] = 'provForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

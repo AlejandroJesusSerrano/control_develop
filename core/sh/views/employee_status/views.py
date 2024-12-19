@@ -92,7 +92,7 @@ class EmployeeStatusCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:employee_status_list')
     context['form_id'] = 'employeeStatusForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -142,7 +142,7 @@ class EmnployeeStatusUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:employee_status_list')
     context['form_id'] = 'employeeStatusForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context['bg_color'] = 'bg-custom-warning'
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -171,6 +171,6 @@ class EmployeeStatusDeleteView(DeleteView):
     context['del_title'] = 'Estado: '
     context['list_url'] = reverse_lazy('sh:employee_status_list')
     context['form_id'] = 'employeeStatusForm'
-    context['bg_color'] = 'bg-danger'
+    context['bg_color'] = 'bg-custom-danger'
     context['action'] = 'delete'
     return context

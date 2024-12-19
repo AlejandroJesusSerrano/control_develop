@@ -12,7 +12,7 @@ class LocationForm(forms.ModelForm):
     widgets = {
       'province': Select(
         attrs={
-          'class': 'form-control select2',
+          'class': 'form-control select2 bg-dark text-light',
           'autofocus': True
         }
       ),

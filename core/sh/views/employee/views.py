@@ -94,7 +94,7 @@ class EmployeeCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:employee_list')
     context['form_id'] = 'employeeForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class EmployeeUpadateView(UpdateView):
@@ -142,7 +142,7 @@ class EmployeeUpadateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:employee_list')
     context['form_id'] = 'employeeForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context['bg_color'] = 'bg-custom-warning'
 
     employee = self.get_object()
 
@@ -195,6 +195,6 @@ class EmployeeDeleteView(DeleteView):
     context['del_title'] = 'Empleado: '
     context['list_url'] = reverse_lazy('sh:employee_list')
     context['form_id'] = 'employeeForm'
-    context['bg_color'] = 'bg-danger'
+    context['bg_color'] = 'bg-custom-danger'
     context['action'] = 'delete'
     return context

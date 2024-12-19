@@ -101,7 +101,7 @@ class WallPortCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:wall_port_list')
     context['form_id'] = 'wall_portForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
 
     # Obtener los puertos no utilizados
@@ -159,8 +159,8 @@ class WallPortUpdateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:wall_port_list')
       context['form_id'] = 'wall_portForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
-      context['filter_btn_color'] = 'btn-warning'
+      context['bg_color'] = 'bg-custom-warning'
+      context['filter_btn_color'] = 'bg-custom-warning'
 
       wall_port = self.get_object()
 
@@ -264,6 +264,6 @@ class WallPortDeleteView(DeleteView):
         context['del_title'] = 'Puerto de la Pared: '
         context['list_url'] = reverse_lazy('sh:wall_port_list')
         context['form_id'] = 'wall_portForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

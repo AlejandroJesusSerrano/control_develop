@@ -92,7 +92,7 @@ class BrandCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:brand_list')
     context['form_id'] = 'brandForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -141,7 +141,7 @@ class BrandUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:brand_list')
       context['form_id'] = 'brandForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       context['saved'] = kwargs.get('saved', None)
       return context
 
@@ -170,6 +170,6 @@ class BrandDeleteView(DeleteView):
         context['del_title'] = 'Marca: '
         context['list_url'] = reverse_lazy('sh:brand_list')
         context['form_id'] = 'brandForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

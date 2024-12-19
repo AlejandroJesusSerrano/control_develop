@@ -23,27 +23,26 @@
           <div class="text-center">
             <h1>{{page_title}}</h1>
           </div>
-        </div><!-- /.container-fluid -->
+        </div>
       </section>
 
-      <!-- Main content -->
+
       <section class="content{% block content_class %}{% endblock content_class %}" style="flex: 1;">
         {% block content %}
         {% endblock content %}
       </section>
-      <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
+
 
     {% include 'footer.html' %}
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-      <!-- Control sidebar content goes here -->
+
+    <aside class="control-sidebar dark-mode">
+
     </aside>
-    <!-- /.control-sidebar -->
+
   </div>
-  <!-- ./wrapper -->
+
 
   {% block js %}
   {% endblock js %}

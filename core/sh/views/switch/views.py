@@ -87,7 +87,7 @@ class SwitchCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:switch_list')
     context['form_id'] = 'switchForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['dev_type_id'] = 'SWITCH'
     return context
 
@@ -136,7 +136,7 @@ class SwitchUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:switch_list')
     context['form_id'] = 'switchForm'
     context['action'] = 'edit'
-    context['bg_color'] = 'bg-warning'
+    context['bg_color'] = 'bg-custom-warning'
 
     switch = self.get_object()
 
@@ -209,6 +209,6 @@ class SwitchDeleteView(DeleteView):
         context['del_title'] = 'Switch: '
         context['list_url'] = reverse_lazy('sh:switch_list')
         context['form_id'] = 'switchForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

@@ -88,7 +88,7 @@ class DependencyCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:dependency_list')
     context['form_id'] = 'dependencyForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
     return context
 
@@ -138,8 +138,8 @@ class DependencyUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:dependency_list')
     context['form_id'] = 'dependencyForm'
     context['action'] = 'edit'
-    context['filter_btn_color'] = 'btn-warning'
-    context['bg_color'] = 'bg-warning'
+    context['filter_btn_color'] = 'bg-custom-warning'
+    context['bg_color'] = 'bg-custom-warning'
 
     dependency = self.get_object()
 
@@ -179,6 +179,6 @@ class DependencyDeleteView(DeleteView):
         context['del_title'] = 'Dependencia: '
         context['list_url'] = reverse_lazy('sh:dependency_list')
         context['form_id'] = 'dependencyForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

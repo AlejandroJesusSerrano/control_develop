@@ -77,7 +77,7 @@ class MovementsCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:office_list')
     context['form_id'] = 'officeForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class MovementsUpdateView(UpdateView):
@@ -113,7 +113,7 @@ class MovementsUpdateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:office_list')
       context['form_id'] = 'officeForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class MovementsDeleteView(DeleteView):
@@ -141,6 +141,6 @@ class MovementsDeleteView(DeleteView):
         context['del_title'] = 'Oficina: '
         context['list_url'] = reverse_lazy('sh:office_list')
         context['form_id'] = 'officeForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

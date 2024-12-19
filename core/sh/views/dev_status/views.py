@@ -88,7 +88,7 @@ class Dev_StatusCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:dev_status_list')
     context['form_id'] = 'dev_statusForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class Dev_StatusUpadateView(UpdateView):
@@ -137,7 +137,7 @@ class Dev_StatusUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:dev_status_list')
       context['form_id'] = 'dev_statusForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class Dev_StatusDeleteView(DeleteView):
@@ -165,6 +165,6 @@ class Dev_StatusDeleteView(DeleteView):
         context['del_title'] = 'Estado de Dispositivo: '
         context['list_url'] = reverse_lazy('sh:dev_status_list')
         context['form_id'] = 'dev_statusForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

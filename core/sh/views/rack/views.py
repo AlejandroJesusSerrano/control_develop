@@ -91,7 +91,7 @@ class RackCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:rack_list')
     context['form_id'] = 'rackForm'
     context['action'] = 'add'
-    context['bg_color'] = 'bg-primary'
+    context['bg_color'] = 'bg-custom-primary'
     return context
 
 class RackUpadateView(UpdateView):
@@ -139,7 +139,7 @@ class RackUpadateView(UpdateView):
       context['list_url'] = reverse_lazy('sh:rack_list')
       context['form_id'] = 'rackForm'
       context['action'] = 'edit'
-      context['bg_color'] = 'bg-warning'
+      context['bg_color'] = 'bg-custom-warning'
       return context
 
 class RackDeleteView(DeleteView):
@@ -167,6 +167,6 @@ class RackDeleteView(DeleteView):
         context['del_title'] = 'Rack: '
         context['list_url'] = reverse_lazy('sh:rack_list')
         context['form_id'] = 'rackForm'
-        context['bg_color'] = 'bg-danger'
+        context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context
