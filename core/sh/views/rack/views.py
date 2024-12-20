@@ -92,6 +92,7 @@ class RackCreateView(CreateView):
     context['form_id'] = 'rackForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class RackUpadateView(UpdateView):
@@ -140,6 +141,7 @@ class RackUpadateView(UpdateView):
       context['form_id'] = 'rackForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-custom-warning'
+      context['filter_btn_color'] = 'bg-custom-warning'
       return context
 
 class RackDeleteView(DeleteView):

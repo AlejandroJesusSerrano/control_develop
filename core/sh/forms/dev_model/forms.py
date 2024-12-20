@@ -34,7 +34,7 @@ class Dev_ModelForm(ModelForm):
       ),
       'image': FileInput(
         attrs={
-          'class': 'form-control-file',
+          'class': 'form-control-file d-none',
           'id': 'id_image_selector'
         }
       ),

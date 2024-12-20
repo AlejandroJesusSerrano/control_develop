@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
 <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
 {% endblock extra_refs %}
 
 {% block form %}
@@ -17,6 +18,75 @@
       {{ form.rack.errors|join:"<br>" }}
     </div>
   {% endif %}
+</div>
+
+<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para oficinas <i class="fas fa-search"></i></button>
+<div id="filter-office-cards" class="d-none">
+  <div class="row">
+    <div class="container">
+    <!-- Tarjeta Filtros Geográficos -->
+      <div class="card mt-1">
+        <div class="card-header {{bg_color}}">
+          Filtros por Ubicacion
+        </div>
+        <div class="card-body row">
+          <div class="form-group col-12">
+            <label for="id_brand">Provincia:</label>
+            {{ form.province }}
+            {% if form.province.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.province.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-12">
+            <label for="id_model">Localidad:</label>
+            {{ form.location }}
+            {% if form.location.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.location.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-6">
+            <label for="id_edifice">Edificio:</label>
+            {{ form.edifice }}
+            {% if form.edifice.help_text %}
+            <small class="form-text text-muted">{{form.edifice.help_text}}</small>
+            {% endif %}
+            {% if form.edifice.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.edifice.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-6">
+            <label for="id_loc">Dependencia:</label>
+            {{ form.dependency }}
+            {% if form.dependency.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.dependency.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-6">
+            <label for="id_loc">Locacion de Oficina:</label>
+            {{ form.loc }}
+            {% if form.loc.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.loc.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+          <small class="form-text text-muted">* Recomendado para filtrar oficinas</small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="form-group">
@@ -45,6 +115,6 @@
 {% endblock form %}
 
 {% block form_scripts %}
-  <script src="{% static 'form_basic.js' %}"></script>
   <script src="{% static 'rack/js/form.js' %}"></script>
+  <script src="{% static 'js/filters.js' %}"></script>
 {% endblock form_scripts %}

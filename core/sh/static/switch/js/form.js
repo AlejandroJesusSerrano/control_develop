@@ -3,164 +3,60 @@ $(document).ready(function() {
     theme: 'bootstrap',
   });
 
-  updateBrandOptions();
+  updateSwitchBrandOptions();
 
-  // Event handlers
-  $('select[name="brand"]').on('change', function() {
+  if ($('#id_brand').length > 0) {
+    $('select[name="brand"]').on('change', function() {
     const brand_id = $(this).val();
-    updateModelOptions(brand_id);
+    updateSwitchModelOptions(brand_id);
+    });
+  }
+
+  $('#toggle-office-filters').on('click', function (e) {
+    e.preventDefault();
+    const filterLocCards = $('#filter-office-cards')
+    filterLocCards.toggleClass('d-none')
+
+    $(this).toggleClass('active btn-primary btn-secondary')
+
+    if (filterLocCards.hasClass('d-none')) {
+      $(this).html('Filtros de oficinas <i class="fas fa-search"></i>');
+    } else {
+      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+    }
   });
 
-  $('select[name="province"]').on('change', function() {
+  $('#toggle-ports-filters').on('click', function (e) {
+    e.preventDefault();
+    const filterPortCards = $('#filter-port-cards')
+    filterPortCards.toggleClass('d-none')
 
-    clearSelects(['location', 'dependency', 'edifice', 'loc', 'office']);
+    $(this).toggleClass('active btn-primary btn-secondary')
 
-    updateLocationOptions();
-    updateDependencyOptions();
-    updateEdificeOptions();
-    updateLocOptions();
-    updateOfficeOptions();
-  });
-
-  $('select[name="location"]').on('change', function() {
-
-    clearSelects(['dependency', 'edifice', 'loc', 'office']);
-
-    updateDependencyOptions();
-    updateEdificeOptions();
-    updateLocOptions();
-    updateOfficeOptions();
-  });
-
-  $('select[name="dependency"]').on('change', function() {
-
-    clearSelects(['office']);
-
-    updateOfficeOptions();
-  });
-
-
-  $('select[name="edifice"]').on('change', function() {
-
-    clearSelects(['loc', 'office']);
-
-    updateLocOptions();
-    updateOfficeOptions();
-  });
-
-  $('select[name="loc"]').on('change', function() {
-    clearSelects(['office']);
-
-    updateOfficeOptions();
+    if (filterPortCards.hasClass('d-none')) {
+      $(this).html('Filtros para puertos <i class="fas fa-search"></i>');
+    } else {
+      $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+    }
   });
 
   initializeFormSubmission('#myform', 'edit');
 
 });
 
-function clearSelects(fields) {
-  fields.forEach(field => {
-    $(`select[name="${field}"]`)
-    .empty()
-    .append('<option value="">----------</option>')
-    .trigger('change');
-  });
-}
-
-function getSelectedFilters(){
-  return {
-    province_id: $('select[name="province"]').val(),
-    location_id: $('select[name="location"]').val(),
-    dependency_id: $('select[name="dependency"]').val(),
-    edifice_id: $('select[name="edifice"]').val(),
-    loc_id: $('select[name="loc"]').val()
-  };
-}
-
-// Funciones de actualización
-function updateBrandOptions() {
+function updateSwitchBrandOptions() {
   const dev_type_name = 'SWITCH';
   updateOptions('/sh/ajax/load_brand/', {
     'dev_type_name': dev_type_name
   }, $('select[name="brand"]'), $('#id_brand').data('preselected'));
 }
 
-function updateModelOptions(brand_id) {
+function updateSwitchModelOptions(brand_id) {
   const dev_type_name = 'SWITCH';
   updateOptions('/sh/ajax/load_model/', {
     'brand_id': brand_id,
     'dev_type_name': dev_type_name
   }, $('select[name="model"]'), $('#id_model').data('preselected'));
-}
-
-function updateLocationOptions() {
-  const { province_id } = getSelectedFilters();
-  if (province_id) {
-    updateOptions('/sh/ajax/load_location/', {
-      'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
-  }
-}
-
-function updateDependencyOptions() {
-  const { province_id, location_id } = getSelectedFilters();
-  let data = {};
-  if (location_id) {
-    data['location_id'] = location_id;
-  } else if (province_id) {
-    data['province_id'] = province_id;
-  }
-  if (Object.keys(data).length > 0) {
-    updateOptions('/sh/ajax/load_dependency/', data,
-      $('select[name="dependency"]'), $('#id_dependency').data('preselected'));
-  }
-}
-
-function updateEdificeOptions() {
-  const { province_id, location_id } = getSelectedFilters();
-  let data = {};
-  if (location_id) data['location_id'] = location_id;
-  else if (province_id) data['province_id'] = province_id;
-
-  if (Object.keys(data).length > 0) {
-    updateOptions('/sh/ajax/load_edifices/', data,
-      $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
-  }
-}
-
-function updateLocOptions() {
-  const { province_id, location_id, edifice_id } = getSelectedFilters();
-  let data = {};
-  // Prioridad: edifice > location > province
-  if (edifice_id) {
-    data['edifice_id'] = edifice_id;
-  } else if (location_id) {
-    data['location_id'] = location_id;
-  } else if (province_id) {
-    data['province_id'] = province_id;
-  }
-
-  if (Object.keys(data).length > 0) {
-    updateOptions('/sh/ajax/load_loc/', data,
-      $('select[name="loc"]'), $('#id_loc').data('preselected'));
-  }
-}
-
-function updateOfficeOptions() {
-  const { province_id, location_id, dependency_id, edifice_id, loc_id } = getSelectedFilters();
-
-  let data = {};
-  // Se envían todos los filtros disponibles al backend
-  if (province_id) data['province_id'] = province_id;
-  if (location_id) data['location_id'] = location_id;
-  if (dependency_id) data['dependency_id'] = dependency_id;
-  if (edifice_id) data['edifice_id'] = edifice_id;
-  if (loc_id) data['loc_id'] = loc_id;
-
-  if (Object.keys(data).length > 0) {
-    updateOptions('/sh/ajax/load_office/', data,
-      $('select[name="office"]'), $('#id_office').data('preselected'));
-  }
 }
 
 function initializeFormSubmission(formSelector, actionType) {

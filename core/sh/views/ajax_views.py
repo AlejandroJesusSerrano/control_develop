@@ -164,7 +164,15 @@ def ajax_load_patchera(request):
 @require_POST
 def ajax_load_patch_ports(request):
     patchera_id = request.POST.get('patchera_id')
-    used_ports = Wall_Port.objects.exclude(patch_port_in=None).values_list('patch_port_in_id', flat=True)
+
+    used_ports = set()
+
+    wall_port_used = Wall_Port.objects.exclude(patch_port_in=None).values_list('patch_port_in_id', flat=True)
+    used_ports.update(wall_port_used)
+
+    switch_used = Switch.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
+    used_ports.update(switch_used)
+
     patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ports)
 
     data = [{'id': p.id, 'name': f'Puerto: {p.port}'} for p in patch_ports]
@@ -192,6 +200,12 @@ def ajax_load_model(request):
 @require_POST
 def ajax_load_wall_port(request):
     office_id = request.POST.get('office_id')
+
+    used_ports = set()
+
+    switch_used = Switch.objects.exclude(wall_port_in=None).values_list('wall_port_in_id', flat=True)
+    used_ports.update(switch_used)
+
     wall_ports = Wall_Port.objects.filter(office_id=office_id)
     data = [{'id': w.id, 'name': w.wall_port} for w in wall_ports]
     return JsonResponse(data, safe=False)
@@ -200,8 +214,16 @@ def ajax_load_wall_port(request):
 @require_POST
 def ajax_load_switch_port(request):
     switch_id = request.POST.get('switch_id')
-    used_ports = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
-    switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=used_ports)
+
+    used_ports = set()
+
+    wall_port_used = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
+    used_ports.update(wall_port_used)
+
+    switch_used = Switch.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
+    used_ports.update(switch_used)
+
+    switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=list(used_ports))
 
     data = [{'id': sp.id, 'name': f'Puerto: {sp.port_id}, Switch: {sp.switch}'} for sp in switch_ports]
     return JsonResponse(data, safe=False)

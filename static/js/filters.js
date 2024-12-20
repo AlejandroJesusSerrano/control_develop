@@ -42,6 +42,15 @@ $(document).ready(function() {
     })
   }
 
+  if ($('#id_wall_port_in').length > 0) {
+    $('select[name="wall_port_in"]').on('change', function() {
+      const wall_port_val = $(this).val();
+      if (wall_port_val) {
+        $('select[name="wall_port_in"]').val(null).trigger('change');
+      }
+    });
+  }
+
   if ($('#id_rack').length > 0) {
     $('select[name="rack"]').on('change', function(){
       const rack_id = $(this).val();
@@ -90,7 +99,7 @@ $(document).ready(function() {
     });
   }
 
-  if ($('#id_switch_port_in').length > 0) {
+  if ($('#id_patch_port_in').length > 0) {
     $('select[name="patch_port_in"]').on('change', function() {
       const patch_port_val = $(this).val();
       if (patch_port_val) {
@@ -132,6 +141,12 @@ function updateLocationOptions(province_id) {
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
     }
 
+    if ($('#id_wall_port_in').length > 0) {
+      updateOptions('/sh/ajax/load_wall_port/', {
+        'province_id': province_id,
+      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    }
+
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
         'province_id': province_id,
@@ -162,7 +177,7 @@ function updateLocationOptions(province_id) {
       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
     }
   } else {
-    clearDependentFields(['#id_location', '#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+    clearDependentFields(['#id_location', '#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 };
 
@@ -190,6 +205,12 @@ function updateLocationReferedOptions(location_id) {
       updateOptions('/sh/ajax/load_office/', {
         'location_id': location_id,
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
+    }
+
+    if ($('#id_wall_port_in').length > 0) {
+      updateOptions('/sh/ajax/load_wall_port/', {
+        'location_id': location_id,
+      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
     }
 
     if ($('#id_rack').length > 0) {
@@ -222,10 +243,9 @@ function updateLocationReferedOptions(location_id) {
       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
     }
   } else {
-    clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+    clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 };
-
 
 
 function updateDependencyOptions(dependency_id) {
@@ -234,6 +254,12 @@ function updateDependencyOptions(dependency_id) {
       updateOptions('/sh/ajax/load_office/', {
         'dependency_id': dependency_id,
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
+    }
+
+    if ($('#id_wall_port_in').length > 0) {
+      updateOptions('/sh/ajax/load_wall_port/', {
+        'dependency_id': dependency_id,
+      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
     }
 
     if ($('#id_rack').length > 0) {
@@ -266,7 +292,7 @@ function updateDependencyOptions(dependency_id) {
       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
     }
   } else {
-    clearDependentFields(['#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+    clearDependentFields(['#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
@@ -284,6 +310,12 @@ function updateEdificeOptions(edifice_id) {
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
     }
 
+    if ($('#id_wall_port_in').length > 0) {
+      updateOptions('/sh/ajax/load_wall_port/', {
+        'edififce_id': edifice_id,
+      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    }
+
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
         'edifice_id': edifice_id,
@@ -314,7 +346,7 @@ function updateEdificeOptions(edifice_id) {
       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
     }
   } else {
-    clearDependentFields(['#id_loc', '#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+    clearDependentFields(['#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
@@ -326,6 +358,12 @@ function updateLocOptions(loc_id) {
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
     }
 
+    if ($('#id_wall_port_in').length > 0) {
+      updateOptions('/sh/ajax/load_wall_port/', {
+        'loc_id': loc_id,
+      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    }
+
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
         'loc_id': loc_id,
@@ -356,12 +394,18 @@ function updateLocOptions(loc_id) {
       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
     }
   } else {
-    clearDependentFields(['#id_office', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+    clearDependentFields(['#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 
 function updateOfficeOptions(office_id) {
   if (office_id) {
+    if ($('#id_wall_port_in').length > 0) {
+      updateOptions('/sh/ajax/load_wall_port/', {
+        'office_id': office_id,
+      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    }
+
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
         'office_id': office_id,
@@ -392,7 +436,7 @@ function updateOfficeOptions(office_id) {
       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
     }
   } else {
-    clearDependentFields(['#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+    clearDependentFields(['#id_wall_port_in','#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
 }
 

@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
 <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
 {% endblock extra_refs %}
 
 {% block form %}
@@ -19,6 +20,7 @@
     </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_brand">Marca:</label>
   {{form.brand}}
@@ -28,6 +30,7 @@
     </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_dev_model">Modelo de Dispositivo:</label>
   {{form.dev_model}}
@@ -37,9 +40,16 @@
     </div>
   {% endif %}
 </div>
+
 <div class="form-group">
   <label for="id_image">Imagen:</label>
-  {{form.image}}
+  <div>
+    {{form.image}}
+    <button type="button" class="btn btn-primary" id="custom_file_button">
+      <i class="fas fa-upload"></i> Seleccionar Archivo
+    </button>
+    <span id="file_name" class="ml-2">Ningún archivo seleccionado</span>
+  </div>
   {% if form.image.help_text%}
     <small class="form-text text-muted">{{form.image.help_text}}</small>
   {% endif %}

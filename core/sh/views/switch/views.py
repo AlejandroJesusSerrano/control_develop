@@ -88,6 +88,7 @@ class SwitchCreateView(CreateView):
     context['form_id'] = 'switchForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['filter_btn_color'] = 'btn-primary'
     context['dev_type_id'] = 'SWITCH'
     return context
 
@@ -137,6 +138,7 @@ class SwitchUpdateView(UpdateView):
     context['form_id'] = 'switchForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
+    context['filter_btn_color'] = 'bg-custom-warning'
 
     switch = self.get_object()
 
@@ -203,12 +205,12 @@ class SwitchDeleteView(DeleteView):
     return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Switchs'
-        context['title'] = 'Eliminar un Switch'
-        context['del_title'] = 'Switch: '
-        context['list_url'] = reverse_lazy('sh:switch_list')
-        context['form_id'] = 'switchForm'
-        context['bg_color'] = 'bg-custom-danger'
-        context['action'] = 'delete'
-        return context
+    context = super().get_context_data(**kwargs)
+    context['page_title'] = 'Switchs'
+    context['title'] = 'Eliminar un Switch'
+    context['del_title'] = 'Switch: '
+    context['list_url'] = reverse_lazy('sh:switch_list')
+    context['form_id'] = 'switchForm'
+    context['bg_color'] = 'bg-custom-danger'
+    context['action'] = 'delete'
+    return context

@@ -9,10 +9,13 @@ from core.sh.models.edifice.models import Edifice
 from core.sh.models.location.models import Location
 from core.sh.models.office.models import Office
 from core.sh.models.office_loc.models import Office_Loc
+from core.sh.models.patch_port.models import Patch_Port
 from core.sh.models.province.models import Province
 from core.sh.models.rack.models import Rack
 from core.sh.models.switch.models import Switch
 from core.sh.models.patchera.models import Patchera
+from core.sh.models.switch_port.models import Switch_Port
+from core.sh.models.wall_port.models import Wall_Port
 
 class SwitchForm(forms.ModelForm):
   brand = forms.ModelChoiceField(
@@ -120,60 +123,38 @@ class SwitchForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-    self._set_initial_data_from_instance()
-
-    self._filter_querysets()
-
-  def _set_initial_data_from_instance(self):
-
-    if not self.instance.pk:
-      return
-
-    instance = self.instance
-
-    office = getattr(instance, 'office', None)
-    if office and hasattr(office, 'loc') and office.loc and hasattr(office.loc, 'edifice') and office.loc.edifice and hasattr(office.loc.edifice, 'location') and office.dependency and office.dependency.location:
-
-      province = office.loc.edifice.location.province
-      dependency = office.dependency
-      location = office.loc.edifice.location
-      edifice = office.loc.edifice
-      loc = office.loc
-
-
-    self.fields['brand'].queryset = Brand.objects.all()
-    self.fields['model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
-
     if self.instance.pk:
 
-      if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice and self.instance.office.loc.edifice.location and self.instance.office.loc.edifice.location.province and self.instance.office.dependency and self.instance.office.dependency.location:
+      if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice and self.instance.office.loc.edifice.location and self.instance.dependency and self.instance.dependency.location and ((self.instance.office.rack and self.instance.office.rack.switch and self.instance.office.rack.switch.switch_port_in) or (self.instance.office.switch and self.instance.office.switch.switch_port_in) or (self.instance.office.rack and self.instance.office.rack.patchera and self.instance.office.rack.patchera.patch_port_in)) and self.instance.wall_port_in:
 
         province = self.instance.office.loc.edifice.location.province
-        dependency = self.instance.office.dependency
-        location = self.instance.office.loc.edifice.location
-        edifice = self.instance.office.loc.edifice
-        loc = self.instance.office.loc
-        office = self.instance.office
-        rack = self.instance.rack
-        patch_port_in = self.instance.patch_port_in
-        patchera = self.instance.patch_port_in.patchera
-        switch_port_in = self.instance.switch_port_in
-        switch = self.instance.switch_port_in.switch
-
-        self.initial['province'] = province.id
-        self.initial['location'] = location.id
-        self.initial['dependency'] = dependency.id
-        self.initial['edifice'] = edifice.id
-        self.initial['loc'] = loc.id
-        self.initial['office'] = self.instance.office.id
-        self.initial['rack'] = self.instance.rack.id
-        self.initial['patchera'] = self.instance.patchera.id
 
         self.fields['location'].queryset = Location.objects.filter(province=province).order_by('location')
         self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.office.loc.edifice.location).order_by('edifice')
         self.fields['dependency'].queryset = Dependency.objects.filter(location=self.instance.office.dependency.location).order_by('dependency')
-        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=self.instance.office.loc.edifice).order_by('office_location')
-        self.fields['office'].queryset = Office.objects.filter(loc=self.instance.office.loc, dependency=self.instance.office.dependency).order_by('office')
+        self.fields['loc'].queryset = Office_Loc.objects.filter(location=self.instance.office.loc.edifice).order_by('office_location')
+        self.fields['office'].queryset = Office.objects.filter(location=self.instance.office.loc).order_by('office')
+
+        if self.fields['wall_port_in']:
+          self.fields['wall_port_in'].queryset = Wall_Port.filter(location=self.instance.office).order_by('wall_port_in')
+
+        if self.fields['rack']:
+          self.fields['rack'].queryset = Rack.objects.filter(location=self.instance.switch_port_in.switch.rack).order_by('rack')
+
+          if self.fields['switch']:
+            self.fields['switch'].queryset = Switch.objects.filter(location=self.instance.office.rack).order_by('switch')
+            self.fields['switch_port_in'].queryset = Switch_Port(location=self.instance.office.rack.switch).order_by('switch_port_in')
+          elif self.fields['patchera']:
+            self.fields['patchera'].queryset = Patchera(location=self.instance.office.rack).order_by('patchera')
+            self.fields['patch_port_in'].queryset = Patch_Port(location=self.instance.office.rack.patchera).order_by('patch_port_in')
+
+        elif self.fields['switch']:
+          self.fields['switch'].queryset = Switch.objects.filter(location=self.instance.office).order_by('switch')
+          self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(location=self.instance.office.switch).order_by('switch_port_in')
+        else: None
+
+        self.fields['brand'].queryset = Brand.objects.all()
+        self.fields['model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
 
         if 'province' in self.data:
           try:
@@ -186,6 +167,9 @@ class SwitchForm(forms.ModelForm):
               loc__edifice__location__province_id=province_id,
               dependency__location__province_id=province_id
               ).order_by('office')
+            self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(
+              office__loc__edifice__location__province_id=province_id
+            ).order_by('wall_port_in')
             self.fields['rack'].queryset = Rack.objects.filter(
               office__loc__edifice__location__province_id=province_id,
               office__dependency__location__province_id=province_id
@@ -223,7 +207,10 @@ class SwitchForm(forms.ModelForm):
               loc__edifice__location_id=location_id,
               dependency__location_id=location_id
               ).order_by('office')
-            self.fields['rack'].queryset = Rack.objects.filter(
+            self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(
+              office__loc__edifice__location_id=location_id
+            ).order_by('wall_port_in')
+            self.fields['rack'].queryset=Rack.objects.filter(
               office__loc__edifice__location_id=location_id,
               office__dependency__location_id=location_id
               ).order_by('rack')
@@ -254,7 +241,12 @@ class SwitchForm(forms.ModelForm):
         if 'dependency' in self.data:
           try:
             dependency_id = int(self.data.get('dependency'))
-            self.fields['office'].queryset = Office.objects.filter(dependency_id=dependency_id).order_by('office')
+            self.fields['office'].queryset = Office.objects.filter(
+              dependency_id=dependency_id
+            ).order_by('office')
+            self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(
+              office__dependency__location_id=location_id
+            ).order_by('wall_port_in')
             self.fields['rack'].queryset = Rack.objects.filter(
               office__dependency__location_id=location_id
             ).order_by('rack')
@@ -282,6 +274,7 @@ class SwitchForm(forms.ModelForm):
             edifice_id = int(self.data.get('edifice'))
             self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice_id).order_by('office_location')
             self.fields['office'].queryset = Office.objects.filter(loc__edifice_id=edifice_id).order_by('office')
+            self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office__loc__edifice_id=edifice_id).order_by('wall_port_in')
             self.fields['rack'].queryset = Rack.objects.filter(office__loc__edifice_id=edifice_id).order_by('rack')
             self.fields['patchera'].queryset = Patchera.objects.filter(rack__loc__edifice_id=edifice_id).order_by('patchera')
             self.fields['switch'].queryset = Switch.objects.filter(office__loc__edifice_id=edifice_id).order_by('switch')
@@ -299,6 +292,7 @@ class SwitchForm(forms.ModelForm):
           try:
             loc_id = int(self.data.get('loc'))
             self.fields['office'].queryset = Office.objects.filter(loc_id=loc_id).order_by('office')
+            self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office__loc_id=loc_id).order_by('wall_port_in')
             self.fields['rack'].queryset = Rack.objects.filter(office__loc_id=loc_id).order_by('rack')
             self.fields['patchera'].queryset = Patchera.objects.filter(rack__office__loc_id=loc_id).order_by('patchera')
             self.fields['switch'].queryset = Switch.objects.filter(office__loc_id=loc_id).order_by('switch')
@@ -314,6 +308,7 @@ class SwitchForm(forms.ModelForm):
         if 'office' in self.data:
           try:
             office_id = int(self.data.get('office'))
+            self.fields['wall_port_in'].queryset = Wall_Port.objects.filter('office_id=office_id').order_by('wall_port_in')
             self.fields['rack'].queryset = Rack.objects.filter(office_id=office_id).order_by('rack')
             self.fields['patchera'].queryset = Patchera.objects.filter(rack__office_id=office_id).order_by('patchera')
             self.fields['switch'].queryset = Switch.objects.filter(office_id=office_id).order_by('switch')
@@ -328,35 +323,30 @@ class SwitchForm(forms.ModelForm):
 
         if 'rack' in self.data:
           try:
-            rack_id = int(self.data.get(rack))
+            rack_id=int(self.data.get('rack'))
+            self.fields['switch'].queryset = Switch.objects.filter(rack_id=rack_id).order_by('switch')
             self.fields['patchera'].queryset = Patchera.objects.filter(rack_id=rack_id).order_by('patchera')
-            self.fields['switch'].queryset = Switch.objects.filter(
-              patchera__rack_id=rack_id,
-              rack_id=rack_id).order_by('switch')
+            self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__rack_id=rack_id).order_by('switch_port')
+            self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack_id=rack_id).order_by('patch_port_in')
           except (ValueError, TypeError):
             pass
-        elif self.instace.pk:
-          self.fields['patchera'].queryset = self.instance.patchera.rack.patchera_rack.order_by('patchera')
+        elif self.instance.pk:
+          self.fields['switch'].queryset = self.instance.office.rack.switch.switch_rack.order_by('switch')
+          self.fields['patchera'].queryset = self.instance.office.patchera.patchera_rack.order_by('patchera')
+
+        if 'switch' in self.data:
+          try:
+            switch_id=int(self.data.get('switch'))
+            self.fields['switch_por_in'].queryset = Switch_Port.objects.filter(switch_id=switch_id).order_by('switch_port_in')
+          except (ValueError, TypeError):
+            pass
 
         if 'patchera' in self.data:
           try:
-            patchera_id = int(self.data.get(patchera))
-            self.fields['switch'].queryset = Switch.objects.filter(patchera_id=patchera_id).order_by('switch')
+              patchera_id=int(self.data.get('patchera'))
+              self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera_id=patchera_id).order_by('patch_port_in')
           except (ValueError, TypeError):
             pass
-        elif self.instace.pk:
-          self.fields['switch'].queryset = self.instance.switch.patchera.switch_patch_port_in.order_by('switch')
-
-        if office or rack:
-          switch_filters = {}
-          if office:
-            switch_filters['office_id'] = office
-          if rack:
-            switch_filters['rack_id'] = rack
-          self.fields['switch'].queryset = Switch.objects.filter(**switch_filters).distinct()
-
-        if switch:
-          pass
 
   def clean(self):
     cleaned_data = super().clean()
@@ -365,24 +355,11 @@ class SwitchForm(forms.ModelForm):
     rack = cleaned_data.get('rack')
     switch_rack_pos = cleaned_data.get('switch_rack_pos')
 
-    if model and serial_n:
-      # Excluir el switch actual en caso de edición
-      qs = Switch.objects.filter(model=model, serial_n=serial_n)
-      if self.instance.pk:
-        qs = qs.exclude(pk=self.instance.pk)
+    if Switch.objects.filter(model=model, serial_n=serial_n).exists():
+      self.add_error('model', f'Ya se encuentra registrado el switch {model} con el S/N° {serial_n}.')
+      self.add_error('serial_n', f'El S/N° {serial_n}, ya se ecuentra registrado para el switch {model}.')
 
-      if qs.exists():
-        self.add_error('model', "Ya se encuentra cargado este modelo de Switch")
-        self.add_error('serial_n', "El número de serie ya se encuentra registrado y asociado al mismo modelo")
-
-    if rack and switch_rack_pos:
-      # Excluir el switch actual en caso de edición
-      qs = Switch.objects.filter(rack=rack, switch_rack_pos=switch_rack_pos)
-      if self.instance.pk:
-        qs = qs.exclude(pk=self.instance.pk)
-
-      if qs.exists():
-        self.add_error('rack', "El switch ya se encuentra en el Rack seleccionado")
-        self.add_error('switch_rack_pos', "La posición seleccionada en el Rack, ya se encuentra ocupada")
-
+    if Switch.objects.filter(rack=rack, switch_rack_pos=switch_rack_pos).exists():
+      self.add_error('rack', f'ya se encuentra ocupáda la posicion {switch_rack_pos} en el rack {rack}')
+      self.add_error('switch_rack_pos', f'el rack {rack}, ya tiene ocupada la posicion de switch {switch_rack_pos}')
     return cleaned_data
