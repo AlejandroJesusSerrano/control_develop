@@ -54,9 +54,33 @@ class SwitchForm(forms.ModelForm):
     required = False
   )
 
+  edifice_ports = forms.ModelChoiceField(
+    queryset = Edifice.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_edifice_ports'}),
+    required = False
+  )
+
   loc = forms.ModelChoiceField(
     queryset = Office_Loc.objects.all(),
     widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc'}),
+    required = False
+  )
+
+  loc_ports = forms.ModelChoiceField(
+    queryset = Office_Loc.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc_ports'}),
+    required = False
+  )
+
+  office_ports = forms.ModelChoiceField(
+    queryset = Office.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_office_ports'}),
+    required = False
+  )
+
+  rack_ports = forms.ModelChoiceField(
+    queryset = Rack.objects.all(),
+    widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_rack_ports'}),
     required = False
   )
 
@@ -125,21 +149,27 @@ class SwitchForm(forms.ModelForm):
 
     if self.instance.pk:
 
-      if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice and self.instance.office.loc.edifice.location and self.instance.dependency and self.instance.dependency.location and ((self.instance.office.rack and self.instance.office.rack.switch and self.instance.office.rack.switch.switch_port_in) or (self.instance.office.switch and self.instance.office.switch.switch_port_in) or (self.instance.office.rack and self.instance.office.rack.patchera and self.instance.office.rack.patchera.patch_port_in)) and self.instance.wall_port_in:
+      if self.instance.office and self.instance_office_ports and self.instance.office.loc and self.instance.office_ports.loc_ports and self.instance.office.loc.edifice and self.instance.office_ports.loc_ports.edifice_ports and self.instance.office.loc.edifice.location and self.instance.office_ports.loc_ports.edifice_ports.location and self.instance.dependency and self.instance.dependency.location and ((self.instance.office.rack and self.instance.office.rack.switch and self.instance.office.rack.switch.switch_port_in) or (self.instance.office.switch and self.instance.office.switch.switch_port_in) or (self.instance.office.rack and self.instance.office.rack.patchera and self.instance.office.rack.patchera.patch_port_in)) and self.instance.wall_port_in:
 
         province = self.instance.office.loc.edifice.location.province
 
         self.fields['location'].queryset = Location.objects.filter(province=province).order_by('location')
         self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.office.loc.edifice.location).order_by('edifice')
+        self.fields['edifice_ports'].queryset = Edifice.objects.filter(location=self.instance.office_ports.loc_ports.edifice_ports.location).order_by('edifice')
         self.fields['dependency'].queryset = Dependency.objects.filter(location=self.instance.office.dependency.location).order_by('dependency')
         self.fields['loc'].queryset = Office_Loc.objects.filter(location=self.instance.office.loc.edifice).order_by('office_location')
+        self.fields['loc_ports'].queryset = Office_Loc.objects.filter(location=self.instance.office_ports.loc_ports.edifice_ports).order_by('office_location')
         self.fields['office'].queryset = Office.objects.filter(location=self.instance.office.loc).order_by('office')
+        self.fields['office_ports'].queryset = Office.objects.filter(location=self.instance.office_ports.loc_ports).order_by('office')
+        self.fields['rack'].queryset = Rack.objects.filter(location=self.instance.office.rack.location).order_by('rack')
+
+        self.fields['rack_ports'].queryset = Rack.objects.filter(location=self.instance.office_ports.rack_ports).order_by('rack')
 
         if self.fields['wall_port_in']:
-          self.fields['wall_port_in'].queryset = Wall_Port.filter(location=self.instance.office).order_by('wall_port_in')
+          self.fields['wall_port_in'].queryset = Wall_Port.filter(location=self.instance.office_ports).order_by('wall_port_in')
 
         if self.fields['rack']:
-          self.fields['rack'].queryset = Rack.objects.filter(location=self.instance.switch_port_in.switch.rack).order_by('rack')
+          self.fields['rack'].queryset = Rack.objects.filter(location=self.instance.switch_port_in.switch.rack_ports).order_by('rack_ports')
 
           if self.fields['switch']:
             self.fields['switch'].queryset = Switch.objects.filter(location=self.instance.office.rack).order_by('switch')
@@ -161,36 +191,40 @@ class SwitchForm(forms.ModelForm):
             province_id = int(self.data.get('province'))
             self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
             self.fields['edifice'].queryset = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
+            self.fields['edifice_ports'].queryset = Edifice.objects.filter(location__province_id=province_id).order_by('edifice')
             self.fields['dependency'].queryet = Dependency.objects.filter(location__province_id=province_id).order_by('dependency')
             self.fields['loc'].queryset = Office_Loc.objects.filter(edifice__location__province_id=province_id).order_by('office_location')
+            self.fields['loc_ports'].queryset = Office_Loc.objects.filter(edifice_ports__location__province_id=province_id).order_by('office_location')
             self.fields['office'].queryset = Office.objects.filter(
               loc__edifice__location__province_id=province_id,
               dependency__location__province_id=province_id
-              ).order_by('office')
+            ).order_by('office')
+            self.fields['office_ports'].queryset = Office.objects.filter(
+              loc_ports__edifice_ports__location__province_id=province_id
+            ).order_by('office_ports')
             self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(
-              office__loc__edifice__location__province_id=province_id
+              office_ports__loc_ports__edifice_ports__location__province_id=province_id
             ).order_by('wall_port_in')
             self.fields['rack'].queryset = Rack.objects.filter(
               office__loc__edifice__location__province_id=province_id,
               office__dependency__location__province_id=province_id
-              ).order_by('rack')
+            ).order_by('rack')
+            self.fields['rack_ports'].queryset = Rack.objects.filter(
+              office_ports__loc_ports__edifice_ports__location__province_id=province_id
+            ).order_by('rack_ports')
             self.fields['patchera'].queryset = Patchera.objects.filter(
-              rack__office__loc__edifice__location__province_id=province_id,
-              rack__office__dependency__location__province_id=province_id
+              rack_ports__office_ports__loc_ports__edifice_ports__location__province_id=province_id,
             ).order_by('patchera')
             self.fields['switch'].queryset = Switch.objects.filter(
-              office__loc__edifice__location__province_id=province_id,
-              office__dependency__location__province_id=province_id
+              office_ports__loc_ports__edifice_ports__location__province_id=province_id,
             ).order_by('switch')
-            if 'rack' in self.data:
+            if 'rack_ports' in self.data:
               self.fields['switch'].queryset = Switch.objects.filter(
-                rack__office__loc__edifice__location__province_id=province_id,
-                rack__office__dependency__location__province_id=province_id
+                rack_ports__office_ports__loc_ports__edifice_ports__location__province_id=province_id,
               ).order_by('switch')
             elif 'patchera' in self.data:
               self.fields['patchera'].queryset = Switch.objects.filter(
-                patchera__rack__office__loc__edifice__location__province_id=province_id,
-                patchera__rack__office__dependency__location__province_id=province_id
+                patchera__rack_ports__office_ports__loc_ports__edifice_ports__location__province_id=province_id,
               ).order_by('switch')
           except (ValueError, TypeError):
             pass

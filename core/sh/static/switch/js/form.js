@@ -12,6 +12,47 @@ $(document).ready(function() {
     });
   }
 
+  if ($('#id_province').length > 0) {
+    $('select[name="province"]').on('change', function(){
+      updateLocationOptions(province_id);
+    });
+  }
+
+  if ($('#id_location_switch').length > 0) {
+    $('select[name="location"]').on('change', function(){
+      const location_id = $(this).val();
+      updateLocationReferedOptions(location_id)
+    })
+  }
+
+  if ($('#id_edifice_switch').length > 0) {
+    $('select[name="edifice"]').on('change', function(){
+      const edifice_id = $(this).val();
+      updateEdificeOptions(edifice_id);
+    })
+  }
+
+  if ($('#id_dependency_switch').length > 0) {
+    $('select[name="dependency"]').on('change', function(){
+      const dependency_id = $(this).val();
+      updateDependencyOptions(dependency_id);
+    })
+  }
+
+  if ($('#id_loc_switch').length > 0) {
+    $('select[name="loc"]').on('change', function(){
+      const loc_id = $(this).val();
+      updateLocOptions(loc_id);
+    })
+  }
+
+  if ($('#id_office_switch').length > 0) {
+    $('select[name="office"]').on('change', function(){
+      const office_id = $(this).val();
+      updateOfficeOptions(office_id);
+    })
+  }
+
   $('#toggle-office-filters').on('click', function (e) {
     e.preventDefault();
     const filterLocCards = $('#filter-office-cards')

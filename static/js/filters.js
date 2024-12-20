@@ -2,7 +2,6 @@ $(document).ready(function() {
 
   if ($('#id_province').length > 0) {
     $('select[name="province"]').on('change', function(){
-      const province_id = $(this).val();
       updateLocationOptions(province_id);
     });
   }

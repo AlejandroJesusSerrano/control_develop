@@ -5,7 +5,7 @@ from ..office.models import Office
 
 class Rack(models.Model):
   office = models.ForeignKey(Office, related_name='rack_office', verbose_name='oficina', on_delete=models.CASCADE)
-  rack = models.CharField(max_length = 6, verbose_name = 'Rack', unique=True)
+  rack = models.CharField(max_length = 20, verbose_name = 'Rack', unique=True)
   details = models.TextField(verbose_name = 'Detalle')
   date_creation = models.DateTimeField(auto_now = True, verbose_name = 'Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
