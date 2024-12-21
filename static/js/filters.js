@@ -311,7 +311,7 @@ function updateEdificeOptions(edifice_id) {
 
     if ($('#id_wall_port_in').length > 0) {
       updateOptions('/sh/ajax/load_wall_port/', {
-        'edififce_id': edifice_id,
+        'edifice_id': edifice_id,
       }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
     }
 

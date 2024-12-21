@@ -173,6 +173,11 @@ def ajax_load_patch_ports(request):
     switch_used = Switch.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
     used_ports.update(switch_used)
 
+    if not patchera_id:
+        patch_ports = Patch_Port.objects.none()
+    else:
+        patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ports)
+
     patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ports)
 
     data = [{'id': p.id, 'name': f'Puerto: {p.port}'} for p in patch_ports]
@@ -222,6 +227,11 @@ def ajax_load_switch_port(request):
 
     switch_used = Switch.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
     used_ports.update(switch_used)
+
+    if not switch_id:
+        switch_ports = Switch_Port.objects.none()
+    else:
+        switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=list(used_ports))
 
     switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=list(used_ports))
 
