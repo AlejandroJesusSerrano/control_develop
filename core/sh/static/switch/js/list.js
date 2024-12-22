@@ -18,13 +18,14 @@ $(document).ready(function(){
       {"data": "brand"},
       {"data": "serial_n"},
       {"data": "ports_q"},
+      {"data": "office"},
       {"data": "rack"},
       {"data": "switch_rack_pos"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [6],
+        targets: [7],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

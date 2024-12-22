@@ -2,6 +2,7 @@ $(document).ready(function() {
 
   if ($('#id_province').length > 0) {
     $('select[name="province"]').on('change', function(){
+      const province_id = $(this).val();
       updateLocationOptions(province_id);
     });
   }
@@ -140,11 +141,11 @@ function updateLocationOptions(province_id) {
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
     }
 
-    if ($('#id_wall_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_wall_port/', {
-        'province_id': province_id,
-      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
-    }
+    // if ($('#id_wall_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_wall_port/', {
+    //     'province_id': province_id,
+    //   }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    // }
 
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
@@ -152,29 +153,29 @@ function updateLocationOptions(province_id) {
       }, $('select[name="rack"]'), $('#id_rack').data('preselected'));
     }
 
-    if ($('#id_switch').length > 0) {
-      updateOptions('/sh/ajax/load_switch/', {
-        'province_id': province_id,
-      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
-    }
+    // if ($('#id_switch').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch/', {
+    //     'province_id': province_id,
+    //   }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+    // }
 
-    if ($('#id_switch_port').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'province_id': province_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
+    // if ($('#id_switch_port').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch_port/', {
+    //     'province_id': province_id,
+    //   }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+    // }
 
-    if ($('#id_patchera').length > 0) {
-      updateOptions('/sh/ajax/load_patchera/', {
-        'province_id': province_id,
-      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
-    }
+    // if ($('#id_patchera').length > 0) {
+    //   updateOptions('/sh/ajax/load_patchera/', {
+    //     'province_id': province_id,
+    //   }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+    // }
 
-    if ($('#id_patch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'province_id': province_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
+    // if ($('#id_patch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_patch_ports/', {
+    //     'province_id': province_id,
+    //   }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+    // }
   } else {
     clearDependentFields(['#id_location', '#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
@@ -206,11 +207,11 @@ function updateLocationReferedOptions(location_id) {
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
     }
 
-    if ($('#id_wall_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_wall_port/', {
-        'location_id': location_id,
-      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
-    }
+    // if ($('#id_wall_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_wall_port/', {
+    //     'location_id': location_id,
+    //   }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    // }
 
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
@@ -218,29 +219,29 @@ function updateLocationReferedOptions(location_id) {
       }, $('select[name="rack"]'), $('#id_rack').data('preselected'));
     }
 
-    if ($('#id_switch').length > 0) {
-      updateOptions('/sh/ajax/load_switch/', {
-        'location_id': location_id,
-      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
-    }
+    // if ($('#id_switch').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch/', {
+    //     'location_id': location_id,
+    //   }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+    // }
 
-    if ($('#id_switch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'location_id': location_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
+    // if ($('#id_switch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch_port/', {
+    //     'location_id': location_id,
+    //   }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+    // }
 
-    if ($('#id_patchera').length > 0) {
-      updateOptions('/sh/ajax/load_patchera/', {
-        'location_id': location_id,
-      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
-    }
+    // if ($('#id_patchera').length > 0) {
+    //   updateOptions('/sh/ajax/load_patchera/', {
+    //     'location_id': location_id,
+    //   }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+    // }
 
-    if ($('#id_pathcera').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'location_id': location_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
+    // if ($('#id_pathcera').length > 0) {
+    //   updateOptions('/sh/ajax/load_patch_ports/', {
+    //     'location_id': location_id,
+    //   }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+    // }
   } else {
     clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
@@ -255,11 +256,11 @@ function updateDependencyOptions(dependency_id) {
       }, $('select[name="office"]'), $('#id_office').data('preselected'));
     }
 
-    if ($('#id_wall_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_wall_port/', {
-        'dependency_id': dependency_id,
-      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
-    }
+    // if ($('#id_wall_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_wall_port/', {
+    //     'dependency_id': dependency_id,
+    //   }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    // }
 
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
@@ -267,29 +268,29 @@ function updateDependencyOptions(dependency_id) {
       } , $('select[name="rack"]'), $('#id_rack').data('preselected'));
     }
 
-    if ($('#id_switch').length > 0) {
-      updateOptions('/sh/ajax/load_switch/', {
-        'dependency_id': dependency_id,
-      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
-    }
+    // if ($('#id_switch').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch/', {
+    //     'dependency_id': dependency_id,
+    //   }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+    // }
 
-    if ($('#id_switch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'dependency_id': dependency_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
+    // if ($('#id_switch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch_port/', {
+    //     'dependency_id': dependency_id,
+    //   }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+    // }
 
-    if ($('#id_patchera').length > 0) {
-      updateOptions('/sh/ajax/load_patchera/', {
-        'dependency_id': dependency_id,
-      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
-    }
+    // if ($('#id_patchera').length > 0) {
+    //   updateOptions('/sh/ajax/load_patchera/', {
+    //     'dependency_id': dependency_id,
+    //   }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+    // }
 
-    if ($('#id_patch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'dependency_id': dependency_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
+    // if ($('#id_patch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_patch_ports/', {
+    //     'dependency_id': dependency_id,
+    //   }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+    // }
   } else {
     clearDependentFields(['#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
@@ -321,29 +322,29 @@ function updateEdificeOptions(edifice_id) {
       }, $('select[name="rack"]'), $('#id_rack').data('preselected'));
     }
 
-    if ($('#id_switch').length > 0) {
-      updateOptions('/sh/ajax/load_switch/', {
-        'edifice_id': edifice_id,
-      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
-    }
+    // if ($('#id_switch').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch/', {
+    //     'edifice_id': edifice_id,
+    //   }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+    // }
 
-    if ($('#id_switch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'edifice_id': edifice_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
+    // if ($('#id_switch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch_port/', {
+    //     'edifice_id': edifice_id,
+    //   }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+    // }
 
-    if ($('#id_patchera').length > 0) {
-      updateOptions('/sh/ajax/load_patchera/', {
-        'edifice_id': edifice_id,
-      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
-    }
+    // if ($('#id_patchera').length > 0) {
+    //   updateOptions('/sh/ajax/load_patchera/', {
+    //     'edifice_id': edifice_id,
+    //   }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+    // }
 
-    if ($('#id_patch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'edifice_id': edifice_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
+    // if ($('#id_patch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_patch_ports/', {
+    //     'edifice_id': edifice_id,
+    //   }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+    // }
   } else {
     clearDependentFields(['#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
@@ -369,29 +370,29 @@ function updateLocOptions(loc_id) {
       }, $('select[name="rack"]'), $('#id_rack').data('preselected'));
     }
 
-    if ($('#id_switch').length > 0) {
-      updateOptions('/sh/ajax/load_switch/', {
-        'loc_id': loc_id,
-      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
-    }
+    // if ($('#id_switch').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch/', {
+    //     'loc_id': loc_id,
+    //   }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+    // }
 
-    if ($('#id_switch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'loc_id': loc_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
+    // if ($('#id_switch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch_port/', {
+    //     'loc_id': loc_id,
+    //   }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+    // }
 
-    if ($('#id_patchera').length > 0) {
-      updateOptions('/sh/ajax/load_patchera/', {
-        'loc_id': loc_id,
-      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
-    }
+    // if ($('#id_patchera').length > 0) {
+    //   updateOptions('/sh/ajax/load_patchera/', {
+    //     'loc_id': loc_id,
+    //   }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+    // }
 
-    if ($('#id_patch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'loc_id': loc_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
+    // if ($('#id_patch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_patch_ports/', {
+    //     'loc_id': loc_id,
+    //   }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+    // }
   } else {
     clearDependentFields(['#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
   }
@@ -399,11 +400,11 @@ function updateLocOptions(loc_id) {
 
 function updateOfficeOptions(office_id) {
   if (office_id) {
-    if ($('#id_wall_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_wall_port/', {
-        'office_id': office_id,
-      }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
-    }
+    // if ($('#id_wall_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_wall_port/', {
+    //     'office_id': office_id,
+    //   }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+    // }
 
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {
@@ -411,85 +412,85 @@ function updateOfficeOptions(office_id) {
       }, $('select[name="rack"]'), $('#id_rack').data('preselected'));
     }
 
-    if ($('#id_switch').length > 0) {
-      updateOptions('/sh/ajax/load_switch/', {
-        'office_id': office_id,
-      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
-    }
+    // if ($('#id_switch').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch/', {
+    //     'office_id': office_id,
+    //   }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+    // }
 
-    if ($('#id_switch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'office_id': office_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
+    // if ($('#id_switch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_switch_port/', {
+    //     'office_id': office_id,
+    //   }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+    // }
 
-    if ($('#id_patchera').length > 0) {
-      updateOptions('/sh/ajax/load_patchera/', {
-        'office_id': office_id,
-      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
-    }
+    // if ($('#id_patchera').length > 0) {
+    //   updateOptions('/sh/ajax/load_patchera/', {
+    //     'office_id': office_id,
+    //   }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+    // }
 
-    if ($('#id_patch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'office_id': office_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
+    // if ($('#id_patch_port_in').length > 0) {
+    //   updateOptions('/sh/ajax/load_patch_ports/', {
+    //     'office_id': office_id,
+    //   }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+    // }
   } else {
-    clearDependentFields(['#id_wall_port_in','#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+    clearDependentFields(['#id_rack'])
   }
 }
 
-function updateRackOptions(rack_id) {
-  if (rack_id) {
-    if ($('#id_switch').length > 0) {
-      updateOptions('/sh/ajax/load_switch/', {
-        'rack_id': rack_id,
-      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
-    }
+// function updateRackOptions(rack_id) {
+//   if (rack_id) {
+//     if ($('#id_switch').length > 0) {
+//       updateOptions('/sh/ajax/load_switch/', {
+//         'rack_id': rack_id,
+//       }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+//     }
 
-    if ($('#id_switch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'rack_id': rack_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
+//     if ($('#id_switch_port_in').length > 0) {
+//       updateOptions('/sh/ajax/load_switch_port/', {
+//         'rack_id': rack_id,
+//       }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+//     }
 
-    if ($('#id_patchera').length > 0) {
-      updateOptions('/sh/ajax/load_patchera/', {
-        'rack_id': rack_id,
-      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
-    }
+//     if ($('#id_patchera').length > 0) {
+//       updateOptions('/sh/ajax/load_patchera/', {
+//         'rack_id': rack_id,
+//       }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+//     }
 
-    if ($('#id_patch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'rack_id': rack_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
-  } else {
-    clearDependentFields(['#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
-  }
-}
+//     if ($('#id_patch_port_in').length > 0) {
+//       updateOptions('/sh/ajax/load_patch_ports/', {
+//         'rack_id': rack_id,
+//       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+//     }
+//   } else {
+//     clearDependentFields(['#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+//   }
+// }
 
-function updateSwitchOptions(switch_id) {
-  if (switch_id) {
-    if ($('#id_switch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_switch_port/', {
-        'switch_id': switch_id,
-      }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-    }
-  } else {
-    clearDependentFields(['#id_switch_port_in'])
-  }
-}
+// function updateSwitchOptions(switch_id) {
+//   if (switch_id) {
+//     if ($('#id_switch_port_in').length > 0) {
+//       updateOptions('/sh/ajax/load_switch_port/', {
+//         'switch_id': switch_id,
+//       }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+//     }
+//   } else {
+//     clearDependentFields(['#id_switch_port_in'])
+//   }
+// }
 
-function updatePatcheraOptions(patchera_id) {
-  if (patchera_id) {
-    if ($('#id_patch_port_in').length > 0) {
-      updateOptions('/sh/ajax/load_patch_ports/', {
-        'patchera_id': patchera_id,
-      }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-    }
-  } else {
-    clearDependentFields(['#id_patch_port_in'])
-  }
-}
+// function updatePatcheraOptions(patchera_id) {
+//   if (patchera_id) {
+//     if ($('#id_patch_port_in').length > 0) {
+//       updateOptions('/sh/ajax/load_patch_ports/', {
+//         'patchera_id': patchera_id,
+//       }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+//     }
+//   } else {
+//     clearDependentFields(['#id_patch_port_in'])
+//   }
+// }
 

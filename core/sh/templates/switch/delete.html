@@ -7,7 +7,7 @@
       Estas por eliminar el registro Nro: {{object.id}}, {{del_title}} {{object.switch_rack_pos}}, del Rack: {{object.rack}}
       <ul>
         <li>
-          Marca: {{object.brand}}
+          Marca: {{object.model.brand}}
         </li>
         <li>
           Número de Serie: {{object.serial_n}}
@@ -15,6 +15,15 @@
         <li>
           Cantidad de Puertos: {{object.ports_q}}
         </li>
+        {% if object.rack %}
+          <li>
+            Rack: {{object.rack}} / Posición {{object.switch_rack_pos}}
+          </li>
+        {% endif %}
+        <li>
+          Oficina: {{object.office}}
+        </li>
+
       ¿Deseas continuar?
     </div>
 </div>

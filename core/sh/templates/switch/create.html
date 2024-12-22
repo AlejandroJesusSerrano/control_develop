@@ -126,7 +126,9 @@
             </div>
             {% endif %}
           </div>
-          <small class="form-text text-muted">* Recomendado para filtrar oficinas</small>
+          <div>
+            <small class="form-text text-muted">* Recomendado para filtrar oficinas</small>
+          </div>
         </div>
       </div>
     </div>
@@ -159,6 +161,26 @@
           Filtrar por Conexión
         </div>
         <div class="card-body row">
+
+          <div class="form-group col-12">
+            <label for="id_edifice_ports">Edificio</label>
+            {{ form.edifice_ports }}
+            {% if form.edifice_ports.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.edifice_ports.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-12">
+            <label for="id_loc_ports">Ubicación de Oficina:</label>
+            {{ form.loc_ports }}
+            {% if form.loc_ports.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.loc_ports.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
 
           <div class="form-group col-12">
             <label for="id_office_ports">Oficina:</label>
