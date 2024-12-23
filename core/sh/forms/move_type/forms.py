@@ -16,7 +16,7 @@ class MoveTypeForm(forms.ModelForm):
           attrs={
             'placeholder': 'Ingrese el tipo de movimiento',
             'class': 'form-control',
-            'autofocus': True, 
+            'autofocus': True,
             'id': 'id_move_input'
           }),
         'details': TextInput(
@@ -32,14 +32,11 @@ class MoveTypeForm(forms.ModelForm):
       }
 
 
-  def save(self, commit=True):
-    data={}
-    form = super()
-    try:
-      if form.is_valid():
-        form.save()
-      else:
-        data['error'] = form.errors.get_json_data()
-    except Exception as e:
-      data['error'] = str(e)
-    return data
+  def clean(self):
+    move = self.cleaned_data.get('move')
+
+    if move and Move_Type.objects.filter(move__iexact=move).exists():
+      self.add_error('move', f"El tipo de movimiento '{move}', ya se encuentra registrado. Ingrese una diferente")
+
+    cleaned_data = super().clean()
+    return cleaned_data

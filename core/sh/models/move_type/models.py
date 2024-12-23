@@ -9,7 +9,8 @@ class Move_Type(models.Model):
 
   def save(self, *args, **kwargs):
     self.move = self.move.upper()
-    self.details = self.details.upper()
+    if self.details:
+      self.details = self.details.upper()
     super(Move_Type, self).save(*args, **kwargs)
 
   def __str__(self):
