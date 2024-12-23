@@ -89,6 +89,15 @@
   {% endif %}
 </div>
 
+<div class="form-group mt-3">
+  <label for="id_wall_port">Puerto de la Pared:</label>
+  {{ form.wall_port }}
+  {% if form.wall_port.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.wall_port.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+</div>
 
 <button id="toggle-ports-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para puertos <i class="fas fa-search"></i></button>
 <div id="filter-port-cards" class="d-none">
@@ -100,12 +109,43 @@
           Filtrar por Conexión
         </div>
         <div class="card-body row">
+
+          <div class="form-group col-12">
+            <label for="id_edifice_port">Edificio:</label>
+            {{ form.edifice_port }}
+            {% if form.edifice_port.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.edifice_port.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-12">
+            <label for="id_loc_port">Ubicacion de Oficina:</label>
+            {{ form.loc_port }}
+            {% if form.loc_port.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.loc_port.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-12">
+            <label for="id_office_port">Oficina:</label>
+            {{ form.office_port }}
+            {% if form.office_port.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.office_port.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
           <div class="form-group col-12">
             <label for="id_rack">Rack:</label>
-            {{ form.rack }}
-            {% if form.rack.errors %}
+            {{ form.rack_port }}
+            {% if form.rack_port.errors %}
             <div class="invalid-feedback d-block">
-              {{ form.rack.errors|join:"<br>" }}
+              {{ form.rack_port.errors|join:"<br>" }}
             </div>
             {% endif %}
           </div>
@@ -136,15 +176,6 @@
   </div>
 </div>
 
-<div class="form-group mt-3">
-  <label for="id_wall_port">Puerto de la Pared:</label>
-  {{ form.wall_port }}
-  {% if form.wall_port.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.wall_port.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
 
 <div class="form-group">
   <label for="id_switch_port_in">Puerto del Switch de Ingreso:</label>

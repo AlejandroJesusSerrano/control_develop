@@ -214,8 +214,8 @@ class WallPortUpdateView(UpdateView):
           rack = wall_port.patch_port_in.patchera.rack
 
         if rack:
-          context['form'].fields['rack'].queryset = Rack.objects.filter(Q(office=office))
-          context['form'].initial['rack'] = rack.id
+          context['form'].fields['rack_port'].queryset = Rack.objects.filter(Q(office=office))
+          context['form'].initial['rack_port'] = rack.id
 
         switch = getattr(wall_port.switch_port_in, 'switch', None)
         if switch:
@@ -227,10 +227,20 @@ class WallPortUpdateView(UpdateView):
           context['form'].fields['patchera'].queryset == Patchera.objects.filter(rack=rack)
           context['form'].initial['patchera'] = patchera.id
 
-        switch_port_in = getattr(wall_port, 'switch_port_in', None)
-        if switch_port_in:
-          context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.exclude(id__in=used_switch_ports)
-          context['form'].initial['switch_port_in'] = switch_port_in.id
+        used_switch_ports = list(Wall_Port.objects
+                              .exclude(switch_port_in=None)
+                              .values_list('switch_port_in_id', flat=True)
+                            )
+
+        if wall_port.switch_port_in and wall_port.switch_port_in.id in used_switch_ports:
+          used_switch_ports.remove(wall_port.switch_port_in.id)
+
+        context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.filter(
+          switch=switch
+        ).exclude(
+          id__in=used_switch_ports
+        ).order_by('port_id')
+        context['form'].initial['switch_port_in'] = wall_port.switch_port_in.id
 
         patch_port_in = getattr(wall_port, 'patch_port_in', None)
         if patch_port_in:

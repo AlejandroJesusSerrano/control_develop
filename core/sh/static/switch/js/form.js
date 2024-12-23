@@ -36,7 +36,7 @@ $(document).ready(function() {
   }
 
   if ($('#id_loc_ports').length > 0) {
-    $('select[name="loc_ports_id"]').on('change', function(){
+    $('select[name="loc_ports"]').on('change', function(){
       const loc_ports_id = $(this).val();
       updateLocPortsOptions(loc_ports_id);
     });
@@ -140,7 +140,7 @@ function updatePortsFromProvince(province_id) {
     if ($('#id_loc_ports').length > 0) {
       updateOptions('/sh/ajax/load_loc/', {
         'province_id': province_id
-      }, $('select[name="loc_ports_id"]'), $('#id_loc_ports').data('preselected'));
+      }, $('select[name="loc_ports"]'), $('#id_loc_ports').data('preselected'));
     }
 
     if ($('#id_office_ports').length > 0) {
@@ -168,7 +168,7 @@ function updatePortsFromLocation(location_id) {
     if ($('#id_loc_ports').length > 0) {
       updateOptions('/sh/ajax/load_loc/', {
         'location_id': location_id
-      }, $('select[name="loc_ports_id"]'), $('#id_loc_ports').data('preselected'));
+      }, $('select[name="loc_ports"]'), $('#id_loc_ports').data('preselected'));
     }
 
     if ($('#id_office_ports').length > 0) {
