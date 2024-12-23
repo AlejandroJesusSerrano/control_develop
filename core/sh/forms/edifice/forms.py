@@ -9,7 +9,7 @@ class EdificeForm(forms.ModelForm):
   province = forms.ModelChoiceField(
     queryset=Province.objects.all(),
     widget=forms.Select(attrs={'class': 'form-control select2', 'id':'id_province'}),
-    required=True
+    required=False
   )
 
   class Meta:

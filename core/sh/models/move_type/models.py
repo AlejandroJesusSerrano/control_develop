@@ -26,6 +26,3 @@ class Move_Type(models.Model):
     verbose_name_plural = 'Tipos Movimientos'
     db_table = 'tipo_movimiento'
     ordering = ['id']
-    constraints = [
-      models.UniqueConstraint(fields=['move', 'details'], name='unique_move_details')
-    ]

@@ -89,6 +89,7 @@ class PatcheraCreateView(CreateView):
     context['form_id'] = 'patcheraForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class PatcheraUpadateView(UpdateView):
@@ -137,6 +138,7 @@ class PatcheraUpadateView(UpdateView):
       context['form_id'] = 'patcheraForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-custom-warning'
+      context['filter_btn_color'] = 'bg-custom-warning'
       return context
 
 class PatcheraDeleteView(DeleteView):

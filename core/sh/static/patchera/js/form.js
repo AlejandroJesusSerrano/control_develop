@@ -4,23 +4,16 @@ $(document).ready(function() {
   });
 })
 
-function show_errors_in_form(errors){
-  $('.is-invalid').removeClass('is-invalid');
-  $('.invalid-feedback').remove();
+$('#toggle-rack-filters').on('click', function (e) {
+  e.preventDefault();
+  const filterLocCards = $('#filter-rack-cards')
+  filterLocCards.toggleClass('d-none')
 
-  $.each(errors, function(field, fieldErrors) {
-    let fieldElement = $(`[name="${field}"]`);
+  $(this).toggleClass('active btn-primary btn-secondary')
 
-    if (fieldElement.length > 0) {
-      fieldElement.addClass('is-invalid');
-      let errorHtml = '<div class="invalid-feedback d-block">';
-
-      $.each(fieldErrors, function(index, error){
-        errorHtml += error.message + '<br>';
-      });
-
-      errorHtml += '</div>';
-      fieldElement.after(errorHtml);
-    }
-  });
-}
+  if (filterLocCards.hasClass('d-none')) {
+    $(this).html('Filtrar Rack <i class="fas fa-search"></i>');
+  } else {
+    $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+  }
+});

@@ -3,9 +3,11 @@ db.py
 #Ignore vars.py file
 vars.py
 #Ignore static/lib folder
-# static/lib/
+ static/lib/
 #Ignore pycache
 *.pyc
 __pycache__/__pycache__
 #Ignore history
 .history/
+
+migrations/
