@@ -45,7 +45,7 @@ class EmployeeForm(forms.ModelForm):
     widgets = {
       'employee_name': TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Ingrese el Nombre del Empleado', 
+        'placeholder': 'Ingrese el Nombre del Empleado',
         'id': 'id_employee_name_input'
       }),
       'employee_last_name': TextInput(attrs={
@@ -59,7 +59,7 @@ class EmployeeForm(forms.ModelForm):
         'id': 'id_cuil_input'
       }),
       'status': Select(attrs={
-        'class':'form-control select2', 
+        'class':'form-control select2',
         'id': 'id_employee_status'
       }),
       'user_pc': TextInput(attrs={
@@ -72,7 +72,8 @@ class EmployeeForm(forms.ModelForm):
         'id': 'id_office'
       }),
       'avatar': FileInput(attrs={
-        'placeholder': 'Seleccione una imagen de perfil', 
+        'class': 'form-control-file d-none',
+        'placeholder': 'Seleccione una imagen de perfil',
         'id': 'id_avatar_image_input'
       }),
     }
@@ -167,13 +168,31 @@ class EmployeeForm(forms.ModelForm):
           self.fields['office'].queryset = self.instance.office.loc.office_location.order_by('office')
 
   def clean(self):
+    cleaned_data = super().clean()
+
     cuil = self.cleaned_data.get('cuil')
     user_pc = self.cleaned_data.get('user_pc').upper()
 
-    if Employee.objects.filter(cuil__iexact=cuil).exists():
-      self.add_error('cuil', f"El CUIL Nro: '{cuil}', ya se ecuentra asignado a un empleado. Verifique y vuelva a ingresar uno distinto")
+    if cuil:
 
-    if Employee.objects.filter(user_pc__iexact=user_pc).exists():
-      self.add_error('user_pc', f"El usuario de PC '{user_pc}', ya se encuentra vinculado a otro empleado, Verifique y vuelva a ingresar uno distinto")
-    cleaned_data = super().clean()
+      qs = Employee.objects.filter(cuil__iexact=cuil)
+
+      if len(str(cuil)) != 11:
+        self.add_error('cuil', 'El CUIL debe contener 11 digitos. Verifique y vuelva a ingresar uno correcto')
+      elif self.instance.pk:
+        qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
+          self.add_error('cuil', f"El CUIL Nro: '{cuil}', ya se ecuentra asignado a un empleado. Verifique y vuelva a ingresar uno distinto")
+
+    if user_pc:
+
+      qs = Employee.objects.filter(user_pc__iexact=user_pc)
+
+      if self.instance.pk:
+        qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
+          self.add_error('user_pc', f"El usuario de PC '{user_pc}', ya se encuentra vinculado a otro empleado, Verifique y vuelva a ingresar uno distinto")
+
     return cleaned_data

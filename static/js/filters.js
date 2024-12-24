@@ -280,3 +280,22 @@ function updateOfficeOptions(office_id) {
     clearDependentFields(['#id_rack'])
   }
 }
+
+function updateRackOptions(rack_id) {
+  if (rack_id) {
+    if ($('#id_switch').length > 0) {
+      updateOptions('/sh/ajax/load_switch/', {
+        'rack_id': rack_id,
+      }, $('select[name="switch"]'), $('#id_switch').data('preselected'));
+    }
+
+    if ($('#id_patchera').length > 0) {
+      updateOptions('/sh/ajax/load_patchera/', {
+        'rack_id': rack_id,
+      }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
+    }
+  } else {
+    console.log('Rack seleccionado: ', rack_id)
+    clearDependentFields(['#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+  }
+}

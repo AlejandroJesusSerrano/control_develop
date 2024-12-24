@@ -33,10 +33,17 @@ class MoveTypeForm(forms.ModelForm):
 
 
   def clean(self):
+    cleaned_data = super().clean()
     move = self.cleaned_data.get('move')
 
-    if move and Move_Type.objects.filter(move__iexact=move).exists():
-      self.add_error('move', f"El tipo de movimiento '{move}', ya se encuentra registrado. Ingrese una diferente")
+    if move:
 
-    cleaned_data = super().clean()
+      qs = Move_Type.objects.filter(move__iexact=move)
+
+      if self.instance.pk:
+        qs = qs.exclude(pk=self.instance.pk)
+
+      if qs.exists():
+        self.add_error('move', f"El tipo de movimiento '{move}', ya se encuentra registrado. Ingrese una diferente")
+
     return cleaned_data

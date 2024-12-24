@@ -94,6 +94,7 @@ class DeviceCreateView(CreateView):
     context['form_id'] = 'deviceForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class DeviceUpdateView(UpdateView):
@@ -142,6 +143,8 @@ class DeviceUpdateView(UpdateView):
     context['form_id'] = 'deviceForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
+    context['filter_btn_color'] = 'bg-custom-warning'
+
 
     device = self.get_object()
 

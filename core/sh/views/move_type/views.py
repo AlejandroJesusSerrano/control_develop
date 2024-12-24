@@ -64,7 +64,7 @@ class Move_Type_CreateView(CreateView):
       if action == 'add':
         form = self.get_form()
         if form.is_valid():
-          instance = form.save
+          instance = form.save()
           data = instance.toJSON()
         else:
           data['error'] = form.errors
@@ -101,10 +101,10 @@ class Move_Type_UpdateView(UpdateView):
     data = {}
     try:
       action = request.POST.get('action')
-      if action == 'add':
+      if action == 'edit':
         form = self.get_form()
         if form.is_valid():
-          instance = form.save
+          instance = form.save()
           data = instance.toJSON()
         else:
           data['error'] = form.errors

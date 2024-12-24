@@ -6,58 +6,77 @@
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
 <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
 {% endblock extra_refs %}
 
 {% block form %}
 
-<div class="form-group">
-  <label for="id_province">Provincia:</label>
-  {{ form.province }}
-  {% if form.province.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.province.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
+<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros de oficina <i class="fas fa-search"></i></button>
+<div id="filter-office-cards" class="d-none">
+  <div class="row">
+    <div class="container">
+    <!-- Tarjeta Filtros Geográficos -->
+      <div class="card mt-1">
+        <div class="card-header {{bg_color}}">
+          Filtrar Oficina
+        </div>
+        <div class="card-body row">
+          <div class="form-group col-6">
+            <label for="id_province">Provincia:</label>
+            {{ form.province }}
+            {% if form.province.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.province.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
 
-<div class="form-group">
-  <label for="id_location">Localidad:</label>
-  {{ form.location }}
-  {% if form.location.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.location.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
+          <div class="form-group col-6">
+            <label for="id_location">Localidad:</label>
+            {{ form.location }}
+            {% if form.location.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.location.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
 
-<div class="form-group">
-  <label for="id_dependency">Dependencia:</label>
-  {{ form.dependency }}
-  {% if form.dependency.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.dependency.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
+          <div class="form-group col-6">
+            <label for="id_edifice">Edificio:</label>
+            {{ form.edifice }}
+            {% if form.edifice.help_text %}
+            <small class="form-text text-muted">{{form.edifice.help_text}}</small>
+            {% endif %}
+            {% if form.edifice.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.edifice.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
 
-<div class="form-group">
-  <label for="id_edifice">Edificio:</label>
-  {{ form.edifice }}
-  {% if form.edifice.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.edifice.errors|join:"<br>" }}
-  </div>
-{% endif %}
-</div>
+          <div class="form-group col-6">
+            <label for="id_dependency">Dependencia:</label>
+            {{ form.dependency }}
+            {% if form.dependency.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.dependency.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
 
-<div class="form-group">
-  <label for="id_loc">Ubicación:</label>
-  {{ form.loc }}
-  {% if form.loc.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.loc.errors|join:"<br>" }}
+          <div class="form-group col-6">
+            <label for="id_loc">Locacion de Oficina:</label>
+            {{ form.loc }}
+            {% if form.loc.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.loc.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% endif %}
 </div>
 
 <div class="form-group">
@@ -104,7 +123,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_status">Estado del Empleado:</label>
+  <label for="id_employee_status">Estado del Empleado:</label>
   {{ form.status }}
   {% if form.status.errors %}
   <div class="invalid-feedback d-block">
@@ -124,8 +143,13 @@
 </div>
 
 <div class="form-group">
-  <label for="id_avatar">Imagen del Empleado:</label>
+  <label for="id_avatar_image_input">Imagen del Empleado:</label>
   {{ form.avatar }}
+  <button type="button" class="btn btn-primary" id="custom_avatar_button">
+    <i class="fas fa-upload"></i> Seleccionar Imagen
+  </button>
+  <span id="avatar_name" class="ml-2">Ningún archivo seleccionado</span>
+</div>
   {% if form.avatar.errors %}
   <div class="invalid-feedback d-block">
     {{ form.avatar.errors|join:"<br>" }}
@@ -137,4 +161,6 @@
 
 {% block form_scripts %}
   <script src="{% static 'employee/js/form.js' %}"></script>
+  <script src="{% static 'js/filters.js' %}"></script>
 {% endblock form_scripts %}
+</script>

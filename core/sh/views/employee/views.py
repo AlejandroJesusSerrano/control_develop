@@ -95,6 +95,7 @@ class EmployeeCreateView(CreateView):
     context['form_id'] = 'employeeForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['filter_btn_color'] = 'btn-primary'
     return context
 
 class EmployeeUpadateView(UpdateView):
@@ -143,6 +144,7 @@ class EmployeeUpadateView(UpdateView):
     context['form_id'] = 'employeeForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
+    context['filter_btn_color'] = 'bg-custom-warning'
 
     employee = self.get_object()
 
