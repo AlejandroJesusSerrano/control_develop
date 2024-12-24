@@ -1,6 +1,6 @@
 from django.urls import path
 from core.sh.views.ajax_views import (
-    ajax_load_brand, ajax_load_employee, ajax_load_location, ajax_load_dependency, ajax_load_edifices,
+    ajax_load_brand, ajax_load_dev_type, ajax_load_employee, ajax_load_location, ajax_load_dependency, ajax_load_edifices,
     ajax_load_loc, ajax_load_office, ajax_load_rack, ajax_load_switch,
     ajax_load_patchera, ajax_load_patch_ports, ajax_load_model, ajax_load_switch_port, ajax_load_wall_port
 )
@@ -12,6 +12,7 @@ urlpatterns = [
     path('ajax/load_loc/', ajax_load_loc, name='ajax_load_loc'),
     path('ajax/load_office/', ajax_load_office, name='ajax_load_office'),
     path('ajax/load_brand/', ajax_load_brand, name='ajax_load_brand'),
+    path('ajax/load_dev_type/', ajax_load_dev_type, name='ajax_load_dev_type'),
     path('ajax/load_rack/', ajax_load_rack, name='ajax_load_rack'),
     path('ajax/load_switch/', ajax_load_switch, name='ajax_load_switch'),
     path('ajax/load_patchera/', ajax_load_patchera, name='ajax_load_patchera'),

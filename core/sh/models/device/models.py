@@ -12,7 +12,7 @@ class Device(models.Model):
   dev_status = models.ForeignKey(Dev_Status, related_name='device_status', verbose_name='Estado del Dispositivo', on_delete=models.CASCADE)
   connection = models.ForeignKey(Connection_Type, related_name='device_connection', verbose_name='Conexion del Dispositivo', on_delete=models.CASCADE, blank=True, null=True)
   ip = models.CharField(max_length=15, verbose_name='IP', blank=True, null=True, unique=True)
-  serial_n = models.CharField(max_length=20, verbose_name='S/N°', unique=True)
+  serial_n = models.CharField(max_length=20, verbose_name='S/N°')
   net_name = models.CharField(max_length=11, verbose_name='ID en la Red', blank=True, null=True, unique=True)
   office = models.ForeignKey(Office, related_name='device_office', verbose_name='Oficina', on_delete=models.CASCADE)
   wall_port_in = models.OneToOneField('sh.Wall_Port', related_name='device_wall_port', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
@@ -58,3 +58,6 @@ class Device(models.Model):
     verbose_name_plural = 'Dispositivos'
     db_table = 'dispositivos'
     ordering = ['id']
+    constraints = [
+      models.UniqueConstraint(fields=['serial_n', 'dev_model'], name='unique_serial_n_dev_model')
+    ]

@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import DeviceForm
 from core.sh.models import Device, Dev_Model, Employee, Office, Switch_Port, Wall_Port

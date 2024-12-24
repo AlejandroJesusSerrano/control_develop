@@ -119,6 +119,14 @@ $(document).ready(function() {
     }
   });
 
+  $('select[name="dev_type"]').on('change', function() {
+    const dev_type_val = $(this).val();
+    updateOptions('/sh/ajax/load_brand/', {
+      usage: 'switch',
+      dev_type_name: dev_type_val
+    }, $('select[name="brand"]'), $('#id_brand').data('preselected'));
+  });
+
   initializeFormSubmission('#myform', 'edit');
 
 });

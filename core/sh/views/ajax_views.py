@@ -8,6 +8,7 @@ from core.sh.models import (
     Patchera, Patch_Port
 )
 from core.sh.models.brands.models import Brand
+from core.sh.models.dev_type.models import Dev_Type
 from core.sh.models.device.models import Device
 
 @csrf_protect
@@ -125,12 +126,20 @@ def ajax_load_rack(request):
 @csrf_protect
 @require_POST
 def ajax_load_brand(request):
+    usage = request.POST.get('usage')
     dev_type_name = request.POST.get('dev_type_name')
-    data = []
+
+    brands = Brand.objects.all()
+
+    if usage == 'device':
+        brands = brands.exclude(models_brand__dev_type__dev_type='SWITCH').distinct()
+
+    elif usage == 'switch':
+        brands = brands.filter(models_brand__dev_type__dev_type='SWITCH').distinct()
+
     if dev_type_name:
-        brands = Brand.objects.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
-    else:
-        brands = Brand.objects.none()
+        brands = brands.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
+
     data = [{'id': b.id, 'name': b.brand} for b in brands]
     return JsonResponse(data, safe=False)
 
@@ -203,23 +212,29 @@ def ajax_load_patch_ports(request):
 
     return JsonResponse(data, safe=False)
 
-
 @csrf_protect
 @require_POST
 def ajax_load_model(request):
+    usage = request.POST.get('usage')
     brand_id = request.POST.get('brand_id')
     dev_type_name = request.POST.get('dev_type_name')
 
-    filters = {}
+    dev_models = Dev_Model.objects.all()
+
+    if usage == 'device':
+        dev_models = dev_models.exclude(dev_type__dev_type='SWITCH')
+    elif usage == 'switch':
+        dev_models = dev_models.filter(dev_type__dev_type='SWITCH')
+
     if brand_id:
-        filters['brand_id'] = brand_id
+        dev_models = dev_models.filter(brand_id=brand_id)
     if dev_type_name:
-        filters['dev_type__dev_type'] = dev_type_name
+        dev_models = dev_models.filter(dev_type__dev_type=dev_type_name)
 
-    models = Dev_Model.objects.filter(**filters).distinct()
-    data = [{'id': model.id, 'name': model.dev_model} for model in models]
+    dev_models = dev_models.distinct()
+
+    data = [{'id': m.id, 'name': m.dev_model} for m in dev_models]
     return JsonResponse(data, safe=False)
-
 
 @csrf_protect
 @require_POST
@@ -279,4 +294,19 @@ def ajax_load_employee(request):
     office_id = request.POST.get('office_id')
     employees = Employee.objects.filter(office_id=office_id)
     data = [{'id': e.id, 'name': f'{e.employee_last_name}, {e.employee_name}'} for e in employees]
+    return JsonResponse(data, safe=False)
+
+
+@csrf_protect
+@require_POST
+def ajax_load_dev_type(request):
+    usage = request.POST.get('usage', '')
+    dev_types = Dev_Type.objects.all()
+
+    if usage == 'device':
+        dev_types = dev_types.exclude(dev_type='SWITCH')
+    elif usage == 'switch':
+        dev_types = dev_types.filter(dev_type='SWITCH')
+
+    data = [{'id': dt.id, 'name': dt.dev_type} for dt in dev_types]
     return JsonResponse(data, safe=False)
