@@ -104,11 +104,9 @@ class WallPortCreateView(CreateView):
     context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
 
-    # Obtener los puertos no utilizados
     used_switch_ports = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
     used_patch_ports = Wall_Port.objects.exclude(patch_port_in=None).values_list('patch_port_in_id', flat=True)
 
-    # Ajustar los querysets para mostrar solo los disponibles
     context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.exclude(id__in=used_switch_ports)
     context['form'].fields['patch_port_in'].queryset = Patch_Port.objects.exclude(id__in=used_patch_ports)
 
@@ -164,7 +162,6 @@ class WallPortUpdateView(UpdateView):
 
       wall_port = self.get_object()
 
-      # Obtener los puertos no utilizados, incluyendo el actual
       used_switch_ports = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
       used_patch_ports = Wall_Port.objects.exclude(patch_port_in=None).values_list('patch_port_in_id', flat=True)
 

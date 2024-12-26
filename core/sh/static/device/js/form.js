@@ -76,6 +76,7 @@ $(document).ready(function() {
   if ($('#id_office_ports').length > 0) {
     $('select[name="office_ports"]').on('change', function(){
       const office_ports_id = $(this).val();
+      console.log('Office ID seleccionado: ', office_ports_id);
       updateOfficePortsOptions(office_ports_id);
     });
   }
@@ -104,12 +105,31 @@ $(document).ready(function() {
     });
   }
 
-  $('select[name="dev_type"]').on('change', function() {
+  if ($('#id_wall_port_in').length > 0) {
+    $('select[name="wall_port_in"]').on('change', function(){
+      const wall_port_in_id = $(this).val();
+      if (wall_port_in_id) {
+        $('select[name="patchera_ports"]').val(null).trigger('change');
+        $('select[name="patch_port_in"]').val(null).trigger('change');
+        $('select[name="patch_port_in"]').closest('.form-group').hide();
+      } else {
+        $('select[name="patch_port_in"]').closest('.form-group').show();
+      }
+    });
+  }
+
+  $('select[name="dev_type"]').on('change', function () {
     const dev_type = $(this).val();
-    updateOptions('/sh/ajax/load_brand/', {
-      usage: 'device',
-      dev_type_name: dev_type
-    }, $('select[name="brand"]'), $('#id_brand').data('preselected'));
+    updateBrandOptions(dev_type);
+    updateModelOptions(dev_type, null);
+  });
+
+
+
+  $('select[name="brand"]').on('change', function () {
+    const brand_id = $(this).val();
+    const dev_type = $('select[name="dev_type"]').val();
+    updateModelOptions(dev_type, brand_id);
   });
 
   initializeFormSubmission('#myform', 'edit');
@@ -178,15 +198,14 @@ function updatePortsFromLocation(location_id) {
   }
 }
 
-function updateBrandOptions() {
-  const dev_type = $('select[name="dev_type"]').val();
+function updateBrandOptions(dev_type) {
   updateOptions('/sh/ajax/load_brand/', {
     'usage': 'device',
     'dev_type_name': dev_type
   }, $('select[name="brand"]'), $('#id_brand').data('preselected'));
 }
 
-updateModelOptions(brand_id) {
+function updateModelOptions(brand_id) {
   const dev_type = $('select[name="dev_type"]').val();
   updateOptions('/sh/ajax/load_model/', {
     'usage': 'device',
@@ -294,6 +313,7 @@ function updateLocPortsOptions(loc_ports_id) {
 }
 
 function updateOfficePortsOptions(office_ports_id) {
+  console.log('Office ID seleccionado: ', office_ports_id);
   if (office_ports_id){
     if ($('#id_wall_port').length > 0) {
       updateOptions('/sh/ajax/load_wall_port/', {

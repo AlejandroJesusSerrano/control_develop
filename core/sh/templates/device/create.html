@@ -255,7 +255,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_wall_port_in">Boca de Pared:</label>
+  <label for="id_wall_port_in">Puerto de Pared:</label>
   {{ form.wall_port_in }}
   {% if form.wall_port_in.errors %}
   <div class="invalid-feedback d-block">
@@ -265,7 +265,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_switch_port_in">Boca Switch:</label>
+  <label for="id_switch_port_in">Puerto Switch:</label>
   {{ form.switch_port_in }}
   {% if form.switch_port_in.errors %}
   <div class="invalid-feedback d-block">
@@ -273,6 +273,15 @@
   </div>
   {% endif %}
 </div>
+
+<div class="form-group">
+  <label for="id_patch_port_in">Puerto Patchera:</label>
+  {{ form.patch_port_in }}
+  {% if form.patch_port_in.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.patch_port_in.errors|join:"<br>" }}
+  </div>
+  {% endif %}
 
 {% endblock form %}
 

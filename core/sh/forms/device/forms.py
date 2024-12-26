@@ -2,10 +2,12 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
 
+from django.db.models import Q
 from core.sh.models import Dependency, Device, Office, Brand, Dev_Type, Employee, Switch_Port, Dev_Model, Wall_Port
 from core.sh.models.edifice.models import Edifice
 from core.sh.models.location.models import Location
 from core.sh.models.office_loc.models import Office_Loc
+from core.sh.models.patch_port.models import Patch_Port
 from core.sh.models.province.models import Province
 from core.sh.models.rack.models import Rack
 from core.sh.models.switch.models import Switch
@@ -73,19 +75,19 @@ class DeviceForm(forms.ModelForm):
   )
 
   brand = forms.ModelChoiceField(
-    queryset=Brand.objects.all(),
+    queryset=Brand.objects.exclude(models_brand__dev_type__dev_type='SWITCH').distinct(),
     widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_brand'}),
     required=False
   )
 
   dev_type = forms.ModelChoiceField(
-    queryset=Dev_Type.objects.all(),
+    queryset=Dev_Type.objects.exclude(dev_type='SWITCH'),
     widget=forms.Select(attrs={'class':'form-control select2', 'id': 'id_dev_type'}),
     required=False
   )
 
   dev_model = forms.ModelChoiceField(
-    queryset=Dev_Model.objects.none(),
+    queryset=Dev_Model.objects.exclude(dev_type__dev_type='SWITCH'),
     widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dev_model'}),
     required=True
   )
@@ -93,7 +95,7 @@ class DeviceForm(forms.ModelForm):
   class Meta:
     model = Device
     fields = [
-      'province', 'location', 'dependency', 'edifice', 'loc', 'dev_model', 'connection', 'ip', 'net_name', 'dev_status', 'serial_n', 'office', 'edifice_ports', 'loc_ports', 'office_ports', 'rack_ports', 'switch_ports', 'wall_port_in', 'switch_port_in', 'employee'
+      'province', 'location', 'dependency', 'edifice', 'loc', 'dev_model', 'connection', 'ip', 'net_name', 'dev_status', 'serial_n', 'office', 'edifice_ports', 'loc_ports', 'office_ports', 'rack_ports', 'switch_ports', 'wall_port_in', 'switch_port_in', 'patch_port_in', 'employee'
     ]
     widgets = {
       'connection': Select(attrs={
@@ -131,6 +133,10 @@ class DeviceForm(forms.ModelForm):
         'class': 'form-control select2',
         'id': 'id_switch_port_in'
       }),
+      'patch_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_patch_port_in'
+      }),
       'employee': SelectMultiple(attrs={
         'class': 'form-control select2',
         'id': 'id_employee'}),
@@ -143,33 +149,81 @@ class DeviceForm(forms.ModelForm):
     brand_queryset = Brand.objects.exclude(models_brand__dev_type__dev_type='SWITCH').distinct()
     dev_model_queryset = Dev_Model.objects.exclude(dev_type__dev_type='SWITCH')
 
+
     selected_dev_type = self.data.get('dev_type') or self.initial.get('dev_type')
     selected_brand = self.data.get('brand') or self.initial.get('brand')
 
     if selected_dev_type:
-
-        brand_queryset = brand_queryset.filter(
-            models_brand__dev_type__dev_type=selected_dev_type
-        ).distinct()
-
-        dev_model_queryset = dev_model_queryset.filter(
-            dev_type__dev_type=selected_dev_type
-        )
+      dev_type_queryset = dev_type_queryset.filter(pk=selected_dev_type)
+      brand_queryset = brand_queryset.filter(models_brand__dev_type_id=selected_dev_type)
+      dev_model_queryset = dev_model_queryset.filter(dev_type_id=selected_dev_type)
 
     if selected_brand:
-
-        dev_type_queryset = dev_type_queryset.filter(
-            models_dev_type__brand_id=selected_brand
-        ).distinct()
-
-        dev_model_queryset = dev_model_queryset.filter(
-            brand_id=selected_brand
-        )
+        dev_model_queryset = dev_model_queryset.filter(brand_id=selected_brand)
 
     self.fields['dev_type'].queryset = dev_type_queryset
     self.fields['brand'].queryset = brand_queryset
     self.fields['dev_model'].queryset = dev_model_queryset
 
+    used_switch_ports = set()
+
+    device_switch_port_in = Switch_Port.objects.filter(device_switch_port_in__isnull=False).values_list('id', flat=True)
+    used_switch_ports.update(device_switch_port_in)
+
+    switch_switch_port_in = Switch_Port.objects.filter(switch_switch_port_in__isnull=False).values_list('id', flat=True)
+    used_switch_ports.update(switch_switch_port_in)
+
+    wall_switch_port_in = Switch_Port.objects.filter(wall_switch_port_in__isnull=False).values_list('id', flat=True)
+    used_switch_ports.update(wall_switch_port_in)
+
+    patch_port_switch_port_in = Switch_Port.objects.filter(patch_port_switch_port_in__isnull=False).values_list('id', flat=True)
+    used_switch_ports.update(patch_port_switch_port_in)
+
+    used_switch_ports = Switch_Port.objects.filter(
+      device_switch_port_in__isnull=False
+      ).values_list('id', flat=True)
+
+    if self.instance.pk and self.instance.switch_port_in:
+      used_switch_ports = list(used_switch_ports)
+      if self.instance.switch_port_in.id in used_switch_ports:
+        used_switch_ports.remove(self.instance.switch_port_in.id)
+
+    self.fields['switch_port_in'].queryset = Switch_Port.objects.exclude(id__in=used_switch_ports)
+
+    used_wall_ports = set()
+
+    device_wall_port_in = Wall_Port.objects.filter(device_wall_port_in__isnull=False).values_list('id', flat=True)
+    used_wall_ports.update(device_wall_port_in)
+
+    switch_wall_port_in = Wall_Port.objects.filter(switch_port_in__isnull=False).values_list('id', flat=True)
+    used_wall_ports.update(switch_wall_port_in)
+
+    patch_wall_port_in = Wall_Port.objects.filter(patch_port_in__isnull=False).values_list('id', flat=True)
+    used_wall_ports.update(patch_wall_port_in)
+
+    if self.instance.pk and self.instance.wall_port_in:
+        current_port_id = self.instance.wall_port_in.id
+        self.fields['wall_port_in'].queryset = Wall_Port.objects.exclude(id__in=used_wall_ports) | Wall_Port.objects.filter(id=current_port_id)
+    else:
+        self.fields['wall_port_in'].queryset = Wall_Port.objects.exclude(id__in=used_wall_ports)
+
+    used_patch_ports = set()
+
+    device_patch_port_in = Patch_Port.objects.filter(device_patch_port_in__isnull=False).values_list('id', flat=True)
+    used_patch_ports.update(device_patch_port_in)
+
+    switch_patch_port_in = Patch_Port.objects.filter(switch_patch_port_in__isnull=False).values_list('id', flat=True)
+    used_patch_ports.update(switch_patch_port_in)
+
+    wall_patch_port_in = Patch_Port.objects.filter(wall_patch_port_in__isnull=False).values_list('id', flat=True)
+    used_patch_ports.update(wall_patch_port_in)
+
+    if self.instance.pk and self.instance.patch_port_in:
+      used_patch_ports = list(used_patch_ports)
+      if self.instance.patch_port_in.id in used_patch_ports:
+        used_patch_ports.remove(self.instance.patch_port_in.id)
+
+    self.fields['patch_port_in'].queryset = Patch_Port.objects.exclude(id__in=used_patch_ports)
 
     if 'province' in self.data:
       try:
@@ -347,6 +401,10 @@ class DeviceForm(forms.ModelForm):
         self.fields['switch_ports_in'].queryset = Switch_Port.objects.filter(
           switch__rack__office__loc__edifice_id=edifice_ports_id
         ).order_by('port_id')
+
+        self.fields['patchera_port'].queryset = Patch_Port.objects.filter(
+          patchera__rack__office__loc__edifice_id=edifice_ports_id
+        ).order_by('port')
 
       except (ValueError, TypeError):
         pass

@@ -12,6 +12,11 @@ class Wall_Port(models.Model):
     date_creation = models.DateTimeField(auto_now=True, verbose_name='Fecha de Registro')
     date_updated = models.DateTimeField(auto_now_add=True, verbose_name='Última Modificación')
 
+    def save(self, *args, **kwargs):
+        if self.wall_port:
+            self.wall_port = self.wall_port.upper()
+        super(Wall_Port, self).save(*args, **kwargs)
+
     def __str__(self):
         switch_info = f"-> SWITCH: {self.switch_port_in.switch.model.brand} DE {self.switch_port_in.switch.ports_q} BOCAS EN EL PUERTO {self.switch_port_in.port_id}" if self.switch_port_in else 'NO SWITCH'
         switch_port_in_info = f"SWITCH/RACK: {self.switch_port_in.switch.switch_rack_pos} -> PUERTO: {self.switch_port_in.port_id} -> RACK: {self.switch_port_in.switch.rack}" if self.switch_port_in else "NO VIENE DE SWITCH"
