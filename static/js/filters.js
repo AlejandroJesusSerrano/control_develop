@@ -38,6 +38,36 @@ $(document).ready(function() {
   if ($('#id_office').length > 0) {
     $('select[name="office"]').on('change', function(){
       const office_id = $(this).val();
+
+      if (office_id) {
+        $.ajax({
+          url: '/sh/ajax/load_province_location/',
+          type: 'POST',
+          data: {
+            'office_id': office_id
+          },
+          dataType: 'json',
+          success: function (data) {
+            if (!data.error) {
+              console.log('Provincia y Localidad cargadas:', data);
+
+              // Actualizar provincia
+              const provinceSelect = $('select[name="province"]');
+              provinceSelect.val(data.province_id).trigger('change.select2');
+
+              // Actualizar localidad
+              const locationSelect = $('select[name="location"]');
+              locationSelect.val(data.location_id).trigger('change.select2').trigger('change');
+            } else {
+              console.error('Error: ', data.error);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX Error: ', status, error);
+          }
+        });
+      }
+
       updateOfficeOptions(office_id);
     })
   }
@@ -269,6 +299,11 @@ function updateLocOptions(loc_id) {
 
 function updateOfficeOptions(office_id) {
   if (office_id) {
+    if ($('#id_office_ports').val() === "") {
+      updateOptions('/sh/ajax/load_office_ports/', {
+        'office_id': office_id,
+      }, $('select[name="office_ports"]'), $('#id_office_ports').data('preselected'));
+    }
 
     if ($('#id_rack').length > 0) {
       updateOptions('/sh/ajax/load_rack/', {

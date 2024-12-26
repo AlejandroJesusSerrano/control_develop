@@ -43,18 +43,18 @@ $(document).ready(function() {
   }
 
 
-  if ($('#id_province').length > 0) {
-    $('select[name="province"]').on('change', function() {
-      const province_id = $(this).val();
-      updateLocationOptions(province_id);
-      updatePortsFromProvince(province_id);
-    });
-  }
+  // if ($('#id_province').length > 0) {
+  //   $('select[name="province"]').on('change', function() {
+  //     const province_id = $(this).val();
+  //     updateLocationOptions(province_id);
+  //     updatePortsFromProvince(province_id);
+  //   });
+  // }
 
   if ($('#id_location').length > 0) {
     $('select[name="location"]').on('change', function() {
       const location_id = $(this).val();
-      updateLocationReferedOptions(location_id);
+      console.log('Location ID seleccionado: ', location_id);
       updatePortsFromLocation(location_id);
     });
   }
@@ -136,42 +136,10 @@ $(document).ready(function() {
 
 });
 
-function updatePortsFromProvince(province_id) {
-  if (province_id) {
-    if ($('#id_location').length > 0) {
-      updateOptions('/sh/ajax/load_location/', {
-        'province_id': province_id
-      }, $('select[name="location"]'), $('#id_location').data('preselected'));
-    }
-
-    if ($('#id_edifice_ports').length > 0) {
-      updateOptions('/sh/ajax/load_edifices/', {
-        'province_id': province_id
-      }, $('select[name="edifice_ports"]'), $('#id_edifice_ports').data('preselected'));
-    }
-
-    if ($('#id_loc_ports').length > 0) {
-      updateOptions('/sh/ajax/load_loc/', {
-        'province_id': province_id
-      }, $('select[name="loc_ports"]'), $('#id_loc_ports').data('preselected'));
-    }
-
-    if ($('#id_office_ports').length > 0) {
-      updateOptions('/sh/ajax/load_office/', {
-        'province_id': province_id
-      }, $('select[name="office_ports"]'), $('#id_office_ports').data('preselected'));
-    }
-
-    if ($('#id_rack_ports').length > 0) {
-      updateOptions('/sh/ajax/load_rack/', {
-        'province_id': province_id
-      }, $('select[name="rack_ports"]'), $('#id_rack_ports').data('preselected'));
-    }
-  }
-}
 
 function updatePortsFromLocation(location_id) {
   if (location_id) {
+    console.log('filtrando puertos con location_id: ', location_id);
     if ($('#id_edifice_ports').length > 0) {
       updateOptions('/sh/ajax/load_edifices/', {
         'location_id': location_id
@@ -315,6 +283,12 @@ function updateLocPortsOptions(loc_ports_id) {
 function updateOfficePortsOptions(office_ports_id) {
   console.log('Office ID seleccionado: ', office_ports_id);
   if (office_ports_id){
+    if ($('#id_office').val()==="") {
+      updateOptions('/sh/ajax/load_office/', {
+        'loc_id': office_ports_id
+      }, $('select[name="office"]'), $('#id_office').data('preselected'));
+    }
+
     if ($('#id_wall_port').length > 0) {
       updateOptions('/sh/ajax/load_wall_port/', {
         'office_id': office_ports_id

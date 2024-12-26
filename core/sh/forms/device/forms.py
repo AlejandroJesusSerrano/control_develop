@@ -145,6 +145,20 @@ class DeviceForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
+    if 'province' in self.data:
+      try:
+        province_id = int(self.data.get('province'))
+        self.fields['location'].queryset = Location.objects.filter(province_id=province_id).order_by('location')
+      except (ValueError, TypeError):
+        self.fields['location'].queryset = Location.objects.none()
+
+    if 'location' in self.data:
+      try:
+        location_id = int(self.data.get('location'))
+        self.fields['edifice'].queryset = Edifice.objects.filter(location_id=location_id).order_by('edifice')
+      except (ValueError, TypeError):
+        self.fields['edifice'].queryset = Edifice.objects.none()
+
     dev_type_queryset = Dev_Type.objects.exclude(dev_type='SWITCH')
     brand_queryset = Brand.objects.exclude(models_brand__dev_type__dev_type='SWITCH').distinct()
     dev_model_queryset = Dev_Model.objects.exclude(dev_type__dev_type='SWITCH')
@@ -490,8 +504,8 @@ class DeviceForm(forms.ModelForm):
 
     if self.instance.pk:
 
-      self.initial['province'] = self.instance.office.loc.edifice.location.province
-      self.initial['location'] = self.instance.office.loc.edifice.location
+      self.initial['province'] = self.instance.office.loc.edifice.location.province_id
+      self.initial['location'] = self.instance.office.loc.edifice.location_id
       self.initial['dependency'] = self.instance.office.dependency
       self.initial['edifice'] = self.instance.office.loc.edifice
       self.initial['loc'] = self.instance.office.loc

@@ -405,3 +405,24 @@ def ajax_load_dev_type(request):
 
     data = [{'id': dt.id, 'name': dt.dev_type} for dt in dev_types]
     return JsonResponse(data, safe=False)
+
+@csrf_protect
+@require_POST
+def ajax_load_province_location(request):
+    office_id = request.POST.get('office_id')
+    if not office_id:
+        return JsonResponse({'error': 'No office_id provided'}, status=400)
+
+    try:
+        office = Office.objects.select_related('loc__edifice__location').get(id=office_id)
+        location = office.loc.edifice.location
+        province = location.province
+
+        return JsonResponse({
+            'province_id': province.id,
+            'province_name': province.province,
+            'location_id': location.id,
+            'location_name': location.location,
+        })
+    except Office.DoesNotExist:
+        return JsonResponse({'error': 'Office not found'}, status=404)
