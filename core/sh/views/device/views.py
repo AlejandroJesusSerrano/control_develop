@@ -161,29 +161,41 @@ class DeviceUpdateView(UpdateView):
       context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
       context['form'].initial['edifice'] = edifice.id
 
+      edifice_port = device.office.loc.edifice
+      context['form'].fields['edifice_ports'].queryset = Edifice.objects.filter(location=location)
+      context['form'].initial['edifice_ports'] = edifice_port
+
       dependency = device.office.dependency
-      context['form'].fields['dependency'].queryset = Dependency.objects.filter(edifice__location=location)
+      context['form'].fields['dependency'].queryset = Dependency.objects.filter(location=location)
       context['form'].initial['dependency'] = dependency.id
 
       loc = device.office.loc
       context['form'].fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice)
       context['form'].initial['loc'] = loc.id
 
+      loc_port = device.office.loc
+      context['form'].fields['loc_ports'].queryset = Office_Loc.objects.filter(edifice=edifice)
+      context['form'].initial['loc_ports'] = loc_port
+
       office = device.office
       context['form'].fields['office'].queryset = Office.objects.filter(loc=loc)
       context['form'].initial['office'] = office.id
 
-      wall_port = device.wall_port
-      context['form'].fields['wall_port'].queryset = Wall_Port.objects.filter(office=office)
-      context['form'].initial['wall_port'] = wall_port
+      office_port = device.office
+      context['form'].fields['office_ports'].queryset = Office.objects.filter(loc=loc)
+      context['form'].initial['office_ports'] = office_port
+
+      wall_port = device.wall_port_in
+      context['form'].fields['wall_port_in'].queryset = Wall_Port.objects.filter(office=office)
+      context['form'].initial['wall_port_in'] = wall_port
 
       context['form'].fields['employee'].queryset = Employee.objects.filter(office=office)
       employees = device.employee.all()
       context['form'].initial['employee'] = [e.id for e in employees]
 
-      switch_port = device.switch_port
-      context['form'].fields['switch_port'].queryset = Switch_Port.objects.filter(switch__office=office)
-      context['form'].initial['switch_port'] = switch_port
+      switch_port = device.switch_port_in
+      context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=office)
+      context['form'].initial['switch_port_in'] = switch_port
 
     return context
 
