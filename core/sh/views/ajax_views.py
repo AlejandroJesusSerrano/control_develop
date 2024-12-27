@@ -158,10 +158,13 @@ def ajax_load_brand(request):
 @csrf_protect
 @require_POST
 def ajax_load_switch(request):
+    location_id = request.POST.get('location_id')
     office_id = request.POST.get('office_id')
     rack_id = request.POST.get('rack_id')
 
     filters = {}
+    if location_id:
+        filters['office__loc__edifice__location_id'] = location_id
     if office_id:
         filters['office_id'] = office_id
     if rack_id:
@@ -177,9 +180,21 @@ def ajax_load_switch(request):
 @csrf_protect
 @require_POST
 def ajax_load_patchera(request):
+    location_id = request.POST.get('location_id')
     rack_id = request.POST.get('rack_id')
-    patcheras = Patchera.objects.filter(rack_id=rack_id)
-    data = [{'id': patch.id, 'name': f'PATCHERA: {patch.patchera}'} for patch in patcheras]
+
+    filters = {}
+    if location_id:
+        filters['rack__office__loc__edifice__location_id'] = location_id
+    if rack_id:
+        filters['rack_id'] = rack_id
+
+    if not filters:
+        return JsonResponse([], safe=False)
+
+    patcheras = Patchera.objects.filter(**filters).distinct()
+
+    data = [{'id': patch.id, 'name': f'PATCHERA: {patch.patchera} / RACK: {patch.rack.rack}'} for patch in patcheras]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -192,79 +207,19 @@ def ajax_load_patch_ports(request):
 
     used_ids = set()
 
-    # (a) Patch_Port asignados a Device
-    # En Device: patch_port_in = OneToOneField(..., related_name='device_patch_port_in')
-    # => inverso: Patch_Port.objects.filter(device_patch_port_in__isnull=False)
     device_patch = Patch_Port.objects.filter(device_patch_port_in__isnull=False).values_list('id', flat=True)
     used_ids.update(device_patch)
 
-    # (b) Patch_Port asignados a Switch
-    # En Switch: patch_port_in = OneToOneField(..., related_name='switch_patch_port_in')
-    # => inverso: Patch_Port.objects.filter(switch_patch_port_in__isnull=False)
     switch_patch = Patch_Port.objects.filter(switch_patch_port_in__isnull=False).values_list('id', flat=True)
     used_ids.update(switch_patch)
 
-    # (c) Patch_Port asignados a Wall_Port
-    # En Wall_Port: patch_port_in = OneToOneField(..., related_name='wall_patch_port_in')
-    # => inverso: Patch_Port.objects.filter(wall_patch_port_in__isnull=False)
     wall_patch = Patch_Port.objects.filter(wall_patch_port_in__isnull=False).values_list('id', flat=True)
     used_ids.update(wall_patch)
 
-    # 2. Filtrar los Patch_Port disponibles en la patchera solicitada
     patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ids).order_by('port')
 
-    # 3. Serializar al formato que tu JS espera
     data = [{'id': p.id, 'name': f'Puerto: {p.port}'} for p in patch_ports]
     return JsonResponse(data, safe=False)
-
-# @csrf_protect
-# @require_POST
-# def ajax_load_patch_ports(request):
-#     patchera_id = request.POST.get('patchera_id')
-
-#     used_ports = set()
-
-#     wall_port_used = Wall_Port.objects.exclude(
-#         patch_port_in=None
-#     ).values_list('patch_port_in_id', flat=True)
-#     used_ports.update(wall_port_used)
-
-#     # Puertos usados en Switch
-#     switch_used = Switch.objects.exclude(
-#         patch_port_in=None
-#     ).values_list('patch_port_in_id', flat=True)
-#     used_ports.update(switch_used)
-
-#     # Puertos usados en Device
-#     device_used = Device.objects.exclude(
-#         patch_port_in=None
-#     ).values_list('patch_port_in_id', flat=True)
-#     used_ports.update(device_used)
-
-#     # Puertos usados en Patchera
-#     patchera_used = Patchera.objects.exclude(
-#         patch_port_in=None
-#     ).values_list('patch_port_in_id', flat=True)
-#     used_ports.update(patchera_used)
-
-
-#     # Si no hay patchera_id, retorna lista vacía
-#     if not patchera_id:
-#         return JsonResponse([], safe=False)
-
-#     # Filtrar puertos disponibles
-#     patch_ports = Patch_Port.objects.filter(
-#         patchera_id=patchera_id
-#     ).exclude(
-#         id__in=list(used_ports)
-#     ).order_by('port')
-
-#     data = [{
-#         'id': p.id,
-#         'name': f'Puerto: {p.port}'
-#     } for p in patch_ports]
-
-#     return JsonResponse(data, safe=False)
 
 @csrf_protect
 @require_POST
@@ -303,9 +258,19 @@ def ajax_load_model(request):
 @require_POST
 def ajax_load_wall_port(request):
 
+    location_id = request.POST.get('location_id')
+    edifice_id = request.POST.get('edifice_id')
     office_id = request.POST.get('office_id')
-    print ('Office ID:', office_id)
-    if not office_id:
+
+    filters = {}
+    if location_id:
+        filters['office__loc__edifice__location_id'] = location_id
+    if edifice_id:
+        filters['office__loc__edifice_id'] = edifice_id
+    if office_id:
+        filters['office_id'] = office_id
+
+    if not filters:
         return JsonResponse([], safe=False)
 
     used_ids = set()
@@ -316,34 +281,16 @@ def ajax_load_wall_port(request):
     switch_wall = Wall_Port.objects.filter(switch_wall_port_in__isnull=False).values_list('id', flat=True)
     used_ids.update(switch_wall)
 
-    wall_ports = Wall_Port.objects.filter(office_id=office_id).exclude(id__in=used_ids).order_by('wall_port')
+    print(f"Device Wall ID's: {list(device_wall)}")
+    print(f"Switch Wall ID's: {list(switch_wall)}")
+    print(f"Used ID's: {list(used_ids)}")
+
+    wall_ports = Wall_Port.objects.filter(**filters).exclude(id__in=used_ids).order_by('wall_port')
     print('Wall Ports:', list(wall_ports.values_list('id', 'wall_port')))
 
-    data = [{'id': w.id, 'name': w.wall_port} for w in wall_ports]
+    data = [{'id': w.id, 'name': f'BOCA DE PARTED: {w.wall_port} / OFICINA: {w.office} / EDIFICIO: {w.office.loc.edifice}'} for w in wall_ports]
     return JsonResponse(data, safe=False)
 
-# @csrf_protect
-# @require_POST
-# def ajax_load_wall_port(request):
-#     office_id = request.POST.get('office_id')
-#     if not office_id:
-#         return JsonResponse([], safe=False)
-
-#     used_ports = set()
-
-#     device_wall_port_in = Wall_Port.objects.filter(device_wall_port_in__isnull=False).values_list('id', flat=True)
-#     used_ports.update(device_wall_port_in)
-
-#     switch_wall_port_in = Wall_Port.objects.filter(switch_port_in__isnull=False).values_list('id', flat=True)
-#     used_ports.update(switch_wall_port_in)
-
-#     patch_wall_port_in = Wall_Port.objects.filter(patch_port_in__isnull=False).values_list('id', flat=True)
-#     used_ports.update(patch_wall_port_in)
-
-#     wall_ports = Wall_Port.objects.filter(office_id=office_id).exclude(id__in=used_ports)
-
-#     data = [{'id': w.id, 'name': w.wall_port} for w in wall_ports]
-#     return JsonResponse(data, safe=False)
 
 @csrf_protect
 @require_POST
@@ -410,7 +357,6 @@ def ajax_load_dev_type(request):
 @require_POST
 def ajax_load_province_location(request):
     office_id = request.POST.get('office_id')
-    print(f"ajax_load_province_location - office_id recibido: {office_id}")
     if not office_id:
         return JsonResponse({'error': 'No office_id provided'}, status=400)
 
@@ -418,8 +364,6 @@ def ajax_load_province_location(request):
         office = Office.objects.select_related('loc__edifice__location').get(id=office_id)
         location = office.loc.edifice.location
         province = location.province
-
-        print(f"ajax_load_province_location - location_id: {location.id} - province_id: {province.id}")
 
         return JsonResponse({
             'province_id': province.id,

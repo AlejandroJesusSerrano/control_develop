@@ -245,12 +245,22 @@
             {% endif %}
           </div>
 
-          <div class="form-group col-6">
+          <div class="form-group col-12">
             <label for="id_rack_ports">Rack:</label>
             {{ form.rack_ports }}
             {% if form.rack_ports.errors %}
             <div class="invalid-feedback d-block">
               {{ form.rack_ports.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-6">
+            <label for="id_patchera_ports">Patchera de Ingreso:</label>
+            {{ form.patchera_ports }}
+            {% if form.patchera_ports.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.patchera_ports.errors|join:"<br>" }}
             </div>
             {% endif %}
           </div>
@@ -302,6 +312,6 @@
 {% endblock form %}
 
 {% block form_scripts %}
-  <script src="{% static 'device/js/form.js' %}"></script>
   <script src="{% static 'js/filters.js' %}"></script>
+  <script src="{% static 'device/js/form.js' %}"></script>
 {% endblock form_scripts %}

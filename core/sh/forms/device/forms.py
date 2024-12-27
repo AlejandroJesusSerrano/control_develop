@@ -76,9 +76,9 @@ class DeviceForm(forms.ModelForm):
     )
 
     patchera_ports = forms.ModelChoiceField(
-      queryset=Patchera.objects.all(),
-      widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_patchera_ports'}),
-      required=False
+        queryset=Patchera.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_patchera_ports'}),
+        required=False
     )
 
     brand = forms.ModelChoiceField(
@@ -151,7 +151,74 @@ class DeviceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # El campo Office es obligatorio.
+
+        if 'data' in kwargs:
+            location_id = kwargs['data'].get('location')
+            if location_id:
+                try:
+                    location = Location.objects.get(id=location_id)
+                    self.fields['edifice_ports'].queryset = Edifice.objects.filter(location=location).order_by('edifice')
+                    self.fields['loc_ports'].queryset = Office_Loc.objects.filter(edifice__location=location).order_by('office_location')
+                    self.fields['office_ports'].queryset = Office.objects.filter(loc__edifice__location=location).order_by('office')
+                    self.fields['rack_ports'].queryset = Rack.objects.filter(office__loc__edifice__location=location).order_by('rack')
+                    self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office__loc__edifice__location=location).order_by('wall_port')
+                    self.fields['switch_ports'].queryset = Switch.objects.filter(office__loc__edifice__location=location).order_by('model')
+                    self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__rack__office__loc__edifice__location=location).order_by('port_id')
+                    self.fields['patchera_ports'].queryset = Patchera.objects.filter(rack__office__loc__edifice__location=location).order_by('patchera')
+                    self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack__office__loc__edifice__location=location).order_by('port')
+
+                except Location.DoesNotExist:
+
+                    self.fields['edifice_ports'].queryset = Edifice.objects.all()
+                    self.fields['loc_ports'].queryset = Office_Loc.objects.all()
+                    self.fields['office_ports'].queryset = Office.objects.all()
+                    self.fields['rack_ports'].queryset = Rack.objects.all()
+                    self.fields['wall_port_in'].queryset = Wall_Port.objects.all()
+                    self.fields['switch_ports'].queryset = Switch.objects.all()
+                    self.fields['switch_port_in'].queryset = Switch_Port.objects.all()
+                    self.fields['patchera_ports'].queryset = Patchera.objects.all()
+                    self.fields['patch_port_in'].queryset = Patch_Port.objects.all()
+            else:
+                self.fields['edifice_ports'].queryset = Edifice.objects.all()
+
+        if 'instance' in kwargs and kwargs['instance']:
+            instance=kwargs['instance']
+            if instance.office and instance.office.loc and instance.office.loc.edifice and instance.office.loc.edifice.location and instance.office.loc.edifice.location.province and instance.office.dependency:
+                self.fields['province'].queryset = Province.objects.all()
+                self.fields['province'].initial = instance.office.loc.edifice.location.province.id
+
+                self.fields['location'].queryset = Location.objects.filter(province=instance.office.loc.edifice.location.province)
+                self.fields['location'].initial = instance.office.loc.edifice.location.id
+
+                self.fields['edifice'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
+                self.fields['edifice'].initial = instance.office.loc.edifice.id
+
+
+
+                self.fields['edifice_ports'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
+                self.fields['edifice_ports'].initial = instance.office.loc.edifice.id
+
+
+
+                self.fields['dependency'].queryset = Dependency.objects.filter(edifice__location=instance.office.loc.edifice.location)
+                self.fields['dependency'].initial = instance.office.dependency.id
+
+                self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=instance.office.loc.edifice)
+                self.fields['loc'].initial = instance.office.loc.id
+
+                self.fields['office'].queryset = Office.objects.filter(loc=instance.office.loc)
+                self.fields['office'].initial = instance.office.id
+
+                self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office=instance.office)
+                self.fields['wall_port_in'].initial = instance.wall_port_in
+
+                self.fields['employee'].queryset = Employee.objects.filter(office=instance.office)
+                self.fields['employee'].initial = [e.id for e in instance.employee.all()]
+
+                self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=instance.office)
+                self.fields['switch_port_in'].initial = instance.switch_port_in
+
+
         self.fields['office'].required = True
 
     def clean(self):

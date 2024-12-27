@@ -77,6 +77,7 @@ function message_error(msg) {
 }
 
 function updateOptions(url, data, selectElement) {
+  console.log('updateOptions', {url, data, selectElement});
   let options = '<option value="">----------</option>';
 
   const preselectedValue = selectElement.data('preselected');
