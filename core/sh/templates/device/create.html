@@ -11,27 +11,43 @@
 
 {% block form %}
 
-<div class="form-group">
-  <label for="id_dev_type">Tipo de Dispositivo:</label>
-  {{ form.dev_type }}
-  {% if form.dev_type.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.dev_type.errors|join:"<br>" }}
+<button id="toggle-device-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para Modelos de Dispositivos <i class="fas fa-search"></i></button>
+<div id="filter-device-cards" class="d-none">
+  <div class="row">
+    <div class="container">
+      <div class="card my-1">
+
+        <div class="card-header {{bg_color}}">
+          Filtrar por Marca y Typo de Dispositivo
+        </div>
+        <div class="card-body row">
+
+          <div class="form-group col-6">
+            <label for="id_dev_type">Tipo de Dispositivo: </label>
+            {{ form.dev_type }}
+            {% if form.dev_type.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.dev_type.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col-6">
+            <label for="id_brand">Marca :</label>
+            {{ form.brand }}
+            {% if form.brand.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.brand.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  {% endif %}
 </div>
 
-<div class="form-group">
-  <label for="id_brand">Marca:</label>
-  {{ form.brand }}
-  {% if form.brand.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.brand.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
+<div class="form-group mt-1">
   <label for="id_dev_model">Modelo de Dispositivo:</label>
   {{ form.dev_model }}
   {% if form.dev_model.errors %}

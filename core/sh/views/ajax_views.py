@@ -410,6 +410,7 @@ def ajax_load_dev_type(request):
 @require_POST
 def ajax_load_province_location(request):
     office_id = request.POST.get('office_id')
+    print(f"ajax_load_province_location - office_id recibido: {office_id}")
     if not office_id:
         return JsonResponse({'error': 'No office_id provided'}, status=400)
 
@@ -417,6 +418,8 @@ def ajax_load_province_location(request):
         office = Office.objects.select_related('loc__edifice__location').get(id=office_id)
         location = office.loc.edifice.location
         province = location.province
+
+        print(f"ajax_load_province_location - location_id: {location.id} - province_id: {province.id}")
 
         return JsonResponse({
             'province_id': province.id,
