@@ -4,6 +4,9 @@ from django.forms import ModelForm, Select, Textarea, DateInput
 
 from core.sh.models import Movements
 from core.sh.models.brands.models import Brand
+from core.sh.models.dev_model.models import Dev_Model
+from core.sh.models.dev_type.models import Dev_Type
+from core.sh.models.device.models import Device
 
 class MovementsForm(ModelForm):
   brand = forms.ModelChoiceField(
@@ -11,6 +14,21 @@ class MovementsForm(ModelForm):
     widget = forms.Select(attrs = {'class': 'form-control select2'}),
     required = False
   )
+
+  dev_type = forms.ModelChoiceField(
+    queryset=Dev_Type.objects.all(),
+    widget = forms.Select(attrs = {'class': 'form-control select2'}),
+    required = False
+  )
+
+  model = forms.ModelChoiceField(
+    queryset=Dev_Model.objects.all(),
+    widget=forms.Select(attrs={'class': 'form-control select2'}),
+    required=False
+  )
+
+  ip = forms.ModelChoiceField(
+    
 
   class Meta:
       model = Movements
