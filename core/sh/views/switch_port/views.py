@@ -84,6 +84,7 @@ class Switch_PortCreateView(CreateView):
         context['form_id'] = 'switch_portForm'
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
+        context['filter_btn_color'] = 'btn-primary'
         return context
 
 class Switch_PortUpdateView(UpdateView):
@@ -132,6 +133,7 @@ class Switch_PortUpdateView(UpdateView):
         context['form_id'] = 'switch_portForm'
         context['action'] = 'edit'
         context['bg_color'] = 'bg-custom-warning'
+        context['filter_btn_color'] = 'bg-custom-warning'
         return context
 
 class Switch_PortDeleteView(DeleteView):

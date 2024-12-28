@@ -3,6 +3,19 @@ $(document).ready(function() {
     theme:'bootstrap',
   });
 
+  if ($('#id_location').length > 0) {
+    $('select[name="location"]').on('change', function() {
+        const location_id = $(this).val();
+        if (!location_id) {
+            console.warn('No se ha seleccionado una localidad válida en el formulario de Patchera.');
+            clearDependentFields(['#id_edifice']);
+            return;
+        }
+        console.log('Localidad seleccionada con ID:', location_id);
+        updateOptions('/sh/ajax/load_edifices/', { 'location_id': location_id }, $('#id_edifice'));
+    });
+  }
+
   $('#toggle-edifice-filters').on('click', function (e) {
     e.preventDefault();
     const filterEdifCards = $('#filter-edifice-cards')
@@ -17,41 +30,9 @@ $(document).ready(function() {
     }
   });
 
-  $('select[name="province"]').on('change', function(){
-    const province_id = $(this).val();
-    updateProvinceOptions(province_id);
-  });
-
-  $('select[name="location"]').on('change', function(){
-    const location_id = $(this).val();
-    updateEdificeOptions(location_id)
-  })
-
   initializeFormSubmission('#myform', 'edit')
 
 });
-
-function updateProvinceOptions(province_id) {
-  if (province_id) {
-    updateOptions('/sh/ajax/load_location/', {
-      'province_id': province_id,
-    }, $('select[name="location"]'), $('#id_location').data('preselected'));
-
-    updateOptions('/sh/ajax/load_edifices/', {
-      'province_id': province_id,
-    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
-  } else {
-    clearDependentFields(['#id_location', '#id_edifice'])
-  };
-}
-
-function updateLocationOptions(location_id) {
-  if (location_id) {
-    updateOptions('/sh/ajax/load_edifices/', {
-      'location_id': location_id,
-    }, $('select[name="edifice"]'), $('#id_edifice').data('preselected'));
-  }
-}
 
 function initializeFormSubmission(formSelector, actionType) {
   $(formSelector).on('submit', function(e) {

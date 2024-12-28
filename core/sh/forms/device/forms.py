@@ -193,12 +193,8 @@ class DeviceForm(forms.ModelForm):
                 self.fields['edifice'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
                 self.fields['edifice'].initial = instance.office.loc.edifice.id
 
-
-
                 self.fields['edifice_ports'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
                 self.fields['edifice_ports'].initial = instance.office.loc.edifice.id
-
-
 
                 self.fields['dependency'].queryset = Dependency.objects.filter(location=instance.office.loc.edifice.location)
                 self.fields['dependency'].initial = instance.office.dependency.id
@@ -206,17 +202,17 @@ class DeviceForm(forms.ModelForm):
                 self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=instance.office.loc.edifice)
                 self.fields['loc'].initial = instance.office.loc.id
 
-                self.fields['office'].queryset = Office.objects.filter(loc=instance.office.loc)
+                self.fields['office'].queryset = Office.objects.filter(loc=instance.office.loc, dependency=instance.office.dependency)
                 self.fields['office'].initial = instance.office.id
 
                 self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office=instance.office)
-                self.fields['wall_port_in'].initial = instance.wall_port_in
+                self.fields['wall_port_in'].initial = instance.wall_port_in.id
 
                 self.fields['employee'].queryset = Employee.objects.filter(office=instance.office)
                 self.fields['employee'].initial = [e.id for e in instance.employee.all()]
 
                 self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=instance.office)
-                self.fields['switch_port_in'].initial = instance.switch_port_in
+                self.fields['switch_port_in'].initial = instance.switch_port_in.id
 
 
         self.fields['office'].required = True

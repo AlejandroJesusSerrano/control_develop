@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'lib/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker.min.css'%}">
+<link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
 
 <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
 <script src="{% static 'lib/bootstrap-datepicker-1.9.0-dist/js/bootstrap-datepicker.min.js' %}"></script>
@@ -55,7 +56,10 @@
 
 <div class="form-group">
   <label for="id_date_in">Fecha de Ingreso al Stock:</label>
-  {{ form.date_in }}
+  <button type="button" id="id_suply_date_in_button" class="btn btn-dark">
+    <i class="fa fa-calendar"></i> Seleccionar Fecha
+  </button>
+  <input type="hidden" name="date_in" id="id_suply_date_in_input" value="{{ form.date_in.value }}">
   {% if form.date_in.errors %}
   <div class="invalid-feedback d-block">
     {{ form.date_in.errors|join:"<br>" }}
@@ -66,6 +70,7 @@
 {% endblock form %}
 
 {% block form_scripts %}
+  <script src="{% static 'js/filters.js'%}"></script>
   <script src="{% static 'suply/js/form.js' %}"></script>
 {% endblock form_scripts %}
 

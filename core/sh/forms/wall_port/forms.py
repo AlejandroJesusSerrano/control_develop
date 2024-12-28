@@ -481,7 +481,7 @@ class WallPortForm(forms.ModelForm):
 
           self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
             patchera=patchera
-          ).order_by('patch_port_in')
+          ).order_by('port')
 
           self.initial['patch_port_in'] = self.instance.patch_port_in.id
 

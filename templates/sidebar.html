@@ -136,24 +136,6 @@
                     <p>Estados de los Dispositivos</p>
                   </a>
                 </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:rack_list' %}" class="nav-link">
-                    <i class="fa-solid fa-server"></i>
-                    <p>Racks</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:switch_list' %}" class="nav-link">
-                    <i class="fa-solid fa-server"></i>
-                    <p>Switches</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="{% url 'sh:patchera_list' %}" class="nav-link">
-                    <i class="fa-solid fa-ethernet"></i>
-                    <p>Patcheras</p>
-                  </a>
-                </li>
               </ul>
             </li>
 
@@ -207,15 +189,33 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{% url 'sh:switch_port_list' %}" class="nav-link">
+              <a href="{% url 'sh:rack_list' %}" class="nav-link">
+                <i class="fa-solid fa-server"></i>
+                <p>Racks</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'sh:patchera_list' %}" class="nav-link">
                 <i class="fa-solid fa-ethernet"></i>
-                <p>Puertos de Switches</p>
+                <p>Patcheras</p>
               </a>
             </li>
             <li class="nav-item">
               <a href="{% url 'sh:patch_port_list' %}" class="nav-link">
                 <i class="fa-solid fa-ethernet"></i>
                 <p>Puertos de Patcheras</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'sh:switch_list' %}" class="nav-link">
+                <i class="fa-solid fa-server"></i>
+                <p>Switches</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'sh:switch_port_list' %}" class="nav-link">
+                <i class="fa-solid fa-ethernet"></i>
+                <p>Puertos de Switches</p>
               </a>
             </li>
             <li class="nav-item">

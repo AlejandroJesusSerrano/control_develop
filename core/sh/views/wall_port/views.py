@@ -237,7 +237,7 @@ class WallPortUpdateView(UpdateView):
         ).exclude(
           id__in=used_switch_ports
         ).order_by('port_id')
-        context['form'].initial['switch_port_in'] = wall_port.switch_port_in.id
+        context['form'].initial['switch_port_in'] = wall_port.switch_port_in
 
         patch_port_in = getattr(wall_port, 'patch_port_in', None)
         if patch_port_in:

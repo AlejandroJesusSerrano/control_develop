@@ -109,3 +109,58 @@ input:-webkit-autofill:focus {
   color: #fff !important;
   transition: background-color 5000s ease-in-out 0s; /* evita el cambio de color */
 }
+
+/* DatePicker */
+
+/* Fondo general del Datepicker */
+.datepicker {
+  background-color: #454d55; /* Fondo similar a .content-wrapper */
+  color: #f8f9fa; /* Texto claro */
+  border: 1px solid #6c757d; /* Borde gris oscuro */
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombras suaves */
+}
+
+/* Hover en días y años */
+.datepicker .day:hover,
+.datepicker .datepicker-switch:hover,
+.datepicker .prev:hover,
+.datepicker .next:hover {
+    background-color: #3f6791; /* Azul grisáceo */
+    color: #3f6791; /* Texto blanco */
+    border-radius: 50%; /* Opcional: redondeado para destacar */
+}
+
+/* Fondo activo para días seleccionados */
+.datepicker .day.active {
+    background-color: #3f6791; /* Azul grisáceo */
+    color: #3f6791; /* Texto claro */
+    border-radius: 50%;
+}
+
+/* Fondo de hover para días seleccionados */
+.datepicker .day.active:hover {
+    background-color: #495057; /* Gris oscuro */
+    color: #3f6791;
+}
+
+/* datepicker btn */
+
+#id_suply_date_in_button {
+  background-color: #3f6791;
+  color: #ffffff;
+  border: 1px solid #6c757d;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+#id_suply_date_in_button:hover {
+  background-color: #495057; /* Gris más oscuro en hover */
+  color: #ffffff;
+}

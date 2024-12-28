@@ -3,12 +3,24 @@ $(document).ready(function() {
     theme: 'bootstrap',
   });
 
-  $('#id_date_in').datepicker({
+  $('#id_suply_date_in_button').datepicker({
     format: 'dd/mm/yyyy',
     autoclose: true,
     todayHighlight: true,
-    language: 'es'
-  })
+    language: 'es',
+    container: 'body',
+    orientation: 'auto',
+    zindex_offset: 1050
+  }).on('changeDate', function(e) {
+    $('#id_suply_date_in_input').val(e.format('dd/mm/yyyy'));
+  });
+
+  // $('#id_suply_date_in_input').datepicker({
+  //   format: 'dd/mm/yyyy',
+  //   autoclose: true,
+  //   todayHighlight: true,
+  //   language: 'es'
+  // })
 
   updateBrandOptions();
 
@@ -33,5 +45,5 @@ function updateModelOptions(brand_id) {
   updateOptions('/sh/ajax/load_model/', {
     'brand_id': brand_id,
     'dev_type_name': dev_type_name
-  }, $('select[name="model"]'), $('#id_model').data('preselected'));
+  }, $('select[name="dev_model"]'), $('#id_dev_model').data('preselected'));
 }

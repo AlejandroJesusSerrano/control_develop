@@ -10,6 +10,7 @@ if ($('#id_province').length > 0) {
 if ($('#id_location').length > 0) {
     $('select[name="location"]').on('change', function(){
         const location_id = $(this).val();
+        updateLocationReferedOptions(location_id);
         console.log('Localidad', location, 'seleccionada con el ID: ', location_id);
 
         if (location_id) {
