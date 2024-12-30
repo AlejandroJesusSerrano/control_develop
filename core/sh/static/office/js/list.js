@@ -23,6 +23,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
+
         targets: [6],
         class: 'text-center',
         orderable: false,

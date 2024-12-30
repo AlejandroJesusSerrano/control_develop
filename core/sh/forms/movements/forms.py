@@ -1,34 +1,10 @@
 from django.forms import *
-from django import forms
 from django.forms import ModelForm, Select, Textarea, DateInput
 
-from core.sh.models import Movements
-from core.sh.models.brands.models import Brand
-from core.sh.models.dev_model.models import Dev_Model
-from core.sh.models.dev_type.models import Dev_Type
-from core.sh.models.device.models import Device
+from core.sh.models.movements.models import Movements
+
 
 class MovementsForm(ModelForm):
-  brand = forms.ModelChoiceField(
-    queryset = Brand.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
-    required = False
-  )
-
-  dev_type = forms.ModelChoiceField(
-    queryset=Dev_Type.objects.all(),
-    widget = forms.Select(attrs = {'class': 'form-control select2'}),
-    required = False
-  )
-
-  model = forms.ModelChoiceField(
-    queryset=Dev_Model.objects.all(),
-    widget=forms.Select(attrs={'class': 'form-control select2'}),
-    required=False
-  )
-
-  ip = forms.ModelChoiceField(
-    
 
   class Meta:
       model = Movements
@@ -36,10 +12,17 @@ class MovementsForm(ModelForm):
       widget = {
         'device': Select(
           attrs={
-            'placeholder': 'Seleccione un dispositivo',
+            'class': 'form-control select2',
             'id': 'id_device'
           }
         ),
+
+        'switch': Select(
+          attrs={
+            'class': 'form-control select2'
+          }
+        ),
+
         'port_id': Select(
           attrs={
             'placeholder': 'Seleccione el tipo de movimiento',

@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  $('#office_table').DataTable({
+  $('#movements_table').DataTable({
     responsive: true,
     autowidth: false,
     destroy: true,
@@ -14,21 +14,30 @@ $(document).ready(function(){
     },
     columns: [
       {"data": "id"},
-      {"data": "location"},
-      {"data": "edifice"},
-      {"data": "office"},
-      {"data": "dependency"},
+      {"data": "null"},
+      {"data": "switch"},
+      {"data": "move"},
+      {"data": "techs"},
+      {"data": "date"},
+      {"data": "suply"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [5],
+        targets: 1,
+        render: function(data, type, row){
+          return row.device ? row.device : row.switch;
+        }
+      },
+      {
+
+        targets: [6],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){
           let buttons = '<a href="#" type="button" class="btn btn-primary"><i class="fas fa-search"></i></a> ';
-          buttons += '<a href="/sh/office/edit/'+row.id+'/" type="button" class="btn bg-custom-warning"><i class="fas fa-edit"></i></a> ';
-          buttons += '<a href="/sh/office/delete/'+row.id+'/" type="button" class="btn bg-custom-danger"><i class="fas fa-trash-alt"></i></a> ';
+          buttons += '<a href="/sh/movements/edit/'+row.id+'/" type="button" class="btn bg-custom-warning"><i class="fas fa-edit"></i></a> ';
+          buttons += '<a href="/sh/movements/delete/'+row.id+'/" type="button" class="btn bg-custom-danger"><i class="fas fa-trash-alt"></i></a> ';
           return buttons
         }
       }

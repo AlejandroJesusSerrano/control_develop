@@ -6,13 +6,15 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from core.sh.forms import OfficeForm
-from core.sh.models import Office
+from core.sh.forms.movements.forms import MovementsForm
+from core.sh.models.movements.models import Movements
+
+
 
 
 class MovementsListView(ListView):
-  model = Office
-  template_name = 'office/list.html'
+  model = Movements
+  template_name = 'Movements/list.html'
 
   # @method_decorator(login_required)
   @method_decorator(csrf_exempt)
@@ -25,7 +27,7 @@ class MovementsListView(ListView):
       action = request.POST['action']
       if action == 'searchdata':
         data = []
-        for i in Office.objects.all():
+        for i in Movements.objects.all():
           data.append(i.toJSON())
       else:
         data['error'] = 'Ha ocurrido un error'
@@ -35,21 +37,21 @@ class MovementsListView(ListView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Oficinas'
-    context['title'] = 'Listado de Oficinas'
-    context['btn_add_id'] = 'office_add'
-    context['create_url'] = reverse_lazy('sh:office_add')
-    context['list_url'] = reverse_lazy('sh:office_list')
-    context['entity'] = 'Oficinas'
+    context['page_title'] = 'Movimientos'
+    context['title'] = 'Listado de Movimientos'
+    context['btn_add_id'] = 'Movements_add'
+    context['create_url'] = reverse_lazy('sh:movements_add')
+    context['list_url'] = reverse_lazy('sh:movements_list')
+    context['entity'] = 'Movimientos'
     context['nav_icon'] = 'fa-regular fa-building'
-    context['table_id'] = 'office_table'
+    context['table_id'] = 'Movements_table'
     return context
 
 class MovementsCreateView(CreateView):
-  model: Office
-  form_class = OfficeForm
-  template_name = 'office/create.html'
-  success_url = reverse_lazy('sh:office_list')
+  model: Movements
+  form_class = MovementsForm
+  template_name = 'Movements/create.html'
+  success_url = reverse_lazy('sh:movements_list')
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
@@ -70,21 +72,21 @@ class MovementsCreateView(CreateView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Oficinas'
-    context['title'] = 'Agregar una Oficina'
-    context['btn_add_id'] = 'office_add'
-    context['entity'] = 'Oficinas'
-    context['list_url'] = reverse_lazy('sh:office_list')
-    context['form_id'] = 'officeForm'
+    context['page_title'] = 'Movimientos'
+    context['title'] = 'Agregar una Movimiento'
+    context['btn_add_id'] = 'Movements_add'
+    context['entity'] = 'Movimientos'
+    context['list_url'] = reverse_lazy('sh:movements_list')
+    context['form_id'] = 'MovementsForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
     return context
 
 class MovementsUpdateView(UpdateView):
-  model = Office
-  form_class = OfficeForm
-  template_name = 'office/create.html'
-  success_url = reverse_lazy('sh:office_list')
+  model = Movements
+  form_class = MovementsForm
+  template_name = 'Movements/create.html'
+  success_url = reverse_lazy('sh:movements_list')
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
@@ -106,20 +108,20 @@ class MovementsUpdateView(UpdateView):
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
-      context['page_title'] = 'Oficinas'
-      context['title'] = 'Editar Oficina'
-      context['btn_add_id'] = 'office_add'
-      context['entity'] = 'Oficinas'
-      context['list_url'] = reverse_lazy('sh:office_list')
-      context['form_id'] = 'officeForm'
+      context['page_title'] = 'Movimientos'
+      context['title'] = 'Editar Movimiento'
+      context['btn_add_id'] = 'Movements_add'
+      context['entity'] = 'Movimientos'
+      context['list_url'] = reverse_lazy('sh:movements_list')
+      context['form_id'] = 'MovementsForm'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-custom-warning'
       return context
 
 class MovementsDeleteView(DeleteView):
-  model = Office
-  template_name = 'office/delete.html'
-  success_url = reverse_lazy('sh:office_list')
+  model = Movements
+  template_name = 'Movements/delete.html'
+  success_url = reverse_lazy('sh:movements_list')
 
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
@@ -136,11 +138,11 @@ class MovementsDeleteView(DeleteView):
 
   def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Oficinas'
-        context['title'] = 'Eliminar una Oficina'
-        context['del_title'] = 'Oficina: '
-        context['list_url'] = reverse_lazy('sh:office_list')
-        context['form_id'] = 'officeForm'
+        context['page_title'] = 'Movimientos'
+        context['title'] = 'Eliminar una Movimiento'
+        context['del_title'] = 'Movimiento: '
+        context['list_url'] = reverse_lazy('sh:movements_list')
+        context['form_id'] = 'MovementsForm'
         context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context

@@ -73,7 +73,7 @@ if ($('#id_loc').length > 0) {
 if ($('#id_office').length > 0) {
     $('#id_office').off('change');
     $('#id_office').on('change', function() {
-        console.log("Evento change en #id_office");
+        console.log("Evento change en #id_office (filters.js)");
         const office_id = $(this).val();
         console.log('office_id:', office_id);
 
@@ -158,7 +158,7 @@ function updateLocationOptions(province_id) {
         }
 
     } else {
-        clearDependentFields(['#id_location', '#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+        clearDependentFields(['#id_location', '#id_dependency', '#id_edifice', '#id_loc', '#id_wall_port_in', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
     }
 };
 
@@ -196,7 +196,7 @@ function updateLocationReferedOptions(location_id) {
         }
 
     } else {
-        clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+        clearDependentFields(['#id_dependency', '#id_edifice', '#id_loc', '#id_wall_port_in', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
     }
 };
 
@@ -217,7 +217,7 @@ function updateDependencyOptions(dependency_id) {
         }
 
     } else {
-        clearDependentFields(['#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+        clearDependentFields(['#id_wall_port_in', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
     }
 };
 
@@ -248,7 +248,7 @@ function updateEdificeOptions(edifice_id) {
         }
 
     } else {
-        clearDependentFields(['#id_loc', '#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+        clearDependentFields(['#id_loc', '#id_wall_port_in', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
     }
 };
 
@@ -273,7 +273,7 @@ function updateLocOptions(loc_id) {
         }
 
     } else {
-        clearDependentFields(['#id_office', '#id_wall_port_in', '#id_rack', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
+        clearDependentFields(['#id_wall_port_in', '#id_switch', '#id_switch_port_in', '#id_patchera', '#id_patch_port_in'])
     }
 };
 

@@ -76,54 +76,41 @@ function message_error(msg) {
 
 }
 
-function updateOptions(url, data, selectElement) {
-  console.log('updateOptions', {url, data, selectElement});
-  let options = '<option value="">----------</option>';
+const activeRequests = {}; // Mantén un registro de solicitudes activas
 
-  const preselectedValue = selectElement.data('preselected');
+function updateOptions(url, data, selectElement) {
+  const selectId = selectElement.attr('id');
+  if (activeRequests[selectId]) {
+    console.log(`Solicitud activa ya existente para ${selectId}, abortando.`);
+    return;
+  }
+
+  activeRequests[selectId] = true; // Bloquea nuevas solicitudes
+  let options = '<option value="">----------</option>';
+  const currentValue = selectElement.val();
+  const preselectedValue = selectElement.data('preselected') || currentValue;
 
   $.ajax({
     url: url,
     type: 'POST',
     data: data,
     dataType: 'json',
-  }).done(function (data) {
-    if (typeof data === 'object' && !data.hasOwnProperty('error')) {
-
-      $.each(data, function (key, value) {
-        options += `<option value="${value.id}" ${value.id == preselectedValue ? 'selected' : ''}>${value.name}</option>`;
+  }).done(function (response) {
+    if (Array.isArray(response)) {
+      response.forEach(item => {
+        const selected = item.id == preselectedValue ? 'selected' : '';
+        options += `<option value="${item.id}" ${selected}>${item.name}</option>`;
       });
-
-      selectElement.html(options).trigger('change');
-
-      selectElement.select2({
-        theme: 'bootstrap',
-      });
-
-      if (preselectedValue) {
-        selectElement.val(preselectedValue).trigger('change.select2');
-      }
-    } else if (data.hasOwnProperty('error')) {
-      message_error(data.error);
+      selectElement.html(options).trigger('change.select2');
     } else {
-      message_error('Ha ocurrido un error inesperado');
+      console.error('Error en respuesta:', response);
     }
-  }).fail(function (jqXHR, textStatus, errorThrown) {
-    if (jqXHR.status == 403) {
-      message_error('Error de seguridad: token CSRF inválido o no proporcionado.');
-    } else if (jqXHR.status === 400) {
-      let response = jqXHR.responseJSON;
-      if (response && response.errors) {
-        message_error(response);
-      } else {
-        message_error('Ha ocurrido un error en la validación del formulario.');
-      }
-    } else {
-      message_error(textStatus + ': ' + errorThrown);
-    }
+  }).fail(function (jqXHR, textStatus) {
+    console.error(`Error en solicitud AJAX para ${selectId}:`, textStatus);
+  }).always(function () {
+    activeRequests[selectId] = false; // Desbloquea el select
   });
 }
-
 
 function confirmAndSend(url, title, icon, content, type, formData, callback) {
   $.confirm({
@@ -211,7 +198,9 @@ function submit_with_ajax(url, formData, callback, actionType = 'add') {
 
 function clearDependentFields(fields){
   fields.forEach(field => {
-    $(field).val(null);
+    if(!['#if_office', '#id_rack'].includes(field)) {
+      $(field).val(null).trigger('change.select2');
+    }
   });
 }
 

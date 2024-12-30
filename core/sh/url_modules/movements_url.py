@@ -1,4 +1,4 @@
-from django.urls import path 
+from django.urls import path
 
 from core.sh.views.movements.views import  MovementsListView, MovementsCreateView, MovementsUpdateView, MovementsDeleteView
 
