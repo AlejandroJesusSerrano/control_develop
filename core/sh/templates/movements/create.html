@@ -1,1 +1,169 @@
 {% extends 'form.html' %}
+{% load static %}
+
+{% block extra_refs %}
+<!-- Datepicker -->
+<link rel="stylesheet" href="{% static 'lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}">
+<script src="{% static 'lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'lib/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js' %}"></script>
+{% endblock extra_refs %}
+
+{% block form %}
+
+<!-- Sección Oficina -->
+<div class="card my-3">
+    <div class="card-header {{bg_color}}">
+        <h5 class="card-title">Ubicación del Movimiento</h5>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <label for="id_office">Oficina:</label>
+            {{ form.office }}
+            {% if form.office.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.office.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+            <small class="form-text text-muted">Seleccione la oficina donde se realizó el movimiento</small>
+        </div>
+    </div>
+</div>
+
+<!-- Sección Dispositivo/Switch -->
+<div class="card my-3">
+    <div class="card-header {{bg_color}}">
+        <h5 class="card-title">Elemento Asociado</h5>
+    </div>
+    <div class="card-body row">
+        <div class="form-group col-6">
+            <label for="id_device">Dispositivo:</label>
+            {{ form.device }}
+            {% if form.device.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.device.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group col-6">
+            <label for="id_switch">Switch:</label>
+            {{ form.switch }}
+            {% if form.switch.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.switch.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-12">
+            <small class="form-text text-muted">
+                * Seleccione solo un dispositivo o un switch según el tipo de movimiento
+            </small>
+        </div>
+    </div>
+</div>
+
+<!-- Sección Datos del Movimiento -->
+<div class="card my-3">
+    <div class="card-header {{bg_color}}">
+        <h5 class="card-title">Detalles del Movimiento</h5>
+    </div>
+    <div class="card-body row">
+        <div class="form-group col-4">
+            <label for="id_move">Tipo de Movimiento:</label>
+            {{ form.move }}
+            {% if form.move.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.move.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group col-4">
+            <label for="id_techs">Técnico Responsable:</label>
+            {{ form.techs }}
+            {% if form.techs.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.techs.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group col-4">
+            <label for="id_date">Fecha del Movimiento:</label>
+            {{ form.date }}
+            {% if form.date.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.date.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group col-6">
+            <label for="id_suply">Insumo Utilizado:</label>
+            {{ form.suply }}
+            {% if form.suply.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.suply.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group col-12">
+            <label for="id_detail">Detalle:</label>
+            {{ form.detail }}
+            {% if form.detail.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.detail.errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock form %}
+
+{% block form_scripts %}
+<script src="{% static 'movements/js/form.js' %}"></script>
+<script>
+$(document).ready(function() {
+    // Inicializar datepicker
+    $('#id_date').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'es',
+        autoclose: true,
+        todayHighlight: true
+    });
+    
+    // Inicializar select2
+    $('.select2').select2({
+        theme: 'bootstrap',
+        placeholder: 'Seleccione una opción',
+        allowClear: true
+    });
+    
+    // Cargar dispositivos y switches cuando cambia la oficina
+    $('#id_office').on('change', function() {
+        const officeId = $(this).val();
+        
+        // Habilitar y cargar dispositivos
+        $('#id_device').prop('disabled', false).empty().append('<option value="">Cargando...</option>');
+        $.get(`/sh/get_devices/?office_id=${officeId}`, function(data) {
+            $('#id_device').empty().append('<option value="">Seleccione un dispositivo</option>');
+            data.forEach(device => {
+                $('#id_device').append(`<option value="${device.id}">${device.text}</option>`);
+            });
+        });
+        
+        // Habilitar y cargar switches
+        $('#id_switch').prop('disabled', false).empty().append('<option value="">Cargando...</option>');
+        $.get(`/sh/get_switches/?office_id=${officeId}`, function(data) {
+            $('#id_switch').empty().append('<option value="">Seleccione un switch</option>');
+            data.forEach(switchItem => {
+                $('#id_switch').append(`<option value="${switchItem.id}">${switchItem.text}</option>`);
+            });
+        });
+    });
+});
+</script>
+{% endblock form_scripts %}

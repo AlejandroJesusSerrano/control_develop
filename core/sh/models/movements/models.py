@@ -24,11 +24,25 @@ class Movements(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['device'] = f"{self.device.dev_model.dev_type.dev_type} - {self.device.dev_model.brand.brand} {self.device.dev_model.dev_model} S/N°: {self.device.serial_n}"
-    item['switch'] = f"SWITCH {self.switch.model.brand} - {self.switch.model.dev_model} / {self.switch.ports_q}"
+    if self.switch:
+      switch_str = f"{self.switch.model.brand} - {self.switch.model.dev_model} / {self.switch.ports_q}"
+    else:
+      switch_str = ''
+    item['switch'] = switch_str
     item['move'] = self.move.move
     item['techs'] = f"{self.techs.last_name}, {self.techs.name}"
-    item['date'] = self.date
+    item['date'] = self.date.strftime('%d-%m-%Y')
     item['suply'] = self.suply.suply_type if self.suply else 'NO SE REALIZO CAMBIO DE INSUMO'
+
+    if self.device:
+      item['user'] = f"{self.device.user.last_name}, {self.device.user.name}" if hasattr(self.device, 'user') else 'NO SE ASIGNA USUARIO'
+      item['office'] = f"{self.device.office.office}" if hasattr(self.device, 'office') else 'NO SE ASIGNA OFICINA'
+    elif self.switch:
+      item['user'] = 'N/A'
+      item['office'] = self.switch.office.office if self.switch.office else 'NO SE ASIGNA OFICINA'
+    else:
+      item['user'] = 'N/A'
+      item['office'] = 'N/A'
     return item
 
   class Meta:

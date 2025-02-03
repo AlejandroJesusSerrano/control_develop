@@ -6,9 +6,9 @@ app_name = 'sh'
 
 urlpatterns = [
 
-  path('movements/list/', MovementsListView.as_view(), name='movements_list'),
-  path('movements/add/', MovementsCreateView.as_view(), name='movements_add' ),
-  path('movements/edit/<int:pk>/', MovementsUpdateView.as_view(), name='movements_edit' ),
-  path('movements/delete/<int:pk>/', MovementsDeleteView.as_view(), name='movements_delete' )
+  path('move/list/', MovementsListView.as_view(), name='move_list'),
+  path('move/add/', MovementsCreateView.as_view(), name='move_add' ),
+  path('move/edit/<int:pk>/', MovementsUpdateView.as_view(), name='move_edit' ),
+  path('move/delete/<int:pk>/', MovementsDeleteView.as_view(), name='move_delete' )
 
 ]

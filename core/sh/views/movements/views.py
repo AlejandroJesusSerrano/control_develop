@@ -16,36 +16,36 @@ class MovementsListView(ListView):
   model = Movements
   template_name = 'Movements/list.html'
 
-  # @method_decorator(login_required)
-  @method_decorator(csrf_exempt)
+  @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
   def post (self, request, *args, **kwargs):
     data = {}
     try:
-      action = request.POST['action']
+      action = request.POST.get('action')
       if action == 'searchdata':
-        data = []
-        for i in Movements.objects.all():
-          data.append(i.toJSON())
+        movements = Movements.objects.all()
+        data = [m.toJSON() for m in movements]
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
-      data['error'] = str(e)
+      data = {'error': str(e)}
+
     return JsonResponse(data, safe=False)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
     context['page_title'] = 'Movimientos'
     context['title'] = 'Listado de Movimientos'
-    context['btn_add_id'] = 'Movements_add'
-    context['create_url'] = reverse_lazy('sh:movements_add')
-    context['list_url'] = reverse_lazy('sh:movements_list')
+    context['btn_add_id'] = 'move_add'
+    context['create_url'] = reverse_lazy('sh:move_add')
+    context['list_url'] = reverse_lazy('sh:move_list')
     context['entity'] = 'Movimientos'
     context['nav_icon'] = 'fa-regular fa-building'
-    context['table_id'] = 'Movements_table'
+    context['table_id'] = 'movement_table'
     return context
+
 
 class MovementsCreateView(CreateView):
   model: Movements
@@ -74,7 +74,7 @@ class MovementsCreateView(CreateView):
     context = super().get_context_data(**kwargs)
     context['page_title'] = 'Movimientos'
     context['title'] = 'Agregar una Movimiento'
-    context['btn_add_id'] = 'Movements_add'
+    context['btn_add_id'] = 'move_add'
     context['entity'] = 'Movimientos'
     context['list_url'] = reverse_lazy('sh:movements_list')
     context['form_id'] = 'MovementsForm'
@@ -110,7 +110,7 @@ class MovementsUpdateView(UpdateView):
       context = super().get_context_data(**kwargs)
       context['page_title'] = 'Movimientos'
       context['title'] = 'Editar Movimiento'
-      context['btn_add_id'] = 'Movements_add'
+      context['btn_add_id'] = 'move_add'
       context['entity'] = 'Movimientos'
       context['list_url'] = reverse_lazy('sh:movements_list')
       context['form_id'] = 'MovementsForm'
