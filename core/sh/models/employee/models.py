@@ -22,7 +22,7 @@ class Employee(models.Model):
     super(Employee, self).save(*args, **kwargs)
 
   def __str__(self):
-    return f'{self.employee_last_name}, {self.employee_name} - {self.cuil} - {self.office.office} - {self.status}'
+    return f'{self.employee_last_name}, {self.employee_name} - CUIL Nro: {self.cuil} / Usuario: {self.user_pc} - {self.office.office} - {self.status}'
 
   def employee_full_name(self):
     return f'{self.employee_last_name}, {self.employee_name}'

@@ -138,10 +138,8 @@ def ajax_load_brand(request):
     dev_type_name = request.POST.get('dev_type_name')
 
     brands = Brand.objects.all()
-
     if usage == 'device':
         brands = brands.exclude(models_brand__dev_type__dev_type='SWITCH').distinct()
-
     elif usage == 'switch':
         brands = brands.filter(models_brand__dev_type__dev_type='SWITCH').distinct()
 
@@ -176,6 +174,29 @@ def ajax_load_switch(request):
     switches = Switch.objects.filter(**filters).distinct()
     data = [{'id': switch.id, 'name': f"{switch.model.brand.brand} / PUERTOS: {switch.ports_q} / POSICION: {switch.switch_rack_pos}"} for switch in switches]
     return JsonResponse(data, safe=False)
+
+@csrf_protect
+@require_POST
+def ajax_load_ip(request):
+    usage = request.POST.get('usage')
+    dev_type_name = request.POST.get('dev_type_name')
+    devices = Device.objects.all()
+    if usage == 'device':
+        devices = devices.exclude(dev_model__dev_type__dev_type='SWITCH')
+    elif usage == 'switch':
+        devices = devices.filter(dev_model__dev_type__dev_type='SWITCH')
+
+    if dev_type_name:
+        try:
+            dev_type_id = int(dev_type_name)
+            devices = devices.filter(dev_model__dev_type__id=dev_type_id)
+        except ValueError:
+            devices = devices.filter(dev_model__dev_type__dev_type=dev_type_name)
+
+    ips = devices.values_list('ip', flat=True).distinct()
+    data = [{'id': ip, 'name': ip} for ip in ips if ip]
+    return JsonResponse(data, safe=False)
+
 
 @csrf_protect
 @require_POST
@@ -224,12 +245,11 @@ def ajax_load_patch_ports(request):
 @csrf_protect
 @require_POST
 def ajax_load_model(request):
-    usage = request.POST.get('usage')
+    usage = request.POST.get('usage')  # 'device' o 'switch'
     dev_type_name = request.POST.get('dev_type_name')
     brand_id = request.POST.get('brand_id')
 
     dev_models = Dev_Model.objects.all()
-
     if usage == 'device':
         dev_models = dev_models.exclude(dev_type__dev_type='SWITCH')
     elif usage == 'switch':
@@ -253,6 +273,7 @@ def ajax_load_model(request):
 
     data = [{'id': m.id, 'name': m.dev_model} for m in dev_models]
     return JsonResponse(data, safe=False)
+
 
 @csrf_protect
 @require_POST
@@ -333,9 +354,32 @@ def ajax_load_switch_port(request):
 @csrf_protect
 @require_POST
 def ajax_load_employee(request):
+    province_id = request.POST.get('province_id') or request.GET.get('province_id')
+    location_id = request.POST.get('location_id') or request.GET.get('location_id')
+    dependency_id = request.POST.get('dependency_id') or request.GET.get('dependency_id')
+    edifice_id = request.POST.get('edifice_id') or request.GET.get('edifice_id')
+    loc_id = request.POST.get('loc_id') or request.GET.get('loc_id')
     office_id = request.POST.get('office_id')
-    employees = Employee.objects.filter(office_id=office_id)
-    data = [{'id': e.id, 'name': f'{e.employee_last_name}, {e.employee_name}'} for e in employees]
+
+    filters = {}
+    if province_id:
+        filters['office__loc__edifice__location__province_id'] = province_id
+    if location_id:
+        filters['office__loc__edifice__location_id'] = location_id
+    if edifice_id:
+        filters['office__loc__edifice_id'] = edifice_id
+    if dependency_id:
+        filters['office__dependency_id'] = dependency_id
+    if loc_id:
+        filters['office__loc_id'] = loc_id
+    if office_id:
+        filters['office_id'] = office_id
+
+    employees = Employee.objects.filter(**filters).distinct()
+    data = [{
+        'id': e.id,
+        'name': f'{e.employee_last_name}, {e.employee_name} - CUIL N°: {e.cuil} / Usuarui: {e.user_pc}'
+    } for e in employees]
     return JsonResponse(data, safe=False)
 
 

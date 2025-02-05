@@ -151,6 +151,12 @@ function updateLocationOptions(province_id) {
             }, $('select[name="office"]'), $('#id_office').data('preselected'));
         }
 
+        if ($('#id_employee').length > 0) {
+            updateOptions('/sh/ajax/load_employee/', {
+                'province_id': province_id,
+            }, $('select[name="employee"]'), $('#id_employee').data('preselected'));
+        }
+
         if ($('#id_rack').length > 0) {
             updateOptions('/sh/ajax/load_rack/', {
                 'province_id': province_id,

@@ -111,12 +111,12 @@ class DeviceForm(forms.ModelForm):
             }),
             'ip': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Si tuviera, ingrese la dirección ip del dispositivo',
+                'placeholder': 'Ingrese la dirección ip',
                 'id': 'id_ip_input'
             }),
             'net_name': TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Si tuviera, ingrese el nombre de registro en la red del dispositivo',
+                'placeholder': 'Ingrese el nombre de registro en la red',
                 'id': 'id_net_name_input'
             }),
             'dev_status': Select(attrs={
@@ -147,6 +147,11 @@ class DeviceForm(forms.ModelForm):
             'employee': SelectMultiple(attrs={
                 'class': 'form-control select2',
                 'id': 'id_employee'}),
+        }
+
+        help_texts = {
+            'ip': 'Solo en caso de tener una dirección IP asignada.',
+            'net_name': 'Solo en caso de tener un nombre de registro en la red.',
         }
 
     def __init__(self, *args, **kwargs):

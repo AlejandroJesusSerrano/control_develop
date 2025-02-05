@@ -1,169 +1,219 @@
 {% extends 'form.html' %}
 {% load static %}
-
 {% block extra_refs %}
-<!-- Datepicker -->
-<link rel="stylesheet" href="{% static 'lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css' %}">
-<script src="{% static 'lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js' %}"></script>
-<script src="{% static 'lib/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js' %}"></script>
+  <!-- Select2 -->
+  <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
+  <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
+  <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+  <!-- Bootstrap Datepicker -->
+  <script src="{% static 'lib/bootstrap-datepicker-1.9.0-dist/js/bootstrap-datepicker.min.js' %}"></script>
 {% endblock extra_refs %}
 
 {% block form %}
-
-<!-- Sección Oficina -->
-<div class="card my-3">
-    <div class="card-header {{bg_color}}">
-        <h5 class="card-title">Ubicación del Movimiento</h5>
+<div class="container mt-4">
+  <!-- Tarjeta de filtros para Oficinas y Empleados -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center {{bg_color}}">
+      <h3 class="card-title">Seleccione una oficina y un usuario</h3>
     </div>
     <div class="card-body">
-        <div class="form-group">
-            <label for="id_office">Oficina:</label>
-            {{ form.office }}
-            {% if form.office.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.office.errors|join:"<br>" }}
+      <button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-4" type="button">
+        Filtrar Oficinas y Empleados <i class="fa fa-filter"></i>
+      </button>
+      <div id="filter-office-cards" class="d-none">
+        <div class="row">
+          <div class="container">
+            <div class="card text-white bg-secondary mt-4">
+              <div class="card-header">
+                Filtrar Oficina y Empleado
+              </div>
+              <div class="card-body row">
+                <div class="form-group col-12">
+                  <label for="id_province">Provincia:</label>
+                  {{ form.province }}
+                  {% if form.province.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.province.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="form-group col-12">
+                  <label for="id_location">Localidad:</label>
+                  {{ form.location }}
+                  {% if form.location.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.location.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="form-group col-6">
+                  <label for="id_edifice">Edificio:</label>
+                  {{ form.edifice }}
+                  {% if form.edifice.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.edifice.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="form-group col-6">
+                  <label for="id_dependency">Dependencia:</label>
+                  {{ form.dependency }}
+                  {% if form.dependency.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.dependency.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="form-group col-6">
+                  <label for="id_loc">Locación de Oficina:</label>
+                  {{ form.loc }}
+                  {% if form.loc.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.loc.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
             </div>
-            {% endif %}
-            <small class="form-text text-muted">Seleccione la oficina donde se realizó el movimiento</small>
+          </div>
         </div>
+      </div>
+      <!-- Selección de Oficina y Empleado -->
+      <div class="row">
+        <div class="form-group col-6">
+          <label for="id_office">Oficina:</label>
+          {{ form.office }}
+          {% if form.office.errors %}
+          <div class="invalid-feedback d-block">
+            {{ form.office.errors|join:"<br>" }}
+          </div>
+          {% endif %}
+        </div>
+        <div class="form-group col-6">
+          <label for="id_employee">Empleado:</label>
+          {{ form.employee }}
+          {% if form.employee.errors %}
+          <div class="invalid-feedback d-block">
+            {{ form.employee.errors|join:"<br>" }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<!-- Sección Dispositivo/Switch -->
-<div class="card my-3">
-    <div class="card-header {{bg_color}}">
-        <h5 class="card-title">Elemento Asociado</h5>
+  <!-- Tarjeta de filtros para Dispositivos -->
+  <div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center {{bg_color}}">
+      <h3 class="card-title">Seleccione el Dispositivo o Switch</h3>
     </div>
-    <div class="card-body row">
-        <div class="form-group col-6">
-            <label for="id_device">Dispositivo:</label>
-            {{ form.device }}
-            {% if form.device.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.device.errors|join:"<br>" }}
+    <div class="card-body">
+      <button id="toggle-device-filters" class="btn {{filter_btn_color}} mb-4" type="button">
+        Filtrar Dispositivos <i class="fa fa-filter"></i>
+      </button>
+      <div id="filter-device-cards" class="d-none">
+        <div class="row">
+          <div class="container">
+            <div class="card text-white bg-secondary mt-1">
+              <div class="card-header">
+                Filtrar Dispositivo
+              </div>
+              <div class="card-body row">
+                <div class="col-4">
+                  <div class="form-group">
+                    <label for="id_dev_type">Tipo de Dispositivo</label>
+                    {{ form.dev_type }}
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-group">
+                    <label for="id_brand">Marca</label>
+                    {{ form.brand }}
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="form-group">
+                    <label for="id_ip">Ip</label>
+                    {{ form.ip }}
+                  </div>
+                </div>
+              </div>
             </div>
-            {% endif %}
+          </div>
         </div>
-        
-        <div class="form-group col-6">
-            <label for="id_switch">Switch:</label>
+      </div>
+      <!-- Selección de Switch y Dispositivo -->
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="id_switch">Switch</label>
             {{ form.switch }}
-            {% if form.switch.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.switch.errors|join:"<br>" }}
-            </div>
-            {% endif %}
+          </div>
         </div>
-        
-        <div class="col-12">
-            <small class="form-text text-muted">
-                * Seleccione solo un dispositivo o un switch según el tipo de movimiento
-            </small>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="id_device">Dispositivo</label>
+            {{ form.device }}
+          </div>
         </div>
+      </div>
     </div>
-</div>
-
-<!-- Sección Datos del Movimiento -->
-<div class="card my-3">
-    <div class="card-header {{bg_color}}">
-        <h5 class="card-title">Detalles del Movimiento</h5>
+  </div>
+  <!-- Tarjeta de detalles del movimiento -->
+<div class="card mt-4">
+  <div class="card-header d-flex justify-content-between align-items-center {{bg_color}}">
+    <h3 class="card-title">Cargue los detalles del movimiento</h3>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="id_move">Tipo de Movimiento</label>
+          {{ form.move }}
+        </div>
+      </div>
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="id_techs">Técnico</label>
+          {{ form.techs }}
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="text-center">Fecha Movimiento:</label>
+          <!-- Botón con el estilo de supy -->
+          <button type="button" id="id_suply_date_in_button" class="btn btn-dark">
+            <i class="fa fa-calendar"></i> Seleccionar Fecha
+          </button>
+          <!-- Input "oculto" pero de tipo text, posicionado fuera de vista -->
+          <input type="text" name="date" id="id_suply_date_in_input" class="hide-input" value="{{ form.date.value|default:'' }}">
+          {% if form.date.errors %}
+          <div class="invalid-feedback d-block">
+            {{ form.date.errors|join:"<br>" }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="id_suply">Suministro</label>
+          {{ form.suply }}
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label for="id_detail">Detalle</label>
+          {{ form.detail }}
+        </div>
+      </div>
     </div>
-    <div class="card-body row">
-        <div class="form-group col-4">
-            <label for="id_move">Tipo de Movimiento:</label>
-            {{ form.move }}
-            {% if form.move.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.move.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-        </div>
-        
-        <div class="form-group col-4">
-            <label for="id_techs">Técnico Responsable:</label>
-            {{ form.techs }}
-            {% if form.techs.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.techs.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-        </div>
-        
-        <div class="form-group col-4">
-            <label for="id_date">Fecha del Movimiento:</label>
-            {{ form.date }}
-            {% if form.date.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.date.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-        </div>
-        
-        <div class="form-group col-6">
-            <label for="id_suply">Insumo Utilizado:</label>
-            {{ form.suply }}
-            {% if form.suply.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.suply.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-        </div>
-        
-        <div class="form-group col-12">
-            <label for="id_detail">Detalle:</label>
-            {{ form.detail }}
-            {% if form.detail.errors %}
-            <div class="invalid-feedback d-block">
-                {{ form.detail.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-        </div>
-    </div>
+  </div>
 </div>
 
 {% endblock form %}
 
 {% block form_scripts %}
-<script src="{% static 'movements/js/form.js' %}"></script>
-<script>
-$(document).ready(function() {
-    // Inicializar datepicker
-    $('#id_date').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es',
-        autoclose: true,
-        todayHighlight: true
-    });
-    
-    // Inicializar select2
-    $('.select2').select2({
-        theme: 'bootstrap',
-        placeholder: 'Seleccione una opción',
-        allowClear: true
-    });
-    
-    // Cargar dispositivos y switches cuando cambia la oficina
-    $('#id_office').on('change', function() {
-        const officeId = $(this).val();
-        
-        // Habilitar y cargar dispositivos
-        $('#id_device').prop('disabled', false).empty().append('<option value="">Cargando...</option>');
-        $.get(`/sh/get_devices/?office_id=${officeId}`, function(data) {
-            $('#id_device').empty().append('<option value="">Seleccione un dispositivo</option>');
-            data.forEach(device => {
-                $('#id_device').append(`<option value="${device.id}">${device.text}</option>`);
-            });
-        });
-        
-        // Habilitar y cargar switches
-        $('#id_switch').prop('disabled', false).empty().append('<option value="">Cargando...</option>');
-        $.get(`/sh/get_switches/?office_id=${officeId}`, function(data) {
-            $('#id_switch').empty().append('<option value="">Seleccione un switch</option>');
-            data.forEach(switchItem => {
-                $('#id_switch').append(`<option value="${switchItem.id}">${switchItem.text}</option>`);
-            });
-        });
-    });
-});
-</script>
+  <script src="{% static 'js/filters.js' %}"></script>
+  <script src="{% static 'movements/js/form.js' %}"></script>
 {% endblock form_scripts %}

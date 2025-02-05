@@ -1,58 +1,88 @@
-# movements/forms.py
 from django import forms
 from django.forms import ModelForm, Select, Textarea, DateInput
 from core.sh.models import Movements, Device, Switch, Move_Type, Techs, Suply
+from core.sh.models.brands.models import Brand
+from core.sh.models.dependency.models import Dependency
+from core.sh.models.dev_type.models import Dev_Type
+from core.sh.models.edifice.models import Edifice
+from core.sh.models.employee.models import Employee
+from core.sh.models.location.models import Location
 from core.sh.models.office.models import Office
+from core.sh.models.office_loc.models import Office_Loc
+from core.sh.models.province.models import Province
+
 
 class MovementsForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Configuración inicial de querysets
-        self.fields['device'].queryset = Device.objects.none()
-        self.fields['switch'].queryset = Switch.objects.none()
 
-        # Si estamos editando una instancia existente
-        if self.instance.pk:
-            if self.instance.device:
-                self.fields['device'].queryset = Device.objects.filter(pk=self.instance.device.pk)
-                self.fields['switch'].queryset = Switch.objects.filter(office=self.instance.device.office)
-            elif self.instance.switch:
-                self.fields['switch'].queryset = Switch.objects.filter(pk=self.instance.switch.pk)
-                self.fields['device'].queryset = Device.objects.filter(office=self.instance.switch.office)
+    class EmployeeModelChoiceField(forms.ModelChoiceField):
+        def label_from_instance(self, obj):
+            return f"{obj.employee_last_name}, {obj.employee_name} - CUIL Nro: {obj.cuil} / Usuario: {obj.user_pc}"
 
+    province = forms.ModelChoiceField(
+        queryset=Province.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
+        required=False
+    )
+    location = forms.ModelChoiceField(
+        queryset=Location.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_location'}),
+        required=False
+    )
+    dependency = forms.ModelChoiceField(
+        queryset=Dependency.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dependency'}),
+        required=False
+    )
+    edifice = forms.ModelChoiceField(
+        queryset=Edifice.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_edifice'}),
+        required=False
+    )
+    loc = forms.ModelChoiceField(
+        queryset=Office_Loc.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc'}),
+        required=False
+    )
     office = forms.ModelChoiceField(
         queryset=Office.objects.all(),
-        widget=Select(attrs={
-            'class': 'form-control select2',
-            'id': 'id_office',
-            'data-url': '/get_devices_and_switches/'
-        }),
-        required=False,
-        label="Oficina"
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_office'}),
+        required=False
+    )
+    employee = EmployeeModelChoiceField(
+        queryset=Employee.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_employee'}),
+        required=False
+    )
+    dev_type = forms.ModelChoiceField(
+        queryset=Dev_Type.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dev_type'}),
+        required=False
+    )
+    brand = forms.ModelChoiceField(
+        queryset=Brand.objects.exclude(models_brand__dev_type__dev_type='SWITCH').distinct(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_brand'}),
+        required=False
+    )
+
+    ips = Device.objects.values_list('ip', flat=True).distinct()
+    ip_choices = [('', '----------')]+[(ip, ip) for ip in ips]
+
+    ip = forms.ChoiceField(
+        choices=ip_choices,
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_ip'}),
+        required=False
     )
 
     class Meta:
         model = Movements
-        fields = '__all__'
+        fields = [
+            'province', 'location', 'dependency', 'edifice', 'loc', 'office', 'employee', 'dev_type', 'brand', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'ip'
+            ]
         widgets = {
-            'device': Select(attrs={
-                'class': 'form-control select2',
-                'id': 'id_device',
-                'disabled': True
-            }),
-            'switch': Select(attrs={
-                'class': 'form-control select2',
-                'id': 'id_switch',
-                'disabled': True
-            }),
-            'move': Select(attrs={
-                'class': 'form-control select2',
-                'id': 'id_move_type'
-            }),
-            'techs': Select(attrs={
-                'class': 'form-control select2',
-                'id': 'id_techs'
-            }),
+            'device': Select(attrs={'class': 'form-control select2', 'id': 'id_device'}),
+            'switch': Select(attrs={'class': 'form-control select2', 'id': 'id_switch'}),
+            'move': Select(attrs={'class': 'form-control select2', 'id': 'id_move'}),
+            'techs': Select(attrs={'class': 'form-control select2', 'id': 'id_techs'}),
             'date': DateInput(attrs={
                 'class': 'form-control datepicker',
                 'id': 'id_date',
@@ -60,10 +90,7 @@ class MovementsForm(ModelForm):
                 'data-provide': 'datepicker',
                 'data-date-format': 'dd/mm/yyyy'
             }),
-            'suply': Select(attrs={
-                'class': 'form-control select2',
-                'id': 'id_suply'
-            }),
+            'suply': Select(attrs={'class': 'form-control select2', 'id': 'id_suply'}),
             'detail': Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
@@ -71,85 +98,31 @@ class MovementsForm(ModelForm):
             }),
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        device = cleaned_data.get('device')
-        switch = cleaned_data.get('switch')
-        move_type = cleaned_data.get('move')
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-        # Validación de campos requeridos según tipo de movimiento
-        if move_type.requires_device and not device:
-            self.add_error('device', 'Este tipo de movimiento requiere un dispositivo')
-        if move_type.requires_switch and not switch:
-            self.add_error('switch', 'Este tipo de movimiento requiere un switch')
-        return cleaned_data
+        if 'instance' in kwargs and kwargs['instance']:
+            instance=kwargs['instance']
+            if instance.employee and instance.employee.office and instance.employee.office.loc and instance.employee.office.dependency and instance.employee.office.loc.edifice and instance.employee.office.loc.edifice.location and instance.employee.office.loc.edifice.location.province:
+                self.fields['province'].queryset = Province.objects.all()
+                self.fields['province'].initial = instance.employee.office.loc.edifice.location.province.id
 
-# from django.forms import *
-# from django.forms import ModelForm, Select, Textarea, DateInput
+                self.fields['location'].queryset = Location.objects.filter(province=instance.employee.office.loc.edifice.location.province)
+                self.fields['location'].initial = instance.employee.office.loc.edifice.location.id
 
-# from core.sh.models.movements.models import Movements
+                self.fields['dependency'].queryset = Dependency.objects.filter(location=instance.employee.office.loc.edifice.location)
+                self.fields['dependency'].initial = instance.employee.office.loc.edifice.location.dependency.id
 
+                self.fields['edifice'].queryset = Edifice.objects.filter(location=instance.employee.office.loc.edifice.location)
+                self.fields['edifice'].initial = instance.employee.office.loc.edifice.id
 
-# class MovementsForm(ModelForm):
+                self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=instance.employee.office.loc.edifice)
+                self.fields['loc'].initial = instance.employee.office.loc.id
 
-#   class Meta:
-#       model = Movements
-#       fields = '__all__'
-#       widget = {
-#         'device': Select(
-#           attrs={
-#             'class': 'form-control select2',
-#             'id': 'id_device'
-#           }
-#         ),
+                self.fields['office'].queryset = Office.objects.filter(loc=instance.employee.office.loc)
+                self.fields['office'].initial = instance.employee.office.id
 
-#         'switch': Select(
-#           attrs={
-#             'class': 'form-control select2'
-#           }
-#         ),
+                self.fields['employee'].queryset = Employee.objects.filter(office=instance.employee.office)
+                self.fields['employee'].initial = instance.employee
 
-#         'port_id': Select(
-#           attrs={
-#             'placeholder': 'Seleccione el tipo de movimiento',
-#             'id': 'id_port_id_input'
-#           }
-#         ),
-#         'techs': Select(
-#           attrs={
-#             'placeholder': 'Seleccione el Técnico responsable del movimiento',
-#             'id': 'id_techs'
-#           }
-#         ),
-#         'date': DateInput(
-#           attrs={
-#             'placeholder': 'Ingrese la fecha del movimiento',
-#             'id': 'id_move_date_input'
-#           }
-#         ),
-#         'suply': Select(
-#           attrs={
-#             'placeholder': 'En caso de haberse requerido, ingrese el insumo utilizado',
-#             'id': 'id_suply'
-#           }
-#         ),
-#         'detail': Textarea(
-#           attrs={
-#             'placeholder': 'Describa el detalle del movimiento realizado',
-#             'id': 'id_detail_move_input'
-#           }
-#         ),
-#       }
-
-#   def save(self, commit=True):
-#     data={}
-#     form = super()
-#     try:
-#       if form.is_valid():
-#         form.save()
-#       else:
-#         data['error'] = form.errors.get_json_data()
-#     except Exception as e:
-#       data['error'] = str(e)
-#     return data
-
+            self.fields['employee'].required = True
