@@ -10,6 +10,7 @@ from core.sh.models.location.models import Location
 from core.sh.models.office.models import Office
 from core.sh.models.office_loc.models import Office_Loc
 from core.sh.models.province.models import Province
+from core.sh.models.rack.models import Rack
 
 
 class MovementsForm(ModelForm):
@@ -63,6 +64,43 @@ class MovementsForm(ModelForm):
         widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_brand'}),
         required=False
     )
+    connection_type = forms.ModelChoiceField(
+        queryset=Dev_Type.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_connection_type'}),
+        required=False
+    )
+    rack = forms.ModelChoiceField(
+        queryset=Rack.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_rack'}),
+        required=False
+    )
+
+    s_serial_n = Switch.objects.values_list('serial_n', flat=True).distinct()
+    s_serial_n_choices = [('', '----------')]+[(serial_n, serial_n) for serial_n in s_serial_n]
+
+    switch_serial_n = forms.ChoiceField(
+        choices=s_serial_n_choices,
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_switch_serial_n'}),
+        required=False
+    )
+
+    d_serial_n = Device.objects.values_list('serial_n', flat=True).distinct()
+    d_serial_n_choices = [('', '----------')]+[(serial_n, serial_n) for serial_n in d_serial_n]
+
+    device_serial_n = forms.ChoiceField(
+        choices=d_serial_n_choices,
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_device_serial_n'}),
+        required=False
+    )
+
+    s_rack_pos = Switch.objects.values_list('switch_rack_pos', flat=True).distinct()
+    s_rack_pos_choices = [('', '----------')]+[(pos, pos) for pos in s_rack_pos]
+
+    switch_rack_pos = forms.ChoiceField(
+        choices=s_rack_pos_choices,
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_switch_rack_pos'}),
+        required=False
+    )
 
     ips = Device.objects.values_list('ip', flat=True).distinct()
     ip_choices = [('', '----------')]+[(ip, ip) for ip in ips]
@@ -76,7 +114,7 @@ class MovementsForm(ModelForm):
     class Meta:
         model = Movements
         fields = [
-            'province', 'location', 'dependency', 'edifice', 'loc', 'office', 'employee', 'dev_type', 'brand', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'ip'
+            'province', 'location', 'dependency', 'edifice', 'loc', 'office', 'employee', 'dev_type', 'brand', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'ip', 'connection_type', 'rack', 'switch_serial_n', 'switch_rack_pos', 'device_serial_n'
             ]
         widgets = {
             'device': Select(attrs={'class': 'form-control select2', 'id': 'id_device'}),

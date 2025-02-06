@@ -133,25 +133,79 @@ def ajax_load_rack(request):
 
 @csrf_protect
 @require_POST
-def ajax_load_brand(request):
-    usage = request.POST.get('usage')
-    dev_type_name = request.POST.get('dev_type_name')
+def ajax_load_switch_rack_pos(request):
+    rack_id = request.POST.get('rack_id')
+    office_id = request.POST.get('office_id')
 
-    brands = Brand.objects.all()
-    if usage == 'device':
-        brands = brands.exclude(models_brand__dev_type__dev_type='SWITCH').distinct()
-    elif usage == 'switch':
-        brands = brands.filter(models_brand__dev_type__dev_type='SWITCH').distinct()
+    qs = Switch.objects.all()
+    if office_id:
+        qs = qs.filter(office_id=office_id)
+    if rack_id:
+        qs = qs.filter(rack_id=rack_id)
 
-    if dev_type_name:
-        try:
-            dev_type_id = int(dev_type_name)
-            brands = brands.filter(models_brand__dev_type__id=dev_type_id).distinct()
-        except ValueError:
-            brands = brands.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
-
-    data = [{'id': b.id, 'name': b.brand} for b in brands]
+    positions = qs.values_list('switch_rack_pos', flat=True).distinct()
+    data = [{'id': pos, 'name': pos} for pos in positions if pos]
     return JsonResponse(data, safe=False)
+
+@csrf_protect
+@require_POST
+def ajax_load_brand(request):
+    try:
+        usage = request.POST.get('usage')
+        dev_type_name = request.POST.get('dev_type_name')
+        office_id = request.POST.get('office_id')
+
+        brands = Brand.objects.all()
+
+        if usage == 'device':
+            brands = brands.exclude(models_brand__dev_type__dev_type='SWITCH').distinct()
+        elif usage == 'switch':
+            brands = brands.filter(models_brand__dev_type__dev_type='SWITCH').distinct()
+
+        if dev_type_name:
+            try:
+                dev_type_id = int(dev_type_name)
+                brands = brands.filter(models_brand__dev_type__id=dev_type_id).distinct()
+            except ValueError:
+                brands = brands.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
+
+        if office_id:
+            brands = brands.filter(models_brand__device_model__device_office__id=office_id).distinct()
+
+        data = [{'id': b.id, 'name': b.brand} for b in brands]
+        return JsonResponse(data, safe=False)
+
+    except Exception as e:
+        print(f"Error en ajax_load_brand: {e}")  # Ver en consola del servidor
+        return JsonResponse({'error': f'Error en servidor: {str(e)}'}, status=500)
+
+
+# @csrf_protect
+# @require_POST
+# def ajax_load_brand(request):
+#     usage = request.POST.get('usage')
+#     dev_type_name = request.POST.get('dev_type_name')
+#     office_id = request.POST.get('office_id')
+
+#     brands = Brand.objects.all()
+
+#     if usage == 'device':
+#         brands = brands.exclude(models_brand__dev_type__dev_type='SWITCH').distinct()
+#     elif usage == 'switch':
+#         brands = brands.filter(models_brand__dev_type__dev_type='SWITCH').distinct()
+
+#     if dev_type_name:
+#         try:
+#             dev_type_id = int(dev_type_name)
+#             brands = brands.filter(models_brand__dev_type__id=dev_type_id).distinct()
+#         except ValueError:
+#             brands = brands.filter(models_brand__dev_type__dev_type=dev_type_name).distinct()
+
+#     if office_id:
+#         brands = brands.filter(models_brand__device__office_id=office_id).distinct()
+
+#     data = [{'id': b.id, 'name': b.brand} for b in brands]
+#     return JsonResponse(data, safe=False)
 
 @csrf_protect
 @require_POST
@@ -180,7 +234,11 @@ def ajax_load_switch(request):
 def ajax_load_ip(request):
     usage = request.POST.get('usage')
     dev_type_name = request.POST.get('dev_type_name')
+    office_id = request.POST.get('office_id')
+
     devices = Device.objects.all()
+    if office_id:
+        devices = devices.filter(office_id=office_id)
     if usage == 'device':
         devices = devices.exclude(dev_model__dev_type__dev_type='SWITCH')
     elif usage == 'switch':
@@ -195,6 +253,45 @@ def ajax_load_ip(request):
 
     ips = devices.values_list('ip', flat=True).distinct()
     data = [{'id': ip, 'name': ip} for ip in ips if ip]
+    return JsonResponse(data, safe=False)
+
+@csrf_protect
+@require_POST
+def load_device_serial_n(request):
+    brand_id = request.POST.get('brand_id')
+    dev_type_name = request.POST.get('dev_type_name')
+    office_id = request.POST.get('office_id')
+
+    devices = Device.objects.all()
+    if brand_id:
+        devices = devices.filter(dev_model__brand_id=brand_id)
+    if dev_type_name:
+        try:
+            dev_type_id = int(dev_type_name)
+            devices = devices.filter(dev_model__dev_type_id=dev_type_id)
+        except ValueError:
+            devices = devices.filter(dev_model__dev_type__dev_type=dev_type_name)
+    if office_id:
+        devices = devices.filter(office_id=office_id)
+
+    serial_n = devices.values_list('serial_n', flat=True).distinct()
+    data = [{'id': sn, 'name': sn} for sn in serial_n if sn]
+    return JsonResponse(data, safe=False)
+
+@csrf_protect
+@require_POST
+def load_switch_serial_n(request):
+    brand_id = request.POST.get('brand_id')
+    office_id = request.POST.get('office_id')
+
+    switches = Switch.objects.all()
+    if brand_id:
+        switches = switches.filter(model__brand_id=brand_id)
+    if office_id:
+        switches = switches.filter(office_id=office_id)
+
+    serial_n = switches.values_list('serial_n', flat=True).distinct()
+    data = [{'id': sn, 'name': sn} for sn in serial_n if sn]
     return JsonResponse(data, safe=False)
 
 
@@ -248,6 +345,7 @@ def ajax_load_model(request):
     usage = request.POST.get('usage')  # 'device' o 'switch'
     dev_type_name = request.POST.get('dev_type_name')
     brand_id = request.POST.get('brand_id')
+    office_id = request.POST.get('office_id')
 
     dev_models = Dev_Model.objects.all()
     if usage == 'device':
@@ -268,6 +366,9 @@ def ajax_load_model(request):
             dev_models = dev_models.filter(dev_type_id=dev_type_id)
         except ValueError:
             dev_models = dev_models.filter(dev_type__dev_type=dev_type_name)
+
+    if office_id:
+        dev_models = dev_models.filter(dev_model__device__office_id=office_id)
 
     dev_models = dev_models.distinct()
 

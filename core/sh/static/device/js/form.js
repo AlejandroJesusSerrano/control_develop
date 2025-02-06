@@ -27,7 +27,6 @@ $(document).ready(function() {
   if ($('#id_rack_ports').length > 0) {
       $('select[name="rack_ports"]').on('change', function() {
           const rack_ports_id = $(this).val();
-          console.log('Rack ID seleccionado: ', rack_ports_id);
           updateRackPortsOptions(rack_ports_id);
       });
   }
