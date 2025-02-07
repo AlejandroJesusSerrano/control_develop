@@ -14,6 +14,7 @@ class Switch(models.Model):
   serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True)
   ports_q = models.CharField(max_length = 2, verbose_name = 'Cantidad de Puertos')
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
+  ip = models.CharField(max_length = 15, verbose_name = 'Dirección IP', null = True, blank = True)
   switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
   office = models.ForeignKey(Office, related_name = 'switch_office', verbose_name = 'Oficina', on_delete = models.CASCADE, blank=True, null=True)
   wall_port_in = models.OneToOneField('sh.Wall_Port', related_name='switch_wall_port_in', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
@@ -53,6 +54,7 @@ class Switch(models.Model):
     item['brand'] = self.model.brand.brand if self.model and self.model.brand else 'GENÉRICO'
     item['serial_n'] = self.serial_n if self.serial_n else 'GENÉRICO SIN S/N°'
     item['ports_q'] = self.ports_q
+    item['ip'] = self.ip if self.ip else 'NO TIENE IP'
     item['rack'] = self.rack.rack if self.rack else 'NO ESTA EN RACK'
     item['office'] = self.office.office if self.office else 'NO ESTA EN UNA OFICINA'
     item['switch_rack_pos'] = self.switch_rack_pos if self.rack else 'NO ESTA EN RACK'

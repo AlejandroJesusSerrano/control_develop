@@ -86,7 +86,7 @@ function updateOptions(url, data, selectElement) {
   }
 
   activeRequests[selectId] = true; // Bloquea nuevas solicitudes
-  let options = '<option value="">----------</option>';
+  let options = '<option value="">----------</option>';  // Opción inicial
   const currentValue = selectElement.val();
   const preselectedValue = selectElement.data('preselected') || currentValue;
 
@@ -95,22 +95,35 @@ function updateOptions(url, data, selectElement) {
     type: 'POST',
     data: data,
     dataType: 'json',
-  }).done(function (response) {
+  })
+  .done(function (response) {
     if (Array.isArray(response)) {
       response.forEach(item => {
-        const selected = item.id == preselectedValue ? 'selected' : '';
-        options += `<option value="${item.id}" ${selected}>${item.name}</option>`;
+        // Ver si coincide el preseleccionado
+        const selected = (String(item.id) === String(preselectedValue)) ? 'selected' : '';
+
+        // Si el servidor devuelve dev_str (ej: "SWITCH"), lo guardamos en data-devtype
+        let devStrAttr = '';
+        if (item.dev_str) {
+          devStrAttr = ` data-devtype="${item.dev_str}"`;
+        }
+
+        options += `<option value="${item.id}" ${selected}${devStrAttr}>${item.name}</option>`;
       });
       selectElement.html(options).trigger('change.select2');
     } else {
       console.error('Error en respuesta:', response);
     }
-  }).fail(function (jqXHR, textStatus) {
+  })
+  .fail(function (jqXHR, textStatus) {
     console.error(`Error en solicitud AJAX para ${selectId}:`, textStatus);
-  }).always(function () {
+  })
+  .always(function () {
     activeRequests[selectId] = false; // Desbloquea el select
   });
 }
+
+
 
 function confirmAndSend(url, title, icon, content, type, formData, callback) {
   $.confirm({

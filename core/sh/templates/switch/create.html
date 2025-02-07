@@ -55,6 +55,15 @@
 </div>
 
 <div class="form-group">
+  <label for="id_ip">Dirección IP:</label>
+  {{ form.ip }}
+  {% if form.ip.errors %}
+  <div class="invalid-feedback d-block">
+    {{ form.ip.errors|join:"<br>" }}
+  </div>
+  {% endif %}
+
+<div class="form-group mt-3">
   <label for="id_rack">Rack:</label>
   {{ form.rack }}
   {% if form.rack.errors %}

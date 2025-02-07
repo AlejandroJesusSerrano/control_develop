@@ -18,6 +18,8 @@ $(document).ready(function(){
       {"data": "brand"},
       {"data": "serial_n"},
       {"data": "ports_q"},
+      {"data": "model"},
+      {"data": "ip"},
       {"data": "office"},
       {"data": "rack"},
       {"data": "switch_rack_pos"},
@@ -25,7 +27,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
-        targets: [7],
+        targets: [9],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){
