@@ -78,17 +78,21 @@ function message_error(msg) {
 
 const activeRequests = {}; // Mantén un registro de solicitudes activas
 
-function updateOptions(url, data, selectElement) {
+function updateOptions(url, data, selectElement, preselectedVal = null) {
   const selectId = selectElement.attr('id');
+
+  // Chequeo de activeRequests, etc. (igual que tu código)
   if (activeRequests[selectId]) {
     console.log(`Solicitud activa ya existente para ${selectId}, abortando.`);
     return;
   }
+  activeRequests[selectId] = true;
 
-  activeRequests[selectId] = true; // Bloquea nuevas solicitudes
-  let options = '<option value="">----------</option>';  // Opción inicial
-  const currentValue = selectElement.val();
-  const preselectedValue = selectElement.data('preselected') || currentValue;
+  let options = '<option value="">----------</option>';
+  // Si no me pasan preselectedVal, uso .val() del select
+  if (preselectedVal === null) {
+    preselectedVal = selectElement.val() || '';
+  }
 
   $.ajax({
     url: url,
@@ -99,10 +103,10 @@ function updateOptions(url, data, selectElement) {
   .done(function (response) {
     if (Array.isArray(response)) {
       response.forEach(item => {
-        // Ver si coincide el preseleccionado
-        const selected = (String(item.id) === String(preselectedValue)) ? 'selected' : '';
+        // Compara ID de la BD con preselectedVal
+        const selected = (String(item.id) === String(preselectedVal)) ? 'selected' : '';
 
-        // Si el servidor devuelve dev_str (ej: "SWITCH"), lo guardamos en data-devtype
+        // dev_str extra, si usas data-devtype
         let devStrAttr = '';
         if (item.dev_str) {
           devStrAttr = ` data-devtype="${item.dev_str}"`;
@@ -119,9 +123,10 @@ function updateOptions(url, data, selectElement) {
     console.error(`Error en solicitud AJAX para ${selectId}:`, textStatus);
   })
   .always(function () {
-    activeRequests[selectId] = false; // Desbloquea el select
+    activeRequests[selectId] = false;
   });
 }
+
 
 
 

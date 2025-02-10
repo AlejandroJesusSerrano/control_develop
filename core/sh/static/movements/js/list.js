@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
   $('#movement_table').DataTable({
     responsive: true,
     autowidth: false,
@@ -15,12 +16,8 @@ $(document).ready(function(){
     columns: [
       {"data": "id"},
       {"data": "device"},
-      {
-        "data": "null",
-        "render": function(data, type, row){
-          return row.user !== 'N/A' ? row.user : row.office;
-        }
-      },
+      {"data": "office"},
+      {"data": "employee"},
       {"data": "move"},
       {"data": "techs"},
       {"data": "date"},
@@ -36,7 +33,7 @@ $(document).ready(function(){
       },
       {
 
-        targets: [7],
+        targets: [8],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){
