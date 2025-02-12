@@ -62,13 +62,27 @@ class MovementsForm(ModelForm):
     # Filtrado de Dev_Type (lo usas sólo para filtrar?)
     dev_type = forms.ModelChoiceField(
         queryset=Dev_Type.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dev_type'}),
+        widget=forms.Select(attrs={
+            'class': 'form-control select2',
+            'id': 'id_dev_type',
+            'data-preselected': ''
+            }),
         required=False
     )
 
-    brand = forms.ModelChoiceField(
+    d_brand = forms.ModelChoiceField(
         queryset=Brand.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_brand'}),
+        widget=forms.Select(attrs={
+            'class': 'form-control select2',
+            'id': 'id_d_brand',
+            'data-preselected': ''
+            }),
+        required=False
+    )
+
+    s_brand = forms.ModelChoiceField(
+        Brand.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_s_brand'}),
         required=False
     )
 
@@ -95,7 +109,11 @@ class MovementsForm(ModelForm):
 
     device_serial_n = forms.ChoiceField(
         choices=d_serial_n_choices,
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_device_serial_n'}),
+        widget=forms.Select(attrs={
+            'class': 'form-control select2',
+            'id': 'id_device_serial_n',
+            'data-preselected': ''
+            }),
         required=False
     )
 
@@ -110,24 +128,40 @@ class MovementsForm(ModelForm):
     )
 
     # IP de Device
-    ips = Device.objects.values_list('ip', flat=True).distinct()
-    ip_choices = [('', '----------')] + [(ip, ip) for ip in ips if ip]
+    d_ips = Device.objects.values_list('ip', flat=True).distinct()
+    d_ip_choices = [('', '----------')] + [(ip, ip) for ip in d_ips if ip]
 
-    ip = forms.ChoiceField(
-        choices=ip_choices,
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_ip'}),
+    d_ip = forms.ChoiceField(
+        choices=d_ip_choices,
+        widget=forms.Select(attrs={
+            'class': 'form-control select2',
+            'id': 'd_id_ip',
+            'data-preselected': ''
+            }),
+        required=False
+    )
+
+    s_ips = Switch.objects.values_list('ip', flat=True).distinct()
+    s_ip_choices = [('', '----------')] + [(ip, ip) for ip in s_ips if ip]
+
+    s_ip = forms.ChoiceField(
+        choices=s_ip_choices,
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 's_id_ip'}),
         required=False
     )
 
     class Meta:
         model = Movements
         fields = [
-            'office', 'employee', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'dev_type', 'brand', 'rack', 'switch_serial_n', 'switch_rack_pos', 'device_serial_n', 'ip'
+            'office', 'employee', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'dev_type', 'd_brand', 'rack', 'switch_serial_n', 'switch_rack_pos', 'device_serial_n', 'd_ip', 's_brand', 'province', 'location', 'dependency', 'edifice', 'loc', 's_ip'
         ]
-        # Todos los campos "extra" (province, location, dependency, etc.) NO pertenecen
-        # realmente al model Movements, así que no van en fields.
+
         widgets = {
-            'device': Select(attrs={'class': 'form-control select2', 'id': 'id_device'}),
+            'device': Select(attrs={
+                'class': 'form-control select2',
+                'id': 'id_device',
+                'data-preselected': ''
+                }),
             'switch': Select(attrs={'class': 'form-control select2', 'id': 'id_switch'}),
             'move': Select(attrs={'class': 'form-control select2', 'id': 'id_move'}),
             'techs': Select(attrs={'class': 'form-control select2', 'id': 'id_techs'}),
@@ -148,11 +182,23 @@ class MovementsForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Aquí podrías inicializar 'office' y 'employee' si Movement ya tiene datos,
-        # o hacer lógicas extras sólo si la instancia existe...
-        # EJEMPLO:
-        if self.instance.pk:  # si es edición
-            if self.instance.office:
-                self.fields['office'].initial = self.instance.office.pk
-            if self.instance.employee:
-                self.fields['employee'].initial = self.instance.employee.pk
+
+        if self.instance and self.instance.pk:
+            self.fields['dev_type'].widget.attrs['data-preselected'] = str(self.instance.dev_type.pk)
+
+            if self.instance:
+                if self.instance.dev_type:
+                    self.fields['dev_type'].widget.attrs['data-preselected'] = str(self.instance.dev_type.pk)
+                if self.instance.brand:
+                    self.fields['d_brand'].widget.attrs['data-preselected'] = str(self.instance.brand.pk)
+                if self.instance.device:
+                    self.fields['device'].widget.attrs['data-preselected'] = str(self.instance.device.pk)
+
+        elif 'initial' in kwargs:
+            initial = kwargs['initial']
+            if 'dev_type' in initial:
+                self.fields['dev_type'].widget.attrs['data-preselected'] = initial['dev_type']
+            if 'd_brand' in initial:
+                self.fields['d_brand'].widget.attrs['data-preselected'] = initial['d_brand']
+            if 'device' in initial:
+                self.fields['device'].widget.attrs['data-preselected'] = initial['device']
