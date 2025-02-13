@@ -202,24 +202,37 @@ def ajax_load_brand(request):
 @csrf_protect
 @require_POST
 def ajax_load_device(request):
+
     office_id = request.POST.get('office_id')
 
-    filters = {}
+    devices = Device.objects.exclude(dev_type__dev_type='SWITCH')
 
     if office_id:
-        filters['device_office_id'] = office_id
-    else:
-        return JsonResponse([], safe=False)
+        devices = devices.filter(device__office_id=office_id).distinct()
 
-    devices = Device.objects.filter(**filters).distinct()
-    data = [
-        {
-            'id': device.id,
-            'name': f"DISPOSITIVO: {device.dev_model.dev_type.dev_type} / {device.dev_model.brand.brand} / {device.dev_model} / S/N°{device.serial_n}"
-        } for device in devices
-    ]
+    dev_models = dev_models.distinct()
 
+    data = [{'id': d.id, 'name': d.dev_model} for d in devices]
     return JsonResponse(data, safe=False)
+
+    # office_id = request.POST.get('office_id')
+
+    # filters = {}
+
+    # if office_id:
+    #     filters['device_office_id'] = office_id
+    # else:
+    #     return JsonResponse([], safe=False)
+
+    # devices = Device.objects.filter(**filters).distinct()
+    # data = [
+    #     {
+    #         'id': device.id,
+    #         'name': f"DISPOSITIVO: {device.dev_model.dev_type.dev_type} / {device.dev_model.brand.brand} / {device.dev_model} / S/N°{device.serial_n}"
+    #     } for device in devices
+    # ]
+
+    # return JsonResponse(data, safe=False)
 
 @csrf_protect
 @require_POST
@@ -395,7 +408,7 @@ def ajax_load_model(request):
             brand_id_int = int(brand_id)
             dev_models = dev_models.filter(brand_id=brand_id_int)
         except ValueError:
-            dev_models = dev_models.none()
+            dev_models = dev_models.filter(brand__brand=brand_id)
 
     # 3) Filtrar dev_type_name
     if dev_type_name and dev_type_name.strip():

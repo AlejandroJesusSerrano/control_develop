@@ -59,14 +59,19 @@ class MovementsForm(ModelForm):
         required=False
     )
 
-    # Filtrado de Dev_Type (lo usas sólo para filtrar?)
-    dev_type = forms.ModelChoiceField(
-        queryset=Dev_Type.objects.all(),
+    device_dev_type = forms.ModelChoiceField(
+        queryset=Dev_Type.objects.exclude(dev_type='SWITCH'),
         widget=forms.Select(attrs={
             'class': 'form-control select2',
-            'id': 'id_dev_type',
+            'id': 'id_device_dev_type',
             'data-preselected': ''
             }),
+        required=False
+    )
+
+    switch_dev_type = forms.ModelChoiceField(
+        queryset=Dev_Type.objects.filter(dev_type='SWITCH'),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_switch_dev_type'}),
         required=False
     )
 
@@ -89,6 +94,18 @@ class MovementsForm(ModelForm):
     rack = forms.ModelChoiceField(
         queryset=Rack.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_rack'}),
+        required=False
+    )
+
+    d_office = forms.ModelChoiceField(
+        queryset=Office.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_d_office'}),
+        required=False
+    )
+
+    s_office = forms.ModelChoiceField(
+        queryset=Office.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_s_office'}),
         required=False
     )
 
@@ -153,7 +170,7 @@ class MovementsForm(ModelForm):
     class Meta:
         model = Movements
         fields = [
-            'office', 'employee', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'dev_type', 'd_brand', 'rack', 'switch_serial_n', 'switch_rack_pos', 'device_serial_n', 'd_ip', 's_brand', 'province', 'location', 'dependency', 'edifice', 'loc', 's_ip'
+            'office', 'employee', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'device_dev_type', 'd_brand', 'rack', 'switch_serial_n', 'switch_rack_pos', 'device_serial_n', 'd_ip', 's_brand', 'province', 'location', 'dependency', 'edifice', 'loc', 's_ip'
         ]
 
         widgets = {

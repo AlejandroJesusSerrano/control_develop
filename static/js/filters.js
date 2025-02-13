@@ -23,6 +23,9 @@ if ($('#id_location').length > 0) {
             if ($('#id_office_ports').length > 0) {
                 updateOptions('/sh/ajax/load_office/', {'location_id': location_id}, $('select[name="office_ports"]'), $('#id_office_ports').data('preselected'));
             }
+            if ($('#id_d_office').length > 0) {
+                updateOptions('/sh/ajax/load_d_office/', {'location_id': location_id}, $('select[name="d_office"]'), $('#id_d_office').data('preselected'));
+            }
             if ($('#id_rack_ports').length > 0) {
                 updateOptions('/sh/ajax/load_rack/', {'location_id': location_id}, $('select[name="rack_ports"]'), $('#id_rack_ports').data('preselected'));
             }

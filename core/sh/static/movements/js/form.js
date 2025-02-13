@@ -53,10 +53,6 @@ $(document).ready(function() {
       let dev_type_val = $('select[name="dev_type"]').val() || '';
       let d_brand_val = $('select[name="d_brand"]').val() || '';
 
-      // Con la oficina seleccionada, actualizar en cascada los filtros para dispositivos:
-      updateBrandOptions(dev_type_val, 'device', office_id);
-      updateIpOptions(dev_type_val, 'device', office_id);
-      updateDeviceSerialNOptions(dev_type_val, d_brand_val, office_id);
       updateModelOptions(dev_type_val, d_brand_val, office_id);
       updateRackOptions(office_id);
     }

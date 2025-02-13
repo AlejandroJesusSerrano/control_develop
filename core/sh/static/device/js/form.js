@@ -67,25 +67,19 @@ $(document).ready(function() {
 
 
 
-  if ($('#id_brand').length > 0) {
-      $('select[name="brand"]').on('change', function() {
-          const brand_id = $(this).val();
-          updateModelOptions(brand_id);
-      });
-  }
-
   $('select[name="dev_type"]').on('change', function() {
       const dev_type = $(this).val();
-      const brand_id = $('select[name="brand"]').val();
       updateBrandOptions(dev_type);
-      updateModelOptions(dev_type, null);
+      updateModelOptions(dev_type);
   });
 
-  $('select[name="brand"]').on('change', function() {
-      const brand_id = $(this).val();
-      const dev_type = $('select[name="dev_type"]').val();
-      updateModelOptions(dev_type, brand_id);
-  });
+  if ($('#id_brand').length > 0) {
+    $('select[name="brand"]').on('change', function() {
+        const brand_id = $(this).val();
+        const dev_type = $('select[name="dev_type"]').val() || '';
+        updateModelOptions(dev_type, brand_id);
+    });
+  }
 
 
   $('#toggle-device-filters').on('click', function(e) {
@@ -387,7 +381,7 @@ function initializeFormSubmission(formSelector, actionType) {
     let formData = new FormData(this);
     submit_with_ajax($(this).attr('action'), formData, function() {
       console.log('Formulario enviado y procesado con éxito');
-      window.location.href = '/sh/switch/list';
+      window.location.href = '/sh/device/list';
     }, actionType);
   });
 }

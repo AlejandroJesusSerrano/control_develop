@@ -217,7 +217,7 @@ class DeviceForm(forms.ModelForm):
                 self.fields['employee'].initial = [e.id for e in instance.employee.all()]
 
                 self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=instance.office)
-                self.fields['switch_port_in'].initial = instance.switch_port_in.id
+                self.fields['switch_port_in'].initial = instance.switch_port_in.id if self.instance.switch_port_in else None
 
 
         self.fields['office'].required = True
