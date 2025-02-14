@@ -22,7 +22,8 @@ class Device(models.Model):
 
   def save(self, *args, **kwargs):
     self.serial_n = self.serial_n.upper()
-    self.net_name = self.net_name.upper()
+    if self.net_name:
+      self.net_name = self.net_name.upper()
     super (Device, self).save(*args, **kwargs)
 
   def __str__(self):

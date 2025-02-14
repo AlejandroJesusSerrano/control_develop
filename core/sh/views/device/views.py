@@ -1,3 +1,4 @@
+import traceback
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import JsonResponse
@@ -64,14 +65,17 @@ class DeviceCreateView(CreateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Dispositivo agregado correctamente'
+          'message': 'Switch agregado exitosamente',
         }
         return JsonResponse(data)
       else:
         return super().form_valid(form)
     except Exception as e:
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({
+                'error': str(e),
+                'traceback': traceback.format_exc()
+            }, status=500)
       else:
         form.add_error(None, str(e))
         return self.form_invalid(form)

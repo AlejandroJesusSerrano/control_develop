@@ -172,7 +172,7 @@ class DeviceForm(forms.ModelForm):
                     self.fields['patchera_ports'].queryset = Patchera.objects.filter(rack__office__loc__edifice__location=location).order_by('patchera')
                     self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack__office__loc__edifice__location=location).order_by('port')
 
-                except Location.DoesNotExist:
+                except (Location.DoesNotExist, ValueError):
 
                     self.fields['edifice_ports'].queryset = Edifice.objects.all()
                     self.fields['loc_ports'].queryset = Office_Loc.objects.all()
