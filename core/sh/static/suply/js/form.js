@@ -15,13 +15,6 @@ $(document).ready(function() {
     $('#id_suply_date_in_input').val(e.format('dd/mm/yyyy'));
   });
 
-  // $('#id_suply_date_in_input').datepicker({
-  //   format: 'dd/mm/yyyy',
-  //   autoclose: true,
-  //   todayHighlight: true,
-  //   language: 'es'
-  // })
-
   updateBrandOptions();
 
   $('select[name="brand"]').on('change', function() {

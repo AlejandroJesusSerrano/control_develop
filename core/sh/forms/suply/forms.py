@@ -1,3 +1,5 @@
+
+from django.utils import timezone
 from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
@@ -45,6 +47,9 @@ class SuplyForm(forms.ModelForm):
     self.fields['brand'].queryset = Brand.objects.all()
     self.fields['dev_model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='IMPRESORA')
     self.fields['date_in'].input_formats = ['%d/%m/%Y']
+
+    if not self.instance.pk and not self.initial.get('date_in'):
+      self.initial['date_in'] = timezone.now().strftime('%d/%m/%Y')
 
   def clean(self):
     cleaned_data = super().clean()

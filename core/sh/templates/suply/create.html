@@ -54,17 +54,19 @@
 {% endif %}
 </div>
 
-<div class="form-group">
+<div class="form-group row p-2">
   <label for="id_date_in">Fecha de Ingreso al Stock:</label>
-  <button type="button" id="id_suply_date_in_button" class="btn btn-dark">
-    <i class="fa fa-calendar"></i> Seleccionar Fecha
-  </button>
-  <input type="hidden" name="date_in" id="id_suply_date_in_input" value="{{ form.date_in.value }}">
-  {% if form.date_in.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.date_in.errors|join:"<br>" }}
+  <div class="row col-12">
+    <button type="button" id="id_suply_date_in_button" class="btn btn-dark mx-3">
+      <i class="fa fa-calendar"></i> Seleccionar Fecha
+    </button>
+    <input type="text" name="date_in" id="id_suply_date_in_input" readonly value="{{ form.date_in.value | default_if_none:'' }}" class="form-control col-2">
+    {% if form.date_in.errors %}
+      <div class="invalid-feedback d-block">
+        {{ form.date_in.errors|join:"<br>" }}
+      </div>
+      {% endif %}
   </div>
-  {% endif %}
 </div>
 
 {% endblock form %}

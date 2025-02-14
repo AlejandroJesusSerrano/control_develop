@@ -1,21 +1,18 @@
 $(document).ready(function() {
-  // Inicializar todos los selects con select2
-  $('.select2').select2({ theme: 'bootstrap' });
+  $('.select2').select2({
+    theme: 'bootstrap',
+  });
 
-  // ---------- INICIALIZAR DATEPICKER ----------
-  $('#id_suply_date_in_input').datepicker({
+  $('#id_movements_date_in_button').datepicker({
     format: 'dd/mm/yyyy',
     autoclose: true,
     todayHighlight: true,
     language: 'es',
+    container: 'body',
     orientation: 'auto',
     zIndexOffset: 1050
   }).on('changeDate', function(e) {
-    $('#id_suply_date_in_input').val(e.format('dd/mm/yyyy'));
-  });
-
-  $('#id_suply_date_in_button').on('click', function() {
-    $('#id_suply_date_in_input').datepicker('show');
+    $('#id_movements_date_in_input').val(e.format('dd/mm/yyyy'));
   });
 
   if ($('#id_office').length > 0) {
