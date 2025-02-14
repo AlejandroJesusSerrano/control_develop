@@ -221,17 +221,22 @@ class SwitchForm(forms.ModelForm):
 
   def clean(self):
     cleaned_data = super().clean()
+
     model = cleaned_data.get('model')
     serial_n = cleaned_data.get('serial_n')
     rack = cleaned_data.get('rack')
     switch_rack_pos = cleaned_data.get('switch_rack_pos')
 
-    if Switch.objects.filter(model=model, serial_n=serial_n).exists():
+    qs = Switch.objects.all()
+    if self.instance:
+      qs = qs.exclude(pk=self.instance.pk)
+
+    if qs.filter(model=model, serial_n=serial_n).exists():
       self.add_error('model', f'Ya se encuentra registrado el switch {model} con el S/N° {serial_n}.')
       self.add_error('serial_n', f'El S/N° {serial_n}, ya se ecuentra registrado para el switch {model}.')
 
     if rack and switch_rack_pos:
-      if Switch.objects.filter(rack=rack, switch_rack_pos=switch_rack_pos).exists():
+      if qs.objects.filter(rack=rack, switch_rack_pos=switch_rack_pos).exists():
         self.add_error('rack', f'ya se encuentra ocupáda la posicion {switch_rack_pos} en el rack {rack}')
         self.add_error('switch_rack_pos', f'el rack {rack}, ya tiene ocupada la posicion de switch {switch_rack_pos}')
     return cleaned_data
