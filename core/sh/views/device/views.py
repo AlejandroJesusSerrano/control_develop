@@ -190,8 +190,7 @@ class DeviceUpdateView(UpdateView):
       context['form'].initial['wall_port_in'] = wall_port
 
       context['form'].fields['employee'].queryset = Employee.objects.filter(office=office)
-      employees = device.employee.all()
-      context['form'].initial['employee'] = [e.id for e in employees]
+      context['form'].initial['employee'] = device.employee
 
       switch_port = device.switch_port_in
       context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=office)

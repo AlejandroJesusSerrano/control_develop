@@ -47,133 +47,15 @@ class MovementsForm(ModelForm):
         required=False
     )
 
-    # Estos dos sí pertenecen al modelo Movements
-    office = forms.ModelChoiceField(
-        queryset=Office.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_office'}),
-        required=False  # o True si deseas que sea obligatorio
-    )
-    employee = forms.ModelChoiceField(
-        queryset=Employee.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_employee'}),
-        required=False
-    )
-
-    device_dev_type = forms.ModelChoiceField(
-        queryset=Dev_Type.objects.exclude(dev_type='SWITCH'),
-        widget=forms.Select(attrs={
-            'class': 'form-control select2',
-            'id': 'id_device_dev_type',
-            'data-preselected': ''
-            }),
-        required=False
-    )
-
-    switch_dev_type = forms.ModelChoiceField(
-        queryset=Dev_Type.objects.filter(dev_type='SWITCH'),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_switch_dev_type'}),
-        required=False
-    )
-
-    d_brand = forms.ModelChoiceField(
-        queryset=Brand.objects.all(),
-        widget=forms.Select(attrs={
-            'class': 'form-control select2',
-            'id': 'id_d_brand',
-            'data-preselected': ''
-            }),
-        required=False
-    )
-
-    s_brand = forms.ModelChoiceField(
-        Brand.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_s_brand'}),
-        required=False
-    )
-
-    rack = forms.ModelChoiceField(
-        queryset=Rack.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_rack'}),
-        required=False
-    )
-
-    d_office = forms.ModelChoiceField(
-        queryset=Office.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_d_office'}),
-        required=False
-    )
-
-    s_office = forms.ModelChoiceField(
-        queryset=Office.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_s_office'}),
-        required=False
-    )
-
-    # Campos "ChoiceField" para serial_n, ip, etc.
-    # Por ej. Switch Serial
-    s_serial_n = Switch.objects.values_list('serial_n', flat=True).distinct()
-    s_serial_n_choices = [('', '----------')] + [(serial_n, serial_n) for serial_n in s_serial_n]
-
-    switch_serial_n = forms.ChoiceField(
-        choices=s_serial_n_choices,
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_switch_serial_n'}),
-        required=False
-    )
-
-    # Device Serial
-    d_serial_n = Device.objects.values_list('serial_n', flat=True).distinct()
-    d_serial_n_choices = [('', '----------')] + [(serial_n, serial_n) for serial_n in d_serial_n]
-
-    device_serial_n = forms.ChoiceField(
-        choices=d_serial_n_choices,
-        widget=forms.Select(attrs={
-            'class': 'form-control select2',
-            'id': 'id_device_serial_n',
-            'data-preselected': ''
-            }),
-        required=False
-    )
-
-    # Switch Rack Pos
-    s_rack_pos = Switch.objects.values_list('switch_rack_pos', flat=True).distinct()
-    s_rack_pos_choices = [('', '----------')] + [(pos, pos) for pos in s_rack_pos if pos]
-
-    switch_rack_pos = forms.ChoiceField(
-        choices=s_rack_pos_choices,
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_switch_rack_pos'}),
-        required=False
-    )
-
-    # IP de Device
-    d_ips = Device.objects.values_list('ip', flat=True).distinct()
-    d_ip_choices = [('', '----------')] + [(ip, ip) for ip in d_ips if ip]
-
-    d_ip = forms.ChoiceField(
-        choices=d_ip_choices,
-        widget=forms.Select(attrs={
-            'class': 'form-control select2',
-            'id': 'd_id_ip',
-            'data-preselected': ''
-            }),
-        required=False
-    )
-
-    s_ips = Switch.objects.values_list('ip', flat=True).distinct()
-    s_ip_choices = [('', '----------')] + [(ip, ip) for ip in s_ips if ip]
-
-    s_ip = forms.ChoiceField(
-        choices=s_ip_choices,
-        widget=forms.Select(attrs={'class': 'form-control select2', 'id': 's_id_ip'}),
-        required=False
-    )
-
     class Meta:
         model = Movements
         fields = [
-            'office', 'employee', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'device_dev_type', 'd_brand', 'rack', 'switch_serial_n', 'switch_rack_pos', 'device_serial_n', 'd_ip', 's_brand', 'province', 'location', 'dependency', 'edifice', 'loc', 's_ip'
+            'office', 'employee', 'device', 'switch', 'move', 'techs', 'date', 'suply', 'detail', 'province', 'location', 'dependency', 'edifice', 'loc'
         ]
 
         widgets = {
+            'office': Select(attrs={'class': 'form-control select2', 'id': 'id_office'}),
+            'employee': Select(attrs={'class': 'form-control select2', 'id': 'id_employee'}),
             'device': Select(attrs={
                 'class': 'form-control select2',
                 'id': 'id_device',
@@ -199,23 +81,3 @@ class MovementsForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        if self.instance and self.instance.pk:
-            self.fields['dev_type'].widget.attrs['data-preselected'] = str(self.instance.dev_type.pk)
-
-            if self.instance:
-                if self.instance.dev_type:
-                    self.fields['dev_type'].widget.attrs['data-preselected'] = str(self.instance.dev_type.pk)
-                if self.instance.brand:
-                    self.fields['d_brand'].widget.attrs['data-preselected'] = str(self.instance.brand.pk)
-                if self.instance.device:
-                    self.fields['device'].widget.attrs['data-preselected'] = str(self.instance.device.pk)
-
-        elif 'initial' in kwargs:
-            initial = kwargs['initial']
-            if 'dev_type' in initial:
-                self.fields['dev_type'].widget.attrs['data-preselected'] = initial['dev_type']
-            if 'd_brand' in initial:
-                self.fields['d_brand'].widget.attrs['data-preselected'] = initial['d_brand']
-            if 'device' in initial:
-                self.fields['device'].widget.attrs['data-preselected'] = initial['device']

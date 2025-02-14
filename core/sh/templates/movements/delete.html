@@ -4,12 +4,12 @@
 <div class="card-body table-responsive">
   <div class="alert bg-custom-danger alert-dismissible">
     <h5><i class="icon fas fa-triangle-exclamation"></i> Atención!</h5>
-      Estas por eliminar el registro Nro: {{object.id}}, {{del_title}} {{object.office}}, de la dependencia: 
-    {% for dependency in object.dependency.all %}
-      {{ dependency.description }}
-    {% endfor %}
-
-          de la localidad: {{object.edifice.location.location}}.
+      Estas por eliminar el registro Nro: {{object.id}}, {{del_title}} {{object.move}} de fecha {{object.date}}
+      <ul> En el dispositivo:
+        <li>{{object.device.dev_model.dev_type}} / MARCA: {{object.device.dev_model.brand}} / Modelo: {{object.device.dev_model}} / IP: {{object.device.ip}} / S/N°: {{object.device.serial_n}}</li>
+        <li>DE LA OFICINA {{object.device.office}}</li>
+        <li>DEL USUARIO {{object.device.employee.employee_last_name}}, {{object.device.employee.employee_name}} / CUIL N°: {{object.device.employee.cuil}} / USUARIO: {{object.device.employee.user_pc}}</li>
+      </ul>
       ¿Deseas continuar?
     </div>
 </div>

@@ -144,7 +144,7 @@ class DeviceForm(forms.ModelForm):
                 'class': 'form-control select2',
                 'id': 'id_patch_port_in'
             }),
-            'employee': SelectMultiple(attrs={
+            'employee': Select(attrs={
                 'class': 'form-control select2',
                 'id': 'id_employee'}),
         }
@@ -211,10 +211,11 @@ class DeviceForm(forms.ModelForm):
                 self.fields['office'].initial = instance.office.id
 
                 self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office=instance.office)
-                self.fields['wall_port_in'].initial = instance.wall_port_in.id
+                if instance.wall_port_in:
+                    self.fields['wall_port_in'].initial = instance.wall_port_in.id
 
                 self.fields['employee'].queryset = Employee.objects.filter(office=instance.office)
-                self.fields['employee'].initial = [e.id for e in instance.employee.all()]
+                self.fields['employee'].initial = instance.employee.id if instance.employee else None
 
                 self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=instance.office)
                 self.fields['switch_port_in'].initial = instance.switch_port_in.id if self.instance.switch_port_in else None
@@ -230,13 +231,18 @@ class DeviceForm(forms.ModelForm):
         net_name = cleaned_data.get('net_name')
         serial_n = cleaned_data.get('serial_n')
 
-        if Device.objects.filter(dev_model=dev_model, serial_n=serial_n).exists():
+        qs = Device.objects.all()
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.filter(dev_model=dev_model, serial_n=serial_n).exists():
             self.add_error('serial_n', f'Ya existe el dispositivo {dev_model} con el número de serie: {serial_n}.')
             self.add_error('dev_model', f'Ya se encuentra asignado el número de serie: {serial_n}, para el dispositivo {dev_model}.')
 
-        if Device.objects.filter(ip=ip).exists():
+        if ip and qs.filter(ip=ip).exists():
             self.add_error('ip', f'la dirección IP: {ip}. Ya de encutra asignada a otro dispositivo.')
 
-        if Device.objects.filter(net_name=net_name).exists():
+        if net_name and qs.filter(net_name=net_name).exists():
             self.add_error('net_name', f'El nombre de registro en la red: {net_name}. Ya se encuentra asignado a otro dispositivo.')
+
         return cleaned_data

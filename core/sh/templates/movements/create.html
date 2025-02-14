@@ -109,134 +109,16 @@
       <h3 class="card-title">Seleccione el Dispositivo o Switch</h3>
     </div>
     <div class="card-body">
-      <div class="row g-3">
-        <div class="col-6">
-          <div class="card mt-2 p-0">
-            <div class="card-header d-flex justify-content-between align-items-center {{bg_color}}">
-              <h3 class="card-title">Dispositivos</h3>
-            </div>
-            <div class="card-body">
-              <button id="toggle-device-filters" class="btn {{filter_btn_color}} mb-4" type="button">
-                Filtrar Dispositivo <i class="fa fa-filter"></i>
-              </button>
-              <div id="filter-device-cards" class="d-none">
-                <div class="row">
-                  <div class="container">
-                    <div class="card text-white bg-secondary mt-1">
-                      <div class="card-header">
-                        Filtrar Dispositivos
-                      </div>
-                      <div class="card-body row">
-                        <div class="col-12">
-                          <div class="form-group">
-                            <label for="id_d_office">Oficina</label>
-                            {{ form.d_office }}
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="form-group">
-                            <label for="id_dev_type">Tipo de Dispositivo</label>
-                            {{ form.device_dev_type }}
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="form-group">
-                            <label for="id_brand">Marca</label>
-                            {{ form.d_brand }}
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="form-group">
-                            <label for="id_ip">Ip</label>
-                            {{ form.d_ip }}
-                          </div>
-                        </div>
-                        <div class="col-6">
-                          <div class="form-group">
-                            <label for="id_ip">Número de Serie</label>
-                            {{ form.device_serial_n }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Selección de Switch y Dispositivo -->
-              <div class="row">
-                <div class="col-12">
-                  <div class="form-group">
-                    <label for="id_device">Dispositivo</label>
-                    {{ form.device }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label for="id_device">Dispositivo</label>
+          {{ form.device }}
         </div>
-        <div class="col-6">
-          <div class="card mt-2 p-0">
-            <div class="card-header d-flex justify-content-between align-items-center {{bg_color}}">
-              <h3 class="card-title">Switchs</h3>
-            </div>
-            <div class="card-body">
-              <button id="toggle-switch-filters" class="btn {{filter_btn_color}} mb-4" type="button">
-                Filtrar Switchs <i class="fa fa-filter"></i>
-              </button>
-              <div id="filter-switch-cards" class="d-none">
-                <div class="row">
-                  <div class="container">
-                    <div class="card text-white bg-secondary mt-1">
-                      <div class="card-header">
-                        Filtrar Switch
-                      </div>
-                      <div class="card-body row">
-                        <div class="col-4">
-                          <div class="form-group">
-                            <label for="id_brand">Marca</label>
-                            {{ form.s_brand }}
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="form-group">
-                            <label for="id_ip">Ip</label>
-                            {{ form.s_ip }}
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="form-group">
-                            <label for="id_ip">Rack</label>
-                            {{ form.rack }}
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="form-group">
-                            <label for="id_ip">Posicion Rack</label>
-                            {{ form.switch_rack_pos }}
-                          </div>
-                        </div>
-                        <div class="col-4">
-                          <div class="form-group">
-                            <label for="id_ip">Número de Serie</label>
-                            {{ form.switch_serial_n }}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Selección de Switch y Dispositivo -->
-              <div class="row">
-                <div class="col-12">
-                  <div class="form-group">
-                    <label for="id_switch">Switch</label>
-                    {{ form.switch }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label for="id_switch">Switch</label>
+          {{ form.switch }}
         </div>
       </div>
     </div>

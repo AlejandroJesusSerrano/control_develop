@@ -23,12 +23,7 @@ $(document).ready(function(){
       {"data": "s_port"},
       {"data": "p_port"},
       {"data": "office"},
-      {
-        "data": "employee",
-        "render": function(data, type, row){
-          return data.map(emp => emp.employee_last_name +", "+ emp.employee_name).join(' <b>/</b> ');
-        }
-      },
+      {"data": "employee"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
