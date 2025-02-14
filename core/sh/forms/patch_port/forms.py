@@ -38,8 +38,8 @@ class PatchPortForm(forms.ModelForm):
     self.fields['patchera'].queryset = Patchera.objects.all()
 
     if self.instance.pk:
-      self.initial['rack'] = self.instance.patch.rack
-      self.initial['patchera'] = self.instance.patch
+      self.initial['rack'] = self.instance.patchera.rack
+      self.initial['patchera'] = self.instance.patchera
 
     else:
       selected_rack = self.data.get('rack')

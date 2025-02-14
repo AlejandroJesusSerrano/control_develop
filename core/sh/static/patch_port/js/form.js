@@ -15,7 +15,7 @@ function updateRackOptions(rack_id){
   if (rack_id) {
     updateOptions('/sh/ajax/load_patchera/', {
       'rack_id': rack_id,
-    }, $('select[name="patch"]'), $('#id_patch').data('preselected'));
+    }, $('select[name="patchera"]'), $('#id_patchera').data('preselected'));
   }
 };
 

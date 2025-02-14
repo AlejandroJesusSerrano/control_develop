@@ -133,7 +133,11 @@ class RackForm(forms.ModelForm):
   def clean(self):
     rack = self.cleaned_data.get('rack').upper()
 
-    if Rack.objects.filter(rack__iexact=rack).exists():
+    qs = Rack.objects.all()
+    if self.instance.pk:
+      qs = qs.exclude(pk=self.instance.pk)
+
+    if qs.filter(rack__iexact=rack).exists():
       self.add_error('rack', f"El Rack que se quiere ingresar, ya existe")
     cleaned_data = super().clean()
     return cleaned_data

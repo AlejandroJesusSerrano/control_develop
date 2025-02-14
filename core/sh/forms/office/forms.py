@@ -61,24 +61,21 @@ class OfficeForm(forms.ModelForm):
 
         if 'instance' in kwargs and kwargs['instance']:
             instance=kwargs['instance']
-            if instance.office and instance.office.loc and instance.office.loc.edifice and instance.office.loc.edifice.location and instance.office.loc.edifice.location.province and instance.office.dependency:
+            if instance.loc and instance.loc.edifice and instance.loc.edifice.location and instance.loc.edifice.location.province and instance.dependency:
                 self.fields['province'].queryset = Province.objects.all()
-                self.fields['province'].initial = instance.office.loc.edifice.location.province.id
+                self.fields['province'].initial = instance.loc.edifice.location.province.id
 
-                self.fields['location'].queryset = Location.objects.filter(province=instance.office.loc.edifice.location.province)
-                self.fields['location'].initial = instance.office.loc.edifice.location.id
+                self.fields['location'].queryset = Location.objects.filter(province=instance.loc.edifice.location.province)
+                self.fields['location'].initial = instance.loc.edifice.location.id
 
-                self.fields['edifice'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
-                self.fields['edifice'].initial = instance.office.loc.edifice.id
+                self.fields['edifice'].queryset = Edifice.objects.filter(location=instance.loc.edifice.location)
+                self.fields['edifice'].initial = instance.loc.edifice.id
 
-                self.fields['edifice_ports'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
-                self.fields['edifice_ports'].initial = instance.office.loc.edifice.id
+                self.fields['dependency'].queryset = Dependency.objects.filter(location=instance.loc.edifice.location)
+                self.fields['dependency'].initial = instance.dependency.id
 
-                self.fields['dependency'].queryset = Dependency.objects.filter(location=instance.office.loc.edifice.location)
-                self.fields['dependency'].initial = instance.office.dependency.id
-
-                self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=instance.office.loc.edifice)
-                self.fields['loc'].initial = instance.office.loc.id
+                self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=instance.loc.edifice)
+                self.fields['loc'].initial = instance.loc.id
 
     def clean(self):
         cleaned_data = super().clean()
