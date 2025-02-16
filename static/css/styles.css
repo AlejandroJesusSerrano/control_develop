@@ -184,3 +184,22 @@ input:-webkit-autofill:focus {
   background-color: #495057; /* Gris más oscuro en hover */
   color: #ffffff;
 }
+
+#id_movements_date_in_button {
+  background-color: #3f6791;
+  color: #ffffff;
+  border: 1px solid #6c757d;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+#id_suply_date_in_button:hover {
+  background-color: #495057; /* Gris más oscuro en hover */
+  color: #ffffff;
+}

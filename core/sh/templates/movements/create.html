@@ -4,9 +4,10 @@
   <!-- Select2 -->
   <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
   <link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
-  <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'lib/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker.min.css'%}">
   <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
-  <!-- Bootstrap Datepicker -->
+
+  <script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
   <script src="{% static 'lib/bootstrap-datepicker-1.9.0-dist/js/bootstrap-datepicker.min.js' %}"></script>
 {% endblock extra_refs %}
 
@@ -143,20 +144,18 @@
           {{ form.techs }}
         </div>
       </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label class="text-center">Fecha Movimiento:</label>
-          <!-- Botón con el estilo de supy -->
-          <button type="button" id="id_suply_date_in_button" class="btn btn-dark">
-            <i class="fa fa-calendar"></i> Seleccionar Fecha
+      <div class="form-group row p-2">
+        <label for="id_date_in">Fecha del Movimiento:</label>
+        <div class="row col-12">
+          <button type="button" id="id_movements_date_in_button" class="btn btn-dark mx-3">
+            <i class="fa fa-calendar"></i> Seleccionar Fecha:
           </button>
-          <!-- Input "oculto" pero de tipo text, posicionado fuera de vista -->
-          <input type="text" name="date" id="id_suply_date_in_input" class="hide-input" value="{{ form.date.value|default:'' }}">
-          {% if form.date.errors %}
-          <div class="invalid-feedback d-block">
-            {{ form.date.errors|join:"<br>" }}
-          </div>
-          {% endif %}
+          <input type="text" name="date_in" id="id_movements_date_in_input" readonly value="{{ form.date_in.value | default_if_none:'' }}" class="form-control col-3">
+          {% if form.date_in.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.date_in.errors|join:"<br>" }}
+            </div>
+            {% endif %}
         </div>
       </div>
       <div class="col-md-6">
