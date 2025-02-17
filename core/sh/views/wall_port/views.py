@@ -46,8 +46,8 @@ class WallPortListView(ListView):
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Puertos de la Pared'
-    context['title'] = 'Listado de Puertos de la Pared'
+    context['page_title'] = 'Bocas de Pared'
+    context['title'] = 'Listado de Bocas de Pared'
     context['btn_add_id'] = 'wall_port_add'
     context['create_url'] = reverse_lazy('sh:wall_port_add')
     context['list_url'] = reverse_lazy('sh:wall_port_list')
@@ -150,10 +150,10 @@ class WallPortUpdateView(UpdateView):
 
   def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
-      context['page_title'] = 'Puertos de la Pared'
-      context['title'] = 'Editar el Nombre de un Puerto de la Pared'
+      context['page_title'] = 'Bocas de Pared'
+      context['title'] = 'Editar el Nombre de una Boca de Pared'
       context['btn_add_id'] = 'wall_port_add'
-      context['entity'] = 'Puertos de la Pared'
+      context['entity'] = 'Bocas de Pared'
       context['list_url'] = reverse_lazy('sh:wall_port_list')
       context['form_id'] = 'wall_portForm'
       context['action'] = 'edit'
@@ -261,14 +261,14 @@ class WallPortDeleteView(DeleteView):
     try:
       self.object.delete()
     except Exception as e:
-      JsonResponse = str(e)
+      data['error'] = str(e)
     return JsonResponse(data)
 
   def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = 'Puertos de la Pared'
-        context['title'] = 'Eliminar una Puerto de la Pared'
-        context['del_title'] = 'Puerto de la Pared: '
+        context['page_title'] = 'Bocas de Pared'
+        context['title'] = 'Eliminar una Boca de Pared'
+        context['del_title'] = 'Bocas de Pared: '
         context['list_url'] = reverse_lazy('sh:wall_port_list')
         context['form_id'] = 'wall_portForm'
         context['bg_color'] = 'bg-custom-danger'

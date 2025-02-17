@@ -13,7 +13,10 @@ function getCookie(name) {
   }
   return cookieValue;
 }
-const csrftoken = getCookie('csrftoken');
+
+window.csrftoken = window.csrftoken || getCookie('csrftoken');
+
+
 
 $.ajaxSetup({
   beforeSend: function (xhr, settings) {
@@ -76,7 +79,7 @@ function message_error(msg) {
 
 }
 
-const activeRequests = {}; // Mantén un registro de solicitudes activas
+window.activeRequests = window.activeRequests || {};
 
 function updateOptions(url, data, selectElement, preselectedVal = null) {
   const selectId = selectElement.attr('id');

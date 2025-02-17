@@ -29,7 +29,10 @@ class LocationForm(forms.ModelForm):
 
   def clean(self):
     province = self.cleaned_data.get('province')
-    location = self.cleaned_data.get('location').upper()
+    location = self.cleaned_data.get('location')
+
+    if location:
+      cleaned_data['location'] = location.upper()
 
     if Location.objects.filter(province=province, location__iexact=location).exists():
       self.add_error('province', "La localidad ya existe asociada a la provincia seleccionada")

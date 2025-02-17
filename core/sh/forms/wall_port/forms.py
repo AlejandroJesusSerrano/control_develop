@@ -161,7 +161,7 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch'].queryset = Switch.objects.filter(
           office__loc__edifice__location__province_id=province_id,
           rack__office__loc__edifice__location__province_id=province_id
-        ).order_by('switch')
+        ).order_by('id')
 
         self.fields['patchera'].queryset = Patchera.objects.filter(
           rack__office__loc__edifice__location__province_id=province_id
@@ -170,11 +170,11 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
           switch__office__loc__edifice__location__province_id=province_id,
           switch__rack__office__loc__edifice__location__province_id=province_id
-        ).order_by('switch_port_in')
+        ).order_by('id')
 
         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
           patchera__rack__office__loc__edifice__location__province_id=province_id
-        ).order_by('patch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
@@ -217,7 +217,7 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch'].queryset = Switch.objects.filter(
           office__loc__edifice__location_id=location_id,
           rack__office__loc__edifice__location_id=location_id
-        ).order_by('switch')
+        ).order_by('id')
 
         self.fields['patchera'].queryset = Patchera.objects.filter(
           rack__office__loc__edifice__location_id=location_id
@@ -226,11 +226,11 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
           switch__office__loc__edifice__location_id=location_id,
           switch__rack__office__loc__edifice__location_id=location_id
-        ).order_by('switch_port_in')
+        ).order_by('id')
 
         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
           patchera__rack__office__loc__edifice__location_id=location_id
-        ).order_by('patch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
@@ -306,7 +306,7 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch'].queryset = Switch.objects.filter(
           office__loc__edifice_id=edifice_port_id,
           rack__office__loc__edifice_id=edifice_port_id
-        ).order_by('switch')
+        ).order_by('id')
 
         self.fields['patchera'].queryset = Patchera.objects.filter(
           rack__office__loc__edifice_id=edifice_port_id
@@ -315,11 +315,11 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
           switch__office__loc__edifice_id=edifice_port_id,
           switch__rack__office__loc__edifice_id=edifice_port_id
-        ).order_by('switch_port_in')
+        ).order_by('id')
 
         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
           patchera__rack__office__loc__edifice_id=edifice_port_id
-        ).order_by('patch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
@@ -338,7 +338,7 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch'].queryset = Switch.objects.filter(
           office__loc_id=loc_port_id,
           rack__office__loc_id=loc_port_id
-        ).order_by('switch')
+        ).order_by('id')
 
         self.fields['patchera'].queryset = Patchera.objects.filter(
           rack__office__loc_id=loc_port_id
@@ -347,11 +347,11 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
           switch__office__loc_id=loc_port_id,
           switch__rack__office__loc_id=loc_port_id
-        ).order_by('switch_port_in')
+        ).order_by('id')
 
         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
           patchera__rack__office__loc_id=loc_port_id
-        ).order_by('patch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
@@ -366,7 +366,7 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch'].queryset = Switch.objects.filter(
           rack__office_id=office_port_id,
           office_id=office_port_id
-        ).order_by('switch')
+        ).order_by('id')
 
         self.fields['patchera'].queryset = Patchera.objects.filter(
           rack__office_id=office_port_id
@@ -375,11 +375,11 @@ class WallPortForm(forms.ModelForm):
         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
           switch__rack__office_id=office_port_id,
           switch__office_id=office_port_id
-        ).order_by('switch_port_in')
+        ).order_by('id')
 
         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
           patchera__rack__office_id=office_port_id
-        ).order_by('patch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
@@ -389,7 +389,7 @@ class WallPortForm(forms.ModelForm):
 
         self.fields['switch'].queryset = Switch.objects.filter(
           rack_id=rack_port_id
-        ).order_by('switch')
+        ).order_by('id')
 
         self.fields['patchera'].queryset = Patchera.objects.filter(
           rack_id=rack_port_id
@@ -397,11 +397,11 @@ class WallPortForm(forms.ModelForm):
 
         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
           switch__rack_id=rack_port_id
-        ).order_by('switch_port_in')
+        ).order_by('id')
 
         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
           patchera__rack_id=rack_port_id
-        ).order_by('patch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
@@ -411,7 +411,7 @@ class WallPortForm(forms.ModelForm):
 
         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(
           switch_id=switch_id
-        ).order_by('switch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
@@ -421,7 +421,7 @@ class WallPortForm(forms.ModelForm):
 
         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(
           patchera_id=patchera_id
-        ).order_by('patch_port_in')
+        ).order_by('id')
       except (ValueError, TypeError):
         pass
 
