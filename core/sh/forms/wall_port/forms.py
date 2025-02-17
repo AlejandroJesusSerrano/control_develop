@@ -83,6 +83,18 @@ class WallPortForm(forms.ModelForm):
     required = False
   )
 
+  switch_port_in = forms.ModelChoiceField(
+    queryset = Switch_Port.objects.all(),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_switch_port_in'}),
+    required = False
+  )
+
+  patch_port_in = forms.ModelChoiceField(
+    queryset = Patch_Port.objects.all(),
+    widget = forms.Select(attrs = {'class': 'form-control select2', 'id': 'id_patch_port_in'}),
+    required = False
+  )
+
 
   class Meta:
     model = Wall_Port

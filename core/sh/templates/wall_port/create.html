@@ -10,204 +10,233 @@
 {% endblock extra_refs %}
 
 {% block form %}
-<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para oficinas <i class="fas fa-search"></i></button>
-<div id="filter-office-cards" class="d-none">
-  <div class="row">
-    <div class="container">
-    <!-- Tarjeta Filtros Geográficos -->
-      <div class="card mt-1">
-        <div class="card-header {{bg_color}}">
-          Filtros por Ubicacion
+
+<div class="container mt4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center {{bg_color}} ">
+      <h3 class="card-title">Seleccione la oficina</h3>
+    </div>
+    <div class="card-body">
+      <button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros oficinas <i class="fa fa-filter"></i></button>
+      <div id="filter-office-cards" class="d-none">
+        <div class="row">
+          <div class="container">
+          <!-- Tarjeta Filtros Geográficos -->
+            <div class="card text-white bg-secondary mt-1">
+              <div class="card-header">
+                Filtrar Oficina
+              </div>
+              <div class="card-body row">
+                <div class="form-group col-12">
+                  <label for="id_province">Provincia:</label>
+                  {{ form.province }}
+                  {% if form.province.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.province.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-12">
+                  <label for="id_location">Localidad:</label>
+                  {{ form.location }}
+                  {% if form.location.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.location.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                  <label for="id_edifice">Edificio:</label>
+                  {{ form.edifice }}
+                  {% if form.edifice.help_text %}
+                  <small class="form-text text-muted">{{form.edifice.help_text}}</small>
+                  {% endif %}
+                  {% if form.edifice.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.edifice.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                  <label for="id_dependency">Dependencia:</label>
+                  {{ form.dependency }}
+                  {% if form.dependency.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.dependency.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                  <label for="id_loc">Locacion de Oficina:</label>
+                  {{ form.loc }}
+                  {% if form.loc.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.loc.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="card-body row">
-          <div class="form-group col-12">
-            <label for="id_brand">Provincia:</label>
-            {{ form.province }}
-            {% if form.province.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.province.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
+      </div>
 
-          <div class="form-group col-12">
-            <label for="id_model">Localidad:</label>
-            {{ form.location }}
-            {% if form.location.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.location.errors|join:"<br>" }}
-            </div>
-            {% endif %}
+      <div class="row mt-2">
+        <div class="form-group col-6">
+          <label for="id_office">Oficina:</label>
+          {{ form.office }}
+          {% if form.office.errors %}
+          <div class="invalid-feedback d-block">
+            {{ form.office.errors|join:"<br>" }}
           </div>
-
-          <div class="form-group col-6">
-            <label for="id_edifice">Edificio:</label>
-            {{ form.edifice }}
-            {% if form.edifice.help_text %}
-            <small class="form-text text-muted">{{form.edifice.help_text}}</small>
-            {% endif %}
-            {% if form.edifice.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.edifice.errors|join:"<br>" }}
-            </div>
-            {% endif %}
+          {% endif %}
+        </div>
+        <div class="form-group col-6">
+          <label for="id_wall_port">Puerto de la Pared:</label>
+          {{ form.wall_port }}
+          {% if form.wall_port.errors %}
+          <div class="invalid-feedback d-block">
+            {{ form.wall_port.errors|join:"<br>" }}
           </div>
-
-          <div class="form-group col-6">
-            <label for="id_loc">Dependencia:</label>
-            {{ form.dependency }}
-            {% if form.dependency.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.dependency.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-
-          <div class="form-group col-6">
-            <label for="id_loc">Locacion de Oficina:</label>
-            {{ form.loc }}
-            {% if form.loc.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.loc.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-          <small class="form-text text-muted">* Recomendado para filtrar oficinas</small>
+          {% endif %}
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="form-group">
-  <label for="id_office">Oficina:</label>
-  {{ form.office }}
-  {% if form.office.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.office.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
+<div class="container mt4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center {{bg_color}} ">
+      <h3 class="card-title">Seleccione el puerto desde el cual llega la conexión a la boca</h3>
+    </div>
+    <div class="card-body">
+      <button id="toggle-ports-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros de conexion de origen <i class="fa fa-filter"></i></button>
+      <div id="filter-port-cards" class="d-none">
+        <div class="row">
+          <div class="container">
+          <!-- Tarjeta Filtros Geográficos -->
+            <div class="card text-white bg-secondary mt-1">
+              <div class="card-header">
+                Filtrar conexion
+              </div>
+              <div class="card-body row">
 
-<div class="form-group mt-3">
-  <label for="id_wall_port">Puerto de la Pared:</label>
-  {{ form.wall_port }}
-  {% if form.wall_port.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.wall_port.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
+                <div class="form-group col-12">
+                  <label for="id_edifice_port">Edificio:</label>
+                  {{ form.edifice_port }}
+                  {% if form.edifice_port.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.edifice_port.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
 
-<button id="toggle-ports-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para puertos <i class="fas fa-search"></i></button>
-<div id="filter-port-cards" class="d-none">
-  <div class="row">
+                <div class="form-group col-12">
+                  <label for="id_loc_port">Ubicacion de Oficina:</label>
+                  {{ form.loc_port }}
+                  {% if form.loc_port.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.loc_port.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-12">
+                  <label for="id_office_port">Oficina:</label>
+                  {{ form.office_port }}
+                  {% if form.office_port.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.office_port.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-12">
+                  <label for="id_rack">Rack:</label>
+                  {{ form.rack_port }}
+                  {% if form.rack_port.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.rack_port.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                  <label for="id_switch">Switch de Ingreso:</label>
+                  {{ form.switch }}
+                  {% if form.switch.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.switch.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                  <label for="id_patchera">Patchera de Ingreso:</label>
+                  {{ form.patchera }}
+                  {% if form.patchera.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{ form.patchera.errors|join:"<br>" }}
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container">
-      <div class="card my-1">
-
-        <div class="card-header {{bg_color}}">
-          Filtrar por Conexión
+      <div class="form-group col-12">
+        <label for="id_switch_port_in">Puerto del Switch de Ingreso:</label>
+        {{ form.switch_port_in }}
+        {% if form.switch_port_in.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.switch_port_in.errors|join:"<br>" }}
         </div>
-        <div class="card-body row">
+        {% endif %}
+      </div>
 
-          <div class="form-group col-12">
-            <label for="id_edifice_port">Edificio:</label>
-            {{ form.edifice_port }}
-            {% if form.edifice_port.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.edifice_port.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-
-          <div class="form-group col-12">
-            <label for="id_loc_port">Ubicacion de Oficina:</label>
-            {{ form.loc_port }}
-            {% if form.loc_port.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.loc_port.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-
-          <div class="form-group col-12">
-            <label for="id_office_port">Oficina:</label>
-            {{ form.office_port }}
-            {% if form.office_port.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.office_port.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-
-          <div class="form-group col-12">
-            <label for="id_rack">Rack:</label>
-            {{ form.rack_port }}
-            {% if form.rack_port.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.rack_port.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-
-          <div class="form-group col-6">
-            <label for="id_switch">Switch de Ingreso:</label>
-            {{ form.switch }}
-            {% if form.switch.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.switch.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-
-          <div class="form-group col-6">
-            <label for="id_patchera">Patchera de Ingreso:</label>
-            {{ form.patchera }}
-            {% if form.patchera.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.patchera.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
-          <small class="form-text text-muted">* Seleccionar Oficina para realizar el filtrado de puertos</small>
+      <div class="form-group col-12">
+        <label for="id_patch_port_in">Puerto de la Patchera de Ingreso:</label>
+        {{ form.patch_port_in }}
+        {% if form.patch_port_in.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.patch_port_in.errors|join:"<br>" }}
         </div>
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
 
-
-<div class="form-group">
-  <label for="id_switch_port_in">Puerto del Switch de Ingreso:</label>
-  {{ form.switch_port_in }}
-  {% if form.switch_port_in.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.switch_port_in.errors|join:"<br>" }}
+<div class="container mt4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center {{bg_color}} ">
+      <h3 class="card-title">Ingrese detalles y aclaraciones, de ser necesario</h3>
+    </div>
+    <div class="card-body">
+      <div class="container">
+        <div class="form-group">
+          <label for="id_details">Detalles:</label>
+          {{ form.details }}
+          {% if form.details.help_text %}
+          <small class="form-text text-muted">{{form.details.help_text}}</small>
+          {% endif %}
+          {% if form.details.errors %}
+          <div class="invalid-feedback d-block">
+            {{ form.details.errors|join:"<br>" }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_patch_port_in">Puerto de la Patchera de Ingreso:</label>
-  {{ form.patch_port_in }}
-  {% if form.patch_port_in.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.patch_port_in.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_details">Detalles:</label>
-  {{ form.details }}
-  {% if form.details.help_text %}
-  <small class="form-text text-muted">{{form.details.help_text}}</small>
-  {% endif %}
-  {% if form.details.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.details.errors|join:"<br>" }}
-  </div>
-  {% endif %}
 </div>
 
 {% endblock form %}
