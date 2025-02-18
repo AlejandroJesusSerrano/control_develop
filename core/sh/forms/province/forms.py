@@ -35,10 +35,14 @@ class ProvinceForm(forms.ModelForm):
     number_id = self.cleaned_data.get('number_id')
     province = self.cleaned_data.get('province').upper()
 
-    if Province.objects.filter(number_id__iexact=number_id).exists():
+    qs= Province.objects.all()
+    if self.instance:
+      qs = qs.exclude(pk=self.instance.pk)
+
+    if qs.filter(number_id__iexact=number_id).exists():
       self.add_error('number_id', "El id de provincia ya se encuentra registrado")
 
-    if Province.objects.filter(province__iexact=province).exists():
+    if qs.filter(province__iexact=province).exists():
       self.add_error('province', "La provincia ya se encuentra registrada")
 
     cleaned_data = super().clean()
