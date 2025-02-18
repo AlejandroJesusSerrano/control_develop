@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms.edifice.forms import EdificeForm
+from core.sh.forms.location.forms import LocationForm
 from core.sh.models import Edifice, Location, Province
 
 # Ajax View
@@ -100,6 +101,7 @@ class EdificeCreateView(CreateView):
     context['form_id'] = 'edificeForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['location_add'] = LocationForm()
     context['filter_btn_color'] = 'btn-primary'
     return context
 

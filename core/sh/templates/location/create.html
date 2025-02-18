@@ -4,9 +4,9 @@
 {% load static %}
 {% block extra_refs %}
 <!-- Select2 -->
-<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2.min.css' %}">
-<link rel="stylesheet" href="{% static 'lib/select2-4.1.0-rc.0/dist/css/select2-bootstrap.min.css' %}">
-<script src="{% static 'lib/select2-4.1.0-rc.0/dist/js/select2.full.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+<link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+<script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
 {% endblock extra_refs %}
 
@@ -34,16 +34,16 @@
 {% endblock form %}
 
 {% block form_scripts %}
-
+<script src="{% static 'location/js/form.js' %}"></script>
 {% endblock form_scripts %}
 
 {% block extra_js %}
-<script src="{% static 'location/js/form.js' %}"></script>
+
 {% endblock extra_js %}
 
 {% block modals %}
 <!-- Modal -->
-<div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel" aria-hidden="true">
   <form method="post" action="{%url 'sh:province_add'%}" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="modal-dialog">
