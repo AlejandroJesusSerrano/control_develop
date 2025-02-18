@@ -28,6 +28,7 @@ class LocationForm(forms.ModelForm):
     }
 
   def clean(self):
+    cleaned_data=super().clean()
     province = self.cleaned_data.get('province')
     location = self.cleaned_data.get('location')
 
