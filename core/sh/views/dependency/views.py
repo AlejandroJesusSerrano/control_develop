@@ -55,6 +55,7 @@ class DependencyCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
+
   def form_valid(self, form):
     try:
       self.object = form.save()

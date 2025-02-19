@@ -16,6 +16,8 @@ class Province(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
+    item['province'] = self.province
+    item['number_id'] = self.number_id
     return item
 
   class Meta:
