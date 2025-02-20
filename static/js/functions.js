@@ -157,8 +157,9 @@ function confirmAndSend(url, title, icon, content, type, formData, callback) {
             processData: false,
             contentType: false,
           }).done(function (data) {
+            console.log('confirmAndSend → .done(...) data = ', data);
             if (!data.hasOwnProperty('error')) {
-              callback();
+              callback(data);
             } else {
               message_error(data.error);
             }

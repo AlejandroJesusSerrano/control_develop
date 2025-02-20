@@ -1,63 +1,70 @@
 $(document).ready(function() {
 
-  $('.select2').select2({
-      theme: 'bootstrap',
-  });
-
-  // Abrir modal de localidad
-  $('#location_add').on('click', function(e) {
-      e.preventDefault();
-      $('#locationModal').modal('show');
-  });
-
-  // Abrir modal de provincia desde el modal de localidad
-  $('#locationModal').on('click', '#province_add_from_location', function(e) {
-      e.preventDefault();
-      $('#provinceModal').modal('show');
-  });
-
-
-  // Enviar formulario de localidad (AJAX)
-  $('#locationForm').on('submit', function(e) {
-      e.preventDefault();
-      var form = this;
-      submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
-          // Cerrar el modal de localidad
-          $('#locationModal').modal('hide');
-
-          // Actualizar el select de localidad en el formulario PRINCIPAL
-          var newOption = new Option(response.location_name, response.location_id, true, true);
-          $('#id_location').append(newOption).trigger('change');  //MUY IMPORTANTE EL .trigger('change')
-
-           // Limpiar el formulario del modal de localidad
-          form.reset();
-
-      },'add'); // Pasar el tipo de accion si es necesario para tu submit_with_ajax
-
-  });
-
-  // Enviar formulario de provincia (AJAX)
-  $('#provinceForm').on('submit', function(e) {
-      e.preventDefault();
-      var form = this;
-      submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
-          // Cerrar SOLO el modal de provincia
-          $('#provinceModal').modal('hide');
-
-          // Actualizar el select de provincia en el modal de LOCALIDAD
-          var newOption = new Option(response.province_name, response.province_id, true, true);
-          $('#locationModal select[name="province"]').append(newOption).trigger('change');
-
-          // Limpiar el formulario de provincia.
-          form.reset();
-      }, 'add');
-  });
-
-
-  initializeFormSubmission('#dependencyForm', 'edit');
+$('.select2').select2({
+    theme: 'bootstrap',
 });
 
-  function initializeFormSubmission(formSelector, actionType) {
+// Abrir modal de localidad
+$('#location_add').on('click', function(e) {
+    e.preventDefault();
+    $('#locationModal').modal('show');
+});
+
+// Abrir modal de provincia desde el modal de localidad
+$('#locationModal').on('click', '#province_add_from_location', function(e) {
+    e.preventDefault();
+    $('#provinceModal').modal('show');
+});
+
+
+// Enviar formulario de localidad (AJAX)
+$('#locationForm').on('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+        // Cerrar el modal de localidad
+        $('#locationModal').modal('hide');
+
+        // Actualizar el select de localidad en el formulario PRINCIPAL
+        var newOption = new Option(response.location_name, response.location_id, true, true);
+        $('#id_location').append(newOption).trigger('change');  //MUY IMPORTANTE EL .trigger('change')
+
+        // Limpiar el formulario del modal de localidad
+        form.reset();
+
+    },'add'); // Pasar el tipo de accion si es necesario para tu submit_with_ajax
+
+});
+
+// Enviar formulario de provincia (AJAX)
+$('#provinceForm').on('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+        console.log("respuesta ajax recibida", response)
+        // Cerrar SOLO el modal de provincia
+        $('#provinceModal').modal('hide');
+
+        // Actualizar el select de provincia en el modal de LOCALIDAD
+        var newOption = new Option(response.province_name, response.province_id, true, true);
+        console.log("Nueva opcion creada: ", newOption)
+
+        var $provinceSelect = $('#locationModal').find('#id_province');
+        console.log("Select de province encontrado: ", $provinceSelect)
+        console.log("Numero de elementos encontrados: ", $provinceSelect.length)
+
+        $provinceSelect.append(newOption).trigger('change');
+        console.log("Opción añadida y trigger ('change') ejecutado");
+          // Limpiar el formulario de provincia.
+        form.reset();
+    }, 'add');
+});
+
+
+initializeFormSubmission('#dependencyForm', 'edit');
+});
+
+function initializeFormSubmission(formSelector, actionType) {
     $(formSelector).on('submit', function(e) {
         e.preventDefault();
 

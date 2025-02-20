@@ -61,6 +61,9 @@ class ProvinceCreateView(CreateView):
         data = {
           'success': True,
           'message': 'Provincia agregada correctamente',
+          'province_id': self.object.id,
+          'province_name': self.object.province,
+          'number_id': self.object.number_id
         }
         return JsonResponse(data)
       else:
