@@ -93,6 +93,7 @@ class DependencyCreateView(CreateView):
     context['action'] = 'add'
     context['location_add'] = LocationForm()
     context['province_add'] = ProvinceForm()
+    context['btn_color'] = 'btn-primary'
     context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
     return context
@@ -143,6 +144,9 @@ class DependencyUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:dependency_list')
     context['form_id'] = 'dependencyForm'
     context['action'] = 'edit'
+    context['location_add'] = LocationForm()
+    context['province_add'] = ProvinceForm()
+    context['btn_color'] = 'btn-warning'
     context['filter_btn_color'] = 'bg-custom-warning'
     context['bg_color'] = 'bg-custom-warning'
 
@@ -154,7 +158,7 @@ class DependencyUpdateView(UpdateView):
       context['form'].initial['province'] = province.id
 
       location = dependency.location
-      context['form'].fields['location'].queryset = Location.objects.filter(province=province)
+      location = dependency.location
       context['form'].initial['location'] = location.id
 
     return context

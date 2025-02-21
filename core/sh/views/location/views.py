@@ -64,6 +64,8 @@ class LocationCreateView(CreateView):
         data = {
           'success': True,
           'message': 'Localidad creada exitosamente',
+          'location_id': self.object.id,
+          'location_name': self.object.location,
         }
         return JsonResponse(data)
       else:
@@ -92,6 +94,7 @@ class LocationCreateView(CreateView):
     context['form_id'] = 'locationForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['btn_color'] = 'btn-primary'
     context['province_add'] = ProvinceForm()
     context['saved'] = kwargs.get('saved', None)
     return context
@@ -113,7 +116,9 @@ class LocationUpadateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Localidad actualizada correctamente'
+          'message': 'Localidad actualizada correctamente',
+          'location_id': self.object.id,
+          'location_name': self.object.location,
         }
         return JsonResponse(data)
       else:
@@ -142,6 +147,8 @@ class LocationUpadateView(UpdateView):
     context['form_id'] = 'locationForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
+    context['btn_color'] = 'btn-warning'
+    context['province_add'] = ProvinceForm()
     context['saved'] = kwargs.get('saved', None)
     return context
 

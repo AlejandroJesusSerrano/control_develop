@@ -25,5 +25,15 @@ $(document).ready(function() {
       location.reload();
     }, 'add');
   });
+
+  if ('{{action}}' === 'edit') {
+    var provinceId = $('#id_province').val();
+    var ProvinceName = $('#id_province option:selected').text();
+
+    if (provinceId) {
+        var newOption = new Option(ProvinceName, provinceId, true, true);
+        $('#id_location').append(newOption).trigger('change');
+    }
+  }
 });
 

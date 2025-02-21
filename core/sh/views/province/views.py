@@ -112,7 +112,10 @@ class ProvinceUpdateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Provincia actualizada exitosamente'
+          'message': 'Provincia actualizada exitosamente',
+          'province_id': self.object.id,
+          'province_name': self.object.province,
+          'number_id': self.object.number_id
         }
         return JsonResponse(data)
       else:

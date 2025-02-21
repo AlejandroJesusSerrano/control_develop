@@ -13,7 +13,7 @@
 {% block form %}
 <div class="form-group">
     <label for="province">Provincia: </label>
-    <button type="button" class="btn btn-sm btn-primary ml-2 mb-1" id="province_add"><i class="fas fa-plus"></i></button>
+    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="province_add"><i class="fas fa-plus"></i></button>
   {{ form.province }}
   {% if form.province.errors %}
     <div class="invalid-feedback d-block">

@@ -30,6 +30,28 @@ $(document).ready(function() {
     }
   });
 
+  $('#edifice_add').on('click', function(e) {
+    e.preventDefault();
+    $('#edificeModal').modal('show');
+
+    if ('{{action}}' === 'add') {
+      var locationId = $('#id_location').val();
+      var locationName = $('#id_location option:selected').text();
+
+      if (locationId) {
+        var newOption = new Option(locationName, locationId, true, true);
+        $('#edificeModal').find('#id_location').append(newOption).trigger('change');
+      }
+    }
+  });
+
+  $('#edificeModal').on('click', '#location_add_from_edifice', function(e) {
+    e.preventDefault();
+    $('#locationModal').modal('show');
+  });
+
+
+
   initializeFormSubmission('#myform', 'edit')
 
 });

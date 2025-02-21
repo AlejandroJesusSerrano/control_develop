@@ -3,21 +3,69 @@ $(document).ready(function() {
     theme:'bootstrap',
   });
 
-  $('#location_add').on('click', function(e) {
-    e.preventDefault();
-    $('#locationModal').modal('show');
-  });
+  // Abrir modal de localidad
+$('#location_add').on('click', function(e) {
+  e.preventDefault();
+  $('#locationModal').modal('show');
 
-  $('#locationModal form').on('submit', function(e) {
-    e.preventDefault();
+  if ('{{action}}' === 'edit') {
+      var proviceId = $('#id_province').val();
+      var provinceName = $('#id_province option:selected').text();
 
-    var parameters = new FormData(this);
-    var actionUrl = $(this).attr('action');
+      if (proviceId) {
+          var newOption = new Option(provinceName, proviceId, true, true);
+          $('#locationModal').find('#id_province').append(newOption).trigger('change');
+      }
+  }
+});
 
-    submit_with_ajax(actionUrl, parameters, function() {
-      location.reload();
-    }, 'add');
-  });
+// Abrir modal de provincia desde el modal de localidad
+$('#locationModal').on('click', '#province_add_from_location', function(e) {
+  e.preventDefault();
+  $('#provinceModal').modal('show');
+});
+
+
+// Enviar formulario de localidad (AJAX)
+$('#locationForm').on('submit', function(e) {
+  e.preventDefault();
+  var form = this;
+  submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+
+      $('#locationModal').modal('hide');
+
+      var newOption = new Option(response.location_name, response.location_id, true, true);
+      $('#id_location').append(newOption).trigger('change');
+
+      form.reset();
+  },'add');
+
+});
+
+// Enviar formulario de provincia (AJAX)
+$('#provinceForm').on('submit', function(e) {
+  e.preventDefault();
+  var form = this;
+  submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+
+      $('#provinceModal').modal('hide');
+
+      var newOption = new Option(response.province_name, response.province_id, true, true);
+      $('#locationModal').find('#id_province').append(newOption).trigger('change');
+
+      form.reset();
+  }, 'add');
+});
+
+if ('{{action}}' === 'edit') {
+  var locationId = $('#id_location').val();
+  var locationName = $('#id_location option:selected').text();
+
+  if (locationId) {
+      var newOption = new Option(locationName, locationId, true, true);
+      $('#id_location').append(newOption).trigger('change');
+  }
+}
 
   initializeFormSubmission('#myform', 'edit');
 
