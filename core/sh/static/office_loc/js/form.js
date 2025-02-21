@@ -50,6 +50,14 @@ $(document).ready(function() {
     $('#locationModal').modal('show');
   });
 
+  $('#edificeForm').on('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    submit_with_ajax($(this).attr('action'), formData, function() {
+      $('#edificeModal').modal('hide');
+      location.reload();
+    });
+  }
 
 
   initializeFormSubmission('#myform', 'edit')

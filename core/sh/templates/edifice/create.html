@@ -50,30 +50,26 @@
 {% endblock form_scripts %}
 
 {% block modals %}
-<div class="modal fade" id="edificeModal" tabindex="-1" aria-labelledby="edificeModalLabel" aria-hidden="true">
-  <form method="post" action="{%url 'sh:edifice_add'%}" id="edificeForm">  {% csrf_token %}
+<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
+  <form method="post" action="{%url 'sh:location_add'%}" id="locationForm">  {% csrf_token %}
       <div class="modal-dialog">
           <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title" id="edificeModalLabel">Agregar un Edificio</h5>
+                  <h5 class="modal-title" id="locationModalLabel">Agregar una Localidad</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                   </button>
               </div>
               <div class="modal-body">
                   <div class="form-group">
-                      <label for="province">Localidad: </label>
-                      <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_edifice"><i class="fas fa-plus"></i></button>
-                      {{ edifice_add.location }}
+                      <label for="province">Provincia: </label>
+                      <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location"><i class="fas fa-plus"></i></button>
+                      {{ location_add.province }}
                   </div>
                   <div class="form-group">
-                      <label for="location">Edificio: </label>
-                      {{ edifice_add.edifice }}
+                      <label for="location">Localidad:</label>
+                      {{ location_add.location }}
                   </div>
-                  <div class="form-group">
-                    <label for="address">Domicilio: </label>
-                    {{ edifice_add.address }}
-                </div>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>

@@ -3,7 +3,7 @@ $(document).ready(function() {
     theme:'bootstrap',
   });
 
-  // Abrir modal de localidad
+// Abrir modal de localidad
 $('#location_add').on('click', function(e) {
   e.preventDefault();
   $('#locationModal').modal('show');
