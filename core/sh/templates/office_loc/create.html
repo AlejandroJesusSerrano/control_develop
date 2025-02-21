@@ -92,8 +92,8 @@
 {% endblock form_scripts %}
 
 {% block modals %}
-<div class="modal fade" id="edificeModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
-  <form method="post" action="{%url 'sh:edifice_add'%}" id="locationForm">  {% csrf_token %}
+<div class="modal fade" id="edificeModal" tabindex="-1" aria-labelledby="edificeModalLabel" aria-hidden="true">
+  <form method="post" action="{%url 'sh:edifice_add'%}" id="edificeForm">  {% csrf_token %}
       <div class="modal-dialog">
           <div class="modal-content">
               <div class="modal-header">
@@ -104,14 +104,18 @@
               </div>
               <div class="modal-body">
                   <div class="form-group">
-                      <label for="province">Provincia: </label>
-                      <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location"><i class="fas fa-plus"></i></button>
-                      {{ location_add.province }}
+                      <label for="province">Localidad: </label>
+                      <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_edifice"><i class="fas fa-plus"></i></button>
+                      {{ edifice_add.location }}
                   </div>
                   <div class="form-group">
-                      <label for="location">Localidad:</label>
-                      {{ location_add.location }}
+                      <label for="location">Edifice: </label>
+                      {{ edifice_add.edifice }}
                   </div>
+                  <div class="form-group">
+                    <label for="location">Domicilio: </label>
+                    {{ edifice_add.address }}
+                </div>
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>

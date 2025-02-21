@@ -53,10 +53,58 @@ $(document).ready(function() {
   $('#edificeForm').on('submit', function(e) {
     e.preventDefault();
     var form = this;
-    submit_with_ajax($(this).attr('action'), formData, function() {
+    submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
+
       $('#edificeModal').modal('hide');
-      location.reload();
-    });
+
+      var newOption = new Option(response.edifice_name, response.edifice_id, true, true);
+      $('#id_edifice').append(newOption).trigger('change');
+
+      form.reset();
+    }, 'add');
+  });
+
+  $('#locationForm').on('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
+
+      $('#locationModal').modal('hide');
+
+      var newOption = new Option(response.location_name, response.location_id, true, true);
+      $('#edificeModal').find('#id_location').append(newOption).trigger('change');
+
+      form.reset();
+    }, 'add');
+  });
+
+  $('#locationModal').on('click', '#province_add_from_location', function(e) {
+    e.preventDefault();
+    $('#provinceModal').modal('show');
+  });
+
+  $('#provinceForm').on('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
+
+      $('#provinceModal').modal('hide');
+
+      var newOption = new Option(response.province_name, response.province_id, true, true);
+      $('#locationModal').find('#id_province').append(newOption).trigger('change');
+
+      form.reset();
+    }, 'add');
+  });
+
+  if ('{{action}}' === 'edit') {
+    var edificeId = $('#id_edifice').val();
+    var edificeName = $('#id_edifice option:selected').text();
+
+    if (edificeId) {
+        var newOption = new Option(edificeName, edificeId, true, true);
+        $('#id_edifice').append(newOption).trigger('change');
+    }
   }
 
 
