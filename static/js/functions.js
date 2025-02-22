@@ -248,4 +248,23 @@ $('.select2').each(function () {
   }
 });
 
+function loadLocations(provinceId, selectElement, selectedLocationId) {
+  if (provinceId) {
+      updateOptions("{% url 'sh:ajax_load_locations' %}", { 'province_id': provinceId }, selectElement, selectedLocationId);
+  } else {
+      // Si no hay provincia, mostrar todas las localidades (o un mensaje)
+      selectElement.empty().append('<option value="">----------</option>').trigger('change');
+  }
+}
+
+// Función auxiliar para cargar Edificios (REUTILIZABLE)
+function loadEdifices(locationId, selectElement, selectedEdificeId) {
+  if (locationId) {
+      updateOptions("{% url 'sh:ajax_load_edifices' %}", { 'location_id': locationId }, selectElement, selectedEdificeId);
+  } else {
+      // Si no hay provincia, mostrar todas las localidades (o un mensaje)
+      selectElement.empty().append('<option value="">----------</option>').trigger('change');
+  }
+}
+
 

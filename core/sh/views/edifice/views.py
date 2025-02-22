@@ -74,6 +74,11 @@ class EdificeCreateView(CreateView):
         data= {
           'success': True,
           'message': 'Edificio agregado correctamente',
+          'edifice_id': self.object.id,
+          'edifice_name': self.object.edifice,
+          'edifice_address': self.object.address,
+          'edifice_location_id': self.object.location.id,
+          'edifice_location_name': self.object.location.location,
         }
         return JsonResponse(data)
       else:
@@ -125,7 +130,10 @@ class EdificeUpdateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Edificio actualizado exitosamente'
+          'message': 'Edificio actualizado exitosamente',
+          'edifice_id': self.object.id,
+          'edifice_name': self.object.edifice,
+          'edifice_address': self.object.address,
         }
         return JsonResponse(data)
       else:

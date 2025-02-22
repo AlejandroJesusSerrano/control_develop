@@ -28,9 +28,14 @@ def ajax_load_location(request):
     province_id = request.GET.get('province_id') or request.POST.get('province_id')
     locations = Location.objects.all()
     if province_id:
-        locations = locations.filter(province_id=province_id)
 
-    data = [{'id': loc.id, 'name': loc.location} for loc in locations]
+        try:
+            province_id = int(province_id)
+            locations = locations.filter(province_id=province_id)
+        except ValueError:
+            return JsonResponse([], safe=False)
+
+    data = [loc.toJson() for loc in locations]
     return JsonResponse(data, safe=False)
 
 
