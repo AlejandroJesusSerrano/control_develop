@@ -267,4 +267,23 @@ function loadEdifices(locationId, selectElement, selectedEdificeId) {
   }
 }
 
+//Función auxiliar para cargar Dependencias
+function loadDependencies(locationId, selectElement, selectedDependencyId) {
+  if(locationId){
+      updateOptions("{% url 'sh:ajax_load_dependencies' %}", { 'location_id': locationId }, selectElement, selectedDependencyId)
+  } else {
+      selectElement.empty().append('<option value="">----------</option>').trigger('change');
+  }
+}
+
+//Función auxiliar para cargar Ubicaciones de oficinas
+function loadOfficeLoc(edificeId, selectElement, selectedLocId) {
+  if(locId){
+      updateOptions("{% url 'sh:ajax_load_loc' %}", { 'edifice_id': edificeId }, selectElement, selectedLocId)
+  } else {
+      selectElement.empty().append('<option value="">----------</option>').trigger('change');
+  }
+}
+
+
 

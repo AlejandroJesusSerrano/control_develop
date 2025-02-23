@@ -64,6 +64,10 @@ class DependencyCreateView(CreateView):
         data= {
           'success': True,
           'message': 'Dependencia agregada correctamente',
+          'dependency_id': self.object.id,
+          'dependency_name': self.object.dependency,
+          'dependency_location_id': self.object.location.id,
+          'dependency_location_name': self.object.location.location,
         }
         return JsonResponse(data)
       else:
@@ -115,7 +119,11 @@ class DependencyUpdateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Dependencia actualizada exitosamente'
+          'message': 'Dependencia actualizada exitosamente',
+          'dependency_id': self.object.id,
+          'dependency_name': self.object.dependency,
+          'dependency_location_id': self.object.location.id,
+          'dependency_location_name': self.object.location.location,
         }
         return JsonResponse(data)
       else:

@@ -147,7 +147,7 @@ class LocationUpadateView(UpdateView):
     context['form_id'] = 'locationForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
-    context['btn_color'] = 'btn-warning'
+    context['btn_color'] = 'bg-custom-warning'
     context['province_add'] = ProvinceForm()
     context['saved'] = kwargs.get('saved', None)
     return context

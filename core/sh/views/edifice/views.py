@@ -164,7 +164,7 @@ class EdificeUpdateView(UpdateView):
     context['bg_color'] = 'bg-custom-warning'
     context['location_add'] = LocationForm()
     context['province_add'] = ProvinceForm()
-    context['btn_color'] = 'btn-warning'
+    context['btn_color'] = 'bg-custom-warning'
     context['filter_btn_color'] = 'bg-custom-warning'
 
     edifice = self.get_object()

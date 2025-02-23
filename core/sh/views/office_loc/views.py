@@ -63,7 +63,12 @@ class Office_Loc_CreateView(CreateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Locacion de oficina agregada correctamente'
+          'message': 'Locacion de oficina agregada correctamente',
+          'office_loc_id': self.object.id,
+          'office_loc_edifice': self.object.edifice.edifice,
+          'office_loc_floor': self.object.floor,
+          'office_loc_wing': self.object.wing,
+          'loc_name': f" PISO: {self.object.floor} / ALA: {self.object.wing} "
         }
         return JsonResponse(data)
       else:
@@ -116,7 +121,12 @@ class Office_Loc_UpdateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Locacion de oficina actualiza correctamente'
+          'message': 'Locacion de oficina actualiza correctamente',
+          'loc_id': self.object.id,
+          'loc_edifice': self.object.edifice.edifice,
+          'loc_floor': self.object.floor,
+          'loc_wing': self.object.wing,
+          'loc_name': f" PISO: {self.object.floor} / ALA: {self.object.wing} "
         }
         return JsonResponse(data)
       else:
@@ -148,7 +158,7 @@ class Office_Loc_UpdateView(UpdateView):
     context['edifice_add'] = EdificeForm()
     context['location_add'] = LocationForm()
     context['province_add'] = ProvinceForm()
-    context['btn_color'] = 'btn-warning'
+    context['btn_color'] = 'bg-custom-warning'
     context['filter_btn_color'] = 'bg-custom-warning'
 
     office_loc = self.get_object()

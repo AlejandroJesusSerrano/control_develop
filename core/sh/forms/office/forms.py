@@ -37,8 +37,8 @@ class OfficeForm(forms.ModelForm):
         ]
         widgets = {
             'loc': Select(attrs={
-                'class': 'form-control',
-                'data-placeholder': 'Seleccione la locación de la oficina',
+                'class': 'form-control select2',
+                'data-placeholder': 'Seleccione la locación de la oficina (Piso / Ala)',
                 'id': 'id_loc'
             }),
             'office': TextInput(attrs={
