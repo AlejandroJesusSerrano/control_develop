@@ -9,11 +9,11 @@ $('#location_add').on('click', function(e) {
   $('#locationModal').modal('show');
 
   if ('{{action}}' === 'edit') {
-      var proviceId = $('#id_province').val();
-      var provinceName = $('#id_province option:selected').text();
+      let proviceId = $('#id_province').val();
+      let provinceName = $('#id_province option:selected').text();
 
       if (proviceId) {
-          var newOption = new Option(provinceName, proviceId, true, true);
+          let newOption = new Option(provinceName, proviceId, true, true);
           $('#locationModal').find('#id_province').append(newOption).trigger('change');
       }
   }
@@ -29,12 +29,12 @@ $('#locationModal').on('click', '#province_add_from_location', function(e) {
 // Enviar formulario de localidad (AJAX)
 $('#locationForm').on('submit', function(e) {
   e.preventDefault();
-  var form = this;
+  let form = this;
   submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
 
       $('#locationModal').modal('hide');
 
-      var newOption = new Option(response.location_name, response.location_id, true, true);
+      let newOption = new Option(response.location_name, response.location_id, true, true);
       $('#id_location').append(newOption).trigger('change');
 
       form.reset();
@@ -45,12 +45,12 @@ $('#locationForm').on('submit', function(e) {
 // Enviar formulario de provincia (AJAX)
 $('#provinceForm').on('submit', function(e) {
   e.preventDefault();
-  var form = this;
+  let form = this;
   submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
 
       $('#provinceModal').modal('hide');
 
-      var newOption = new Option(response.province_name, response.province_id, true, true);
+      let newOption = new Option(response.province_name, response.province_id, true, true);
       $('#locationModal').find('#id_province').append(newOption).trigger('change');
 
       form.reset();
@@ -58,11 +58,11 @@ $('#provinceForm').on('submit', function(e) {
 });
 
 if ('{{action}}' === 'edit') {
-  var locationId = $('#id_location').val();
-  var locationName = $('#id_location option:selected').text();
+  let locationId = $('#id_location').val();
+  let locationName = $('#id_location option:selected').text();
 
   if (locationId) {
-      var newOption = new Option(locationName, locationId, true, true);
+      let newOption = new Option(locationName, locationId, true, true);
       $('#id_location').append(newOption).trigger('change');
   }
 }

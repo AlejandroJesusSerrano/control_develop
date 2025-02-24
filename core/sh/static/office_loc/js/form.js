@@ -37,19 +37,19 @@ $(document).ready(function() {
     $('#edificeModal').modal('show');
 
     if ('{{action}}' === 'add') {
-      var locationId = $('#id_location').val();
-      var locationName = $('#id_location option:selected').text();
+      let locationId = $('#id_location').val();
+      let locationName = $('#id_location option:selected').text();
 
       if (locationId) {
-        var newOption = new Option(locationName, locationId, true, true);
+        let newOption = new Option(locationName, locationId, true, true);
         $('#edificeModal').find('#id_location').append(newOption).trigger('change');
       }
 
-      var provinceId = $('#id_province').val();
-      var provinceName = $('#id_province option:selected').text();
+      let provinceId = $('#id_province').val();
+      let provinceName = $('#id_province option:selected').text();
 
       if (provinceId) {
-        var newOption = new Option(provinceName, provinceId, true, true);
+        let newOption = new Option(provinceName, provinceId, true, true);
         $('#edificeModal').find('#id_province').append(newOption).trigger('change');
       }
     }
@@ -70,12 +70,12 @@ $(document).ready(function() {
   // enviar formulario de edificio (AJAX)
   $('#edificeForm').on('submit', function(e) {
     e.preventDefault();
-    var form = this;
+    let form = this;
     submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
       console.log('Respuesta AJAX: ', response);
       $('#edificeModal').modal('hide');
 
-      var newOption = new Option(response.edifice_name, response.edifice_id, true, true);
+      let newOption = new Option(response.edifice_name, response.edifice_id, true, true);
       $('#id_edifice').append(newOption).trigger('change')
 
       form.reset();
@@ -85,12 +85,12 @@ $(document).ready(function() {
   // enviar formulario de localidad (AJAX)
   $('#locationForm').on('submit', function(e) {
     e.preventDefault();
-    var form = this;
+    let form = this;
     submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
 
       $('#locationModal').modal('hide');
 
-      var newOption = new Option(response.location_name, response.location_id, true, true);
+      let newOption = new Option(response.location_name, response.location_id, true, true);
       $('#edificeModal').find('#id_location').append(newOption).trigger('change');
 
       form.reset();
@@ -100,12 +100,12 @@ $(document).ready(function() {
   // enviar formulario de provincia (AJAX)
   $('#provinceForm').on('submit', function(e) {
     e.preventDefault();
-    var form = this;
+    let form = this;
     submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
 
       $('#provinceModal').modal('hide');
 
-      var newOption = new Option(response.province_name, response.province_id, true, true);
+      let newOption = new Option(response.province_name, response.province_id, true, true);
       $('#locationModal').find('#id_province').append(newOption).trigger('change');
 
       form.reset();
@@ -113,11 +113,11 @@ $(document).ready(function() {
   });
 
   if ('{{action}}' === 'edit') {
-    var edificeId = $('#id_edifice').val();
-    var edificeName = $('#id_edifice option:selected').text();
+    let edificeId = $('#id_edifice').val();
+    let edificeName = $('#id_edifice option:selected').text();
 
     if (edificeId) {
-        var newOption = new Option(edificeName, edificeId, true, true);
+        let newOption = new Option(edificeName, edificeId, true, true);
         $('#id_edifice').append(newOption).trigger('change');
     }
   }

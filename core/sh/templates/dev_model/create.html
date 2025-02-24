@@ -12,7 +12,9 @@
 {% block form %}
 
 <div class="form-group">
-  <label for="id_dev_type">Tipo de Dispositivo:</label>
+  <div class="mt-2">
+    <label for="id_dev_type">Tipo de Dispositivo: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dev_type_add"><i class="fas fa-plus"></i></button>
+  </div>
   {{form.dev_type}}
   {% if form.dev_type.errors %}
     <div class="invalid-feedback d-block">
@@ -22,7 +24,9 @@
 </div>
 
 <div class="form-group">
-  <label for="id_brand">Marca:</label>
+  <div class="mt-2">
+    <label for="id_brand">Marca: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="brand_add"><i class="fas fa-plus"></i></button>
+  </div>
   {{form.brand}}
   {% if form.brand.errors %}
     <div class="invalid-feedback d-block">
@@ -65,3 +69,55 @@
 {% block form_scripts %}
   <script src="{% static 'dev_model/js/form.js' %}"></script>
 {% endblock form_scripts %}
+
+{% block modals %}
+<div class="modal fade" id="devTypeModal" tabindex="-1" aria-labelledby="devTypeModalLabel" aria-hidden="true">
+  <form method="post" action="{% url 'sh:dev_type_add' %}" id="devTypeForm">  {% csrf_token %}
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="devTypeModalLabel">Agregar un Tipo de Dispositivo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="id_dev_type_dev_model_modal">Tipo de Dispositivo: </label>
+            {{ dev_type_add.dev_type }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
+          <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal fade" id="brandModal" tabindex="-1" aria-labelledby="brandModalLabel" aria-hidden="true">
+  <form method="post" action="{% url 'sh:brand_add' %}" id="locForm">  {% csrf_token %}
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="brandModalLabel">Agregar una Marca</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="id_brand_dev_model_modal">Marca: </label>
+            {{ brand_add.brand }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
+          <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock modals %}

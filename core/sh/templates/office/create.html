@@ -53,7 +53,7 @@
       </div>
       <div class="form-group mt-2">
         <div class="mt-2">
-          <label for="id_edifice_main">Dependencia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dependency_add"><i class="fas fa-plus"></i></button>
+          <label for="id_dependency">Dependencia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dependency_add"><i class="fas fa-plus"></i></button>
         </div>
         {{ form.dependency }}
         {% if form.dependency.errors %}
@@ -64,7 +64,7 @@
       </div>
       <div class="form-group">
         <div class="mt-2">
-          <label for="id_edifice_main">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="edifice_add"><i class="fas fa-plus"></i></button>
+          <label for="id_edifice">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="edifice_add"><i class="fas fa-plus"></i></button>
         </div>
         {{ form.edifice }}
         {% if form.edifice.errors %}
@@ -150,11 +150,11 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="id_location_edifice_modal">Localidad: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_dependency"><i class="fas fa-plus"></i></button>
+            <label for="id_location_dependency_main">Localidad: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_dependency"><i class="fas fa-plus"></i></button>
             {{ dependency_add.location }}
           </div>
           <div class="form-group">
-            <label for="id_edifice_edifice_modal">Dependencia: </label>  {{ dependency_add.dependency }}
+            <label for="id_dependency_input">Dependencia: </label>  {{ dependency_add.dependency }}
           </div>
         </div>
         <div class="modal-footer">
@@ -178,14 +178,14 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="id_location_edifice_modal">Localidad: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_edifice"><i class="fas fa-plus"></i></button>
+            <label for="id_location_edifice_main">Localidad: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_edifice"><i class="fas fa-plus"></i></button>
             {{ edifice_add.location }}
           </div>
           <div class="form-group">
-            <label for="id_edifice_edifice_modal">Edificio: </label>  {{ edifice_add.edifice }}
+            <label for="id_edifice_input">Edificio: </label>  {{ edifice_add.edifice }}
           </div>
           <div class="form-group">
-            <label for="id_address_edifice_modal">Domicilio: </label>  {{ edifice_add.address }}
+            <label for="id_address_input">Domicilio: </label>  {{ edifice_add.address }}
           </div>
         </div>
         <div class="modal-footer">
@@ -209,7 +209,7 @@
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label for="id_edifice_loc_modal">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="edifice_add_from_loc"><i class="fas fa-plus"></i></button>
+            <label for="id_edifice_office_loc_main">Edificio: </label>
             {{ loc_add.edifice }}
           </div>
           <div class="form-group">

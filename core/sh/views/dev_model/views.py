@@ -6,10 +6,12 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 
 from core.sh.forms import Dev_ModelForm
+from core.sh.forms.brands.forms import BrandForm
+from core.sh.forms.dev_type.forms import Dev_TypeForm
 from core.sh.models import Dev_Model
 
 
-class Dev_ModelsListView(ListView): 
+class Dev_ModelsListView(ListView):
   model = Dev_Model
   template_name = 'dev_model/list.html'
 
@@ -87,6 +89,9 @@ class Dev_ModelsCreateView(CreateView):
     context['entity'] = 'Modelos de Dispositivos'
     context['list_url'] = reverse_lazy('sh:dev_model_list')
     context['form_id'] = 'dev_modelForm'
+    context['dev_type_add'] = Dev_TypeForm()
+    context['brand_add'] = BrandForm()
+    context['btn_color'] = 'btn-primary'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
     return context
@@ -136,6 +141,9 @@ class Dev_ModelsUpadateView(UpdateView):
       context['entity'] = 'Modelos de Dispositivos'
       context['list_url'] = reverse_lazy('sh:dev_model_list')
       context['form_id'] = 'dev_modelForm'
+      context['dev_type_add'] = Dev_TypeForm()
+      context['brand_add'] = BrandForm()
+      context['btn_color'] = 'bg-custom-warning'
       context['action'] = 'edit'
       context['bg_color'] = 'bg-custom-warning'
       return context
