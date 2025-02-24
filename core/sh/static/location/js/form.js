@@ -18,11 +18,15 @@ $(document).ready(function() {
   $('#provinceModal form').on('submit', function(e) {
     e.preventDefault();
 
-    var parameters = new FormData(this);
-    var actionUrl = $(this).attr('action');
+    let form = this;
 
-    submit_with_ajax(actionUrl, parameters, function() {
-      location.reload();
+    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+      $('#provinceModal').modal('hide');
+
+      let newOption = new Option(response.province_name, response.province_id, true, true);
+      $('#id_province').append(newOption).trigger('change');
+
+      form.reset();
     }, 'add');
   });
 
