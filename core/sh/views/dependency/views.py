@@ -19,19 +19,35 @@ class DependencyListView(ListView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  def post (self, request, *args, **kwargs):
-    data = {}
+  def form_valid(self, form):
     try:
-      action = request.POST['action']
-      if action == 'searchdata':
-        dependencies = Dependency.objects.all()
-        data = [d.toJSON() for d in dependencies]
-      else:
-        data['error'] = 'Ha ocurrido un error'
-    except Exception as e:
-      data = {'error': str(e)}
+      self.object = form.save()
 
-    return JsonResponse(data, safe=False)
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        data = {
+          'success': True,
+          'message': 'Edificio actualizado exitosamente',
+          'dependency_id': self.object.id,
+          'dependency_name': self.object.dependency,
+          'dependency_location_id': self.object.location.id,
+          'dependency_location_name': self.object.location.location,
+        }
+        return JsonResponse(data)
+      else:
+        return super().form_valid(form)
+
+    except Exception as e:
+      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({'error': str(e)}, status=500)
+      else:
+        form.add_error(None, str(e))
+        return self.form_invalid(form)
+  def form_invalid(self, form):
+    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+      errors = form.errors.get_json_data()
+      return JsonResponse({'error': errors}, status=400)
+    else:
+      return super().form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)

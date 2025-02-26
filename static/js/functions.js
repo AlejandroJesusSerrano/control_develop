@@ -84,7 +84,7 @@ window.activeRequests = window.activeRequests || {};
 function updateOptions(url, data, selectElement, preselectedVal = null) {
   const selectId = selectElement.attr('id');
 
-  // Chequeo de activeRequests, etc. (igual que tu código)
+
   if (activeRequests[selectId]) {
     console.log(`Solicitud activa ya existente para ${selectId}, abortando.`);
     return;
@@ -92,7 +92,7 @@ function updateOptions(url, data, selectElement, preselectedVal = null) {
   activeRequests[selectId] = true;
 
   let options = '<option value="">----------</option>';
-  // Si no me pasan preselectedVal, uso .val() del select
+
   if (preselectedVal === null) {
     preselectedVal = selectElement.val() || '';
   }
@@ -106,10 +106,10 @@ function updateOptions(url, data, selectElement, preselectedVal = null) {
   .done(function (response) {
     if (Array.isArray(response)) {
       response.forEach(item => {
-        // Compara ID de la BD con preselectedVal
+
         const selected = (String(item.id) === String(preselectedVal)) ? 'selected' : '';
 
-        // dev_str extra, si usas data-devtype
+
         let devStrAttr = '';
         if (item.dev_str) {
           devStrAttr = ` data-devtype="${item.dev_str}"`;
@@ -117,7 +117,10 @@ function updateOptions(url, data, selectElement, preselectedVal = null) {
 
         options += `<option value="${item.id}" ${selected}${devStrAttr}>${item.name}</option>`;
       });
-      selectElement.html(options).trigger('change.select2');
+      selectElement.html(options).trigger('change');
+      selectElement.select2({
+        theme: 'bootstrap',
+      })
     } else {
       console.error('Error en respuesta:', response);
     }
