@@ -5,33 +5,32 @@ $(document).ready(function() {
     theme:'bootstrap',
   });
 
-  $('.select2').on('select2:open', function() {
-    $('.select2-container').addClass('bg-dark text-light');
-    $('.select2-results').addClass('bg-dark text-light');
-  });
-
   $('#province_add').on('click', function(e) {
     e.preventDefault();
     $('#provinceModal').modal('show');
   });
 
-  $('#provinceModal form').on('submit', function(e) {
+  $('#provinceForm').on('submit', function(e) {
     e.preventDefault();
+    var form = this;
+    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
 
-    var parameters = new FormData(this);
-    var actionUrl = $(this).attr('action');
+        $('#provinceModal').modal('hide');
 
-    submit_with_ajax(actionUrl, parameters, function() {
-      location.reload();
-    }, 'add');
-  });
+        var newOption = new Option(response.location_name, response.location_id, true, true);
+        $('#id_province').append(newOption).trigger('change');
+
+        form.reset();
+    },'add');
+
+});
 
   if ('{{action}}' === 'edit') {
     var provinceId = $('#id_province').val();
-    var ProvinceName = $('#id_province option:selected').text();
+    var provinceName = $('#id_province option:selected').text();
 
     if (provinceId) {
-        var newOption = new Option(ProvinceName, provinceId, true, true);
+        var newOption = new Option(provinceName, provinceId, true, true);
         $('#id_location').append(newOption).trigger('change');
     }
   }

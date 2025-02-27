@@ -8,16 +8,6 @@ $('.select2').select2({
 $('#location_add').on('click', function(e) {
     e.preventDefault();
     $('#locationModal').modal('show');
-
-    if ('{{action}}' === 'edit') {
-        var proviceId = $('#id_province').val();
-        var provinceName = $('#id_province option:selected').text();
-
-        if (proviceId) {
-            var newOption = new Option(provinceName, proviceId, true, true);
-            $('#locationModal').find('#id_province').append(newOption).trigger('change');
-        }
-    }
 });
 
 // Abrir modal de provincia desde el modal de localidad

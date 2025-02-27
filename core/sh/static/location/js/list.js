@@ -13,7 +13,7 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
+      {"data": "number_id"},
       {"data": "province"},
       {"data": "location"},
       {"data": null, "defaultContent": ""},

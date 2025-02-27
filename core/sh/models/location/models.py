@@ -19,6 +19,7 @@ class Location(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['province'] = self.province.province
+    item['number_id'] = self.province.number_id
     return item
 
   class Meta:

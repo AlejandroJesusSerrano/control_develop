@@ -15,14 +15,13 @@ $(document).ready(function() {
       dataSrc: ""
     },
     columns: [
-      { "data": "id" },
       { "data": "number_id" },
       { "data": "province" },
       { "data": "province" },
     ],
     columnDefs: [
       {
-        targets: [3],
+        targets: [2],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

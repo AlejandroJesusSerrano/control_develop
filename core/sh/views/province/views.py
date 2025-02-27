@@ -23,8 +23,8 @@ class ProvinceListView(ListView):
       action = request.POST['action']
       if action == 'searchdata':
         data = []
-        for i in Province.objects.all():
-          data.append(i.toJSON())
+        for p in Province.objects.all():
+          data.append(p.toJSON())
       else:
         data['error'] = 'Ha ocurrido un error'
     except Exception as e:
