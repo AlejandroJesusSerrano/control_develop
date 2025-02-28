@@ -37,46 +37,35 @@
 <script src="{% static 'location/js/form.js' %}"></script>
 {% endblock form_scripts %}
 
-{% block extra_js %}
-
-{% endblock extra_js %}
-
 {% block modals %}
 <!-- Modal -->
-<div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel" aria-hidden="true">
-  <form method="post" action="{%url 'sh:province_add'%}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="provinceModalLabel">Agregar una Provincia</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <input name="action" type="hidden" value="add">
-            {% csrf_token %}
-            {% for field  in province_add.visible_fields  %}
-            <div class="form-group">
-              <label for="{{ field.name }}">{{ field.label }}</label>
-              {{ field }}
-              {% if field.errors %}
-                <div class="invalid-feedback d-block">
-                  {{ field.errors|join:'<br>' }}
+<div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel">
+    <form method="post" action="{%url 'sh:province_add'%}" id="provinceForm">
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="provinceModalLabel">Agregar una Provincia</h>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-              {% endif %}
+                <div class="modal-body">
+                    <div class=form-group">
+                        <label for="number_id"> Número de Distrito: </label>
+                        {{province_add.number_id}}
+                    </div>
+                    <div class="form-group">
+                        <label for="province">Provincia: </label>
+                        {{province_add.province}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
+                </div>
             </div>
-            {% endfor %}
-          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-          <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
-        </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>
 {% endblock modals %}

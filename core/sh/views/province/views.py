@@ -41,6 +41,7 @@ class ProvinceListView(ListView):
     context['entity'] = 'Provincias'
     context['nav_icon'] = 'fa-solid fa-earth-americas'
     context['table_id'] = 'province_table'
+    context['add_btn_title'] = 'Agregar Provincia'
     return context
 
 class ProvinceCreateView(CreateView):

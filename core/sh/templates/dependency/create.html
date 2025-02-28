@@ -39,7 +39,8 @@
 
 {% block modals %}
 <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
-    <form method="post" action="{%url 'sh:location_add'%}" id="locationForm">  {% csrf_token %}
+    <form method="post" action="{%url 'sh:location_add'%}" id="locationForm">
+        {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

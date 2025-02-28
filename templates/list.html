@@ -6,46 +6,52 @@
 <script src="{% static 'lib/adminlte_3.2.0/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <!-- Data Tables Bs4 -->
 <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
-  {% block header_list %}
-  {% endblock header_list %}
+
+{% block header_list %}{% endblock header_list %}
 
 {% endblock extra_refs %}
 
 {% block content %}
 
-  <div class="card card-default mb-2">
-    <div class="card-header bg-custom-primary">
-      <h3 class="card-title">
-      <i class="{{nav_icon}}"></i>
-      {{title}}
-      </h3>
+
+<div class="card card-default mb-2">
+    <div class="card-header bg-custom-primary px-3">
+        <h3 class="card-title mb-0">
+            <i class="{{nav_icon}}"></i>
+            {{title}}
+        </h3>
+    </div>
+    <div class="card-footer">
+        <a href="{{ create_url }}" type="button" class="btn btn-primary" id="{{btn_add_id}}"">
+            <i class="fas fa-plus"></i> {{add_btn_title}}
+        </a>
     </div>
 
     <div class="card-body table-responsive">
-      <table class="table text-center" id="{{table_id}}">
-        <thead>
+        <table class="table text-center" id="{{table_id}}">
+            <thead>
 
-          {% block columns %}
-          {% endblock columns %}
+                {% block columns %}
+                {% endblock columns %}
 
-        </thead>
+            </thead>
 
-        <tbody>
+            <tbody>
 
-          {% block rows %}
-          {% endblock rows %}
+                {% block rows %}
+                {% endblock rows %}
 
-        </tbody>
-      </table>
+            </tbody>
+        </table>
     </div>
     <div class="card-footer">
 
-      {% block add_button %}
-      {% endblock add_button %}
+        {% block add_button %}
+        {% endblock add_button %}
 
     </div>
-  </div>
 </div>
+
 {% endblock content %}
 
 {% block js %}
@@ -53,20 +59,20 @@
 
     $(document).ready(function() {
         $('#{{btn_add_id}}').on('click', function(){
-          $.ajax({
-            url: "{% url 'sh:p_list'%}",
-            type: 'POST',
-            data: {id: 34},
-            dataType: 'json',
-          }).done(function(data){
+            $.ajax({
+                url: "{% url 'sh:p_list'%}",
+                type: 'POST',
+                data: {id: 34},
+                dataType: 'json',
+            }).done(function(data){
             console.log(data);
-          }).fail(function (jqXHR, textStatus, errorThrown) {
-            alert(textStatus+': ' +errorThrown);
-          }).always(function(data){
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert(textStatus+': ' +errorThrown);
+            }).always(function(data){
 
-          })
-        })
+        });
     });
+});
 
 </script>
 {% endblock js %}

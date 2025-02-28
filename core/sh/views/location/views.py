@@ -45,6 +45,7 @@ class LocationListView(ListView):
     context['entity'] = 'Localidades'
     context['nav_icon'] = 'fa-solid fa-earth-americas'
     context['table_id'] = 'location_table'
+    context['add_btn_title'] = 'Agregar Localidad'
     return context
 
 class LocationCreateView(CreateView):
