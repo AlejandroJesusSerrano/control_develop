@@ -13,7 +13,6 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
       {"data": "province"},
       {"data": "location"},
       {"data": "dependency"},
@@ -21,7 +20,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
-        targets: [4],
+        targets: [3],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

@@ -9,86 +9,84 @@
 {% endblock extra_refs %}
 
 {% block form %}
-  <button id="toggle-edifice-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros para Edificios <i class="fas fa-search"></i></button>
-  <div id="filter-edifice-cards" class="d-none">
-    <div class="row">
-      <div class="container">
-        <div class="card mt-1">
-          <div class="card-header {{bg_color}}">
-            Filtros por Ubicacion
-          </div>
-          <div class="card-body row">
-            <div class="form-group col-12">
-              <label for="id_province_main">Provincia:</label>  {{ form.province }}
-              {% if form.province.errors %}
-              <div class="invalid-feedback d-block">
-                {{ form.province.errors|join:"<br>" }}
-              </div>
-              {% endif %}
+<div class="row">
+    <div class="container">
+        <div class="card text-white bg-secondary mt-1">
+            <div class="card-header">
+                Filtros <i class="fas fa-filter"></i>
             </div>
-
-            <div class="form-group col-12">
-              <label for="id_location_main">Localidad:</label>  {{ form.location }}
-              {% if form.location.errors %}
-              <div class="invalid-feedback d-block">
-                {{ form.location.errors|join:"<br>" }}
-              </div>
-              {% endif %}
+            <div class="card-body row">
+                <div class="form-group col-6">
+                    <label for="id_province">Provincia:</label> <button type="button" class="btn btn-sm btn-dark ml-2 mb-1" id="province_add"><i class="fas fa-plus"></i></button>
+                    {{ form.province }}
+                    {% if form.province.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.province.errors|join:"<br>" }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group col-6">
+                    <label for="id_location">Localidad:</label> <button type="button" class="btn btn-sm btn-dark ml-2 mb-1" id="location_add"><i class="fas fa-plus"></i></button>
+                    {{ form.location }}
+                    {% if form.location.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.location.errors|join:"<br>" }}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
-
-<div class="form-group">
-  <div class="mt-2">
-    <label for="id_edifice_main">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="edifice_add"><i class="fas fa-plus"></i></button>
-  </div>
-  {{ form.edifice }}
-  {% if form.edifice.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.edifice.errors|join:"<br>" }}
-  </div>
-  {% endif %}
 </div>
 
 <div class="form-group">
-  <label for="id_floor">Piso:</label>
-  {{ form.floor }}
-  {% if form.floor.help_text %}
-  <small class="form-text text-muted">{{form.floor.help_text}}</small>
-  {% endif %}
-  {% if form.floor.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.floor.errors|join:"<br>" }}
-  </div>
-  {% endif %}
+    <div class="mt-2">
+        <label for="id_edifice_main">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="edifice_add"><i class="fas fa-plus"></i></button>
+    </div>
+    {{ form.edifice }}
+    {% if form.edifice.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.edifice.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 
 <div class="form-group">
-  <label for="id_connection_type">Ala:</label>
-  {{ form.wing }}
-  {% if form.wing.help_text %}
-  <small class="form-text text-muted">{{form.wing.help_text}}</small>
-  {% endif %}
-  {% if form.wing.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.wing.errors|join:"<br>" }}
-  </div>
-{% endif %}
+    <label for="id_floor">Piso:</label>
+    {{ form.floor }}
+    {% if form.floor.help_text %}
+    <small class="form-text text-muted">{{form.floor.help_text}}</small>
+    {% endif %}
+    {% if form.floor.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.floor.errors|join:"<br>" }}
+    </div>
+    {% endif %}
+</div>
+
+<div class="form-group">
+    <label for="id_connection_type">Ala:</label>
+    {{ form.wing }}
+    {% if form.wing.help_text %}
+    <small class="form-text text-muted">{{form.wing.help_text}}</small>
+    {% endif %}
+    {% if form.wing.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.wing.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 
 {% endblock form %}
 
 {% block form_scripts %}
-  <script src="{% static 'js/filters.js' %}"></script>
-  <script src="{% static 'office_loc/js/form.js' %}"></script>
+    <script src="{% static 'js/filters.js' %}"></script>
+    <script src="{% static 'office_loc/js/form.js' %}"></script>
 {% endblock form_scripts %}
 
 {% block modals %}
 <div class="modal fade" id="edificeModal" tabindex="-1" aria-labelledby="edificeModalLabel" aria-hidden="true">
-  <form method="post" action="{% url 'sh:edifice_add' %}" id="edificeForm">  {% csrf_token %}
+    <form method="post" action="{% url 'sh:edifice_add' %}" id="edificeForm">  {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -99,14 +97,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="id_location_edifice_modal">Localidad: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_edifice"><i class="fas fa-plus"></i></button>
+                        <label for="id_location_edifice_modal">Localidad: </label>
                         {{ edifice_add.location }}
                     </div>
                     <div class="form-group">
-                        <label for="id_edifice_edifice_modal">Edificio: </label>  {{ edifice_add.edifice }}
+                        <label for="id_edifice_edifice_modal">Edificio: </label>
+                        {{ edifice_add.edifice }}
                     </div>
                     <div class="form-group">
-                        <label for="id_address_edifice_modal">Domicilio: </label>  {{ edifice_add.address }}
+                        <label for="id_address_edifice_modal">Domicilio: </label>
+                        {{ edifice_add.address }}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -115,13 +115,11 @@
                 </div>
             </div>
         </div>
-  </form>
+    </form>
 </div>
-{% endblock modals %}
 
-{% block modal_in %}
 <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
-  <form method="post" action="{% url 'sh:location_add' %}" id="locationForm">  {% csrf_token %}
+    <form method="post" action="{% url 'sh:location_add' %}" id="locationForm">  {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -132,11 +130,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="id_province_location_modal">Provincia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location"><i class="fas fa-plus"></i></button>
+                        <label for="id_province_location_modal">Provincia: </label>
                         {{ location_add.province }}
                     </div>
                     <div class="form-group">
-                        <label for="id_location_location_modal">Localidad:</label>  {{ location_add.location }}
+                        <label for="id_location_location_modal">Localidad:</label>
+                        {{ location_add.location }}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -145,11 +144,11 @@
                 </div>
             </div>
         </div>
-  </form>
+    </form>
 </div>
 
 <div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel" aria-hidden="true">
-  <form method="post" action="{% url 'sh:province_add' %}" id="provinceForm"> {% csrf_token %}
+    <form method="post" action="{% url 'sh:province_add' %}" id="provinceForm"> {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -181,6 +180,6 @@
                 </div>
             </div>
         </div>
-  </form>
+    </form>
 </div>
-{% endblock modal_in %}
+{% endblock modals %}

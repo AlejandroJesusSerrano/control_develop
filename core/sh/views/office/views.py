@@ -46,6 +46,7 @@ class OfficeListView(ListView):
     context['entity'] = 'Oficinas'
     context['nav_icon'] = 'fa-regular fa-building'
     context['table_id'] = 'office_table'
+    context['add_btn_title'] = 'Agregar Oficina'
     return context
 
 class OfficeCreateView(CreateView):

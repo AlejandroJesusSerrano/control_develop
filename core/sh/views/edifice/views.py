@@ -54,6 +54,7 @@ class EdificeListView(ListView):
     context['entity'] = 'Edificios'
     context['nav_icon'] = 'fa fa-building'
     context['table_id'] = 'edifice_table'
+    context['add_btn_title'] = 'Agregar Edificio'
     return context
 
 class EdificeCreateView(CreateView):

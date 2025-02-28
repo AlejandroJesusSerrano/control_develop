@@ -244,6 +244,8 @@ $('#submitButton').on('click', function (e) {
   submit_with_ajax(url, formData, callback, 'add');
 });
 
+
+
 $('.select2').each(function () {
   const preselectedValue = $(this).data('preselected');
   if (preselectedValue) {
