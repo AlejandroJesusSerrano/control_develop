@@ -1,85 +1,75 @@
 $(document).ready(function() {
-  $('.select2').select2({
-    theme:'bootstrap',
-  });
+    $('.select2').select2({
+        theme:'bootstrap',
+    });
 
-// Abrir modal de localidad
-$('#location_add').on('click', function(e) {
-  e.preventDefault();
-  $('#locationModal').modal('show');
 
-  if ('{{action}}' === 'edit') {
-      var proviceId = $('#id_province').val();
-      var provinceName = $('#id_province option:selected').text();
-
-      if (proviceId) {
-          var newOption = new Option(provinceName, proviceId, true, true);
-          $('#locationModal').find('#id_province').append(newOption).trigger('change');
-      }
-  }
+$('#location_modal_add').on('click', function(e) {
+    e.preventDefault();
+    $('#locationModal').modal('show');
 });
 
-// Abrir modal de provincia desde el modal de localidad
+
 $('#locationModal').on('click', '#province_add_from_location', function(e) {
-  e.preventDefault();
-  $('#provinceModal').modal('show');
+    e.preventDefault();
+    $('#provinceModal').modal('show');
 });
 
 
 // Enviar formulario de localidad (AJAX)
-$('#locationForm').on('submit', function(e) {
-  e.preventDefault();
-  var form = this;
-  submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+$('#locationModalForm').on('submit', function(e) {
+    e.preventDefault();
+    let form = this;
+    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
 
-      $('#locationModal').modal('hide');
+        $('#locationModal').modal('hide');
 
-      var newOption = new Option(response.location_name, response.location_id, true, true);
-      $('#id_location').append(newOption).trigger('change');
+        let newOption = new Option(response.location_name, response.location_id, true, true);
+        $('#id_location').append(newOption).trigger('change');
 
-      form.reset();
-  },'add');
+        form.reset();
+    },'add');
 
 });
 
 // Enviar formulario de provincia (AJAX)
-$('#provinceForm').on('submit', function(e) {
-  e.preventDefault();
-  var form = this;
-  submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+$('#provinceModalForm').on('submit', function(e) {
+    e.preventDefault();
+    let form = this;
+    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
 
-      $('#provinceModal').modal('hide');
+        $('#provinceModal').modal('hide');
 
-      var newOption = new Option(response.province_name, response.province_id, true, true);
-      $('#locationModal').find('#id_province').append(newOption).trigger('change');
+        let newOption = new Option(response.province_name, response.province_id, true, true);
+        $('#locationModal').find('#id_modal_province_select').append(newOption).trigger('change');
 
-      form.reset();
-  }, 'add');
+        form.reset();
+    }, 'add');
 });
 
 if ('{{action}}' === 'edit') {
-  var locationId = $('#id_location').val();
-  var locationName = $('#id_location option:selected').text();
+    let locationId = $('#id_location').val();
+    let locationName = $('#id_location option:selected').text();
 
-  if (locationId) {
-      var newOption = new Option(locationName, locationId, true, true);
-      $('#id_location').append(newOption).trigger('change');
-  }
+    if (locationId) {
+        let newOption = new Option(locationName, locationId, true, true);
+        $('#id_location').append(newOption).trigger('change');
+    }
 }
 
-  initializeFormSubmission('#myform', 'edit');
+initializeFormSubmission('#myform', 'edit');
 
 });
 
 function initializeFormSubmission(formSelector, actionType) {
-  $(formSelector).on('submit', function(e) {
-    e.preventDefault();
+    $(formSelector).on('submit', function(e) {
+        e.preventDefault();
 
-    let formData = new FormData(this);
+        let formData = new FormData(this);
 
-    submit_with_ajax($(this).attr('action'), formData, function() {
-      console.log('Formulario enviado y procesado con éxito');
-      window.location.href = '/sh/edifice/list';
-    }, actionType)
-  });
+        submit_with_ajax($(this).attr('action'), formData, function() {
+            console.log('Formulario enviado y procesado con éxito');
+            window.location.href = '/sh/edifice/list';
+        }, actionType)
+    });
 }

@@ -7,9 +7,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 
 from core.sh.forms import DependencyForm
-from core.sh.forms.location.forms import LocationForm
-from core.sh.forms.province.forms import ProvinceForm
-from core.sh.models import Dependency, Location, Province
+from core.sh.forms.modals.forms import LocationModalForm, ProvinceModalForm
+from core.sh.models import Dependency, Province
 
 class DependencyListView(ListView):
   model = Dependency
@@ -99,8 +98,8 @@ class DependencyCreateView(CreateView):
     context['list_url'] = reverse_lazy('sh:dependency_list')
     context['form_id'] = 'dependencyForm'
     context['action'] = 'add'
-    context['location_add'] = LocationForm()
-    context['province_add'] = ProvinceForm()
+    context['location_modal_add'] = LocationModalForm()
+    context['province_modal_add'] = ProvinceModalForm()
     context['btn_color'] = 'btn-primary'
     context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
@@ -156,8 +155,8 @@ class DependencyUpdateView(UpdateView):
     context['list_url'] = reverse_lazy('sh:dependency_list')
     context['form_id'] = 'dependencyForm'
     context['action'] = 'edit'
-    context['location_add'] = LocationForm()
-    context['province_add'] = ProvinceForm()
+    context['location_modal_add'] = LocationModalForm()
+    context['province_modal_add'] = ProvinceModalForm()
     context['btn_color'] = 'btn-warning'
     context['filter_btn_color'] = 'bg-custom-warning'
     context['bg_color'] = 'bg-custom-warning'

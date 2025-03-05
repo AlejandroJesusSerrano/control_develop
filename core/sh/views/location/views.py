@@ -7,7 +7,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from core.sh.forms import LocationForm, ProvinceForm
+from core.sh.forms import LocationForm
+from core.sh.forms.modals.forms import ProvinceModalForm
 from core.sh.models import Location
 
 
@@ -98,7 +99,7 @@ class LocationCreateView(CreateView):
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
     context['btn_color'] = 'btn-primary'
-    context['province_add'] = ProvinceForm()
+    context['province_modal_add'] = ProvinceModalForm()
     context['saved'] = kwargs.get('saved', None)
     return context
 
@@ -151,7 +152,7 @@ class LocationUpadateView(UpdateView):
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
     context['btn_color'] = 'bg-custom-warning'
-    context['province_add'] = ProvinceForm()
+    context['province_modal_add'] = ProvinceModalForm()
     context['saved'] = kwargs.get('saved', None)
     return context
 

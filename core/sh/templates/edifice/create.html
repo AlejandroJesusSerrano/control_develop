@@ -13,108 +13,122 @@
 
 {% block form %}
 <div class="form-group">
-  <div class="mt-2">
-    <label for="location_id">Localidad:</label>
-    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="location_add"><i class="fas fa-plus"></i></button>
-  </div>
-  {{ form.location }}
-  {% if form.location.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.location.errors|join:"<br>" }}
-  </div>
-  {% endif %}
+    <div class="mt-2">
+        <label for="location_id">Localidad:</label>
+        <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="location_modal_add"><i class="fas fa-plus"></i></button>
+    </div>
+    {{ form.location }}
+    {% if form.location.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.location.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 <div class="form-group">
-  <label for="edifice_id">Edificio:</label>
-  {{ form.edifice }}
-  {% if form.edifice.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.edifice.errors|join:"<br>" }}
-  </div>
-  {% endif %}
+    <label for="edifice_id">Edificio:</label>
+    {{ form.edifice }}
+    {% if form.edifice.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.edifice.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 <div class="form-group">
-  <label for="id_connection_type">Domicilio:</label>
-  {{ form.address }}
-  {% if form.adress.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.address.errors|join:"<br>" }}
-  </div>
-{% endif %}
+    <label for="id_address">Domicilio:</label>
+    {{ form.address }}
+    {% if form.adress.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.address.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 
 {% endblock form %}
 
 {% block form_scripts %}
-  <script src="{% static 'edifice/js/form.js' %}"></script>
+    <script src="{% static 'edifice/js/form.js' %}"></script>
 {% endblock form_scripts %}
 
 {% block modals %}
 <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
-  <form method="post" action="{%url 'sh:location_add'%}" id="locationForm">  {% csrf_token %}
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="locationModalLabel">Agregar una Localidad</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
+    <form method="post" action="{%url 'sh:location_modal_add'%}" id="locationModalForm">
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="locationModalLabel">Agregar una Localidad</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="id_modal_province_select">Provincia: </label>
+                        <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location"><i class="fas fa-plus"></i></button>
+                        {{ location_modal_add.province }}
+                        {% if location_modal_add.province.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ location_modal_add.province.errors|join:'<br>' }}
+                        </div>
+                        {% endif %}
+                    </div>
                   <div class="form-group">
-                      <label for="province">Provincia: </label>
-                      <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location"><i class="fas fa-plus"></i></button>
-                      {{ location_add.province }}
+                      <label for="id_modal_location_input">Localidad:</label>
+                      {{ location_modal_add.location }}
+                      {% if location_modal_add.location.errors %}
+                      <div class="invalid-feedback d-block">
+                          {{ location_modal_add.location.errors|join:'<br>' }}
+                      </div>
+                      {% endif %}
                   </div>
-                  <div class="form-group">
-                      <label for="location">Localidad:</label>
-                      {{ location_add.location }}
-                  </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                  <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-              </div>
-          </div>
-      </div>
-  </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
+                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock modals %}
 
 {% block modal_in %}
 <div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel" aria-hidden="true">
-  <form method="post" action="{%url 'sh:province_add'%}" id="provinceForm"> {% csrf_token %}
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="provinceModalLabel">Agregar una Provincia</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                <div class="container-fluid">
-                  <input name="action" type="hidden" value="add">
-                  {% csrf_token %}
-                  {% for field  in province_add.visible_fields  %}
-                  <div class="form-group">
-                    <label for="{{ field.name }}">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                      <div class="invalid-feedback d-block">
-                        {{ field.errors|join:'<br>' }}
-                      </div>
-                    {% endif %}
-                  </div>
-                  {% endfor %}
+    <form method="post" action="{%url 'sh:province_modal_add'%}" id="provinceModalForm"> {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="provinceModalLabel">Agregar una Provincia</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                  <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-              </div>
-          </div>
-      </div>
-  </form>
+                <div class="modal-body">
+                    <div class=form-group">
+                        <label for="id_modal_province_number"> Número de Distrito: </label>
+                        {{province_modal_add.number_id}}
+                        {% if province_modal_add.number_id.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ province_modal_add.number_id.errors|join:'<br>' }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_modal_province_input" class="mt-2">Provincia: </label>
+                        {{province_modal_add.province}}
+                        {% if province_modal_add.province.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ province_modal_add.province.errors|join:'<br>' }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
+                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock modal_in %}

@@ -7,11 +7,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import Office_Loc_Form
-from core.sh.forms.edifice.forms import EdificeForm
-from core.sh.forms.location.forms import LocationForm
-from core.sh.forms.modals.forms import ProvinceModalForm
-from core.sh.forms.province.forms import ProvinceForm
-from core.sh.models import Edifice, Location, Office_Loc, Province
+from core.sh.forms.modals.forms import EdificeModalForm, LocationModalForm, ProvinceModalForm
+
+from core.sh.models import Office_Loc
 
 class Office_Loc_ListView(ListView):
     model = Office_Loc
@@ -99,9 +97,8 @@ class Office_Loc_CreateView(CreateView):
         context['form_id'] = 'office_locForm'
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
-        context['edifice_add'] = EdificeForm()
-        context['location_add'] = LocationForm()
-        context['province_add'] = ProvinceForm()
+        context['edifice_modal_add'] = EdificeModalForm()
+        context['location_modal_add'] = LocationModalForm()
         context['province_modal_add'] = ProvinceModalForm()
         context['btn_color'] = 'btn-primary'
         context['filter_btn_color'] = 'btn-primary'
@@ -158,9 +155,9 @@ class Office_Loc_UpdateView(UpdateView):
         context['form_id'] = 'office_locForm'
         context['action'] = 'edit'
         context['bg_color'] = 'bg-custom-warning'
-        context['edifice_add'] = EdificeForm()
-        context['location_add'] = LocationForm()
-        context['province_add'] = ProvinceForm()
+        context['edifice_modal_add'] = EdificeModalForm()
+        context['location_modal_add'] = LocationModalForm()
+        context['province_modal_add'] = ProvinceModalForm()
         context['btn_color'] = 'bg-custom-warning'
         context['filter_btn_color'] = 'bg-custom-warning'
 

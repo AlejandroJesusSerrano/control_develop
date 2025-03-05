@@ -29,6 +29,7 @@ from .url_modules.switch_port_url import urlpatterns as switch_port_url
 from .url_modules.techs_url import urlpatterns as techs_url
 from .url_modules.wall_port_url import urlpatterns as wall_port_url
 from .url_modules.ajax_urls import urlpatterns as ajax_url
+from .url_modules.modals_urls import urlpatterns as modals_url
 
 urlpatterns += brands_url
 urlpatterns += connection_type_url
@@ -57,3 +58,4 @@ urlpatterns += switch_port_url
 urlpatterns += techs_url
 urlpatterns += wall_port_url
 urlpatterns += ajax_url
+urlpatterns += modals_url

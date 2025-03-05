@@ -5,7 +5,7 @@ $('.select2').select2({
 });
 
 // Abrir modal de localidad
-$('#location_add').on('click', function(e) {
+$('#location_modal_add').on('click', function(e) {
     e.preventDefault();
     $('#locationModal').modal('show');
 });
@@ -18,7 +18,7 @@ $('#locationModal').on('click', '#province_add_from_location', function(e) {
 
 
 // Enviar formulario de localidad (AJAX)
-$('#locationForm').on('submit', function(e) {
+$('#locationModalForm').on('submit', function(e) {
     e.preventDefault();
     let form = this;
     submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
@@ -34,7 +34,7 @@ $('#locationForm').on('submit', function(e) {
 });
 
 // Enviar formulario de provincia (AJAX)
-$('#provinceForm').on('submit', function(e) {
+$('#provinceModalForm').on('submit', function(e) {
     e.preventDefault();
     let form = this;
     submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
@@ -42,7 +42,7 @@ $('#provinceForm').on('submit', function(e) {
         $('#provinceModal').modal('hide');
 
         let newOption = new Option(response.province_name, response.province_id, true, true);
-        $('#locationModal').find('#id_province').append(newOption).trigger('change');
+        $('#locationModal').find('#id_modal_province_select').append(newOption).trigger('change');
 
         form.reset();
     }, 'add');

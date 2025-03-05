@@ -3,39 +3,27 @@ $(document).ready(function() {
         theme:'bootstrap',
     });
 
-    $('#id_province').select2({
-        theme: 'bootstrap'
-    });
-
-
-    $('#id_location').select2({
-        theme: 'bootstrap'
-    });
-
-
-    $('#province_add').on('click', function(e) {
+    $('#toggle-edifice-filters').on('click', function(e) {
         e.preventDefault();
-        $('#provinceModal').modal('show');
+        const filterLocCards = $('#filter-edifice-cards')
+        filterLocCards.toggleClass('d-none')
+
+        $(this).toggleClass('active btn-primary btn-secondary')
+
+        if (filterLocCards.hasClass('d-none')) {
+            $(this).html('Filtros <i class="fa fa-filter"></i>');
+        } else {
+            $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+        }
     });
 
-    $('#location_add').on('click', function(e) {
-        e.preventDefault();
-        $('#locationModal').modal('show');
-    });
-
-    // $('#locationModal').on('shown.bs.modal', function() {
-    //     $('.select2').select2({
-    //         theme: 'bootstrap'
-    //     });
-    // });
-
-    $('#edifice_add').on('click', function(e) {
+    $('#edifice_modal_add').on('click', function(e) {
         e.preventDefault();
         $('#edificeModal').modal('show');
     });
 
     // enviar formulario de edificio (AJAX)
-    $('#edificeForm').on('submit', function(e) {
+    $('#edificeModalForm').on('submit', function(e) {
         e.preventDefault();
         let form = this;
         submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
@@ -48,22 +36,32 @@ $(document).ready(function() {
         }, 'add');
     });
 
+    $('#location_add_from_edifice_modal').on('click', function(e) {
+        e.preventDefault();
+        $('#locationModal').modal('show');
+    });
+
     // enviar formulario de localidad (AJAX)
-    $('#locationForm').on('submit', function(e) {
+    $('#locationModalForm').on('submit', function(e) {
         e.preventDefault();
         let form = this;
         submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
             $('#locationModal').modal('hide');
 
             let newOption = new Option(response.location_name, response.location_id, true, true);
-            $('#id_location').append(newOption).trigger('change');
+            $('#edificeModal').find('#id_modal_location_select').append(newOption).trigger('change')
 
             form.reset();
         }, 'add');
     });
 
+    $('#province_add_from_location_modal').on('click', function(e) {
+        e.preventDefault();
+        $('#provinceModal').modal('show');
+    });
+
     // enviar formulario de provincia (AJAX)
-    $('#provinceForm').on('submit', function(e) {
+    $('#provinceModalForm').on('submit', function(e) {
         e.preventDefault();
         let form = this;
         submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
@@ -71,7 +69,7 @@ $(document).ready(function() {
             $('#provinceModal').modal('hide');
 
             let newOption = new Option(response.province_name, response.province_id, true, true);
-            $('#province_id').append(newOption).trigger('change');
+            $('#locationModal').find('#id_modal_province_select').append(newOption).trigger('change')
 
             form.reset();
         }, 'add');

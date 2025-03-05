@@ -5,7 +5,7 @@ $(document).ready(function() {
         theme:'bootstrap',
     });
 
-    $('#province_add').on('click', function(e) {
+    $('#province_modal_add').on('click', function(e) {
         e.preventDefault();
         $('#provinceModal').modal('show');
     });
