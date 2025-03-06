@@ -203,3 +203,14 @@ input:-webkit-autofill:focus {
   background-color: #495057; /* Gris más oscuro en hover */
   color: #ffffff;
 }
+
+.popup-body {
+  margin: 20px;
+  max-width: 800px;
+  overflow-y: auto;
+}
+
+.btn-primary {
+  background-color: #3f6791;
+  border: 0px solid #6c757d;
+}

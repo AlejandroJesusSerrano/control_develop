@@ -49,7 +49,7 @@ $(document).ready(function() {
             $('#locationModal').modal('hide');
 
             let newOption = new Option(response.location_name, response.location_id, true, true);
-            $('#edificeModal').find('#id_modal_location_select').append(newOption).trigger('change')
+            $('#edificeModal').find('#id_modal_edifice_location_select').append(newOption).trigger('change')
 
             form.reset();
         }, 'add');
@@ -69,7 +69,7 @@ $(document).ready(function() {
             $('#provinceModal').modal('hide');
 
             let newOption = new Option(response.province_name, response.province_id, true, true);
-            $('#locationModal').find('#id_modal_province_select').append(newOption).trigger('change')
+            $('#locationModal').find('#id_modal_location_province_select').append(newOption).trigger('change')
 
             form.reset();
         }, 'add');

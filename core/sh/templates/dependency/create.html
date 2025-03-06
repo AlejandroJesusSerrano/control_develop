@@ -54,20 +54,10 @@
                         <label for="id_modal_province_select">Provincia: </label>
                         <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location"><i class="fas fa-plus"></i></button>
                         {{ location_modal_add.province }}
-                        {% if location_modal_add.province.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ location_modal_add.province.errors|join:'<br>' }}
-                        </div>
-                        {% endif %}
                     </div>
                   <div class="form-group">
                       <label for="id_modal_location_input">Localidad:</label>
                       {{ location_modal_add.location }}
-                      {% if location_modal_add.location.errors %}
-                      <div class="invalid-feedback d-block">
-                          {{ location_modal_add.location.errors|join:'<br>' }}
-                      </div>
-                      {% endif %}
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -95,20 +85,10 @@
                 <div class=form-group">
                     <label for="id_modal_province_number"> Número de Distrito: </label>
                     {{province_modal_add.number_id}}
-                    {% if province_modal_add.number_id.errors %}
-                    <div class="invalid-feedback d-block">
-                        {{ province_modal_add.number_id.errors|join:'<br>' }}
-                    </div>
-                    {% endif %}
                 </div>
                 <div class="form-group">
                     <label for="id_modal_province_input" class="mt-2">Provincia: </label>
                     {{province_modal_add.province}}
-                    {% if province_modal_add.province.errors %}
-                    <div class="invalid-feedback d-block">
-                        {{ province_modal_add.province.errors|join:'<br>' }}
-                    </div>
-                    {% endif %}
                 </div>
               </div>
               <div class="modal-footer">
