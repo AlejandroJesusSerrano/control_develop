@@ -214,3 +214,7 @@ input:-webkit-autofill:focus {
   background-color: #3f6791;
   border: 0px solid #6c757d;
 }
+
+.btn-primary:hover {
+  background-color: #495057;
+}
