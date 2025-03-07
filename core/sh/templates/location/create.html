@@ -13,7 +13,7 @@
 {% block form %}
 <div class="form-group">
     <label for="province">Provincia: </label>
-    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="province_modal_add"><i class="fas fa-plus"></i></button>
+    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="province_add_popup"><i class="fas fa-plus"></i></button>
   {{ form.province }}
   {% if form.province.errors %}
     <div class="invalid-feedback d-block">
@@ -35,47 +35,11 @@
 
 {% block form_scripts %}
 <script src="{% static 'location/js/form.js' %}"></script>
+<script>
+    let provinceAddUrl = "{% url 'sh:province_add' %}";
+</script>
 {% endblock form_scripts %}
 
 {% block modals %}
-<!-- Modal -->
-<div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel">
-    <form method="post" action="{%url 'sh:province_modal_add'%}" id="provinceForm">
-        {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="provinceModalLabel">Agregar una Provincia</h>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class=form-group">
-                        <label for="id_modal_province_number"> Número de Distrito: </label>
-                        {{province_modal_add.number_id}}
-                        {% if province_modal_add.number_id.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ province_modal_add.number_id.errors|join:'<br>' }}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_modal_province_input" class="mt-2">Provincia: </label>
-                        {{province_modal_add.province}}
-                        {% if province_modal_add.province.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ province_modal_add.province.errors|join:'<br>' }}
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+
 {% endblock modals %}

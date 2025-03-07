@@ -1,65 +1,38 @@
 $(document).ready(function() {
 
-$('.select2').select2({
-    theme: 'bootstrap',
-});
+    $('.select2').select2({
+        theme: 'bootstrap',
+    });
 
-// Abrir modal de localidad
-$('#location_modal_add').on('click', function(e) {
-    e.preventDefault();
-    $('#locationModal').modal('show');
-});
+    $('#location_add_popup').on('click', function() {
+        let url = locationAddUrl + "?popup=1";
+        let popup = window.open(url, 'Agregar Localidad', 'width=800,height=380');
+        popup.focus();
+    });
 
-// Abrir modal de provincia desde el modal de localidad
-$('#locationModal').on('click', '#province_add_from_location', function(e) {
-    e.preventDefault();
-    $('#provinceModal').modal('show');
-});
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'locationAdded') {
+            let locationId = event.data.id;
+            let locationName = event.data.name;
+            let select = $('#id_location');
+            let option = new Option(locationName, locationId, true, true);
+            select.append(option).val(locationId).trigger('change');
+        }
+    });
 
 
-// Enviar formulario de localidad (AJAX)
-$('#locationModalForm').on('submit', function(e) {
-    e.preventDefault();
-    let form = this;
-    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
+    if ('{{action}}' === 'edit') {
+        let locationId = $('#id_location').val();
+        let locationName = $('#id_location option:selected').text();
 
-        $('#locationModal').modal('hide');
-
-        let newOption = new Option(response.location_name, response.location_id, true, true);
-        $('#id_location').append(newOption).trigger('change');
-
-        form.reset();
-    },'add');
-
-});
-
-// Enviar formulario de provincia (AJAX)
-$('#provinceModalForm').on('submit', function(e) {
-    e.preventDefault();
-    let form = this;
-    submit_with_ajax($(form).attr('action'), new FormData(form), function(response) {
-
-        $('#provinceModal').modal('hide');
-
-        let newOption = new Option(response.province_name, response.province_id, true, true);
-        $('#locationModal').find('#id_modal_location_province_select').append(newOption).trigger('change');
-
-        form.reset();
-    }, 'add');
-});
-
-if ('{{action}}' === 'edit') {
-    let locationId = $('#id_location').val();
-    let locationName = $('#id_location option:selected').text();
-
-    if (locationId) {
-        let newOption = new Option(locationName, locationId, true, true);
-        $('#id_location').append(newOption).trigger('change');
+        if (locationId) {
+            let newOption = new Option(locationName, locationId, true, true);
+            $('#id_location').append(newOption).trigger('change');
+        }
     }
-}
 
 
-initializeFormSubmission('#dependencyForm', 'edit');
+    initializeFormSubmission('#dependencyForm', 'edit');
 
 });
 

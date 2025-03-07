@@ -54,6 +54,11 @@ class ProvinceCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
      return super().dispatch(request, *args, **kwargs)
 
+  def get_template_names(self):
+    if self.request.GET.get('popup') == '1':
+      return ['province/popup_add.html']
+    return ['province/create.html']
+
   def form_valid(self, form):
     try:
       self.object = form.save()

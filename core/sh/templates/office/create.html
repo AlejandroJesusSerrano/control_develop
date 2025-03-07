@@ -28,7 +28,7 @@
                             <div class="card-body row">
                                 <div class="form-group col-6">
                                     <label for="id_province">Provincia:</label>
-                                    <a href="#" class="btn btn-sm btn-dark ml-2 mb-1 add-related" data-popup-url="{% url 'sh:province_modal_add' %}"><i class="fas fa-plus"></i></a>
+                                    <a href="#" class="btn btn-sm btn-dark ml-2 mb-1 add-related" data-popup-url="#"><i class="fas fa-plus"></i></a>
                                     {{ form.province }}
                                     {% if form.province.errors %}
                                     <div class="invalid-feedback d-block">
@@ -38,7 +38,7 @@
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="id_location">Localidad:</label>
-                                    <a href="#" class="btn btn-sm btn-dark ml-2 mb-1 add-related" data-popup-url="{% url 'sh:location_modal_add' %}"><i class="fas fa-plus"></i></a>
+                                    <a href="#" class="btn btn-sm btn-dark ml-2 mb-1 add-related" data-popup-url="#"><i class="fas fa-plus"></i></a>
                                     {{ form.location }}
                                     {% if form.location.errors %}
                                     <div class="invalid-feedback d-block">
@@ -53,7 +53,7 @@
             </div>
             <div class="form-group mt-2">
                 <div class="mt-2">
-                    <label for="id_edifice">Dependencia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dependency_add_modal"><i class="fas fa-plus"></i></button>
+                    <label for="id_edifice">Dependencia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="#"><i class="fas fa-plus"></i></button>
                 </div>
                 {{ form.dependency }}
                 {% if form.dependency.errors %}
@@ -64,7 +64,7 @@
             </div>
             <div class="form-group">
                 <div class="mt-2">
-                    <label for="id_edifice">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="edifice_add_modal"><i class="fas fa-plus"></i></button>
+                    <label for="id_edifice">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="#"><i class="fas fa-plus"></i></button>
                 </div>
                 {{ form.edifice }}
                 {% if form.edifice.errors %}
@@ -136,7 +136,7 @@
 
 {% block modals %}
 <div class="modal fade" id="dependencyModal" tabindex="-1" aria-labelledby="dependencyModalLabel" aria-hidden="true">
-    <form method="post" action="{% url 'sh:dependency_modal_add' %}" id="dependencyModalForm">  {% csrf_token %}
+    <form method="post" action="#" id="dependencyModalForm">  {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -166,7 +166,7 @@
 </div>
 
 <div class="modal fade" id="edificeModal" tabindex="-1" aria-labelledby="edificeModalLabel" aria-hidden="true">
-    <form method="post" action="{% url 'sh:edifice_modal_add' %}" id="edificeModalForm">  {% csrf_token %}
+    <form method="post" action="#" id="edificeModalForm">  {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -199,7 +199,7 @@
 </div>
 
 <div class="modal fade" id="locModal" tabindex="-1" aria-labelledby="locModalLabel" aria-hidden="true">
-    <form method="post" action="{% url 'sh:office_loc_modal_add' %}" id="locModalForm">  {% csrf_token %}
+    <form method="post" action="#" id="locModalForm">  {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -234,7 +234,7 @@
 
 {% block modal_in %}
 <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
-    <form method="post" action="{% url 'sh:location_modal_add' %}" id="locationModalForm">  {% csrf_token %}
+    <form method="post" action="#" id="locationModalForm">  {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -263,7 +263,7 @@
 </div>
 
 <div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel" aria-hidden="true">
-    <form method="post" action="{%url 'sh:province_modal_add'%}" id="provinceModalForm"> {% csrf_token %}
+    <form method="post" action="#" id="provinceModalForm"> {% csrf_token %}
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

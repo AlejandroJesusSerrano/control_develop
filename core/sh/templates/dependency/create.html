@@ -12,7 +12,7 @@
 <div class="form-group">
     <div class="mt-2">
         <label for="location_id">Localidad:</label>
-        <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_modal_add"><i class="fas fa-plus"></i></button>
+        <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_popup"><i class="fas fa-plus"></i></button>
     </div>
     {{ form.location }}
     {% if form.location.errors %}
@@ -35,68 +35,7 @@
 
 {% block form_scripts %}
 <script src="{% static 'dependency/js/form.js' %}"></script>
+<script>
+    let locationAddUrl = "{% url 'sh:location_add' %}";
+</script>
 {% endblock form_scripts %}
-
-{% block modals %}
-<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
-    <form method="post" action="{%url 'sh:location_modal_add'%}" id="locationModalForm">
-        {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="locationModalLabel">Agregar una Localidad</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="id_modal_province_select">Provincia: </label>
-                        <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location"><i class="fas fa-plus"></i></button>
-                        {{ location_modal_add.province }}
-                    </div>
-                  <div class="form-group">
-                      <label for="id_modal_location_input">Localidad:</label>
-                      {{ location_modal_add.location }}
-                  </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-{% endblock modals %}
-
-{% block modal_in %}
-<div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel" aria-hidden="true">
-  <form method="post" action="{%url 'sh:province_modal_add'%}" id="provinceModalForm"> {% csrf_token %}
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="provinceModalLabel">Agregar una Provincia</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                <div class=form-group">
-                    <label for="id_modal_province_number"> Número de Distrito: </label>
-                    {{province_modal_add.number_id}}
-                </div>
-                <div class="form-group">
-                    <label for="id_modal_province_input" class="mt-2">Provincia: </label>
-                    {{province_modal_add.province}}
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-            </div>
-          </div>
-      </div>
-  </form>
-</div>
-{% endblock modal_in %}

@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Provincia</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Provincia</h2>
+        <form method="post" id="provinceForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.number_id.id_for_label }}">Número de Distrito:</label>
+                {{ form.number_id }}
+                {% if form.number_id.errors %}
+                  <div class="invalid-feedback d-block">{{ form.number_id.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.province.id_for_label }}">Provincia:</label>
+                {{ form.province }}
+                 {% if form.province.errors %}
+                    <div class="invalid-feedback d-block">{{ form.province.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+                submitPopupForm('#provinceForm', "{% url 'sh:province_add' %}", 'province');
+        });
+
+        initPopup({
+            entityType: 'province',
+            formSelector: '#provinceForm',
+        })
+    </script>
+</body>
+</html>
