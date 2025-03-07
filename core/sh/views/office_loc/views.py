@@ -56,6 +56,11 @@ class Office_Loc_CreateView(CreateView):
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
+    def get_template_names(self):
+        if self.request.GET.get('popup') == '1':
+            return ['office_loc/popup_add.html']
+        return ['office_loc/create.html']
+
     def form_valid(self, form):
         try:
             self.object = form.save()

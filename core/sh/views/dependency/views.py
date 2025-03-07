@@ -18,10 +18,6 @@ class DependencyListView(ListView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
-
   def post (self, request, *args, **kwargs):
     data = {}
     try:
@@ -57,6 +53,11 @@ class DependencyCreateView(CreateView):
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
+  
+  def get_template_names(self):
+    if self.request.GET.get('popup') == '1':
+      return ['dependency/popup_add.html']
+    return ['dependency/create.html']
 
 
   def form_valid(self, form):

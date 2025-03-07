@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Edificio</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Ubicación de Oficina</h2>
+        <form method="post" id="OfficeLocForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.edifice.id_for_label }}">Edificio: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="edifice_add_popup"><i class="fas fa-plus"></i></button>
+                {{ form.edifice }}
+                {% if form.edifice.errors %}
+                  <div class="invalid-feedback d-block">{{ form.edifice.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.floor.id_for_label }}">Piso: </label>
+                {{ form.floor }}
+                 {% if form.floor.errors %}
+                    <div class="invalid-feedback d-block">{{ form.floor.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.wing.id_for_label }}">Ala: </label>
+                {{ form.wing }}
+                 {% if form.wing.errors %}
+                    <div class="invalid-feedback d-block">{{ form.wing.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        submitPopupForm('#edificeForm', "{% url 'sh:edifice_add' %}", 'edifice');
+
+        let edificeAddUrl = "{% url 'sh:edifice_add' %}";
+
+        initPopup({
+            triggerSelector: '#edifice_add_popup',
+            popupUrl: "{% url 'sh:edifice_add' %}",
+            entityType: 'office_loc',
+            selectedId: 'id_edifice',
+            formSelector: '#OfficeLocForm',
+            onSuccess: function(response) {
+                console.log('Ubicación de Oficina agregada:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'edificeAdded') {
+                let select = document.getElementById('id_edifice');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+</body>
+</html>

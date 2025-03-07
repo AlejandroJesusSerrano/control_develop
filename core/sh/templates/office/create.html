@@ -28,7 +28,6 @@
                             <div class="card-body row">
                                 <div class="form-group col-6">
                                     <label for="id_province">Provincia:</label>
-                                    <a href="#" class="btn btn-sm btn-dark ml-2 mb-1 add-related" data-popup-url="#"><i class="fas fa-plus"></i></a>
                                     {{ form.province }}
                                     {% if form.province.errors %}
                                     <div class="invalid-feedback d-block">
@@ -38,7 +37,6 @@
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="id_location">Localidad:</label>
-                                    <a href="#" class="btn btn-sm btn-dark ml-2 mb-1 add-related" data-popup-url="#"><i class="fas fa-plus"></i></a>
                                     {{ form.location }}
                                     {% if form.location.errors %}
                                     <div class="invalid-feedback d-block">
@@ -53,7 +51,7 @@
             </div>
             <div class="form-group mt-2">
                 <div class="mt-2">
-                    <label for="id_edifice">Dependencia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="#"><i class="fas fa-plus"></i></button>
+                    <label for="id_edifice">Dependencia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dependency_popup_add"><i class="fas fa-plus"></i></button>
                 </div>
                 {{ form.dependency }}
                 {% if form.dependency.errors %}
@@ -64,7 +62,7 @@
             </div>
             <div class="form-group">
                 <div class="mt-2">
-                    <label for="id_edifice">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="#"><i class="fas fa-plus"></i></button>
+                    <label for="id_edifice">Edificio: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="edifice_popup_add"><i class="fas fa-plus"></i></button>
                 </div>
                 {{ form.edifice }}
                 {% if form.edifice.errors %}
@@ -85,7 +83,7 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="mt-2">
-                    <label for="id_loc">Ubicación de la Oficina: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="loc_add_modal"><i class="fas fa-plus"></i></button>
+                    <label for="id_loc">Ubicación de la Oficina: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="office_loc_popup_add"><i class="fas fa-plus"></i></button>
                 </div>
                 {{ form.loc }}
                 {% if form.loc.errors %}
@@ -132,162 +130,9 @@
 {% block form_scripts %}
     <script src="{% static 'office/js/form.js' %}"></script>
     <script src="{% static 'js/filters.js' %}"></script>
+    <script>
+        let dependencyAddUrl = "{% url 'sh:dependency_add' %}";
+        let edificeAddUrl = "{% url 'sh:edifice_add' %}";
+        let officeLocAddUrl = "{% url 'sh:office_loc_add' %}";
+    </script>
 {% endblock form_scripts %}
-
-{% block modals %}
-<div class="modal fade" id="dependencyModal" tabindex="-1" aria-labelledby="dependencyModalLabel" aria-hidden="true">
-    <form method="post" action="#" id="dependencyModalForm">  {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="dependencyModalLabel">Agregar una Dependencia</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="id_location_edifice_modal">Localidad: </label>
-                        <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_dependency_modal"><i class="fas fa-plus"></i></button>
-                        {{ dependency_modal_add.location }}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_edifice_edifice_modal">Dependencia: </label>
-                        {{ dependency_modal_add.dependency }}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<div class="modal fade" id="edificeModal" tabindex="-1" aria-labelledby="edificeModalLabel" aria-hidden="true">
-    <form method="post" action="#" id="edificeModalForm">  {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="edificeModalLabel">Agregar un Edificio</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="id_location_edifice_modal">Localidad: </label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="location_add_from_edifice_modal"><i class="fas fa-plus"></i></button>
-                        {{ edifice_modal_add.location }}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_edifice_edifice_modal">Edificio: </label>
-                        {{ edifice_modal_add.edifice }}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_address_edifice_modal">Domicilio: </label>
-                        {{ edifice_modal_add.address }}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</butto>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<div class="modal fade" id="locModal" tabindex="-1" aria-labelledby="locModalLabel" aria-hidden="true">
-    <form method="post" action="#" id="locModalForm">  {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="locModalLabel">Agregar una Ubicación de Oficina</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="id_edifice_loc_modal">Edificio: </label>
-                        {{ loc_add.edifice }}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_floor_loc_modal">Piso: </label>
-                        {{ loc_add.floor }}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_wing_loc_modal">Ala: </label>
-                        {{ loc_add.wing }}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-{% endblock modals %}
-
-{% block modal_in %}
-<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="locationModalLabel" aria-hidden="true">
-    <form method="post" action="#" id="locationModalForm">  {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="locationModalLabel">Agregar una Localidad</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="id_province_location_modal">Provincia: </label>  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="province_add_from_location_modal"><i class="fas fa-plus"></i></button>
-                        {{ location_modal_add.province }}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_location_location_modal">Localidad:</label>
-                        {{ location_modal_add.location }}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<div class="modal fade" id="provinceModal" tabindex="-1" aria-labelledby="provinceModalLabel" aria-hidden="true">
-    <form method="post" action="#" id="provinceModalForm"> {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="provinceModalLabel">Agregar una Provincia</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class=form-group">
-                        <label for="id_modal_province_number"> Número de Distrito: </label>
-                        {{province_modal_add.number_id}}
-                    </div>
-                    <div class="form-group">
-                        <label for="id_modal_province_input" class="mt-2">Provincia: </label>
-                        {{province_modal_add.province}}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-cancel"></i> Cancelar</button>
-                    <button type="submit" class="btn {{btn_color}}"><i class="fa fa-save"></i> Guardar</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-{% endblock modal_in %}
