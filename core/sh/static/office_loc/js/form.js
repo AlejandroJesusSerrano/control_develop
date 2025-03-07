@@ -17,62 +17,20 @@ $(document).ready(function() {
         }
     });
 
-    $('#edifice_modal_add').on('click', function(e) {
-        e.preventDefault();
-        $('#edificeModal').modal('show');
+    $('#edifice_add_popup').on('click', function() {
+        let url = edificeAddUrl + "?popup=1";
+        let popup = window.open(url, 'Agregar Edificio', 'width=800,height=600');
+        popup.focus();
     });
 
-    // enviar formulario de edificio (AJAX)
-    $('#edificeModalForm').on('submit', function(e) {
-        e.preventDefault();
-        let form = this;
-        submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
-            $('#edificeModal').modal('hide');
-
-            let newOption = new Option(response.edifice_name, response.edifice_id, true, true);
-            $('#id_edifice').append(newOption).trigger('change')
-
-            form.reset();
-        }, 'add');
-    });
-
-    $('#location_add_from_edifice_modal').on('click', function(e) {
-        e.preventDefault();
-        $('#locationModal').modal('show');
-    });
-
-    // enviar formulario de localidad (AJAX)
-    $('#locationModalForm').on('submit', function(e) {
-        e.preventDefault();
-        let form = this;
-        submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
-            $('#locationModal').modal('hide');
-
-            let newOption = new Option(response.location_name, response.location_id, true, true);
-            $('#edificeModal').find('#id_modal_edifice_location_select').append(newOption).trigger('change')
-
-            form.reset();
-        }, 'add');
-    });
-
-    $('#province_add_from_location_modal').on('click', function(e) {
-        e.preventDefault();
-        $('#provinceModal').modal('show');
-    });
-
-    // enviar formulario de provincia (AJAX)
-    $('#provinceModalForm').on('submit', function(e) {
-        e.preventDefault();
-        let form = this;
-        submit_with_ajax($(this).attr('action'), new FormData(form), function(response) {
-
-            $('#provinceModal').modal('hide');
-
-            let newOption = new Option(response.province_name, response.province_id, true, true);
-            $('#locationModal').find('#id_modal_location_province_select').append(newOption).trigger('change')
-
-            form.reset();
-        }, 'add');
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'edificeAdded') {
+            let edificeId = event.data.id;
+            let edificeName = event.data.name;
+            let select = $('#id_edifice');
+            let option = new Option(edificeName, edificeId, true, true);
+            select.append(option).val(edificeId).trigger('change');
+        }
     });
 
     if ('{{action}}' === 'edit') {
