@@ -31,5 +31,7 @@ class Edifice(models.Model):
     db_table = 'edificios'
     ordering = ['id']
     constraints = [
-        models.UniqueConstraint(fields=['edifice', 'location'], name='unique_edifice_location')
+        models.UniqueConstraint(fields=['edifice', 'location'], name='unique_edifice_location'),
+        models.UniqueConstraint(fields=['address', 'edifice'], name='unique_address_edifice'),
+        models.UniqueConstraint(fields=['address', 'location'], name='unique_address_location')
     ]

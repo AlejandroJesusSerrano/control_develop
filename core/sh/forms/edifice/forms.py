@@ -65,23 +65,39 @@ class EdificeForm(forms.ModelForm):
 
     location = self.cleaned_data.get('location')
     edifice = self.cleaned_data.get('edifice')
+    address =  self.cleaned_data.get('address')
 
-    qs = Edifice.objects.filter(location=location, edifice=edifice)
+    if 'location' not in cleaned_data or not location:
+      self.add_error('location', 'Este campo es obligatorio')
 
-    if not edifice:
-      self.add_error('edifice', "El nombre del edificio no puede estar vacío")
-      return cleaned_data
+    if 'edifice' not in cleaned_data or not edifice:
+      self.add_error('edifice', 'Este campo es obligatorio')
 
-    if location:
-      duplicate_query = Edifice.objects.filter(
-        location = location,
-        edifice = edifice.upper()
-      )
+    if 'address' not in cleaned_data or not address:
+      self.add_error('address', 'Este campo es obligatorio')
+
+    if location and edifice:
+
+      edifice_upper = edifice.upper()
+      address_upper = cleaned_data.get('address').upper()
+
+      qs = Edifice.objects.filter(location=location, edifice=edifice_upper)
+      qs_address = Edifice.objects.filter(location=location, address=address_upper)
+      qs_edifice_address = Edifice.objects.filter(edifice=edifice_upper, address=address_upper)
 
       if self.instance.pk:
         qs = qs.exclude(pk = self.instance.pk)
+        qs_address = qs_address.exclude(pk = self.instance.pk)
+        qs_edifice_address = qs_edifice_address.exclude(pk = self.instance.pk)
 
       if  qs.exists():
         self.add_error('edifice', f"Ya existe el edificio '{edifice}' en la localidad seleccionada")
+
+      if qs_address.exists():
+        self.add_error('address', f"Ya existe la dirección '{address_upper}' en la localidad seleccionada")
+
+      if qs_edifice_address.exists():
+        self.add_error('edifice', f"Ya existe el edificio '{edifice}' con la dirección '{address_upper}'")
+        self.add_error('address', f"Ya existe la dirección '{address_upper}' en el edificio '{edifice}'")
 
     return cleaned_data

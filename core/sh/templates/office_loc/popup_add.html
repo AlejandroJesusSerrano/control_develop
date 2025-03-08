@@ -17,7 +17,7 @@
 <body>
     <div class="container">
         <h2>Agregar Ubicación de Oficina</h2>
-        <form method="post" id="OfficeLocForm">
+        <form method="post" id="officeLocForm">
             {% csrf_token %}
             <div class="form-group">
                 <label for="{{ form.edifice.id_for_label }}">Edificio: </label>
@@ -51,7 +51,7 @@
 
     <script>
 
-        submitPopupForm('#edificeForm', "{% url 'sh:edifice_add' %}", 'edifice');
+        submitPopupForm('#officeLocForm', "{% url 'sh:office_loc_add' %}", 'office_loc');
 
         let edificeAddUrl = "{% url 'sh:edifice_add' %}";
 
@@ -60,7 +60,7 @@
             popupUrl: "{% url 'sh:edifice_add' %}",
             entityType: 'office_loc',
             selectedId: 'id_edifice',
-            formSelector: '#OfficeLocForm',
+            formSelector: '#officeLocForm',
             onSuccess: function(response) {
                 console.log('Ubicación de Oficina agregada:', response);
             }

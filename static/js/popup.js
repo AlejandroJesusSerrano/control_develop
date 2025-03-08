@@ -29,10 +29,32 @@ function submitPopupForm(formId, url, entityType) {
                 }
             },
             error: function(xhr) {
-                alert('Error al procesar el formulario');
+                if (xhr.status === 400) {
+                    showFormErrors(xhr.responseJSON.error);
+                } else {
+                    alert('Error al procesar el formulario: ' + xhr.status);
+                }
             }
         });
     });
+}
+
+function showFormErrors(errors) {
+    $('.invalid-feedback').remove();
+    $('.is-invalid').removeClass('is-invalid');
+    for (let field in errors) {
+        let fieldErrors = errors[field];
+        let fieldElement = $(`[name="${field}"]`);
+        if (fieldElement.length) {
+            fieldElement.addClass('is-invalid');
+            let errorHtml = '<div class="invalid-feedback d-block">';
+            fieldErrors.forEach(error => {
+                errorHtml += error.message + '<br>';
+            });
+            errorHtml += '</div>';
+            fieldElement.after(errorHtml);
+        }
+    }
 }
 
 function openPopup(url, title, width = 800, height = 380) {
@@ -87,20 +109,6 @@ function initPopup(config) {
             });
         }
 
-        $(settings.formSelector).on('submit', function(e) {
-            e.preventDefault();
-            $.post($(this).attr('action'), $(this).serialize(), function(response) {
-                if (response.success) {
-                    sendAddedMessage(settings.entityType, response.id, response.name);
-                    if (settings.onSuccess) {
-                        settings.onSuccess(response);
-                    }
-                    window.close();
-                } else {
-                    alert('Error: ' + response.error);
-                }
-            });
-        });
     });
 }
 

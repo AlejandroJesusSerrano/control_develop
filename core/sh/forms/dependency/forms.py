@@ -53,11 +53,22 @@ class DependencyForm(forms.ModelForm):
     location = self.cleaned_data.get('location')
     dependency = self.cleaned_data.get('dependency')
 
-    qs = Dependency.objects.filter(location=location, dependency=dependency)
-    if self.instance.pk:
-      qs = qs.exclude(pk = self.instance.pk)
+    if 'location' not in cleaned_data or not location:
+      self.add_error('location', 'Este campo es obligatorio')
 
-    if qs.exists():
-      self.add_error('dependency', f"Ya existe la dependencia '{dependency}' en la localidad y provincia seleccionadas")
+    if 'dependency' not in cleaned_data or not dependency:
+      self.add_error('dependency', 'Este campo es obligatorio')
+
+    if location and dependency:
+
+      dependency_upper = dependency.upper()
+
+      qs = Dependency.objects.filter(location=location, dependency=dependency_upper)
+
+      if self.instance.pk:
+        qs = qs.exclude(pk = self.instance.pk)
+
+      if qs.exists():
+        self.add_error('dependency', f"Ya existe la dependencia '{dependency}' en la localidad y provincia seleccionadas")
 
     return cleaned_data

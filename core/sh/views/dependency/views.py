@@ -53,7 +53,7 @@ class DependencyCreateView(CreateView):
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
-  
+
   def get_template_names(self):
     if self.request.GET.get('popup') == '1':
       return ['dependency/popup_add.html']
@@ -77,6 +77,7 @@ class DependencyCreateView(CreateView):
       else:
         return super().form_valid(form)
     except Exception as e:
+      print("Error al guardar:", str(e))
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({'error': str(e)}, status=500)
       else:

@@ -44,18 +44,22 @@ $(document).ready(function() {
             let select = $('#id_edifice');
             let option = new Option(edificeName, edificeId, true, true);
             select.append(option).val(edificeId).trigger('change');
-        } else if (event.data.type === 'dependencyAdded') {
+        }
+
+        if (event.data.type === 'dependencyAdded') {
             let dependencyId = event.data.id;
             let dependencyName = event.data.name;
             let select = $('#id_dependency');
             let option = new Option(dependencyName, dependencyId, true, true);
             select.append(option).val(dependencyId).trigger('change');
-        } else if (event.data.type === 'officeLocAdded') {
-            let officeLocId = event.data.id;
-            let officeLocName = event.data.name;
+        }
+
+        if (event.data.type === 'officeLocAdded') {
+            let office_locId = event.data.id;
+            let office_locName = event.data.name;
             let select = $('#id_loc');
-            let option = new Option(officeLocName, officeLocId, true, true);
-            select.append(option).val(officeLocId).trigger('change');
+            let option = new Option(office_locName, office_locId, true, true);
+            select.append(option).val(office_locId).trigger('change');
         }
     });
 

@@ -73,7 +73,7 @@ class Office_Loc_CreateView(CreateView):
                     'office_loc_edifice': self.object.edifice.edifice,
                     'office_loc_floor': self.object.floor,
                     'office_loc_wing': self.object.wing,
-                    'loc_name': f" PISO: {self.object.floor} / ALA: {self.object.wing} "
+                    'office_loc_name': f" PISO: {self.object.floor} / ALA: {self.object.wing} "
                 }
                 return JsonResponse(data)
             else:
