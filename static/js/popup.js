@@ -5,9 +5,7 @@ $(document).ready(function() {
 });
 
 function submitPopupForm(formId, url, entityType) {
-    console.log('Attaching submit handler to', formId);
     $(formId).on('submit', function(e) {
-        console.log('Form submit intercepted');
         e.preventDefault();
         var form = this;
         $.ajax({
