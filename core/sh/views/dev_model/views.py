@@ -41,6 +41,7 @@ class Dev_ModelsListView(ListView):
     context['entity'] = 'Modelos de Dispositivos'
     context['nav_icon'] = 'fa-solid fa-laptop-file'
     context['table_id'] = 'dev_model_table'
+    context['add_btn_title'] = 'Agregar Modelo de Dispositivo'
     return context
 
 class Dev_ModelsCreateView(CreateView):
@@ -52,6 +53,11 @@ class Dev_ModelsCreateView(CreateView):
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
+
+  def get_template_names(self):
+    if self.request.GET.get('popup') == '1':
+      return ['dev_model/popup_add.html']
+    return ['dev_model/create.html']
 
   def form_valid(self, form):
     try:
@@ -89,6 +95,7 @@ class Dev_ModelsCreateView(CreateView):
     context['form_id'] = 'dev_modelForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
+    context['btn_color'] = 'bg-custom-primary'
     return context
 
 class Dev_ModelsUpadateView(UpdateView):

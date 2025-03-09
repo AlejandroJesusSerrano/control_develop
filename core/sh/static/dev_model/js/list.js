@@ -14,21 +14,20 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
+      {"data": "dev_model"},
+      {"data": "dev_type"},
+      {"data": "brand"},
       {
         "data": "image",
         "render": function(data, type, row){
           return '<img src="' + data + '" class="img-thumbnail" style="max-width:100px;"/>';
         }
       },
-      {"data": "dev_model"},
-      {"data": "dev_type"},
-      {"data": "brand"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [5],
+        targets: [4],
         class: 'text-center align-middle',
         orderable: false,
         render: function(data, type, row){

@@ -14,13 +14,12 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
       {"data": "brand"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [2],
+        targets: [1],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

@@ -13,13 +13,12 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
       {"data": "dev_type"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [2],
+        targets: [1],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

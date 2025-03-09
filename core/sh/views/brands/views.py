@@ -42,6 +42,7 @@ class BrandListView(ListView):
     context['entity'] = 'Marcas'
     context['nav_icon'] = 'fa fa-copyright'
     context['table_id'] = 'brand_table'
+    context['add_btn_title'] = 'Agregar Marca'
     return context
 
 class BrandCreateView(CreateView):
@@ -54,6 +55,11 @@ class BrandCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
+  def get_template_names(self):
+    if self.request.GET.get('popup') == '1':
+      return ['brand/popup_add.html']
+    return ['brand/create.html']
+
   def form_valid(self, form):
     try:
       self.object = form.save()
@@ -62,6 +68,8 @@ class BrandCreateView(CreateView):
         data = {
           'success': True,
           'message': 'Marca agregada exitosamente',
+          'brand_id': self.object.id,
+          'brand_name': self.object.brand
         }
         return JsonResponse(data)
       else:

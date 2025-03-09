@@ -41,6 +41,7 @@ class Dev_TypeListView(ListView):
     context['entity'] = 'Tipos de Dispositivos'
     context['nav_icon'] = 'fa fa-microchip'
     context['table_id'] = 'dev_type_table'
+    context['add_btn_title'] = 'Agregar Tipo de Dispositivo'
     return context
 
 class Dev_TypeCreateView(CreateView):
@@ -53,6 +54,11 @@ class Dev_TypeCreateView(CreateView):
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
 
+  def get_template_names(self):
+    if self.request.GET.get('popup') == '1':
+      return ['dev_type/popup_add.html']
+    return ['dev_type/create.html']
+
   def form_valid(self, form):
     try:
       self.object = form.save()
@@ -61,6 +67,8 @@ class Dev_TypeCreateView(CreateView):
         data = {
           'success': True,
           'message': 'Tipo de Dispositivo agregado correctamente',
+          'dev_type_id': self.object.id,
+          'dev_type_name': self.object.dev_type
         }
         return JsonResponse(data)
       else:

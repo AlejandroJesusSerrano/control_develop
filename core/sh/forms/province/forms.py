@@ -35,7 +35,7 @@ class ProvinceForm(forms.ModelForm):
     number_id = self.cleaned_data.get('number_id')
     province = self.cleaned_data.get('province').upper()
 
-    qs= Province.objects.all()
+    qs = Province.objects.all()
     if self.instance:
       qs = qs.exclude(pk=self.instance.pk)
 

@@ -12,7 +12,7 @@
 {% block form %}
 
 <div class="form-group">
-  <label for="id_dev_type">Tipo de Dispositivo:</label>
+  <label for="id_dev_type">Tipo de Dispositivo: </label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dev_type_popup_add"><i class="fas fa-plus"></i></button>
   {{form.dev_type}}
   {% if form.dev_type.errors %}
     <div class="invalid-feedback d-block">
@@ -22,7 +22,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_brand">Marca:</label>
+  <label for="id_brand">Marca: </label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="brand_popup_add"><i class="fas fa-plus"></i></button>
   {{form.brand}}
   {% if form.brand.errors %}
     <div class="invalid-feedback d-block">
@@ -32,7 +32,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_dev_model">Modelo de Dispositivo:</label>
+  <label for="id_dev_model">Modelo de Dispositivo: </label>
   {{form.dev_model}}
   {% if form.dev_model.errors %}
     <div class="invalid-feedback d-block">
@@ -42,7 +42,7 @@
 </div>
 
 <div class="form-group">
-  <label for="id_image">Imagen:</label>
+  <label for="id_image">Imagen: </label>
   <div>
     {{form.image}}
     <button type="button" class="btn btn-primary" id="custom_file_button">
@@ -64,4 +64,8 @@
 
 {% block form_scripts %}
   <script src="{% static 'dev_model/js/form.js' %}"></script>
+  <script>
+    let brandAddUrl = "{% url 'sh:brand_add' %}";
+    let dev_typeAddUrl = "{% url 'sh:dev_type_add' %}";
+  </script>
 {% endblock form_scripts %}

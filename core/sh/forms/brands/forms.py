@@ -23,9 +23,14 @@ class BrandForm(forms.ModelForm):
   def clean(self):
     brand = self.cleaned_data.get('brand').upper()
 
-    if Brand.objects.filter(brand__iexact=brand).exists():
+    qs = Brand.objects.all()
+
+    if self.instance:
+      qs = qs.exclude(pk=self.instance.pk)
+
+    if qs.filter(brand__iexact=brand).exists():
       self.add_error('brand', f"La marca ya se encuentra registrada")
 
     cleaned_data = super().clean()
-    return cleaned_data
+    return cleaned_data 
 
