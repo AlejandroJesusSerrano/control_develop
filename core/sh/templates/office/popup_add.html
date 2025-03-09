@@ -1,0 +1,141 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Oficina</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Oficina</h2>
+        <form method="post" id="officeForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.dependency.id_for_label }}">Dependencia: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="dependency_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.dependency }}
+                {% if form.depdendency.errors %}
+                  <div class="invalid-feedback d-block">{{ form.dependency.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.edifice.id_for_label }}">Edificio: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="edifice_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.edifice }}
+                {% if form.edifice.errors %}
+                  <div class="invalid-feedback d-block">{{ form.edifice.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.loc.id_for_label }}">Ubicación de la Oficina: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="office_loc_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.loc }}
+                 {% if form.loc.errors %}
+                    <div class="invalid-feedback d-block">{{ form.loc.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.office.id_for_label }}">Ala: </label>
+                {{ form.office }}
+                 {% if form.office.errors %}
+                    <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Ala: </label>
+                {{ form.description }}
+                 {% if form.description.errors %}
+                    <div class="invalid-feedback d-block">{{ form.description.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        submitPopupForm('#officeForm', "{% url 'sh:office_add' %}", 'office');
+
+        let dependencyAddUrl = "{% url 'sh:dependency_add' %}";
+        let edificeAddUrl = "{% url 'sh:edifice_add' %}";
+        let officeLocAddUrl = "{% url 'sh:office_loc_add' %}";
+
+        initPopup({
+            triggerSelector: '#edifice_popup_add',
+            popupUrl: "{% url 'sh:edifice_add' %}",
+            entityType: 'office',
+            selectedId: 'id_edifice',
+            formSelector: '#officeForm',
+            onSuccess: function(response) {
+                console.log('Edificio agregado:', response);
+            }
+        })
+
+        initPopup({
+            triggerSelector: '#dependency_popup_add',
+            popupUrl: "{% url 'sh:dependency_add' %}",
+            entityType: 'office',
+            selectedId: 'id_dependency',
+            formSelector: '#officeForm',
+            onSuccess: function(response) {
+                console.log('Dependencia agregada:', response);
+            }
+        })
+
+        initPopup({
+            triggerSelector: '#office_loc_popup_add',
+            popupUrl: "{% url 'sh:office_loc_add' %}",
+            entityType: 'office',
+            selectedId: 'id_loc',
+            formSelector: '#officeForm',
+            onSuccess: function(response) {
+                console.log('Ubicación de Oficina agregada:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'dependencyAdded') {
+                let select = document.getElementById('id_dependency');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+
+            if (event.data.type === 'edificeAdded') {
+                let select = document.getElementById('id_edifice');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+
+            if (event.data.type === 'office_locAdded') {
+                let select = document.getElementById('id_loc');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -72,11 +72,6 @@ class Office_Loc_Form(forms.ModelForm):
             floor = self.cleaned_data.get('floor')
             wing = self.cleaned_data.get('wing')
 
-            print("Edifice:", edifice)
-            print("Floor:", floor)
-            print("Wing:", wing)
-
-
             qs = Office_Loc.objects.all()
 
             if self.instance:

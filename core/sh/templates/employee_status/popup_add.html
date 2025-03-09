@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Estado de Empleado</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Estado de Empleado</h2>
+        <form method="post" id="employee_statusForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">Estado: </label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                  <div class="invalid-feedback d-block">{{ form.status.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+                submitPopupForm('#employee_statusForm', "{% url 'sh:employee_status_add' %}", 'employee_status');
+        });
+
+        initPopup({
+            entityType: 'employee_status',
+            formSelector: '#employee_status',
+        })
+    </script>
+</body>
+</html>
