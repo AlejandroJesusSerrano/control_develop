@@ -10,151 +10,157 @@
 {% endblock extra_refs %}
 
 {% block form %}
-
-<button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-1" type="button"> Filtros de oficina <i class="fas fa-search"></i></button>
-<div id="filter-office-cards" class="d-none">
-  <div class="row">
-    <div class="container">
-    <!-- Tarjeta Filtros Geográficos -->
-      <div class="card mt-1">
-        <div class="card-header {{bg_color}}">
-          Filtrar Oficina
+<div class="container mt4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center {{bg_color}} ">
+            <h3 class="card-title">Seleccione la Oficina</h3>
         </div>
-        <div class="card-body row">
-          <div class="form-group col-6">
-            <label for="id_province">Provincia:</label>
-            {{ form.province }}
-            {% if form.province.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.province.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
+        <div class="card-body">
+            <button id="toggle-office-filters" class="btn {{ filter_btn_color }} mb-2" type="button"> Filtros <i class="fa fa-filter"></i></button>
+            <div id="filter-office-cards" class="d-none">
+                <div class="row">
+                    <div class="container">
+                        <div class="card text-white bg-secondary my-1">
+                            <div class="card-header">
+                                Filtros para Oficina
+                            </div>
+                            <div class="card-body row">
+                                <div class="form-group col-6">
+                                    <label for="id_province">Provincia:</label>
+                                    {{ form.province }}
+                                    {% if form.province.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.province.errors|join:"<br>" }}
+                                    </div>
+                                    {% endif %}
+                                </div>
 
-          <div class="form-group col-6">
-            <label for="id_location">Localidad:</label>
-            {{ form.location }}
-            {% if form.location.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.location.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
+                                <div class="form-group col-6">
+                                    <label for="id_location">Localidad:</label>
+                                    {{ form.location }}
+                                    {% if form.location.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.location.errors|join:"<br>" }}
+                                    </div>
+                                    {% endif %}
+                                </div>
 
-          <div class="form-group col-6">
-            <label for="id_edifice">Edificio:</label>
-            {{ form.edifice }}
-            {% if form.edifice.help_text %}
-            <small class="form-text text-muted">{{form.edifice.help_text}}</small>
-            {% endif %}
-            {% if form.edifice.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.edifice.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
+                                <div class="form-group col-6">
+                                        <label for="id_edifice">Edificio:</label>
+                                        {{ form.edifice }}
+                                        {% if form.edifice.help_text %}
+                                        <small class="form-text text-muted">{{form.edifice.help_text}}</small>
+                                        {% endif %}
+                                        {% if form.edifice.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.edifice.errors|join:"<br>" }}
+                                        </div>
+                                        {% endif %}
+                                </div>
 
-          <div class="form-group col-6">
-            <label for="id_dependency">Dependencia:</label>
-            {{ form.dependency }}
-            {% if form.dependency.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.dependency.errors|join:"<br>" }}
-            </div>
-            {% endif %}
-          </div>
+                                <div class="form-group col-6">
+                                    <label for="id_dependency">Dependencia:</label>
+                                    {{ form.dependency }}
+                                    {% if form.dependency.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.dependency.errors|join:"<br>" }}
+                                    </div>
+                                    {% endif %}
+                                </div>
 
-          <div class="form-group col-6">
-            <label for="id_loc">Locacion de Oficina:</label>
-            {{ form.loc }}
-            {% if form.loc.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.loc.errors|join:"<br>" }}
+                                <div class="form-group col-6">
+                                    <label for="id_loc">Locacion de Oficina:</label>
+                                    {{ form.loc }}
+                                    {% if form.loc.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.loc.errors|join:"<br>" }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            {% endif %}
-          </div>
+            <div class="form-group">
+                <label for="id_office">Oficina:</label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.office }}
+                {% if form.office.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.office.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-
-<div class="form-group">
-  <label for="id_office">Oficina:</label>
-  {{ form.office }}
-  {% if form.office.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.office.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_employee_name">Nombre del Empleado:</label>
-  {{ form.employee_name }}
-  {% if form.employee_name.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.employee_name.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_employee_last_name">Apellido del Empleado:</label>
-  {{ form.employee_last_name }}
-  {% if form.employee_last_name.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.employee_last_name.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_cuil">Número de CUIL:</label>
-  {{ form.cuil }}
-  {% if form.cuil.help_text %}
-  <small class="form-text text-muted">{{form.cuil.help_text}}</small>
-  {% endif %}
-  {% if form.cuil.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.cuil.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_employee_status">Estado del Empleado:</label>
-  {{ form.status }}
-  {% if form.status.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.status.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_user_pc">Usuario de la PC:</label>
-  {{ form.user_pc }}
-  {% if form.user_pc.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.user_pc.errors|join:"<br>" }}
-  </div>
-  {% endif %}
-</div>
-
-<div class="form-group">
-  <label for="id_avatar_image_input">Imagen del Empleado:</label>
-  {{ form.avatar }}
-  <button type="button" class="btn btn-primary" id="custom_avatar_button">
-    <i class="fas fa-upload"></i> Seleccionar Imagen
-  </button>
-  <span id="avatar_name" class="ml-2">Ningún archivo seleccionado</span>
-</div>
-  {% if form.avatar.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.avatar.errors|join:"<br>" }}
-  </div>
-  {% endif %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center {{bg_color}} ">
+            <h3 class="card-title">Ingrese los Datos del Empleado</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label for="id_employee_name">Nombre del Empleado:</label>
+                {{ form.employee_name }}
+                {% if form.employee_name.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.employee_name.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_employee_last_name">Apellido del Empleado:</label>
+                {{ form.employee_last_name }}
+                {% if form.employee_last_name.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.employee_last_name.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_cuil">Número de CUIL:</label>
+                {{ form.cuil }}
+                {% if form.cuil.help_text %}
+                <small class="form-text text-muted">{{form.cuil.help_text}}</small>
+                {% endif %}
+                {% if form.cuil.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.cuil.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_employee_status">Estado del Empleado:</label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="employee_status_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.status }}
+                {% if form.status.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.status.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_user_pc">Usuario de la PC:</label>
+                {{ form.user_pc }}
+                {% if form.user_pc.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.user_pc.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_avatar_image_input">Imagen del Empleado:</label>
+                {{ form.avatar }}
+                <button type="button" class="btn btn-primary" id="custom_avatar_button">
+                    <i class="fas fa-upload"></i> Seleccionar Imagen
+                </button>
+                <span id="avatar_name" class="ml-2">Ningún archivo seleccionado</span>
+                {% if form.avatar.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.avatar.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock form %}
@@ -162,5 +168,9 @@
 {% block form_scripts %}
   <script src="{% static 'employee/js/form.js' %}"></script>
   <script src="{% static 'js/filters.js' %}"></script>
+
+  <script>
+    let officeAddUrl = "{% url 'sh:office_add' %}";
+    let employee_statusAddUrl = "{% url 'sh:employee_status_add' %}";
+  </script>
 {% endblock form_scripts %}
-</script>

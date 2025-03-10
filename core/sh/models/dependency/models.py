@@ -15,7 +15,8 @@ class Dependency(models.Model):
     super(Dependency, self).save(*args, **kwargs)
 
   def __str__(self):
-    return self.dependency
+    dependency_info = f"Dependencia: {self.dependency} / Localidad: {self.location.location} / Provincia: {self.location.province.province}"
+    return dependency_info
 
   def toJSON(self):
     item = model_to_dict(self)

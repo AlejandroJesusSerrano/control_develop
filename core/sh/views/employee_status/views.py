@@ -55,6 +55,11 @@ class EmployeeStatusCreateView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
+    def get_template_names(self):
+        if self.request.GET.get('popup') == '1':
+            return ['employee_status/popup_add.html']
+        return ['employee_status/create.html']
+
     def form_valid(self, form):
         try:
             self.object = form.save()
@@ -63,8 +68,8 @@ class EmployeeStatusCreateView(CreateView):
                 data={
                     'success': True,
                     'message': 'Estado agregado exitosamente',
-                    'status_id': self.object.id,
-                    'status_name': self.object.status,
+                    'employee_status_id': self.object.id,
+                    'employee_status_name': self.object.status,
                 }
                 return JsonResponse(data)
             else:

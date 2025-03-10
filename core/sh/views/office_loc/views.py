@@ -5,6 +5,7 @@ from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods
 
 from core.sh.forms import Office_Loc_Form
 from core.sh.forms.modals.forms import EdificeModalForm, LocationModalForm, ProvinceModalForm
@@ -208,3 +209,15 @@ class Office_Loc_DeleteView(DeleteView):
         context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context
+
+@csrf_protect
+@require_http_methods(["GET"])
+def get_office_locs_by_edifice(request):
+    edifice_id = request.GET.get('edifice_id')
+    if edifice_id:
+        try:
+            office_locs = Office_Loc.objects.filter(edifice_id=edifice_id).values('id', 'floor', 'wing')
+            return JsonResponse(list(office_locs), safe=False)
+        except ValueError:
+            return JsonResponse([], safe=False)
+    return JsonResponse([], safe=False)

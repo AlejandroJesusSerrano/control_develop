@@ -16,187 +16,189 @@ from core.sh.models.office_loc.models import Office_Loc
 from core.sh.models.province.models import Province
 
 class EmployeeListView(ListView):
-  model = Employee
-  template_name = 'employee/list.html'
+    model = Employee
+    template_name = 'employee/list.html'
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def post (self, request, *args, **kwargs):
-    data = {}
-    try:
-      action = request.POST['action']
-      if action == 'searchdata':
-        data = []
-        for i in Employee.objects.all():
-          data.append(i.toJSON())
-      else:
-        data['error'] = 'Ha ocurrido un error'
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data, safe=False)
+    def post (self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                for i in Employee.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Empleados'
-    context['title'] = 'Listado de Empleados'
-    context['btn_add_id'] = 'employee_add'
-    context['create_url'] = reverse_lazy('sh:employee_add')
-    context['list_url'] = reverse_lazy('sh:employee_list')
-    context['entity'] = 'Empleados'
-    context['nav_icon'] = 'fa fa-user-tie'
-    context['table_id'] = 'employee_table'
-    return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Empleados'
+        context['title'] = 'Listado de Empleados'
+        context['btn_add_id'] = 'employee_add'
+        context['create_url'] = reverse_lazy('sh:employee_add')
+        context['list_url'] = reverse_lazy('sh:employee_list')
+        context['entity'] = 'Empleados'
+        context['nav_icon'] = 'fa fa-user-tie'
+        context['table_id'] = 'employee_table'
+        context['add_btn_title'] = 'Agregar Empleado'
+        return context
 
 class EmployeeCreateView(CreateView):
-  model: Employee
-  form_class = EmployeeForm
-  template_name = 'employee/create.html'
-  success_url = reverse_lazy('sh:employee_list')
+    model: Employee
+    form_class = EmployeeForm
+    template_name = 'employee/create.html'
+    success_url = reverse_lazy('sh:employee_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    try:
-      self.object = form.save()
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
 
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        data = {
-          'success': True,
-          'message': 'Empleado agregado correctamente'
-        }
-        return JsonResponse(data)
-      else:
-        return super().form_valid(form)
-    except Exception as e:
-      if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
-      else:
-        form.add_error(None, str(e))
-        return self.form_invalid(form)
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                data = {
+                    'success': True,
+                    'message': 'Empleado agregado correctamente'
+                }
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        except Exception as e:
+            if self.request.headers.get('x-reuquested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)}, status=500)
+            else:
+                form.add_error(None, str(e))
+                return self.form_invalid(form)
 
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({'error': errors}, status=400)
-    else:
-      return super().form_invalid(form)
+    def form_invalid(self, form):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            errors = form.errors.get_json_data()
+            return JsonResponse({'error': errors}, status=400)
+        else:
+            return super().form_invalid(form)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Empleados'
-    context['title'] = 'Agregar un Empleado'
-    context['btn_add_id'] = 'employee_add'
-    context['entity'] = 'Empleados'
-    context['list_url'] = reverse_lazy('sh:employee_list')
-    context['form_id'] = 'employeeForm'
-    context['action'] = 'add'
-    context['bg_color'] = 'bg-custom-primary'
-    context['filter_btn_color'] = 'btn-primary'
-    return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Empleados'
+        context['title'] = 'Agregar un Empleado'
+        context['btn_add_id'] = 'employee_add'
+        context['entity'] = 'Empleados'
+        context['list_url'] = reverse_lazy('sh:employee_list')
+        context['form_id'] = 'employeeForm'
+        context['action'] = 'add'
+        context['bg_color'] = 'bg-custom-primary'
+        context['btn_color'] = 'btn-primary'
+        context['filter_btn_color'] = 'btn-primary'
+        return context
 
 class EmployeeUpadateView(UpdateView):
-  model = Employee
-  form_class = EmployeeForm
-  template_name = 'employee/create.html'
-  success_url = reverse_lazy('sh:employee_list')
+    model = Employee
+    form_class = EmployeeForm
+    template_name = 'employee/create.html'
+    success_url = reverse_lazy('sh:employee_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    try:
-      self.object = form.save()
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
 
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        data = {
-          'success': True,
-          'message': 'Empleado actualizado correctamente'
-        }
-        return JsonResponse(data)
-      else:
-        return super().form_valid(form)
-    except Exception as e:
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
-      else:
-        form.add_error(None, str(e))
-        return self.form_invalid(form)
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                data = {
+                    'success': True,
+                    'message': 'Empleado actualizado correctamente'
+                }
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        except Exception as e:
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)}, status=500)
+            else:
+                form.add_error(None, str(e))
+                return self.form_invalid(form)
 
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({'error':errors}, status=400)
-    else:
-      return super().form_invalid(form)
+    def form_invalid(self, form):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            errors = form.errors.get_json_data()
+            return JsonResponse({'error':errors}, status=400)
+        else:
+            return super().form_invalid(form)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Empleados'
-    context['title'] = 'Editar Empleado'
-    context['btn_add_id'] = 'employee_add'
-    context['entity'] = 'Empleados'
-    context['list_url'] = reverse_lazy('sh:employee_list')
-    context['form_id'] = 'employeeForm'
-    context['action'] = 'edit'
-    context['bg_color'] = 'bg-custom-warning'
-    context['filter_btn_color'] = 'bg-custom-warning'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Empleados'
+        context['title'] = 'Editar Empleado'
+        context['btn_add_id'] = 'employee_add'
+        context['entity'] = 'Empleados'
+        context['list_url'] = reverse_lazy('sh:employee_list')
+        context['form_id'] = 'employeeForm'
+        context['action'] = 'edit'
+        context['bg_color'] = 'bg-custom-warning'
+        context['filter_btn_color'] = 'bg-custom-warning'
 
-    employee = self.get_object()
+        employee = self.get_object()
 
-    if employee.office and employee.office.loc and employee.office.loc.edifice:
-      context['form'].fields['edifice'].queryset = Edifice.objects.filter(
-        location=employee.office.loc.edifice.location
-    )
+        if employee.office and employee.office.loc and employee.office.loc.edifice:
+            context['form'].fields['edifice'].queryset = Edifice.objects.filter(
+                location=employee.office.loc.edifice.location
+        )
 
-    if employee.office:
-      context['form'].fields['office'].queryset = Office.objects.select_related('loc__edifice').filter(
-        loc__edifice=employee.office.loc.edifice
-    )
+        if employee.office:
+            context['form'].fields['office'].queryset = Office.objects.select_related('loc__edifice').filter(
+                loc__edifice=employee.office.loc.edifice
+        )
 
-    if employee.office and employee.office.loc and employee.office.loc.edifice:
-      context['form'].initial['location'] = employee.office.loc.edifice.location.id
-      context['form'].initial['edifice'] = employee.office.loc.edifice.id
-      context['form'].initial['office'] = employee.office.id if employee.office else None
+        if employee.office and employee.office.loc and employee.office.loc.edifice:
+            context['form'].initial['location'] = employee.office.loc.edifice.location.id
+            context['form'].initial['edifice'] = employee.office.loc.edifice.id
+            context['form'].initial['office'] = employee.office.id if employee.office else None
 
-    context['form'].fields['edifice'].widget.attrs.update({
-      'data-preselected': self.object.office.loc.edifice.id if self.object.office.loc.edifice else ''
-    })
-    context['form'].fields['office'].widget.attrs.update({
-      'data-preselected': self.object.office.id if self.object.office else ''
-    })
+        context['form'].fields['edifice'].widget.attrs.update({
+            'data-preselected': self.object.office.loc.edifice.id if self.object.office.loc.edifice else ''
+        })
+        context['form'].fields['office'].widget.attrs.update({
+            'data-preselected': self.object.office.id if self.object.office else ''
+        })
 
-    return context
+        return context
 
 class EmployeeDeleteView(DeleteView):
-  model = Employee
-  template_name = 'employee/delete.html'
-  success_url = reverse_lazy('sh:employee_list')
+    model = Employee
+    template_name = 'employee/delete.html'
+    success_url = reverse_lazy('sh:employee_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data = {}
-    try:
-      self.object.delete()
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            self.object.delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Empleados'
-    context['title'] = 'Eliminar una Empleado'
-    context['del_title'] = 'Empleado: '
-    context['list_url'] = reverse_lazy('sh:employee_list')
-    context['form_id'] = 'employeeForm'
-    context['bg_color'] = 'bg-custom-danger'
-    context['action'] = 'delete'
-    return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Empleados'
+        context['title'] = 'Eliminar una Empleado'
+        context['del_title'] = 'Empleado: '
+        context['list_url'] = reverse_lazy('sh:employee_list')
+        context['form_id'] = 'employeeForm'
+        context['bg_color'] = 'bg-custom-danger'
+        context['action'] = 'delete'
+        return context

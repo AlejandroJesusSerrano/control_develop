@@ -12,194 +12,201 @@ from core.sh.forms.office_loc.forms import Office_Loc_Form
 from core.sh.models import Dependency, Edifice, Location, Office, Office_Loc, Province
 
 class OfficeListView(ListView):
-  model = Office
-  template_name = 'office/list.html'
+    model = Office
+    template_name = 'office/list.html'
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def post (self, request, *args, **kwargs):
-    data = {}
-    try:
-      action = request.POST.get('action')
-      if action == 'searchdata':
-        offices = Office.objects.all()
-        data = [o.toJSON() for o in offices]
-      else:
-        data['error'] = 'Ha ocurrido un error'
-    except Exception as e:
-      data = {'error': str(e)}
+    def post (self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST.get('action')
+            if action == 'searchdata':
+                offices = Office.objects.all()
+                data = [o.toJSON() for o in offices]
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data = {'error': str(e)}
 
-    return JsonResponse(data, safe=False)
+        return JsonResponse(data, safe=False)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Oficinas'
-    context['title'] = 'Listado de Oficinas'
-    context['btn_add_id'] = 'office_add'
-    context['create_url'] = reverse_lazy('sh:office_add')
-    context['list_url'] = reverse_lazy('sh:office_list')
-    context['entity'] = 'Oficinas'
-    context['nav_icon'] = 'fa-regular fa-building'
-    context['table_id'] = 'office_table'
-    context['add_btn_title'] = 'Agregar Oficina'
-    return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Oficinas'
+        context['title'] = 'Listado de Oficinas'
+        context['btn_add_id'] = 'office_add'
+        context['create_url'] = reverse_lazy('sh:office_add')
+        context['list_url'] = reverse_lazy('sh:office_list')
+        context['entity'] = 'Oficinas'
+        context['nav_icon'] = 'fa-regular fa-building'
+        context['table_id'] = 'office_table'
+        context['add_btn_title'] = 'Agregar Oficina'
+        return context
 
 class OfficeCreateView(CreateView):
-  model = Office
-  form_class = OfficeForm
-  template_name = 'office/create.html'
-  success_url = reverse_lazy('sh:office_list')
+    model = Office
+    form_class = OfficeForm
+    template_name = 'office/create.html'
+    success_url = reverse_lazy('sh:office_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    try:
-      self.object = form.save()
+    def get_template_names(self):
+        if self.request.GET.get('popup') == '1':
+            return ['office/popup_add.html']
+        return ['office/create.html']
 
-      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        data = {
-          'success': True,
-          'message': 'Oficina agregada correctamente'
-        }
-        return JsonResponse(data)
-      else:
-        return super().form_valid(form)
-    except Exception as e:
-      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
-      else:
-        form.add_error(None, str(e))
-        return self.form_invalid(form)
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
 
-  def form_invalid(self, form):
-    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({'error': errors}, status=400)
-    else:
-      return super().form_invalid(form)
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                data = {
+                    'success': True,
+                    'message': 'Oficina agregada correctamente',
+                    'office_id': self.object.id,
+                    'office_name': self.object.office
+                }
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        except Exception as e:
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)}, status=500)
+            else:
+                form.add_error(None, str(e))
+                return self.form_invalid(form)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Oficinas'
-    context['title'] = 'Agregar una Oficina'
-    context['btn_add_id'] = 'office_add'
-    context['entity'] = 'Oficinas'
-    context['list_url'] = reverse_lazy('sh:office_list')
-    context['form_id'] = 'officeForm'
-    context['action'] = 'add'
-    context['bg_color'] = 'bg-custom-primary'
-    context['edifice_modal_add'] = EdificeModalForm()
-    context['location_modal_add'] = LocationModalForm()
-    context['province_modal_add'] = ProvinceModalForm()
-    context['dependency_modal_add'] = DependencyModalForm()
-    context['loc_add'] = Office_Loc_Form()
-    context['btn_color'] = 'btn-primary'
-    context['filter_btn_color'] = 'btn-primary'
-    return context
+    def form_invalid(self, form):
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            errors = form.errors.get_json_data()
+            return JsonResponse({'error': errors}, status=400)
+        else:
+            return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Oficinas'
+        context['title'] = 'Agregar una Oficina'
+        context['btn_add_id'] = 'office_add'
+        context['entity'] = 'Oficinas'
+        context['list_url'] = reverse_lazy('sh:office_list')
+        context['form_id'] = 'officeForm'
+        context['action'] = 'add'
+        context['bg_color'] = 'bg-custom-primary'
+        context['edifice_modal_add'] = EdificeModalForm()
+        context['location_modal_add'] = LocationModalForm()
+        context['province_modal_add'] = ProvinceModalForm()
+        context['dependency_modal_add'] = DependencyModalForm()
+        context['loc_add'] = Office_Loc_Form()
+        context['btn_color'] = 'btn-primary'
+        context['filter_btn_color'] = 'btn-primary'
+        return context
 
 class OfficeUpdateView(UpdateView):
-  model = Office
-  form_class = OfficeForm
-  template_name = 'office/create.html'
-  success_url = reverse_lazy('sh:office_list')
+    model = Office
+    form_class = OfficeForm
+    template_name = 'office/create.html'
+    success_url = reverse_lazy('sh:office_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    try:
-      self.object = form.save()
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
 
-      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        data = {
-          'success': True,
-          'message': 'Oficina actualizada correctamente'
-        }
-        return JsonResponse(data)
-      else:
-        return super().form_valid(form)
-    except Exception as e:
-      if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
-      else:
-        form.add_error(None, str(e))
-        return self.form_invalid(form)
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                data = {
+                    'success': True,
+                    'message': 'Oficina actualizada correctamente'
+                }
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        except Exception as e:
+            if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)}, status=500)
+            else:
+                form.add_error(None, str(e))
+                return self.form_invalid(form)
 
-  def form_invalid(self, form):
-    if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({'error':errors}, status=400)
-    else:
-      return super().form_invalid(form)
+    def form_invalid(self, form):
+        if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            errors = form.errors.get_json_data()
+            return JsonResponse({'error':errors}, status=400)
+        else:
+            return super().form_invalid(form)
 
 
-  def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['page_title'] = 'Oficinas'
-      context['title'] = 'Editar Oficina'
-      context['btn_add_id'] = 'office_add'
-      context['entity'] = 'Oficinas'
-      context['list_url'] = reverse_lazy('sh:office_list')
-      context['form_id'] = 'officeForm'
-      context['action'] = 'edit'
-      context['bg_color'] = 'bg-custom-warning'
-      context['edifice_modal_add'] = EdificeModalForm()
-      context['location_modal_add'] = LocationModalForm()
-      context['province_modal_add'] = ProvinceModalForm()
-      context['dependency_modal_add'] = DependencyModalForm()
-      context['btn_color'] = 'bg-custom-warning'
-      context['filter_btn_color'] = 'bg-custom-warning'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Oficinas'
+        context['title'] = 'Editar Oficina'
+        context['btn_add_id'] = 'office_add'
+        context['entity'] = 'Oficinas'
+        context['list_url'] = reverse_lazy('sh:office_list')
+        context['form_id'] = 'officeForm'
+        context['action'] = 'edit'
+        context['bg_color'] = 'bg-custom-warning'
+        context['edifice_modal_add'] = EdificeModalForm()
+        context['location_modal_add'] = LocationModalForm()
+        context['province_modal_add'] = ProvinceModalForm()
+        context['dependency_modal_add'] = DependencyModalForm()
+        context['btn_color'] = 'bg-custom-warning'
+        context['filter_btn_color'] = 'bg-custom-warning'
 
-      office = self.get_object()
+        office = self.get_object()
 
-      if office.loc and office.loc.edifice and office.loc.edifice.location and office.loc.edifice.location.province and office.dependency:
+        if office.loc and office.loc.edifice and office.loc.edifice.location and office.loc.edifice.location.province and office.dependency:
 
-        province = office.loc.edifice.location.province
-        context['form'].fields['province'].queryset = Province.objects.all()
-        context['form'].initial['province'] = province.id
+            province = office.loc.edifice.location.province
+            context['form'].fields['province'].queryset = Province.objects.all()
+            context['form'].initial['province'] = province.id
 
-        location = office.loc.edifice.location
-        context['form'].fields['location'].queryset = Location.objects.filter(province=province)
-        context['form'].initial['location'] = location.id
+            location = office.loc.edifice.location
+            context['form'].fields['location'].queryset = Location.objects.filter(province=province)
+            context['form'].initial['location'] = location.id
 
-        edifice = office.loc.edifice
-        context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
-        context['form'].initial['edifice'] = edifice.id
+            edifice = office.loc.edifice
+            context['form'].fields['edifice'].queryset = Edifice.objects.filter(location=location)
+            context['form'].initial['edifice'] = edifice.id
 
-        dependency = office.dependency
-        context['form'].fields['dependency'].queryset = Dependency.objects.filter(location=location)
-        context['form'].initial['dependency'] = dependency.id
+            dependency = office.dependency
+            context['form'].fields['dependency'].queryset = Dependency.objects.filter(location=location)
+            context['form'].initial['dependency'] = dependency.id
 
-        wing_floor = office.loc
-        context['form'].fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice)
-        context['form'].initial['loc'] = wing_floor.id
+            wing_floor = office.loc
+            context['form'].fields['loc'].queryset = Office_Loc.objects.filter(edifice=edifice)
+            context['form'].initial['loc'] = wing_floor.id
 
-      return context
+        return context
 
 class OfficeDeleteView(DeleteView):
-  model = Office
-  template_name = 'office/delete.html'
-  success_url = reverse_lazy('sh:office_list')
+    model = Office
+    template_name = 'office/delete.html'
+    success_url = reverse_lazy('sh:office_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
-    try:
-      self.object.delete()
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+    def post(self, request, *args, **kwargs):
+        data={}
+        try:
+            self.object.delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
 
-  def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Oficinas'
         context['title'] = 'Eliminar una Oficina'

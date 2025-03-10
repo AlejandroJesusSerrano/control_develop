@@ -48,7 +48,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.office.id_for_label }}">Ala: </label>
+                <label for="{{ form.office.id_for_label }}">Oficina: </label>
                 {{ form.office }}
                  {% if form.office.errors %}
                     <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
@@ -56,7 +56,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.description.id_for_label }}">Ala: </label>
+                <label for="{{ form.description.id_for_label }}">Descripción: </label>
                 {{ form.description }}
                  {% if form.description.errors %}
                     <div class="invalid-feedback d-block">{{ form.description.errors|join:"<br>" }}</div>
@@ -136,6 +136,46 @@
                 console.log('Selector actualizado con:', event.data.name);
             }
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            function loadOfficeLocs(edificeId) {
+                let select = $('#id_loc');
+                if (edificeId) {
+                    $.ajax({
+                        url: "{% url 'sh:get_office_locs_by_edifice' %}",
+                        data: {
+                            'edifice_id': edificeId
+                        },
+                        success: function(data) {
+                            select.empty();
+                            select.append('<option value="">---------</option>');
+                            $.each(data, function(index, item) {
+                                select.append($('<option>').val(item.id).text(`PISO: ${item.floor} / ALA: ${item.wing}`));
+                            });
+                        },
+                        error: function() {
+                            console.log('Error al cargar las ubicaciones de oficina');
+                        }
+                    });
+                } else {
+                    select.empty().append('<option value="">Primero seleccione un edificio</option>');
+                }
+            }
+
+            // Detectar cambios en el campo #id_edifice
+            $('#id_edifice').on('change', function() {
+                let edificeId = $(this).val();
+                loadOfficeLocs(edificeId);
+            });
+
+            // Cargar ubicaciones iniciales si ya hay un edificio seleccionado
+            let initialEdificeId = $('#id_edifice').val();
+            if (initialEdificeId) {
+                loadOfficeLocs(initialEdificeId);
+            }
+        });
+
     </script>
 </body>
 </html>

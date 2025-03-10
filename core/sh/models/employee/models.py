@@ -28,16 +28,15 @@ class Employee(models.Model):
     return f'{self.employee_last_name}, {self.employee_name}'
 
   def toJSON(self):
-    return {
-      'id': self.id,
-      'employee_name': self.employee_name,
-      'employee_last_name': self.employee_last_name,
-      'cuil': self.cuil,
-      'status': self.status.status,
-      'user_pc': self.user_pc,
-      'office': self.office.office,
-      'avatar': self.avatar.url if self.avatar else '/media/no_file.svg'
-    }
+    item = model_to_dict(self)
+    item['id'] = self.id
+    item['employee_full_name'] = (f"{self.employee_last_name}, {self.employee_name}")
+    item['cuil'] = self.cuil
+    item['status'] = self.status.status
+    item['user_pc'] = self.user_pc
+    item['office'] = (f"Oficina: {self.office.office} / Dependencia: {self.office.dependency.dependency} / Localidad: {self.office.loc.edifice.location.location} / Provincia: {self.office.loc.edifice.location.province.province}")
+    item['avatar'] = self.avatar.url if self.avatar else '/media/no_file.svg'
+    return item
 
   class Meta:
     verbose_name = 'Empleado'

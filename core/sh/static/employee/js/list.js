@@ -13,23 +13,21 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
+      {"data": "employee_full_name"},
+      {"data": "user_pc"},
+      {"data": "status"},
+      {"data": "office"},
       {
         "data": "avatar",
         "render": function(data, type, row){
           return '<img src="' + data + '" class="img-thumbnail" style="max-width:100px;"/>';
         },
       },
-      {"data": "employee_name"},
-      {"data": "employee_last_name"},
-      {"data": "user_pc"},
-      {"data": "status"},
-      {"data": "office"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [7],
+        targets: [5],
         class: 'text-center align-middle',
         orderable: false,
         render: function(data, type, row){
