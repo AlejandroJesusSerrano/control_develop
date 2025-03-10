@@ -1,0 +1,201 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Switch</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Switch</h2>
+        <form method="post" id="wall_portForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.model.id_for_label }}">Modelo: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="model_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.model }}
+                {% if form.model.errors %}
+                  <div class="invalid-feedback d-block">{{ form.model.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.serial_n.id_for_label }}">Número de Serie: </label>
+                {{ form.serial_n }}
+                {% if form.serial_n.errors %}
+                  <div class="invalid-feedback d-block">{{ form.serial_n.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.ports_q.id_for_label }}">Cantidad de Puertos: </label>
+                {{ form.ports_q }}
+                {% if form.ports_q.errors %}
+                  <div class="invalid-feedback d-block">{{ form.ports_q.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.rack.id_for_label }}">Rack: </label>
+                {{ form.rack }}
+                {% if form.rack.errors %}
+                  <div class="invalid-feedback d-block">{{ form.rack.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.ip.id_for_label }}">Dirección IP: </label>
+                {{ form.ip }}
+                {% if form.ip.errors %}
+                  <div class="invalid-feedback d-block">{{ form.ip.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.switch_rack_pos.id_for_label }}">Posición del Switch en el Rack: </label>
+                {{ form.switch_rack_pos }}
+                {% if form.switch_rack_pos.errors %}
+                  <div class="invalid-feedback d-block">{{ form.switch_rack_pos.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.office.id_for_label }}">Oficina: </label>
+                {{ form.office }}
+                {% if form.office.errors %}
+                  <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+
+            <div class="form-group">
+                <label for="{{ form.wall_port_in.id_for_label }}">Boca de la Pared de Ingreso: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="wall_port_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.wall_port_in }}
+                {% if form.wall_port_in %}
+                  <div class="invalid-feedback d-block">{{ form.wall_port_in.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.switch_port_in }}
+                {% if form.switch_port_in %}
+                  <div class="invalid-feedback d-block">{{ form.switch_port_in.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.patch_port_in.id_for_label }}">Puerto de la Patchera de Ingreso: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.patch_port_in }}
+                {% if form.patch_port_in %}
+                  <div class="invalid-feedback d-block">{{ form.patch_port_in.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        submitPopupForm('#officeForm', "{% url 'sh:office_add' %}", 'office');
+
+        let modelAddUrl = "{% url 'sh:dev_model_add' %}";
+        let wall_portAddUrl = "{% url 'sh:wall_port_add' %}";
+        let switch_portAddUrl = "{% url 'sh:switch_port_add' %}";
+        let patch_portAddUrl = "{% url 'sh:patch_port_add' %}";
+
+        initPopup({
+            triggerSelector: '#model_popup_add',
+            popupUrl: "{% url 'sh:dev_model_add' %}",
+            entityType: 'switch',
+            selectedId: 'id_model',
+            formSelector: '#switchForm',
+            onSuccess: function(response) {
+                console.log('Modelo de Switch agregado:', response);
+            }
+        })
+
+        initPopup({
+            triggerSelector: '#wall_port_popup_add',
+            popupUrl: "{% url 'sh:wall_port_add' %}",
+            entityType: 'switch',
+            selectedId: 'id_wall_port_in',
+            formSelector: '#switchForm',
+            onSuccess: function(response) {
+                console.log('Boca de pared de ingreso agregada:', response);
+            }
+        })
+
+        initPopup({
+            triggerSelector: '#switch_port_popup_add',
+            popupUrl: "{% url 'sh:switch_port_add' %}",
+            entityType: 'switch',
+            selectedId: 'id_switch_port_in',
+            formSelector: '#switchForm',
+            onSuccess: function(response) {
+                console.log('Puerto del switch de ingreso agregado:', response);
+            }
+        })
+
+        initPopup({
+            triggerSelector: '#patch_port_popup_add',
+            popupUrl: "{% url 'sh:patch_port_add' %}",
+            entityType: 'switch',
+            selectedId: 'id_pathc_port_in',
+            formSelector: '#switchForm',
+            onSuccess: function(response) {
+                console.log('Puerto de la patchera de ingreso agregado:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'modelAdded') {
+                let select = document.getElementById('id_model');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+
+            if (event.data.type === 'wall_portAdded') {
+                let select = document.getElementById('id_wall_port');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+
+            if (event.data.type === 'switch_portAdded') {
+                let select = document.getElementById('id_switch_port_in');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+
+            if (event.data.type === 'patch_portAdded') {
+                let select = document.getElementById('id_patch_port_in');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+    <!--! funciones js para filtrado? Editar Form? -->
+</body>
+</html>

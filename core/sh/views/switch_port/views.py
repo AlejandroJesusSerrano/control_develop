@@ -3,6 +3,8 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods
 
 from core.sh.forms import SwitchPortForm
 from core.sh.models import Switch_Port
@@ -166,3 +168,15 @@ class Switch_PortDeleteView(DeleteView):
         context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context
+
+@csrf_protect
+@require_http_methods(['GET'])
+def get_switch_ports_by_office(request):
+    office_id = request.GET.get('office_id')
+    if office_id:
+        try:
+            switch_ports = Switch_Port.objects.filter(office_id=office_id).values('id', 'port_id', 'switch', 'switch__rack', 'switch__rack__office', 'switch__switch_rack_pos', 'switch__office', 'switch__model__brand', 'switch__model__model')
+            return JsonResponse(list(switch_ports), safe=False)
+        except Exception as e:
+            return JsonResponse([], safe=False)
+    return JsonResponse([], safe=False)

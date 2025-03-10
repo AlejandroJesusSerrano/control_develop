@@ -1,0 +1,142 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Empleado</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Empleado</h2>
+        <form method="post" id="employeeForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.office.id_for_label }}">Oficina: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.office }}
+                {% if form.office.errors %}
+                  <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.employee_name.id_for_label }}">Nombre del Empleado: </label>
+                {{ form.employee_name }}
+                {% if form.employee_name.errors %}
+                  <div class="invalid-feedback d-block">{{ form.employee_name.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">Apellido del Empleado: </label>
+                {{ form.loc }}
+                 {% if form.last_name.errors %}
+                    <div class="invalid-feedback d-block">{{ form.last_name.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.cuil.id_for_label }}">Número de CUIL: </label>
+                {{ form.cuil }}
+                 {% if form.cuil.errors %}
+                    <div class="invalid-feedback d-block">{{ form.cuil.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.status.id_for_label }}">Estado del Empleado: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="employee_status_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.status }}
+                 {% if form.status.errors %}
+                    <div class="invalid-feedback d-block">{{ form.status.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.user_pc.id_for_label }}">Usuario de la PC: </label>
+                {{ form.user_pc }}
+                 {% if form.user_pc.errors %}
+                    <div class="invalid-feedback d-block">{{ form.user_pc.errors|join:"<br>" }}</div>
+                 {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_avatar_image_input">Imagen del Empleado:</label>
+                {{ form.avatar }}
+                <button type="button" class="btn btn-primary" id="custom_avatar_button">
+                    <i class="fas fa-upload"></i> Seleccionar Imagen
+                </button>
+                <span id="avatar_name" class="ml-2">Ningún archivo seleccionado</span>
+                {% if form.avatar.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.avatar.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        submitPopupForm('#officeForm', "{% url 'sh:office_add' %}", 'office');
+
+        let officeAddUrl = "{% url 'sh:office_add' %}";
+        let employee_statusAddUrl = "{% url 'sh:office_loc_add' %}";
+
+        initPopup({
+            triggerSelector: '#office_popup_add',
+            popupUrl: "{% url 'sh:office_add' %}",
+            entityType: 'employee',
+            selectedId: 'id_office',
+            formSelector: '#employeeForm',
+            onSuccess: function(response) {
+                console.log('Oficina agregada:', response);
+            }
+        })
+
+        initPopup({
+            triggerSelector: '#employee_status_popup_add',
+            popupUrl: "{% url 'sh:employee_status_add' %}",
+            entityType: 'employee',
+            selectedId: 'id_status',
+            formSelector: '#employeeForm',
+            onSuccess: function(response) {
+                console.log('Estado de Empleado agregado:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'officeAdded') {
+                let select = document.getElementById('id_office');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+
+            if (event.data.type === 'employee_statusAdded') {
+                let select = document.getElementById('id_status');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+</body>
+</html>

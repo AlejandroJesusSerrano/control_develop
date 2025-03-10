@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Puerto de Switch</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Puerto de Switch</h2>
+        <form method="post" id="switch_portForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="{{ form.switch.id_for_label }}">Switch: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="switch_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.switch }}
+                {% if form.switch.errors %}
+                    <div class="invalid-feedback d-block">{{ form.switch.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.port_id.id_for_label }}">Puerto del Switch: </label>
+                {{ form.port_id }}
+                {% if form.port_id.errors %}
+                    <div class="invalid-feedback d-block">{{ form.port_id.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <hr>
+                <h5>Selección del Puerto desde el cual ingresa la conexión a la Boca de Pared</h5>
+            <hr>
+
+            <div class="form-group">
+                <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.switch_port_in }}
+                {% if form.switch_port_in.errors %}
+                    <div class="invalid-feedback d-block">{{ form.switch_port_in.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.patch_port_in.id_for_label }}">Puero de la Patchera de Ingreso: </label>
+                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.patch_port_in }}
+                {% if form.patch_port_in.errors %}
+                    <div class="invalid-feedback d-block">{{ form.patch_port_in.errors|join:"<br>" }}</div>
+                {% endif %}
+            </div>
+
+            <hr>
+                <h5>Ingrese detalles y aclaraciones, de ser necesario</h5>
+            <hr>
+
+            <div class="form-group">
+                <label for="{{ form.obs }}">Observaciones: </label>
+                {{ form.obs }}
+                {% if form.obs.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.obs.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        submitPopupForm('#switch_portForm', "{% url 'sh:switch_port_add' %}", 'switch_port');
+
+        let switchAddUrl = "{% url 'sh:switch_add' %}";
+
+        initPopup({
+            triggerSelector: '#switch_popup_add',
+            popupUrl: "{% url 'sh:switch_add' %}",
+            entityType: 'switch_port',
+            selectedId: 'id_switch',
+            formSelector: '#switch_portForm',
+            onSuccess: function(response) {
+                console.log('Switch agregado:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'switchAdded') {
+                let select = document.getElementById('id_switch');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+</body>
+</html>

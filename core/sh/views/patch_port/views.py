@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_http_methods
 
 from core.sh.forms import PatchPortForm
 from core.sh.models import Patch_Port
@@ -167,3 +169,15 @@ class Patch_PortDeleteView(DeleteView):
         context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context
+
+@csrf_protect
+@require_http_methods(['GET'])
+def get_patch_ports_by_office(request):
+    office_id = request.GET.get('office_id')
+    if office_id:
+        try:
+            patch_ports = Patch_Port.objects.filter(office_id=office_id).values('id', 'port', 'pathcera', 'patchera__rack', 'patchera__rack__office')
+            return JsonResponse(list(patch_ports), safe=False)
+        except Exception as e:
+            return JsonResponse([], safe=False)
+    return JsonResponse([], safe=False)

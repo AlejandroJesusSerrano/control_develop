@@ -11,156 +11,164 @@ from core.sh.models import Techs
 
 
 class TechsListView(ListView):
-  model = Techs
-  template_name = 'techs/list.html'
+    model = Techs
+    template_name = 'techs/list.html'
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def post (self, request, *args, **kwargs):
-    data = {}
-    try:
-      action = request.POST['action']
-      if action == 'searchdata':
-        data = []
-        for i in Techs.objects.all():
-          data.append(i.toJSON())
-      else:
-        data['error'] = 'Ha ocurrido un error'
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data, safe=False)
+    def post (self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'searchdata':
+                data = []
+                for i in Techs.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Técnicos'
-    context['title'] = 'Listado de Técnicos'
-    context['btn_add_id'] = 'techs_add'
-    context['create_url'] = reverse_lazy('sh:techs_add')
-    context['list_url'] = reverse_lazy('sh:techs_list')
-    context['entity'] = 'Técnicos'
-    context['nav_icon'] = 'fa fa-helmet-safety'
-    context['table_id'] = 'techs_table'
-    return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Técnicos'
+        context['title'] = 'Listado de Técnicos'
+        context['btn_add_id'] = 'techs_add'
+        context['create_url'] = reverse_lazy('sh:techs_add')
+        context['list_url'] = reverse_lazy('sh:techs_list')
+        context['entity'] = 'Técnicos'
+        context['nav_icon'] = 'fa fa-helmet-safety'
+        context['table_id'] = 'techs_table'
+        context['add_btn_title'] = 'Agregar Técnico'
+        return context
 
 class TechsCreateView(CreateView):
-  model: Techs
-  form_class = TechsForm
-  template_name = 'techs/create.html'
-  success_url = reverse_lazy('sh:techs_list')
+    model: Techs
+    form_class = TechsForm
+    template_name = 'techs/create.html'
+    success_url = reverse_lazy('sh:techs_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    try:
-      self.object = form.save()
+    def get_template_names(self):
+        if self.request.GET.get('popup') == '1':
+            return ['techs/popup_add.html']
+        return ['techs/create.html']
 
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        data = {
-          'success': True,
-          'message': 'Tipo de Dispositivo agregado correctamente',
-        }
-        return JsonResponse(data)
-      else:
-        return super().form_valid(form)
-    except Exception as e:
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error': str(e)}, status=500)
-      else:
-        form.add_error(None, str(e))
-        return self.form_invalid(form)
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
 
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({'error': errors}, status=400)
-    else:
-      return super().form_invalid(form)
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                data = {
+                    'success': True,
+                    'message': 'Tipo de Dispositivo agregado correctamente',
+                    'tech_id': self.object.id,
+                    'tech_name': f"{self.object.last_name}, {self.object.name}"
+                }
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        except Exception as e:
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)}, status=500)
+            else:
+                form.add_error(None, str(e))
+            return self.form_invalid(form)
 
-  def get_context_data(self, **kwargs):
-    context = super().get_context_data(**kwargs)
-    context['page_title'] = 'Técnicos'
-    context['title'] = 'Agregar un Técnico'
-    context['btn_add_id'] = 'techs_add'
-    context['entity'] = 'Técnicos'
-    context['list_url'] = reverse_lazy('sh:techs_list')
-    context['form_id'] = 'techsForm'
-    context['action'] = 'add'
-    context['bg_color'] = 'bg-custom-primary'
-    return context
+    def form_invalid(self, form):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            errors = form.errors.get_json_data()
+            return JsonResponse({'error': errors}, status=400)
+        else:
+            return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Técnicos'
+        context['title'] = 'Agregar un Técnico'
+        context['btn_add_id'] = 'techs_add'
+        context['entity'] = 'Técnicos'
+        context['list_url'] = reverse_lazy('sh:techs_list')
+        context['form_id'] = 'techsForm'
+        context['action'] = 'add'
+        context['bg_color'] = 'bg-custom-primary'
+        return context
 
 class TechsUpadateView(UpdateView):
-  model = Techs
-  form_class = TechsForm
-  template_name = 'techs/create.html'
-  success_url = reverse_lazy('sh:techs_list')
+    model = Techs
+    form_class = TechsForm
+    template_name = 'techs/create.html'
+    success_url = reverse_lazy('sh:techs_list')
 
-  @method_decorator(login_required)
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
-    return super().dispatch(request, *args, **kwargs)
 
-  def form_valid(self, form):
-    try:
-      self.object = form.save()
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
 
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        data = {
-          'succes': True,
-          'message': 'Tipo de Dispositivo actualizado exitosamente'
-        }
-        return JsonResponse(data)
-      else:
-        return super().form_valid(form)
-    except Exception as e:
-      if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        return JsonResponse({'error':str(e)}, status=500)
-      else:
-        form.add_error(None, str(e))
-        return self.form_invalid(form)
+    def form_valid(self, form):
+        try:
+            self.object = form.save()
 
-  def form_invalid(self, form):
-    if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
-      errors = form.errors.get_json_data()
-      return JsonResponse({'error': errors}, status=400)
-    else:
-      return super().form_invalid(form)
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                data = {
+                    'succes': True,
+                    'message': 'Tipo de Dispositivo actualizado exitosamente'
+                }
+                return JsonResponse(data)
+            else:
+                return super().form_valid(form)
+        except Exception as e:
+            if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error':str(e)}, status=500)
+            else:
+                form.add_error(None, str(e))
+                return self.form_invalid(form)
 
-  def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['page_title'] = 'Técnicos'
-      context['title'] = 'Editar Técnico'
-      context['btn_add_id'] = 'Techs_add'
-      context['entity'] = 'Técnicos'
-      context['list_url'] = reverse_lazy('sh:techs_list')
-      context['form_id'] = 'techsForm'
-      context['action'] = 'edit'
-      context['bg_color'] = 'bg-custom-warning'
-      return context
+    def form_invalid(self, form):
+        if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            errors = form.errors.get_json_data()
+            return JsonResponse({'error': errors}, status=400)
+        else:
+            return super().form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Técnicos'
+        context['title'] = 'Editar Técnico'
+        context['btn_add_id'] = 'Techs_add'
+        context['entity'] = 'Técnicos'
+        context['list_url'] = reverse_lazy('sh:techs_list')
+        context['form_id'] = 'techsForm'
+        context['action'] = 'edit'
+        context['bg_color'] = 'bg-custom-warning'
+        return context
 
 class TechsDeleteView(DeleteView):
-  model = Techs
-  template_name = 'techs/delete.html'
-  success_url = reverse_lazy('sh:techs_list')
+    model = Techs
+    template_name = 'techs/delete.html'
+    success_url = reverse_lazy('sh:techs_list')
 
-  @method_decorator(login_required)
-  def dispatch(self, request, *args, **kwargs):
-    self.object = self.get_object()
-    return super().dispatch(request, *args, **kwargs)
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().dispatch(request, *args, **kwargs)
 
-  def post(self, request, *args, **kwargs):
-    data={}
-    try:
-      self.object.delete()
-    except Exception as e:
-      data['error'] = str(e)
-    return JsonResponse(data)
+    def post(self, request, *args, **kwargs):
+        data={}
+        try:
+            self.object.delete()
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data)
 
-  def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Técnicos'
         context['title'] = 'Eliminar un Técnico'
