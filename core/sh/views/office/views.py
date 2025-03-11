@@ -7,7 +7,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms import OfficeForm
-from core.sh.forms.modals.forms import DependencyModalForm, EdificeModalForm, LocationModalForm, ProvinceModalForm
 from core.sh.forms.office_loc.forms import Office_Loc_Form
 from core.sh.models import Dependency, Edifice, Location, Office, Office_Loc, Province
 
@@ -99,11 +98,6 @@ class OfficeCreateView(CreateView):
         context['form_id'] = 'officeForm'
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
-        context['edifice_modal_add'] = EdificeModalForm()
-        context['location_modal_add'] = LocationModalForm()
-        context['province_modal_add'] = ProvinceModalForm()
-        context['dependency_modal_add'] = DependencyModalForm()
-        context['loc_add'] = Office_Loc_Form()
         context['btn_color'] = 'btn-primary'
         context['filter_btn_color'] = 'btn-primary'
         return context
@@ -155,10 +149,6 @@ class OfficeUpdateView(UpdateView):
         context['form_id'] = 'officeForm'
         context['action'] = 'edit'
         context['bg_color'] = 'bg-custom-warning'
-        context['edifice_modal_add'] = EdificeModalForm()
-        context['location_modal_add'] = LocationModalForm()
-        context['province_modal_add'] = ProvinceModalForm()
-        context['dependency_modal_add'] = DependencyModalForm()
         context['btn_color'] = 'bg-custom-warning'
         context['filter_btn_color'] = 'bg-custom-warning'
 

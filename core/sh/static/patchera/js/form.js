@@ -1,32 +1,62 @@
 $(document).ready(function() {
-  $('.select2').select2({
-    theme:'bootstrap',
-  });
-
-  if ($('#id_location').length > 0) {
-    $('select[name="location"]').on('change', function() {
-        const location_id = $(this).val();
-        if (!location_id) {
-            console.warn('No se ha seleccionado una localidad válida en el formulario de Patchera.');
-            clearDependentFields(['#id_edifice', '#id_loc', '#id_office', '#id_rack_patchera']); // Limpia los campos dependientes
-            return;
-        }
-        console.log('Localidad seleccionada con ID:', location_id);
-        updateOptions('/sh/ajax/load_edifices/', { 'location_id': location_id }, $('#id_edifice'));
+    $('.select2').select2({
+        theme:'bootstrap',
     });
-  }
+
+    $('#toggle-rack-filters').on('click', function (e) {
+        e.preventDefault();
+        const filterLocCards = $('#filter-rack-cards')
+        filterLocCards.toggleClass('d-none')
+
+        $(this).toggleClass('active btn-primary btn-secondary')
+
+        if (filterLocCards.hasClass('d-none')) {
+            $(this).html('Filtros <i class="fas fa-filter"></i>');
+        } else {
+            $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
+        }
+    });
+
+    $('#rack_popup_add').on('click', function (){
+        let url = rackAddUrl + "?popup=1";
+        let popup = window.open(url, 'rack_add_popup', 'width=800,height=600');
+        popup.focus();
+    })
+
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'rackAdded') {
+            let rackId = event.data.id;
+            let rackName = event.data.name;
+            let select = $('#id_rack');
+            let option = new Option(rackName, rackId, true, true);
+            select.append(option).trigger('change');
+            select.select2({theme: 'bootstrap'});
+        }
+    });
+
+    if ('{{action}}' === 'edit') {
+        let rackId = $('#id_rack').val();
+        let rackName = $('#id_rack option:selected').text();
+
+        if (rackId) {
+            let newOption = new Option(rackName, rackId, true, true);
+            $('#id_rack').append(newOption).trigger('change');
+        }
+    }
+
+    initializeFormSubmission('#myForm', 'edit');
+
 })
 
-$('#toggle-rack-filters').on('click', function (e) {
-  e.preventDefault();
-  const filterLocCards = $('#filter-rack-cards')
-  filterLocCards.toggleClass('d-none')
+function initializeFormSubmission(formSelector, actionType) {
+    $(formSelector).on('submit', function(e) {
+        e.preventDefault();
 
-  $(this).toggleClass('active btn-primary btn-secondary')
+        let formData = new FormData(this);
 
-  if (filterLocCards.hasClass('d-none')) {
-    $(this).html('Filtrar Rack <i class="fas fa-search"></i>');
-  } else {
-    $(this).html('Ocultar Filtros <i class = "fas fa-times"></i>')
-  }
-});
+        submit_with_ajax($(this).attr('action'), formData, function() {
+            console.log('Formulario enviado y procesado con éxito');
+            window.location.href = '/sh/patchera/list';
+        }, actionType)
+    });
+}

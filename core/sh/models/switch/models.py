@@ -55,7 +55,7 @@ class Switch(models.Model):
     item['serial_n'] = self.serial_n if self.serial_n else 'GENÉRICO SIN S/N°'
     item['ports_q'] = self.ports_q
     item['ip'] = self.ip if self.ip else 'NO TIENE IP'
-    item['rack'] = self.rack.rack if self.rack else 'NO ESTA EN RACK'
+    item['rack'] = f'RACK: {self.rack.rack} EN OFICINA: {self.rack.office.office}' if self.rack else 'NO ESTA EN RACK'
     item['office'] = self.office.office if self.office else 'NO ESTA EN UNA OFICINA'
     item['switch_rack_pos'] = self.switch_rack_pos if self.rack else 'NO ESTA EN RACK'
     return item

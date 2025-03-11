@@ -32,19 +32,8 @@ $(document).ready(function() {
         }
     }
 
-initializeFormSubmission('#dependencyForm', 'edit');
+initializeFormSubmission('#myForm', 'edit');
 
 });
 
-function initializeFormSubmission(formSelector, actionType) {
-    $(formSelector).on('submit', function(e) {
-        e.preventDefault();
 
-        let formData = new FormData(this);
-
-        submit_with_ajax($(this).attr('action'), formData, function() {
-            console.log('Formulario enviado y procesado con éxito');
-            window.location.href = '/sh/location/list';
-        }, actionType)
-    });
-}

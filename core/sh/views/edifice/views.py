@@ -8,7 +8,6 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
 from core.sh.forms.edifice.forms import EdificeForm
-from core.sh.forms.modals.forms import LocationModalForm, ProvinceModalForm
 from core.sh.models import Edifice, Location
 
 # Ajax View
@@ -112,8 +111,6 @@ class EdificeCreateView(CreateView):
     context['form_id'] = 'edificeForm'
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
-    context['location_modal_add'] = LocationModalForm()
-    context['province_modal_add'] = ProvinceModalForm()
     context['btn_color'] = 'btn-primary'
     context['filter_btn_color'] = 'btn-primary'
     return context
@@ -167,8 +164,6 @@ class EdificeUpdateView(UpdateView):
     context['form_id'] = 'edificeForm'
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
-    context['location_modal_add'] = LocationModalForm()
-    context['province_modal_add'] = ProvinceModalForm()
     context['btn_color'] = 'bg-custom-warning'
     context['filter_btn_color'] = 'bg-custom-warning'
 

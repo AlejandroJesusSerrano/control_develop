@@ -20,6 +20,7 @@ class Rack(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
+    item['rack'] = f'RACK: {self.rack} EN OFICINA: {self.office.office}'
     return item
 
   class Meta:

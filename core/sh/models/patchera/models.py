@@ -18,7 +18,7 @@ class Patchera(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['rack'] = self.rack.rack
+    item['rack'] = f'RACK: {self.rack.rack} EN OFICINA: {self.rack.office.office}'
     item['patchera'] = self.patchera
     return item
 

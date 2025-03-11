@@ -66,7 +66,7 @@ class PatcheraForm(forms.ModelForm):
     widgets = {
       'rack': Select(attrs={
         'class': 'form-control select2',
-        'id': 'id_rack_patchera'
+        'id': 'id_rack'
       }),
       'patchera': TextInput(attrs={
         'class': 'form-control',

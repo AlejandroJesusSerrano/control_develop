@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Provincia</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Rack</h2>
+        <form method="post" id="rackForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_rack">Rack:</label>
+                {{ form.rack }}
+                {% if form.rack.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.rack.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_office">Oficina:</label>
+                <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.office }}
+                {% if form.office.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.office.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group"></div>
+                <label for="id_rack">Detalles:</label>
+                {{ form.details }}
+                {% if form.details.help_text %}
+                <small class="form-text text-muted">{{form.details.help_text}}</small>
+                {% endif %}
+                {% if form.details.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.details.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="container mt-2">
+                <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        let officeAddUrl = "{% url 'sh:office_add' %}";
+
+        $(document).ready(function() {
+                submitPopupForm('#rackForm', "{% url 'sh:rack_add' %}", 'rack');
+        });
+
+        initPopup({
+            entityType: 'rack',
+            formSelector: '#rackForm',
+        })
+
+        initPopup({
+            triggerSelector: '#office_popup_add',
+            popupUrl: "{% url 'sh:office_add' %}",
+            entityType: 'rack',
+            selectedId: 'id_office',
+            formSelector: '#rackForm',
+            onSuccess: function(response) {
+                console.log('Oficina agregada:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'officeAdded') {
+                let select = document.getElementById('id_office');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+</body>
+</html>

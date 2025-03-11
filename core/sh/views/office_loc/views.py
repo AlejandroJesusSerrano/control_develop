@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 
 from core.sh.forms import Office_Loc_Form
-from core.sh.forms.modals.forms import EdificeModalForm, LocationModalForm, ProvinceModalForm
 
 from core.sh.models import Office_Loc
 
@@ -103,9 +102,6 @@ class Office_Loc_CreateView(CreateView):
         context['form_id'] = 'office_locForm'
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
-        context['edifice_modal_add'] = EdificeModalForm()
-        context['location_modal_add'] = LocationModalForm()
-        context['province_modal_add'] = ProvinceModalForm()
         context['btn_color'] = 'btn-primary'
         context['filter_btn_color'] = 'btn-primary'
         return context
@@ -161,9 +157,6 @@ class Office_Loc_UpdateView(UpdateView):
         context['form_id'] = 'office_locForm'
         context['action'] = 'edit'
         context['bg_color'] = 'bg-custom-warning'
-        context['edifice_modal_add'] = EdificeModalForm()
-        context['location_modal_add'] = LocationModalForm()
-        context['province_modal_add'] = ProvinceModalForm()
         context['btn_color'] = 'bg-custom-warning'
         context['filter_btn_color'] = 'bg-custom-warning'
 

@@ -1,0 +1,125 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Modelo de Dispositivo</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Modelo de Dispositivo</h2>
+        <form method="post" id="dev_modelForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_dev_type">Tipo de Dispositivo: </label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dev_type_popup_add"><i class="fas fa-plus"></i></button>
+                {{form.dev_type}}
+                {% if form.dev_type.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{form.dev_type.errors|join:"<br>"}}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="id_brand">Marca: </label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="brand_popup_add"><i class="fas fa-plus"></i></button>
+                {{form.brand}}
+                {% if form.brand.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{form.brand.errors|join:"<br>"}}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="id_dev_model">Modelo de Dispositivo: </label>
+                {{form.dev_model}}
+                {% if form.dev_model.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{form.dev_model.errors|join:"<br>"}}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="form-group">
+                <label for="id_image">Imagen: </label>
+                <div>
+                  {{form.image}}
+                  <button type="button" class="btn btn-primary" id="custom_file_button">
+                    <i class="fas fa-upload"></i> Seleccionar Archivo
+                  </button>
+                  <span id="file_name" class="ml-2">Ningún archivo seleccionado</span>
+                </div>
+                {% if form.image.help_text%}
+                  <small class="form-text text-muted">{{form.image.help_text}}</small>
+                {% endif %}
+                {% if form.image.errors %}
+                  <div class="invalid-feedback d-block">
+                    {{form.image.errors|join:"<br>"}}
+                  </div>
+                {% endif %}
+              </div>
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        submitPopupForm('#edificeForm', "{% url 'sh:edifice_add' %}", 'edifice');
+
+        let dev_typeAddUrl = "{% url 'sh:dev_type_add' %}";
+        let brandAddUrl = "{% url 'sh:brand_add' %}";
+
+        initPopup({
+            triggerSelector: '#brand_add_popup',
+            popupUrl: "{% url 'sh:brand_add' %}",
+            entityType: 'dev_model',
+            selectedId: 'id_brand',
+            formSelector: '#dev_modelForm',
+            onSuccess: function(response) {
+                console.log('Marca agregada:', response);
+            }
+        })
+
+        initPopup({
+            triggerSelector: '#brand_add_popup',
+            popupUrl: "{% url 'sh:brand_add' %}",
+            entityType: 'dev_model',
+            selectedId: 'id_brand',
+            formSelector: '#dev_modelForm',
+            onSuccess: function(response) {
+                console.log('Marca agregada:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'dev_typeAdded') {
+                let select = document.getElementById('id_dev_type');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+
+            if (event.data.type === 'brandAdded') {
+                let select = document.getElementById('id_brand');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+</body>
+</html>

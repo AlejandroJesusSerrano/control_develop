@@ -16,7 +16,7 @@ class Switch_Port(models.Model):
 
   def toJSON(self):
     item = model_to_dict(self)
-    item['rack'] = self.switch.rack.rack if self.switch and self.switch.rack else 'NO RACK'
+    item['rack'] = f"RACK: {self.switch.rack.rack} EN OFICINA: {self.switch.rack.office.office}" if self.switch and self.switch.rack else 'NO RACK'
     item['switch'] = str(self.switch.model.brand) +'-> '+str(self.switch.ports_q)+'-> Rack Pos: '+str(self.switch.switch_rack_pos)
     item['obs'] = str(self.obs) if self.obs else 'NO HAY OBSERVACIONES'
     return item

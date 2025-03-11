@@ -100,7 +100,7 @@ function initializeFormSubmission(formSelector, actionType) {
 
         submit_with_ajax($(this).attr('action'), formData, function() {
             console.log('Formulario enviado y procesado con éxito');
-            window.location.href = '/sh/wall_port/list/';
+            window.location.href = '/sh/office/list/';
         }, actionType);
     });
 }
