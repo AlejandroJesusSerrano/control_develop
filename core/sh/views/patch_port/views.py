@@ -185,7 +185,7 @@ class Patch_PortDeleteView(DeleteView):
 
 @csrf_protect
 @require_http_methods(['GET'])
-def get_patch_ports_by_patchera(request):
+def get_patch_ports_by_rack(request):
     patchera_id = request.GET.get('patchera_id')
     if patchera_id:
         try:

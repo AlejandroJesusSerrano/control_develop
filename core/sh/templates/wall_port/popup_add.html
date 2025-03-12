@@ -37,10 +37,6 @@
                 {% endif %}
             </div>
 
-            <hr>
-                <h5>Selección del Puerto desde el cual ingresa la conexión a la Boca de Pared</h5>
-            <hr>
-
             <div class="form-group">
                 <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
                 <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
@@ -85,7 +81,7 @@
 
     <script>
 
-        submitPopupForm('#officeForm', "{% url 'sh:office_add' %}", 'office');
+        submitPopupForm('#wall_portForm', "{% url 'sh:wall_port_add' %}", 'wall_port');
 
         let officeAddUrl = "{% url 'sh:office_add' %}";
         let switch_portAddUrl = "{% url 'sh:switch_port_add' %}";

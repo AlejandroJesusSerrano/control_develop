@@ -39,7 +39,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.port.id_for_label }}">Observaciones: </label>
+                <label for="{{ form.port.id_for_label }}">Puerto de la Patchera: </label>
                 {{ form.port }}
                 {% if form.port.errors %}
                 <div class="invalid-feedback d-block">
@@ -103,6 +103,46 @@
                 console.log('Selector actualizado con:', event.data.name);
             }
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            function loadPatchPortsIn(rackId) {
+                let select = $('#id_patch_port_in');
+                if (rackId) {
+                    $.ajax({
+                        url: "{% url 'sh:get_patch_ports_by_rack' %}",
+                        data: {
+                            'rack_id': rackId
+                        },
+                        success: function(data) {
+                            select.empty();
+                            select.append('<option value="">---------</option>');
+                            $.each(data, function(index, item) {
+                                select.append($('<option>').val(item.id).text(`RACK: ${item.patchera.rack.rack} / PATCHERA: ${item.patchera.patchera} PUERTO: ${item.port}`));
+                            });
+                        },
+                        error: function() {
+                            console.log('Error al cargar los puertos de la oficina');
+                        }
+                    });
+                } else {
+                    select.empty().append('<option value="">Primero seleccione una oficina</option>');
+                }
+            }
+
+            // Detectar cambios en el campo #id_rack
+            $('#id_rack').on('change', function() {
+                let rackId = $(this).val();
+                loadPatchPortsIn(rackId);
+            });
+
+            // Cargar puertos iniciales si ya hay una oficina seleccionada
+            let initialRackId = $('#id_rack').val();
+            if (initialRackId) {
+                loadPatchPortsIn(initialRackId);
+            }
+        });
+
     </script>
 </body>
 </html>

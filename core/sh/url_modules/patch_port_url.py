@@ -12,6 +12,6 @@ urlpatterns = [
   path('patch_port/edit/<int:pk>/', Patch_PortUpadateView.as_view(), name='patch_port_edit'),
   path('patch_port/delete/<int:pk>/', Patch_PortDeleteView.as_view(), name='patch_port_delete'),
   # filter by office
-  path('get_patch_ports_by_patchera/', views.get_patch_ports_by_patchera, name='get_patch_ports_by_patchera'),
+  path('get_patch_ports_by_rack/', views.get_patch_ports_by_rack, name='get_patch_ports_by_rack'),
   path('get_patch_ports_by_office/', views.get_patch_ports_by_office, name='get_patch_ports_by_office')
 ]

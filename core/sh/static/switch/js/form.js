@@ -125,7 +125,7 @@ $(document).ready(function() {
 
     $('#wall_port_popup_add').on('click', function() {
         let url = wallPortAddUrl + "?popup=1";
-        let popup = window.open(url, 'Agregar Boca de Pared', 'width=800,height=600');
+        let popup = window.open(url, 'Agregar Boca de Pared', 'width=800,height=850');
         popup.focus();
     });
 

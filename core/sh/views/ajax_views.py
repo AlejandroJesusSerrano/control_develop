@@ -35,7 +35,7 @@ def ajax_load_location(request):
         except ValueError:
             return JsonResponse([], safe=False)
 
-    data = [loc.toJson() for loc in locations]
+    data = [{'id': loc.id, 'name': loc.location} for loc in locations]
     return JsonResponse(data, safe=False)
 
 
@@ -112,7 +112,10 @@ def ajax_load_office(request):
         filters['loc_id'] = loc_id
 
     offices = Office.objects.filter(**filters).distinct()
-    data = [{'id': office.id, 'name': str(office.office)} for office in offices]
+    data = [{
+        'id': office.id,
+        'name': f'PROVINCIA: {office.loc.edifice.location.province.province} / LOCALIDAD: {office.loc.edifice.location.location} / DEPENDENCIA: {office.dependency.dependency} / OFICINA: {office.office}'
+        } for office in offices]
     return JsonResponse(data, safe=False)
 
 
