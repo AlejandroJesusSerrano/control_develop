@@ -17,12 +17,13 @@ class Dev_Model(models.Model):
     super(Dev_Model, self).save(*args, **kwargs)
 
   def __str__(self):
-    return self.dev_model
+    return f'MARCA: {self.brand.brand} MODELO: {self.dev_model}'
 
   def toJSON(self):
     item = model_to_dict(self)
     item['dev_type'] = self.dev_type.dev_type
     item['brand'] = self.brand.brand
+    item['dev_model'] = self.dev_model
     item['image'] = self.image.url if self.image else '/media/no_file.svg'
     return item
 

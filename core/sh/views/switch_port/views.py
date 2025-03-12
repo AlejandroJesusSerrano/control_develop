@@ -51,13 +51,21 @@ class Switch_PortCreateView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
+    def get_template_names(self):
+        if self.request.GET.get('popup') == '1':
+            return['switch_port/popup_add.html']
+        return ['switch_port/create.html']
+
     def form_valid(self, form):
         try:
             self.object = form.save()
             if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 data = {
                     'success': True,
-                    'message': 'Puerto de Switch agregado correctamente'
+                    'message': 'Puerto de Switch agregado correctamente',
+                    'switch_port_id': self.object.id,
+                    'switch_port_name': self.object.port_id,
+                    'switch_port_switch': f'{self.object.switch.model.brand.brand} {self.object.switch.model.dev_model} DE {self.object.switch.ports_q} PUERTOS',
                 }
                 return JsonResponse(data)
             else:
@@ -87,6 +95,7 @@ class Switch_PortCreateView(CreateView):
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
         context['filter_btn_color'] = 'btn-primary'
+        context['btn_color'] = 'btn-primary'
         return context
 
 class Switch_PortUpdateView(UpdateView):

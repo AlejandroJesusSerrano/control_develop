@@ -67,7 +67,7 @@ class SwitchCreateView(CreateView):
                     'success': True,
                     'message': 'Switch agregado exitosamente',
                     'switch_id': self.object.id,
-                    'switch_name': f'{self.object.model.brand.brand} {self.object.model.model} DE {self.object.ports_q} PUERTOS',
+                    'switch_name': f'{self.object.model.brand.brand} {self.object.model.dev_model} DE {self.object.ports_q} PUERTOS',
                     'switch_model': self.object.model.model,
                     'switch_brand': self.object.model.brand.brand,
                     'switch_ports_q': self.object.ports_q,

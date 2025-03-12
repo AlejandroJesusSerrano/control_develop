@@ -38,33 +38,11 @@
             </div>
 
             <hr>
-                <h5>Selección del Puerto desde el cual ingresa la conexión a la Boca de Pared</h5>
-            <hr>
-
-            <div class="form-group">
-                <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.switch_port_in }}
-                {% if form.switch_port_in.errors %}
-                    <div class="invalid-feedback d-block">{{ form.switch_port_in.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.patch_port_in.id_for_label }}">Puero de la Patchera de Ingreso: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.patch_port_in }}
-                {% if form.patch_port_in.errors %}
-                    <div class="invalid-feedback d-block">{{ form.patch_port_in.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <hr>
                 <h5>Ingrese detalles y aclaraciones, de ser necesario</h5>
             <hr>
 
             <div class="form-group">
-                <label for="{{ form.obs }}">Observaciones: </label>
+                <label for="{{ form.obs.id_for_label }}">Observaciones: </label>
                 {{ form.obs }}
                 {% if form.obs.errors %}
                 <div class="invalid-feedback d-block">

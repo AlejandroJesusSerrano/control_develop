@@ -106,7 +106,7 @@ $(document).ready(function() {
     });
 
     $('#dev_model_popup_add').on('click', function() {
-        let url = modelAddUrl + "?popup=1";
+        let url = modelAddUrl + "?popup=1&context=switch";
         let popup = window.open(url, 'Agregar Modelo', 'width=800,height=500');
         popup.focus();
     });
@@ -124,38 +124,39 @@ $(document).ready(function() {
     });
 
     $('#wall_port_popup_add').on('click', function() {
-        let url = wall_portAddUrl + "?popup=1";
+        let url = wallPortAddUrl + "?popup=1";
         let popup = window.open(url, 'Agregar Boca de Pared', 'width=800,height=600');
         popup.focus();
     });
 
     $('#switch_port_popup_add').on('click', function() {
-        let url = switch_portAddUrl + "?popup=1";
-        let popup = window.open(url, 'Agregar Puerto de Switch', 'width=800,height=500');
+        let url = switchPortAddUrl + "?popup=1";
+        let popup = window.open(url, 'Agregar Puerto de Switch', 'width=800,height=700');
         popup.focus();
     });
 
     $('#patch_port_popup_add').on('click', function() {
-        let url = patch_portAddUrl + "?popup=1";
+        let url = patchPortAddUrl + "?popup=1";
         let popup = window.open(url, 'Agregar Puerto de Patchera', 'width=800,height=400');
         popup.focus();
     });
 
     window.addEventListener('message', function(event) {
         if (event.data.type === 'brandAdded') {
-            let edificeId = event.data.id;
-            let edificeName = event.data.name;
+            let brandId = event.data.id;
+            let brandName = event.data.name;
             let select = $('#id_brand');
             let option = new Option(brandName, brandId, true, true);
             select.append(option).val(brandId).trigger('change');
         }
 
-        if (event.data.type === 'modelAdded') {
+        if (event.data.type === 'dev_modelAdded') {
             let dev_modelId = event.data.id;
             let dev_modelName = event.data.name;
             let select = $('#id_dev_model');
             let option = new Option(dev_modelName, dev_modelId, true, true);
             select.append(option).val(dev_modelId).trigger('change');
+            select.value = dev_modelId;
         }
 
         if (event.data.type === 'officeAdded') {

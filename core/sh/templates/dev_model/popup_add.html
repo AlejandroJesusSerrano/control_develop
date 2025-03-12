@@ -20,53 +20,60 @@
         <form method="post" id="dev_modelForm">
             {% csrf_token %}
             <div class="form-group">
-                <label for="id_dev_type">Tipo de Dispositivo: </label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dev_type_popup_add"><i class="fas fa-plus"></i></button>
+                <label for="id_dev_type">Tipo de Dispositivo: </label>
+                {% if request.GET.context == 'switch' %}
+                <input type="hidden" name="dev_type" value="{{ form.dev_type.initial.id }}">
+                <p class="form-control-static">SWITCH</p>
+                {% else %}
+                <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="dev_type_popup_add"><i class="fas fa-plus"></i></button>
+                {{form.dev_type}}
+                {% endif %}
                 {{form.dev_type}}
                 {% if form.dev_type.errors %}
-                  <div class="invalid-feedback d-block">
-                    {{form.dev_type.errors|join:"<br>"}}
-                  </div>
+                    <div class="invalid-feedback d-block">
+                          {{form.dev_type.errors|join:"<br>"}}
+                    </div>
                 {% endif %}
-              </div>
+            </div>
 
-              <div class="form-group">
+            <div class="form-group">
                 <label for="id_brand">Marca: </label> <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="brand_popup_add"><i class="fas fa-plus"></i></button>
                 {{form.brand}}
                 {% if form.brand.errors %}
-                  <div class="invalid-feedback d-block">
-                    {{form.brand.errors|join:"<br>"}}
-                  </div>
+                    <div class="invalid-feedback d-block">
+                        {{form.brand.errors|join:"<br>"}}
+                    </div>
                 {% endif %}
-              </div>
+            </div>
 
-              <div class="form-group">
+            <div class="form-group">
                 <label for="id_dev_model">Modelo de Dispositivo: </label>
                 {{form.dev_model}}
                 {% if form.dev_model.errors %}
-                  <div class="invalid-feedback d-block">
-                    {{form.dev_model.errors|join:"<br>"}}
-                  </div>
+                    <div class="invalid-feedback d-block">
+                        {{form.dev_model.errors|join:"<br>"}}
+                    </div>
                 {% endif %}
-              </div>
+            </div>
 
-              <div class="form-group">
+            <div class="form-group">
                 <label for="id_image">Imagen: </label>
                 <div>
-                  {{form.image}}
-                  <button type="button" class="btn btn-primary" id="custom_file_button">
-                    <i class="fas fa-upload"></i> Seleccionar Archivo
-                  </button>
-                  <span id="file_name" class="ml-2">Ningún archivo seleccionado</span>
+                    {{form.image}}
+                    <button type="button" class="btn btn-primary" id="custom_file_button">
+                        <i class="fas fa-upload"></i> Seleccionar Archivo
+                    </button>
+                    <span id="file_name" class="ml-2">Ningún archivo seleccionado</span>
                 </div>
                 {% if form.image.help_text%}
-                  <small class="form-text text-muted">{{form.image.help_text}}</small>
+                <small class="form-text text-muted">{{form.image.help_text}}</small>
                 {% endif %}
                 {% if form.image.errors %}
-                  <div class="invalid-feedback d-block">
-                    {{form.image.errors|join:"<br>"}}
-                  </div>
+                    <div class="invalid-feedback d-block">
+                        {{form.image.errors|join:"<br>"}}
+                    </div>
                 {% endif %}
-              </div>
+            </div>
             <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
         </form>
     </div>
@@ -76,7 +83,17 @@
 
     <script>
 
-        submitPopupForm('#edificeForm', "{% url 'sh:edifice_add' %}", 'edifice');
+        let context = "{{ request.GET.context }}";
+
+        $(document).ready(function() {
+            if (context !== 'switch') {
+                $('#id_dev_type').select2({
+                    theme: 'bootstrap',
+                });
+            }
+        });
+
+        submitPopupForm('#dev_modelForm', "{% url 'sh:dev_model_add' %}", 'dev_model');
 
         let dev_typeAddUrl = "{% url 'sh:dev_type_add' %}";
         let brandAddUrl = "{% url 'sh:brand_add' %}";
