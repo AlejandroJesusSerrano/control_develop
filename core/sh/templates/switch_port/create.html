@@ -102,6 +102,7 @@
 
 <div class="form-group">
   <label for="id_switch">Switch:</label>
+  <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="switch_popup_add"><i class="fas fa-plus"></i></button>
   {{ form.switch }}
   {% if form.switch.errors %}
   <div class="invalid-feedback d-block">
@@ -135,4 +136,8 @@
 {% block form_scripts %}
 <script src="{% static 'js/filters.js' %}"></script>
 <script src="{% static 'switch_port/js/form.js' %}"></script>
+
+<script>
+  let switchAddUrl = "{% url 'sh:switch_add' %}";
+</script>
 {% endblock form_scripts %}

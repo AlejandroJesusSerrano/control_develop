@@ -98,7 +98,7 @@ class PatcheraCreateView(CreateView):
         context['form_id'] = 'patcheraForm'
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
-        context['btn_color'] = 'btn-primary'
+        context['btn_color'] = 'bg-custom-primary'
         context['filter_btn_color'] = 'btn-primary'
         return context
 

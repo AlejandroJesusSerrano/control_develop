@@ -1,0 +1,82 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Patchera</title>
+    <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/fontawesome_6.5.2/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2_dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'lib/jquery_3.7.1/jquery-3.7.1.min.js' %}"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Agregar Patchera</h2>
+        <form method="post" id="patcheraForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="rack_patchera_id">Rack:</label>
+                <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="rack_popup_add"><i class="fas fa-plus"></i></button>
+                {{ form.rack }}
+                {% if form.rack.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.rack.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_patch">Patchera: </label>
+                {{ form.patchera }}
+                {% if form.patchera.help_text %}
+                <small class="form-text text-muted">{{form.patchera.help_text}}</small>
+                {% endif %}
+                {% if form.patchera.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.patchera.errors|join:"<br>" }}
+                </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
+        </form>
+    </div>
+
+    <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/popup.js' %}"></script>
+
+    <script>
+
+        submitPopupForm('#patcheraForm', "{% url 'sh:patchera_add' %}", 'patchera');
+
+        let rackAddUrl = "{% url 'sh:rack_add' %}";
+
+        initPopup({
+            triggerSelector: '#rack_popup_add',
+            popupUrl: "{% url 'sh:rack_add' %}",
+            entityType: 'patchera',
+            selectedId: 'id_rack',
+            formSelector: '#patcheraForm',
+            onSuccess: function(response) {
+                console.log('Rack agregado:', response);
+            }
+        })
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'rackAdded') {
+                let select = document.getElementById('id_rack');
+                let option = new Option(event.data.name, event.data.id, true, true);
+                select.appendChild(option);
+                select.value = event.data.id;
+                console.log('Selector actualizado con:', event.data.name);
+            }
+        });
+    </script>
+</body>
+</html>
