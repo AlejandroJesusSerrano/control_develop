@@ -87,7 +87,9 @@ function initPopup(config) {
             entityType: '',
             selectId: null,
             formSelector: 'form',
-            onSuccess: null
+            onSuccess: null,
+            width: 800,
+            height: 380
         };
         const settings = {...defaults, ...config };
 
