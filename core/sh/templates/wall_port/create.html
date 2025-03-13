@@ -88,6 +88,7 @@
       <div class="row mt-2">
         <div class="form-group col-12">
           <label for="id_office">Oficina:</label>
+          <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
           {{ form.office }}
           {% if form.office.errors %}
           <div class="invalid-feedback d-block">
@@ -195,6 +196,7 @@
     <div class="container">
       <div class="form-group col-12">
         <label for="id_switch_port_in">Puerto del Switch de Ingreso:</label>
+        <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
         {{ form.switch_port_in }}
         {% if form.switch_port_in.errors %}
         <div class="invalid-feedback d-block">
@@ -205,6 +207,7 @@
 
       <div class="form-group col-12">
         <label for="id_patch_port_in">Puerto de la Patchera de Ingreso:</label>
+        <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
         {{ form.patch_port_in }}
         {% if form.patch_port_in.errors %}
         <div class="invalid-feedback d-block">
@@ -245,4 +248,9 @@
 {% block form_scripts %}
   <script src="{% static 'wall_port/js/form.js' %}"></script>
   <script src="{% static 'js/filters.js' %}"></script>
+  <script>
+    let officeAddUrl = "{% url 'sh:office_add' %}";
+    let switchPortAddUrl = "{% url 'sh:switch_port_add' %}";
+    let patchPortAddUrl = "{% url 'sh:patch_port_add' %}";
+  </script>
 {% endblock form_scripts %}

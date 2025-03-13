@@ -18,7 +18,6 @@ from core.sh.models.switch_port.models import Switch_Port
 from core.sh.models.wall_port.models import Wall_Port
 
 class SwitchForm(forms.ModelForm):
-  # Campos comunes para ambos caminos
   province = forms.ModelChoiceField(
     queryset = Province.objects.all(),
     widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_province'}),
@@ -236,7 +235,7 @@ class SwitchForm(forms.ModelForm):
       self.add_error('serial_n', f'El S/N° {serial_n}, ya se ecuentra registrado para el switch {model}.')
 
     if rack and switch_rack_pos:
-      if qs.objects.filter(rack=rack, switch_rack_pos=switch_rack_pos).exists():
+      if qs.filter(rack=rack, switch_rack_pos=switch_rack_pos).exists():
         self.add_error('rack', f'ya se encuentra ocupáda la posicion {switch_rack_pos} en el rack {rack}')
         self.add_error('switch_rack_pos', f'el rack {rack}, ya tiene ocupada la posicion de switch {switch_rack_pos}')
     return cleaned_data

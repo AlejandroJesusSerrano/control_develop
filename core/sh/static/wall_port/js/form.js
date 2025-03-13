@@ -93,6 +93,50 @@ $(document).ready(function () {
     });
   }
 
+  $('#office_popup_add').on('click', function() {
+    let url = officeAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar oficina', 'width=800, height=800');
+    popup.focus();
+  });
+
+  $('#switch_port_popup_add').on('click', function() {
+    let url = switchPortAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar puerto de switch', 'width=800, height=700');
+    popup.focus();
+  });
+
+  $('#patch_port_popup_add').on('click', function() {
+    let url = patchPortAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar puerto de patchera', 'width=800, height=400');
+    popup.focus();
+  });
+
+  window.addEventListener('message', function(event) {
+    if (event.data.type === 'officeAdded') {
+      let officeId = event.data.id;
+      let brandName = event.data.brand.name;
+      let select = $('#id_office');
+      let option = new Option(brandName, officeId, true, true);
+      select.append(option).trigger('change');
+    }
+
+    if (event.data.type === 'switch_portAdded') {
+      let switch_portId = event.data.id;
+      let switch_portName = event.data.name;
+      let select = $('#id_switch_port_in');
+      let option = new Option(switch_portName, switch_portId, true, true);
+      select.append(option).trigger('change');
+    }
+
+    if (event.data.type === 'patch_portAdded') {
+      let patch_portId = event.data.id;
+      let patch_portName = event.data.name;
+      let select = $('#id_patch_port_in');
+      let option = new Option(patch_portName, patch_portId, true, true);
+      select.append(option).trigger('change');
+    }
+  });S
+
   initializeFormSubmission('#myform', 'edit');
 
 });

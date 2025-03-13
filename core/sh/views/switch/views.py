@@ -68,7 +68,7 @@ class SwitchCreateView(CreateView):
                     'message': 'Switch agregado exitosamente',
                     'switch_id': self.object.id,
                     'switch_name': f'{self.object.model.brand.brand} {self.object.model.dev_model} DE {self.object.ports_q} PUERTOS',
-                    'switch_model': self.object.model.model,
+                    'switch_model': self.object.model.dev_model,
                     'switch_brand': self.object.model.brand.brand,
                     'switch_ports_q': self.object.ports_q,
                     'switch_ip': self.object.ip,
@@ -234,7 +234,7 @@ class SwitchDeleteView(DeleteView):
             self.object.delete()
         except Exception as e:
             data['error'] = str(e)
-            return JsonResponse(data)
+        return JsonResponse(data)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

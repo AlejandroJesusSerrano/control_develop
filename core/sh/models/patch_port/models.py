@@ -16,7 +16,7 @@ class Patch_Port(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['patch'] = self.patchera.patchera
-    item['rack'] = f'PROVINCIA: {self.patchera.rack.office.loc.edifice.location.province.province} / LOCALIDAD: {self.patchera.rack.office.loc.edifice.location.location} / OFICINA: {self.patchera.rack.office.loc.edifice.edifice} / RACK: {self.patchera.rack.rack}'
+    item['rack'] = f'RACK: {self.patchera.rack.rack} EN OFICINA: {self.patchera.rack.office.office} / LOCALIDAD: {self.patchera.rack.office.loc.edifice.location.location} / PROVINCIA: {self.patchera.rack.office.loc.edifice.location.province.province}'
     return item
 
   class Meta:

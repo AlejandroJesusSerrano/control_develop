@@ -39,6 +39,7 @@ class Switch_PortListView(ListView):
         context['entity'] = 'Puertos de Switches'
         context['nav_icon'] = 'fa-solid fa-ethernet'
         context['table_id'] = 'switch_port_table'
+        context['add_btn_title'] = 'Agregar Puerto de Switch'
         return context
 
 class Switch_PortCreateView(CreateView):
@@ -95,7 +96,7 @@ class Switch_PortCreateView(CreateView):
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
         context['filter_btn_color'] = 'btn-primary'
-        context['btn_color'] = 'btn-primary'
+        context['btn_color'] = 'bg-custom-primary'
         return context
 
 class Switch_PortUpdateView(UpdateView):

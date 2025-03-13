@@ -8,6 +8,39 @@ $(document).ready(function() {
     updateRackOptions(rack_id);
   });
 
+  $('#rack_popup_add').on('click', function (){
+    let url = rackAddUrl + "?popup=1";
+    let popup = window.open(url, 'rack_add_popup', 'width=800,height=600');
+    popup.focus();
+  });
+
+  $('#patchera_popup_add').on('click', function (){
+    let url = patcheraAddUrl + "?popup=1";
+    let popup = window.open(url, 'patchera_add_popup', 'width=800,height=300');
+    popup.focus();
+  });
+
+  window.addEventListener('message', function(event) {
+    if (event.data.type === 'rackAdded') {
+        let rackId = event.data.id;
+        let rackName = event.data.name;
+        let select = $('#id_rack');
+        let option = new Option(rackName, rackId, true, true);
+        select.append(option).trigger('change');
+        select.select2({theme: 'bootstrap'});
+    }
+
+    if (event.data.type === 'patcheraAdded') {
+        let patcheraId = event.data.id;
+        let patcheraName = event.data.name;
+        let select = $('#id_patchera');
+        let option = new Option(patcheraName, patcheraId, true, true);
+        select.append(option).trigger('change');
+        select.select2({theme: 'bootstrap'});
+    }
+});
+
+
   initializeFormSubmission('#myform', 'edit');
 });
 

@@ -101,7 +101,7 @@ class Patch_PortCreateView(CreateView):
         context['form_id'] = 'patch_portForm'
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
-        context['btn_color'] = 'btn-primary'
+        context['btn_color'] = 'bg-custom-primary'
         return context
 
 class Patch_PortUpadateView(UpdateView):

@@ -34,6 +34,10 @@ class PatchPortForm(forms.ModelForm):
   def __init__(self, *args, **kwargs):
     super(PatchPortForm, self).__init__(*args, **kwargs)
 
+    self.fields['rack'].label_from_instance = lambda obj: (
+            f"RACK: {obj.rack} EN OFICINA: {obj.office.office}"
+        )
+
     self.fields['rack'].queryset = Rack.objects.all()
     self.fields['patchera'].queryset = Patchera.objects.all()
 

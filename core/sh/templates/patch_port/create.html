@@ -12,38 +12,44 @@
 {% block form %}
 
 <div class="form-group">
-  <label for="id_rack">Rack:</label>
-  {{ form.rack }}
-  {% if form.rack.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.rack.errors|join:"<br>" }}
-  </div>
-  {% endif %}
+    <label for="id_rack">Rack:</label>
+    <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="rack_popup_add"><i class="fas fa-plus"></i></button>
+    {{ form.rack }}
+    {% if form.rack.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.rack.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 
 <div class="form-group">
-  <label for="id_patchera">Patchera:</label>
-  {{ form.patchera }}
-  {% if form.patchera.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.patchera.errors|join:"<br>" }}
-  </div>
-  {% endif %}
+    <label for="id_patchera">Patchera:</label>
+    <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="patchera_popup_add"><i class="fas fa-plus"></i></button>
+    {{ form.patchera }}
+    {% if form.patchera.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.patchera.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 
 <div class="form-group">
-  <label for="id_port">Puerto:</label>
-  {{ form.port }}
-  {% if form.port.errors %}
-  <div class="invalid-feedback d-block">
-    {{ form.port.errors|join:"<br>" }}
-  </div>
-  {% endif %}
+    <label for="id_port">Puerto:</label>
+    {{ form.port }}
+    {% if form.port.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.port.errors|join:"<br>" }}
+    </div>
+    {% endif %}
 </div>
 
 {% endblock form %}
 
 {% block form_scripts %}
-<script src="{% static 'js/filters.js' %}"></script>
+  <script src="{% static 'js/filters.js' %}"></script>
   <script src="{% static 'patch_port/js/form.js' %}"></script>
+  <script>
+    let rackAddUrl = "{% url 'sh:rack_add' %}";
+    let patcheraAddUrl = "{% url 'sh:patchera_add' %}";
+  </script>
 {% endblock form_scripts %}

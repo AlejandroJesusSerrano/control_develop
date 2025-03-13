@@ -144,7 +144,7 @@ def ajax_load_rack(request):
         filters['office_id'] = office_id
 
     racks = Rack.objects.filter(**filters).distinct()
-    data = [{'id': rack.id, 'name': rack.rack} for rack in racks]
+    data = [{'id': rack.id, 'name': f'RACK: {rack.rack} EN OFICINA: {rack.office.office}'} for rack in racks]
     return JsonResponse(data, safe=False)
 
 
