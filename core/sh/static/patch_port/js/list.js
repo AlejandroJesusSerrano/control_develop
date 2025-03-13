@@ -14,7 +14,6 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
       {"data": "rack"},
       {"data": "patch"},
       {"data": "port"},
@@ -22,7 +21,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
-        targets: [4],
+        targets: [3],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

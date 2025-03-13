@@ -14,11 +14,10 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
       {"data": "brand"},
+      {"data": "model"},
       {"data": "serial_n"},
       {"data": "ports_q"},
-      {"data": "model"},
       {"data": "ip"},
       {"data": "office"},
       {"data": "rack"},
@@ -27,7 +26,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
-        targets: [9],
+        targets: [8],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){

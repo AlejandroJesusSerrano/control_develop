@@ -14,7 +14,6 @@ $(document).ready(function(){
       dataSrc: ""
     },
     columns: [
-      {"data": "id"},
       {"data": "rack"},
       {"data": "switch"},
       {"data": "port_id"},
@@ -23,7 +22,7 @@ $(document).ready(function(){
     ],
     columnDefs: [
       {
-        targets: [5],
+        targets: [4],
         class: 'text-center',
         orderable: false,
         render: function(data, type, row){
