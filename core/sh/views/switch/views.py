@@ -75,9 +75,9 @@ class SwitchCreateView(CreateView):
                     'switch_rack': f'RACK: {self.object.rack.rack} EN OFICINA: {self.object.rack.office.office}' if self.object.rack else 'No se encuentra en Rack',
                     'switch_rack_pos': self.object.switch_rack_pos if self.object.rack else 'No se encuentra en Rack',
                     'switch_office': self.object.office.office,
-                    'switch_wall_port_in': self.object.wall_port_in if self.object.wall_port_in else 'No ingresa de pared',
-                    'swtich_switch_port_in': self.object.switch_port_in if self.object.switch_port_in else 'No ingresa de switch',
-                    'switch_patch_port_in': self.object.patch_port_in if self.object.patch_port_in else 'No ingresa de patchera',
+                    'switch_wall_port_in': str(self.object.wall_port_in) if self.object.wall_port_in else 'No ingresa de pared',
+                    'switch_switch_port_in': str(self.object.switch_port_in) if self.object.switch_port_in else 'No ingresa de switch',
+                    'switch_patch_port_in': str(self.object.patch_port_in) if self.object.patch_port_in else 'No ingresa de patchera',
                 }
                 return JsonResponse(data)
             else:
@@ -139,7 +139,7 @@ class SwitchUpdateView(UpdateView):
                     'switch_rack_pos': self.object.switch_rack_pos if self.object.rack else 'No se encuentra en Rack',
                     'switch_office': self.object.office.office,
                     'switch_wall_port_in': self.object.wall_port_in if self.object.wall_port_in else 'No ingresa de pared',
-                    'swtich_switch_port_in': self.object.switch_port_in if self.object.switch_port_in else 'No ingresa de switch',
+                    'switch_switch_port_in': self.object.switch_port_in if self.object.switch_port_in else 'No ingresa de switch',
                     'switch_patch_port_in': self.object.patch_port_in if self.object.patch_port_in else 'No ingresa de patchera',
                 }
                 return JsonResponse(data)
