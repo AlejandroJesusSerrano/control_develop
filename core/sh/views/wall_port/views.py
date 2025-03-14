@@ -120,6 +120,23 @@ class WallPortCreateView(CreateView):
         context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.exclude(id__in=used_switch_ports)
         context['form'].fields['patch_port_in'].queryset = Patch_Port.objects.exclude(id__in=used_patch_ports)
 
+        office_id = self.request.GET.get('office_id')
+        if office_id:
+            try:
+                office = Office.objects.get(id=office_id)
+                # Filtrar switches y patcheras basados en la oficina
+                context['form'].fields['switch'].queryset = Switch.objects.filter(Q(office=office) | Q(rack__office=office))
+                context['form'].fields['patchera'].queryset = Patchera.objects.filter(rack__office=office)
+                # Filtrar switch_port_in y patch_port_in según las selecciones disponibles
+                context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.filter(
+                    switch__in=context['form'].fields['switch'].queryset
+                ).exclude(id__in=used_switch_ports).order_by('port_id')
+                context['form'].fields['patch_port_in'].queryset = Patch_Port.objects.filter(
+                    patchera__in=context['form'].fields['patchera'].queryset
+                ).exclude(id__in=used_patch_ports)
+            except Office.DoesNotExist:
+                pass
+
         return context
 
 class WallPortUpdateView(UpdateView):

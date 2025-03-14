@@ -14,20 +14,16 @@ $(document).ready(function(){
     },
     columns: [
       {"data": "employee_full_name"},
+      {"data": "cuil"},
       {"data": "user_pc"},
       {"data": "status"},
       {"data": "office"},
-      {
-        "data": "avatar",
-        "render": function(data, type, row){
-          return '<img src="' + data + '" class="img-thumbnail" style="max-width:100px;"/>';
-        },
-      },
+      {"data": "dependency"},
       {"data": null, "defaultContent": ""},
     ],
     columnDefs: [
       {
-        targets: [5],
+        targets: [6],
         class: 'text-center align-middle',
         orderable: false,
         render: function(data, type, row){

@@ -144,7 +144,8 @@ $(document).ready(function() {
     });
 
     $('#wall_port_popup_add').on('click', function() {
-        let url = wallPortAddUrl + '?popup=1';
+        let office_id = $('#id_office').val();
+        let url = wallPortAddUrl + '?popup=1&office_id=' + office_id;
         let popup = window.open(url, 'Agregar Puerto de Pared', 'width=800, height=825');
         popup.focus();
     });

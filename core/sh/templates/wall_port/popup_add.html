@@ -19,57 +19,76 @@
         <h2>Agregar Boca de Pared</h2>
         <form method="post" id="wall_portForm">
             {% csrf_token %}
-
-            <div class="form-group">
-                <label for="{{ form.office.id_for_label }}">Oficina: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.office }}
-                {% if form.office.errors %}
-                  <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.wall_port.id_for_label }}">Boca de Pared: </label>
-                {{ form.wall_port }}
-                {% if form.wall_port.errors %}
-                  <div class="invalid-feedback d-block">{{ form.wall_port.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.switch_port_in }}
-                {% if form.switch_port_in.errors %}
-                    <div class="invalid-feedback d-block">{{ form.switch_port_in.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.patch_port_in.id_for_label }}">Puerto de la Patchera de Ingreso: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.patch_port_in }}
-                {% if form.patch_port_in.errors %}
-                    <div class="invalid-feedback d-block">{{ form.patch_port_in.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <hr>
-                <h5>Ingrese detalles y aclaraciones, de ser necesario</h5>
-            <hr>
-
-            <div class="form-group">
-                <label for="{{ form.details.id_for_label }}">Detalles: </label>
-                {{ form.details }}
-                {% if form.details.help_text %}
-                <small class="form-text text-muted">{{form.details.help_text}}</small>
-                {% endif %}
-                {% if form.details.errors %}
-                <div class="invalid-feedback d-block">
-                    {{ form.details.errors|join:"<br>" }}
+            <div class="row bg-custom-dark-over-dark p-3 my-2 rounded">
+                <div class="form-group col-12">
+                    <label for="{{ form.office.id_for_label }}">Oficina: </label>
+                    <button type="button" class="btn btn-xs {{btn_color}} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.office }}
+                    {% if form.office.errors %}
+                      <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
+                    {% endif %}
                 </div>
-                {% endif %}
+
+                <div class="form-group col-12">
+                    <label for="{{ form.wall_port.id_for_label }}">Boca de Pared: </label>
+                    {{ form.wall_port }}
+                    {% if form.wall_port.errors %}
+                      <div class="invalid-feedback d-block">{{ form.wall_port.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row bg-custom-dark-over-dark p-3 my-2 rounded">
+                <div class="form-group col-6">
+                    <label for="{{ form.switch.id_for_label }}">Switch de Ingreso: </label>
+                    {{ form.switch }}
+                    {% if form.switch.errors %}
+                        <div class="invalid-feedback d-block">{{ form.switch.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
+                    <button type="button" class="btn btn-xs {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.switch_port_in }}
+                    {% if form.switch_port_in.errors %}
+                        <div class="invalid-feedback d-block">{{ form.switch_port_in.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row bg-custom-dark-over-dark my-2 p-3 rounded">
+                <div class="form-group col-6">
+                    <label for="{{ form.patchera.id_for_label }}">Patchera de Ingreso: </label>
+                    {{ form.patchera }}
+                    {% if form.patchera.errors %}
+                        <div class="invalid-feedback d-block">{{ form.patchera.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.patch_port_in.id_for_label }}">Puerto de la Patchera de Ingreso: </label>
+                    <button type="button" class="btn btn-xs {{btn_color}} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.patch_port_in }}
+                    {% if form.patch_port_in.errors %}
+                        <div class="invalid-feedback d-block">{{ form.patch_port_in.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row bg-custom-dark-over-dark my-2 p-3 rounded">
+                <div class="form-group col-12">
+                    <label for="{{ form.details.id_for_label }}">Detalles: </label>
+                    {{ form.details }}
+                    {% if form.details.help_text %}
+                    <small class="form-text text-muted">{{form.details.help_text}}</small>
+                    {% endif %}
+                    {% if form.details.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.details.errors|join:"<br>" }}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
@@ -145,91 +164,6 @@
                 console.log('Selector actualizado con:', event.data.name);
             }
         });
-    </script>
-    <script>
-        $(document).ready(function() {
-            function loadSwitchPortsIn(officeId) {
-                let select = $('#id_switch_port_in');
-                if (officeId) {
-                    $.ajax({
-                        url: "{% url 'sh:get_switch_ports_by_office' %}",
-                        data: {
-                            'office_id': officeId
-                        },
-                        success: function(data) {
-                            select.empty();
-                            select.append('<option value="">---------</option>');
-                            $.each(data, function(index, item) {
-                                if (item.switch.rack) {
-                                    select.append($('<option>').val(item.id).text(`PUERTO: ${item.port_id} - SWITCH: ${item.switch.model.brand}, ${item.switch.model.model} / RACK: ${item.switch.rack.rack} POSICIÓN: ${item.switch.switch_rack_pos} / OFICINA: ${item.switch.rack.office}`));
-                                } else {
-                                    select.append($('<option>').val(item.id).text(`PUERTO: ${item.port_id} - SWITCH: ${item.switch.model.brand}, ${item.switch.model.model} / OFICINA: ${item.switch.office}`));
-                                }
-                            });
-                        },
-                        error: function() {
-                            console.log('Error al cargar los puertos de la oficina');
-                        }
-                    });
-                } else {
-                    select.empty().append('<option value="">Primero seleccione una oficina</option>');
-                }
-            }
-
-            // Detectar cambios en el campo #id_office
-            $('#id_office').on('change', function() {
-                let officeId = $(this).val();
-                loadSwitchPortsIn(officeId);
-            });
-
-            // Cargar puertos iniciales si ya hay una oficina seleccionada
-            let initialOfficeId = $('#id_office').val();
-            if (initialOfficeId) {
-                loadSwitchPortsIn(initialOfficeId);
-            }
-        });
-
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            function loadPatchPortsIn(officeId) {
-                let select = $('#id_patch_port_in');
-                if (officeId) {
-                    $.ajax({
-                        url: "{% url 'sh:get_patch_ports_by_office' %}",
-                        data: {
-                            'office_id': officeId
-                        },
-                        success: function(data) {
-                            select.empty();
-                            select.append('<option value="">---------</option>');
-                            $.each(data, function(index, item) {
-                                select.append($('<option>').val(item.id).text(`PUERTO: ${item.port} - PATCHERA: ${item.patchera.patchera} DEL RACK: ${item.patchera.rack.rack} EN LA OFICINA: ${item.patchera.rack.office}`));
-                            });
-                        },
-                        error: function() {
-                            console.log('Error al cargar los puertos de la oficina');
-                        }
-                    });
-                } else {
-                    select.empty().append('<option value="">Primero seleccione una oficina</option>');
-                }
-            }
-
-            // Detectar cambios en el campo #id_office
-            $('#id_office').on('change', function() {
-                let officeId = $(this).val();
-                loadPatchPortsIn(officeId);
-            });
-
-            // Cargar puertos iniciales si ya hay una oficina seleccionada
-            let initialOfficeId = $('#id_office').val();
-            if (initialOfficeId) {
-                loadPatchPortsIn(initialOfficeId);
-            }
-        });
-
     </script>
 </body>
 </html>

@@ -34,7 +34,8 @@ class Employee(models.Model):
     item['cuil'] = self.cuil
     item['status'] = self.status.status
     item['user_pc'] = self.user_pc
-    item['office'] = (f"Oficina: {self.office.office} / Dependencia: {self.office.dependency.dependency} / Localidad: {self.office.loc.edifice.location.location} / Provincia: {self.office.loc.edifice.location.province.province}")
+    item['office'] = (f"Oficina: {self.office.office} / Localidad: {self.office.loc.edifice.location.location} / Provincia: {self.office.loc.edifice.location.province.province}")
+    item['dependency'] = self.office.dependency.dependency
     item['avatar'] = self.avatar.url if self.avatar else '/media/no_file.svg'
     return item
 
