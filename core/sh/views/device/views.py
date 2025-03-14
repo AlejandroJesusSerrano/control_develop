@@ -46,6 +46,7 @@ class DeviceListView(ListView):
     context['entity'] = 'Dispositivos'
     context['nav_icon'] = 'fa-solid fa-ethernet'
     context['table_id'] = 'device_table'
+    context['add_btn_title'] = 'Agregar Dispositivo'
     return context
 
 class DeviceCreateView(CreateView):
@@ -57,6 +58,11 @@ class DeviceCreateView(CreateView):
   @method_decorator(login_required)
   def dispatch(self, request, *args, **kwargs):
     return super().dispatch(request, *args, **kwargs)
+
+  def get_template_names(self):
+    if self.request.GET.get('popup') == '1':
+      return ['device/popup_add.html']
+    return ['device/create.html']
 
   def form_valid(self, form):
     try:
@@ -98,6 +104,7 @@ class DeviceCreateView(CreateView):
     context['action'] = 'add'
     context['bg_color'] = 'bg-custom-primary'
     context['filter_btn_color'] = 'btn-primary'
+    context['btn_color'] = 'bg-custom-primary'
     return context
 
 class DeviceUpdateView(UpdateView):

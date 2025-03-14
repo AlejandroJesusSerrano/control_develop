@@ -146,54 +146,6 @@ function updateEdificePortsFromLocation(location_id) {
             }, $('select[name="edifice_ports"]'), $('#id_edifice_ports').data('preselected'));
         }
 
-        if ($('#id_loc_ports').length > 0) {
-            updateOptions('/sh/ajax/load_loc/', {
-                'location_id': location_id
-            }, $('select[name="loc_ports"]'), $('#id_loc_ports').data('preselected'));
-        }
-
-        if ($('#id_office_ports').length > 0) {
-            updateOptions('/sh/ajax/load_office/', {
-                'location_id': location_id
-            }, $('select[name="office_ports"]'), $('#id_office_ports').data('preselected'));
-        }
-
-        if ($('#id_rack_ports').length > 0) {
-            updateOptions('/sh/ajax/load_rack/', {
-                'location_id': location_id
-            }, $('select[name="rack_ports"]'), $('#id_rack').data('preselected'));
-        }
-
-        if ($('#id_switch_ports').length > 0) {
-            updateOptions('/sh/ajax/load_switch/', {
-                'location_id': location_id
-            }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
-        }
-
-        if ($('#id_switch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_switch_port/', {
-                'location_id': location_id
-            }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-        }
-
-        if ($('#id_patchera_ports').length > 0) {
-            updateOptions('/sh/ajax/load_patchera/', {
-                'location_id': location_id
-            }, $('select[name="patchera_ports"]'), $('#id_patchera_ports').data('preselected'));
-        }
-
-        if ($('#id_patch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_patch_ports/', {
-                'location_id': location_id
-            }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-        }
-
-        if ($('#id_wall_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_wall_port/', {
-                'location_id': location_id
-            }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
-        }
-
     } else {
 
         clearDependentFields(['#id_edifice_ports', '#id_loc_ports', '#id_office_ports', '#id_rack_ports']);
@@ -208,41 +160,6 @@ function updateEdificePortsOptions(edifice_ports_id) {
             'edifice_id': edifice_ports_id
             }, $('select[name="loc_ports"]'), $('#id_loc_ports').data('preselected'));
         }
-        if ($('#id_office_ports').length > 0) {
-            updateOptions('/sh/ajax/load_office/', {
-                'edifice_id': edifice_ports_id
-            }, $('select[name="office_ports"]'), $('#id_office_ports').data('preselected'));
-        }
-        if ($('#id_rack_ports').length > 0) {
-            updateOptions('/sh/ajax/load_rack/', {
-                'edifice_id': edifice_ports_id
-            }, $('select[name="rack_ports"]'), $('#id_rack_ports').data('preselected'));
-        }
-        if ($('#id_switch_ports').length > 0) {
-            updateOptions('/sh/ajax/load_switch/', {
-                'edifice_id': edifice_ports_id
-            }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
-        }
-        if ($('#id_switch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_switch_port/', {
-                'edifice_id': edifice_ports_id
-            }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-        }
-        if ($('#id_patchera_ports').length > 0) {
-            updateOptions('/sh/ajax/load_patchera/', {
-                'edifice_id': edifice_ports_id
-            }, $('select[name="patchera_ports"]'), $('#id_patchera_ports').data('preselected'));
-        }
-        if ($('#id_patch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_patch_ports/', {
-                'edifice_id': edifice_ports_id
-            }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-        }
-        if ($('#id_wall_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_wall_port/', {
-                'edifice_id': edifice_ports_id
-            }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
-        }
     } else {
         clearDependentFields(['#id_loc_ports', '#id_office_ports', '#id_rack_ports', '#id_switch_ports', '#id_switch_port_in', '#id_patchera_ports', '#id_patch_port_in', '#id_wall_port_in']);
     }
@@ -254,36 +171,6 @@ function updateLocPortsOptions(loc_ports_id) {
             updateOptions('/sh/ajax/load_office/', {
                 'loc_id': loc_ports_id
             }, $('select[name="office_ports"]'), $('#id_office_ports').data('preselected'));
-        }
-        if ($('#id_rack_ports').length > 0) {
-            updateOptions('/sh/ajax/load_rack/', {
-                'loc_id': loc_ports_id
-            }, $('select[name="rack_ports"]'), $('#id_rack_ports').data('preselected'));
-        }
-        if ($('#id_switch_ports').length > 0) {
-            updateOptions('/sh/ajax/load_switch/', {
-                'loc_id': loc_ports_id
-            }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
-        }
-        if ($('#id_switch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_switch_port/', {
-                'loc_id': loc_ports_id
-            }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-        }
-        if ($('#id_patchera_ports').length > 0) {
-            updateOptions('/sh/ajax/load_patchera/', {
-                'loc_id': loc_ports_id
-            }, $('select[name="patchera_ports"]'), $('#id_patchera_ports').data('preselected'));
-        }
-        if ($('#id_patch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_patch_ports/', {
-                'loc_id': loc_ports_id
-            }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-        }
-        if ($('#id_wall_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_wall_port/', {
-                'loc_id': loc_ports_id
-            }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
         }
     } else {
         clearDependentFields(['#id_office_ports', '#id_rack_ports', '#id_switch_ports', '#id_switch_port_in', '#id_patchera_ports', '#id_patch_port_in', '#id_wall_port_in']);
@@ -297,31 +184,6 @@ function updateOfficePortsOptions(office_ports_id) {
                 'office_id': office_ports_id
             }, $('select[name="rack_ports"]'), $('#id_rack_ports').data('preselected'));
         }
-        if ($('#id_switch_ports').length > 0) {
-            updateOptions('/sh/ajax/load_switch/', {
-                'office_id': office_ports_id
-            }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
-        }
-        if ($('#id_switch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_switch_port/', {
-                'office_id': office_ports_id
-            }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-        }
-        if ($('#id_patchera_ports').length > 0) {
-            updateOptions('/sh/ajax/load_patchera/', {
-                'office_id': office_ports_id
-            }, $('select[name="patchera_ports"]'), $('#id_patchera_ports').data('preselected'));
-        }
-        if ($('#id_patch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_patch_ports/', {
-                'office_id': office_ports_id
-            }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
-        }
-        if ($('#id_wall_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_wall_port/', {
-                'office_id': office_ports_id
-            }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
-        }
     } else {
         clearDependentFields(['#id_rack_ports', '#id_switch_ports', '#id_switch_port_in', '#id_patchera_ports', '#id_patch_port_in', '#id_wall_port_in']);
     }
@@ -333,21 +195,6 @@ function updateRackPortsOptions(rack_ports_id) {
             updateOptions('/sh/ajax/load_switch/', {
                 'rack_id': rack_ports_id
             }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
-        }
-        if ($('#id_switch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_switch_port/', {
-                'rack_id': rack_ports_id
-            }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
-        }
-        if ($('#id_patchera_ports').length > 0) {
-            updateOptions('/sh/ajax/load_patchera/', {
-                'rack_id': rack_ports_id
-            }, $('select[name="patchera_ports"]'), $('#id_patchera_ports').data('preselected'));
-        }
-        if ($('#id_patch_port_in').length > 0) {
-            updateOptions('/sh/ajax/load_patch_ports/', {
-                'rack_id': rack_ports_id
-            }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
         }
     } else {
         clearDependentFields(['#id_switch_ports', '#id_switch_port_in', '#id_patchera_ports', '#id_patch_port_in']);
