@@ -30,8 +30,80 @@ $(document).ready(function() {
     filterOfficeCards.toggleClass('d-none');
     $(this).toggleClass('active btn-primary btn-secondary');
     $(this).html(filterOfficeCards.hasClass('d-none')
-      ? 'Filtrar Oficinas y Empleados <i class="fa fa-filter"></i>'
+      ? 'Filtros <i class="fa fa-filter"></i>'
       : 'Ocultar Filtros <i class="fas fa-times"></i>');
+  });
+
+  $('#office_popup_add').on('click', function() {
+    let url = officeAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar Oficina', 'width=800,height=800');
+    popup.focus();
+  });
+
+  $('#employee_popup_add').on('click', function() {
+    let url = employeeAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar Empleado', 'width=800,height=700');
+    popup.focus();
+  });
+
+  $('#device_popup_add').on('click', function() {
+    let url = deviceAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar Dispositivo', 'width=800,height=1080');
+    popup.focus();
+  });
+
+  $('#switch_popup_add').on('click', function() {
+    let url = switchAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar Switch', 'width=800,height=800');
+    popup.focus();
+  });
+
+  $('#move_type_popup_add').on('click', function() {
+    let url = moveTypeAddUrl + "?popup=1";
+    let popup = window.open(url, 'Agregar Tipo de Movimiento', 'width=800,height=800');
+    popup.focus();
+  });
+
+  window.addEventListener('message', function(event) {
+    if (event.data.type === 'officeAdded') {
+      let office_id = event.data.id;
+      let office_name = event.data.name;
+      let select = $('#id_office');
+      let option = new Option(office_name, office_id, true, true);
+      select.append(option).val(officeId).trigger('change');
+    }
+
+    if (event.data.type === 'employeeAdded') {
+      let employee_id = event.data.id;
+      let employee_name = event.data.name;
+      let select = $('#id_employee');
+      let option = new Option(employee_name, employee_id, true, true);
+      select.append(option).val(employeeId).trigger('change');
+    }
+
+    if (event.data.type === 'deviceAdded') {
+      let device_id = event.data.id;
+      let device_name = event.data.name;
+      let select = $('#id_device');
+      let option = new Option(device_name, device_id, true, true);
+      select.append(option).val(deviceId).trigger('change');
+    }
+
+    if (event.data.type === 'switchAdded') {
+      let switch_id = event.data.id;
+      let switch_name = event.data.name;
+      let select = $('#id_switch');
+      let option = new Option(switch_name, switch_id, true, true);
+      select.append(option).val(switchId).trigger('change');
+    }
+
+    if (event.data.type === 'moveTypeAdded') {
+      let move_type_id = event.data.id;
+      let move_type_name = event.data.name;
+      let select = $('#id_movements_type');
+      let option = new Option(move_type_name, move_type_id, true, true);
+      select.append(option).val(moveTypeId).trigger('change');
+    }
   });
 
   initializeFormSubmission('#myform', 'edit');

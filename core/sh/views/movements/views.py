@@ -39,6 +39,7 @@ class MovementsListView(ListView):
         context['entity'] = 'Movimientos'
         context['nav_icon'] = 'fa-regular fa-building'
         context['table_id'] = 'movement_table'
+        context['add_btn_title'] = 'Agregar Movimiento'
         return context
 
 # core/sh/views/movements/views.py
@@ -93,6 +94,7 @@ class MovementsCreateView(CreateView):
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
         context['filter_btn_color'] = 'btn-primary'
+        context['btn_color'] = 'bg-custom-primary'
         return context
 
 class MovementsUpdateView(UpdateView):
@@ -146,6 +148,7 @@ class MovementsUpdateView(UpdateView):
         context['action'] = 'edit'
         context['bg_color'] = 'bg-custom-warning'
         context['filter_btn_color'] = 'btn-warning'
+        context['btn_color'] = 'bg-custom-warning'
         return context
 
 
@@ -177,4 +180,5 @@ class MovementsDeleteView(DeleteView):
         context['form_id'] = 'MovementsForm'
         context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
+        context['btn_color'] = 'bg-custom-danger'
         return context

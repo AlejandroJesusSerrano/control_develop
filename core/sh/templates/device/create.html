@@ -68,7 +68,7 @@
 
                 <div class="form-group col-6">
                     <label for="id_connection_type">Tipo de Conexión:</label>
-                    <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="connection_type_popup_add"><i class="fas fa-plus"></i></button>
+                    <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="connection_popup_add"><i class="fas fa-plus"></i></button>
                     {{ form.connection }}
                     {% if form.connection.errors %}
                     <div class="invalid-feedback d-block">
@@ -334,7 +334,7 @@
 
             <div class="form-group">
                 <label for="id_patch_port_in">Puerto Patchera:</label>
-                <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="patchera_port_popup_add"><i class="fas fa-plus"></i></button>
+                <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
                 {{ form.patch_port_in }}
                 {% if form.patch_port_in.errors %}
                 <div class="invalid-feedback d-block">
@@ -353,8 +353,7 @@
   <script src="{% static 'js/filters.js' %}"></script>
   <script src="{% static 'device/js/form.js' %}"></script>
   <script>
-    let dev_modelAddUrl = "{% url 'sh:dev_model_add' %}";
-    let connectionTypeAddUrl = "{% url 'sh:connection_type_add' %}";
+    let modelAddUrl = "{% url 'sh:dev_model_add' %}";
     let officeAddUrl = "{% url 'sh:office_add' %}";
     let employeeAddUrl = "{% url 'sh:employee_add' %}";
     let wallPortAddUrl = "{% url 'sh:wall_port_add' %}";

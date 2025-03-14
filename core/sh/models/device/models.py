@@ -18,7 +18,7 @@ class Device(models.Model):
   wall_port_in = models.OneToOneField('sh.Wall_Port', related_name='device_wall_port_in', verbose_name='Boca de la pared', on_delete=models.CASCADE, blank=True, null=True)
   switch_port_in = models.OneToOneField('sh.Switch_Port', related_name='device_switch_port_in', verbose_name='Puerto de Switch', on_delete=models.CASCADE, blank=True, null=True)
   patch_port_in = models.OneToOneField('sh.Patch_Port', related_name='device_patch_port_in', verbose_name='Puerto de patchera de Entrada', on_delete=models.CASCADE, blank=True, null=True)
-  employee = models.ForeignKey(Employee, related_name='device_employee', verbose_name='Empleado', blank=True, null=True, on_delete=models.CASCADE)
+  employee = models.ManyToManyField(Employee, related_name='device_employee', verbose_name='Empleados', blank=True)
 
   def save(self, *args, **kwargs):
     self.serial_n = self.serial_n.upper()
@@ -27,8 +27,8 @@ class Device(models.Model):
     super (Device, self).save(*args, **kwargs)
 
   def __str__(self):
-    if self.employee:
-        emp_str = f"{self.employee.employee_last_name}, {self.employee.employee_name}, Oficina: {self.employee.office.office}"
+    if self.employee.exists():
+        emp_str = ", ".join([f"{emp.employee_last_name}, {emp.employee_name}, Oficina: {emp.office.office}" for emp in self.employee.all()]) 
     else:
         emp_str = "No asignado"
     return f"{self.dev_model.dev_type} Marca: {self.dev_model.brand}, Modelo: {self.dev_model.dev_model}, S/N°: {self.serial_n}, Empleado: {emp_str}"
@@ -48,7 +48,14 @@ class Device(models.Model):
       if self.patch_port_in else 'No llega directo de patchera'
     )
     item['office'] = self.office.office
-    item['employee'] = self.employee.employee_last_name + ', ' + self.employee.employee_name + '/ CUIL N°: ' + self.employee.cuil if self.employee else 'No asignado'
+
+    if self.employee.exists():
+      item['employee'] = [
+        f"{emp.employee_last_name}, {emp.employee_name}"
+        for emp in self.employee.all()
+      ]
+    else:
+      item['employee'] = 'NO HAY EMPLEADO ASIGNADO'
     return item
 
   class Meta:

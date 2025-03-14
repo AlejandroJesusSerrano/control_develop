@@ -127,9 +127,91 @@ $(document).ready(function() {
 
     $('#dev_model_popup_add').on('click', function() {
         let url = modelAddUrl + '?popup=1&context=device';
-        let popup = window.opener(url, 'Agregar Modelo de Dispositivo', 'width=800, height=500');
+        let popup = window.open(url, 'Agregar Modelo de Dispositivo', 'width=800, height=500');
         popup.focus();
     });
+
+    $('#office_popup_add').on('click', function() {
+        let url = officeAddUrl + '?popup=1';
+        let popup = window.open(url, 'Agregar Oficina', 'width=800, height=750');
+        popup.focus();
+    });
+
+    $('#employee_popup_add').on('click', function() {
+        let url = employeeAddUrl + '?popup=1';
+        let popup = window.open(url, 'Agregar Empleado', 'width=800, height=700');
+        popup.focus();
+    });
+
+    $('#wall_port_popup_add').on('click', function() {
+        let url = wallPortAddUrl + '?popup=1';
+        let popup = window.open(url, 'Agregar Puerto de Pared', 'width=800, height=825');
+        popup.focus();
+    });
+
+    $('#switch_port_popup_add').on('click', function() {
+        let url = switchPortAddUrl + '?popup=1';
+        let popup = window.open(url, 'Agregar Puerto de Switch', 'width=800, height=650');
+        popup.focus();
+    });
+
+    $('#patch_port_popup_add').on('click', function() {
+        let url = patchPortAddUrl + '?popup=1';
+        let popup = window.open(url, 'Agregar Puerto de Patchera', 'width=800, height=400');
+        popup.focus();
+    });
+
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'dev_modelAdded') {
+            let dev_modelId = event.data.id;
+            let dev_modelName = event.data.name;
+            let select = $('#id_dev_model');
+            let option = new Option(dev_modelName, dev_modelId, true, true);
+            select.append(option).val(dev_modelId).trigger('change');
+        }
+
+        if (event.data.type === 'officeAdded') {
+            let officeId = event.data.id;
+            let officeName = event.data.name;
+            let select = $('#id_office');
+            let option = new Option(officeName, officeId, true, true);
+            select.append(option).val(officeId).trigger('change');
+        }
+
+        if (event.data.type === 'employeeAdded') {
+            let employeeId = event.data.id;
+            let employeeName = event.data.name;
+            let select = $('#id_employee');
+            let option = new Option(employeeName, employeeId, true, true);
+            select.append(option).val(employeeId).trigger('change');
+        }
+
+        if (event.data.type === 'wall_portAdded') {
+            let wall_portId = event.data.id;
+            let wall_portName = event.data.name;
+            let select = $('#id_wall_port');
+            let option = new Option(wall_portName, wall_portId, true, true);
+            select.append(option).val(wall_portId).trigger('change');
+        }
+
+        if (event.data.type === 'switch_portAdded') {
+            let switch_portId = event.data.id;
+            let switch_portName = event.data.name;
+            let select = $('#id_switch_port');
+            let option = new Option(switch_portName, switch_portId, true, true);
+            select.append(option).val(switch_portId).trigger('change');
+        }
+
+        if (event.data.type === 'patch_portAdded') {
+            let patch_portId = event.data.id;
+            let patch_portName = event.data.name;
+            let select = $('#id_patch_port');
+            let option = new Option(patch_portName, patch_portId, true, true);
+            select.append(option).val(patch_portId).trigger('change');
+        }
+    });
+
+
 
 
     initializeFormSubmission('#myform', 'edit');

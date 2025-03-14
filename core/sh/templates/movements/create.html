@@ -20,7 +20,7 @@
     </div>
     <div class="card-body">
       <button id="toggle-office-filters" class="btn {{filter_btn_color}} mb-4" type="button">
-        Filtrar Oficinas y Empleados <i class="fa fa-filter"></i>
+        Filtros <i class="fa fa-filter"></i>
       </button>
       <div id="filter-office-cards" class="d-none">
         <div class="row">
@@ -84,6 +84,7 @@
       <div class="row">
         <div class="form-group col-6">
           <label for="id_office">Oficina:</label>
+          <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
           {{ form.office }}
           {% if form.office.errors %}
           <div class="invalid-feedback d-block">
@@ -93,6 +94,7 @@
         </div>
         <div class="form-group col-6">
           <label for="id_employee">Empleado:</label>
+          <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="employee_popup_add"><i class="fas fa-plus"></i></button>
           {{ form.employee }}
           {% if form.employee.errors %}
           <div class="invalid-feedback d-block">
@@ -113,61 +115,66 @@
       <div class="col-12">
         <div class="form-group">
           <label for="id_device">Dispositivo</label>
+          <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="device_popup_add"><i class="fas fa-plus"></i></button>
           {{ form.device }}
         </div>
       </div>
       <div class="col-12">
         <div class="form-group">
           <label for="id_switch">Switch</label>
+          <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="switch_popup_add"><i class="fas fa-plus"></i></button>
           {{ form.switch }}
         </div>
       </div>
     </div>
   </div>
-</div>
+
   <!-- Tarjeta de detalles del movimiento -->
-<div class="card mt-4">
-  <div class="card-header d-flex justify-content-between align-items-center {{bg_color}}">
-    <h3 class="card-title">Cargue los detalles del movimiento</h3>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label for="id_move">Tipo de Movimiento</label>
-          {{ form.move }}
+  <div class="card mt-4">
+    <div class="card-header d-flex justify-content-between align-items-center {{bg_color}}">
+      <h3 class="card-title">Cargue los detalles del movimiento</h3>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="id_move">Tipo de Movimiento</label>
+            <button type="button" class="btn btn-sm {{ btn_color }} ml-2 mb-1" id="move_type_popup_add"><i class="fas fa-plus"></i></button>
+            {{ form.move }}
+          </div>
         </div>
-      </div>
-      <div class="col-md-5">
-        <div class="form-group">
-          <label for="id_techs">Técnico</label>
-          {{ form.techs }}
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="id_techs">Técnico: </label>
+
+            {{ form.techs }}
+          </div>
         </div>
-      </div>
-      <div class="form-group row p-2">
-        <label for="id_date_in">Fecha del Movimiento:</label>
-        <div class="row col-12">
-          <button type="button" id="id_movements_date_in_button" class="btn btn-dark mx-3">
-            <i class="fa fa-calendar"></i> Seleccionar Fecha:
-          </button>
-          <input type="text" name="date_in" id="id_movements_date_in_input" readonly value="{{ form.date_in.value | default_if_none:'' }}" class="form-control col-3">
-          {% if form.date_in.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.date_in.errors|join:"<br>" }}
-            </div>
-            {% endif %}
+        <div class="form-group row p-2">
+          <label for="id_date_in">Fecha del Movimiento: </label>
+          <div class="row col-12">
+            <button type="button" id="id_movements_date_in_button" class="btn btn-dark mx-3">
+              <i class="fa fa-calendar"></i> Seleccionar Fecha:
+            </button>
+            <input type="text" name="date_in" id="id_movements_date_in_input" readonly value="{{ form.date_in.value | default_if_none:'' }}" class="form-control col-3">
+            {% if form.date_in.errors %}
+              <div class="invalid-feedback d-block">
+                {{ form.date_in.errors|join:"<br>" }}
+              </div>
+              {% endif %}
+          </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="id_suply">Suministro</label>
-          {{ form.suply }}
+        <div class="col-12">
+          <div class="form-group">
+            <label for="id_suply">Insumo: </label>
+            {{ form.suply }}
+          </div>
         </div>
-      </div>
-      <div class="col-12">
-        <div class="form-group">
-          <label for="id_detail">Detalle</label>
-          {{ form.detail }}
+        <div class="col-12">
+          <div class="form-group">
+            <label for="id_detail">Detalle: </label>
+            {{ form.detail }}
+          </div>
         </div>
       </div>
     </div>
@@ -179,4 +186,12 @@
 {% block form_scripts %}
   <script src="{% static 'js/filters.js' %}"></script>
   <script src="{% static 'movements/js/form.js' %}"></script>
+
+  <script>
+    officeAddUrl = "{% url 'sh:office_add' %}";
+    employeeAddUrl = "{% url 'sh:employee_add' %}";
+    deviceAddUrl = "{% url 'sh:device_add' %}";
+    switchAddUrl = "{% url 'sh:switch_add' %}";
+    moveTypeAddUrl = "{% url 'sh:move_type_add' %}";
+  </script>
 {% endblock form_scripts %}

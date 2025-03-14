@@ -60,6 +60,11 @@ class EmployeeCreateView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
+    def get_template_names(self):
+        if self.request.GET.get('popup') == '1':
+            return ['employee/popup_add.html']
+        return ['employee/create.html']
+
     def form_valid(self, form):
         try:
             self.object = form.save()
@@ -67,7 +72,9 @@ class EmployeeCreateView(CreateView):
             if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 data = {
                     'success': True,
-                    'message': 'Empleado agregado correctamente'
+                    'message': 'Empleado agregado correctamente',
+                    'employee_id': self.object.id,
+                    'employee_name': f"{self.object.employee_last_name}, {self.object.employee_name}"
                 }
                 return JsonResponse(data)
             else:
@@ -96,7 +103,7 @@ class EmployeeCreateView(CreateView):
         context['form_id'] = 'employeeForm'
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
-        context['btn_color'] = 'btn-primary'
+        context['btn_color'] = 'bg-custom-primary'
         context['filter_btn_color'] = 'btn-primary'
         return context
 
@@ -117,7 +124,9 @@ class EmployeeUpadateView(UpdateView):
             if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 data = {
                     'success': True,
-                    'message': 'Empleado actualizado correctamente'
+                    'message': 'Empleado actualizado correctamente',
+                    'employee_id': self.object.id,
+                    'employee_name': f"{self.object.employee_last_name}, {self.object.employee_name}"
                 }
                 return JsonResponse(data)
             else:

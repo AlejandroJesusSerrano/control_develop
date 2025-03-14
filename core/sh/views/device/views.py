@@ -72,6 +72,8 @@ class DeviceCreateView(CreateView):
         data = {
           'success': True,
           'message': 'Switch agregado exitosamente',
+          'device_id': self.object.id,
+          'device_name': f"{self.object.dev_model.dev_type.dev_type} {self.object.dev_model.brand.brand} {self.object.dev_model.dev_model} S/N°: {self.object.serial_n}"
         }
         return JsonResponse(data)
       else:
@@ -124,7 +126,11 @@ class DeviceUpdateView(UpdateView):
       if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
         data = {
           'success': True,
-          'message': 'Dispositivo actualizado correctamente'
+          'message': 'Dispositivo actualizado correctamente',
+          'success': True,
+          'message': 'Switch agregado exitosamente',
+          'device_id': self.object.id,
+          'device_name': f"{self.object.dev_model.dev_type.dev_type} {self.object.dev_model.brand.brand} {self.object.dev_model.dev_model} S/N°: {self.object.serial_n}"
         }
         return JsonResponse(data)
       else:
@@ -154,6 +160,7 @@ class DeviceUpdateView(UpdateView):
     context['action'] = 'edit'
     context['bg_color'] = 'bg-custom-warning'
     context['filter_btn_color'] = 'bg-custom-warning'
+    context['btn_color'] = 'bg-custom-warning'
 
 
     device = self.get_object()
@@ -201,7 +208,6 @@ class DeviceUpdateView(UpdateView):
       context['form'].initial['wall_port_in'] = wall_port
 
       context['form'].fields['employee'].queryset = Employee.objects.filter(office=office)
-      context['form'].initial['employee'] = device.employee
 
       switch_port = device.switch_port_in
       context['form'].fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=office)

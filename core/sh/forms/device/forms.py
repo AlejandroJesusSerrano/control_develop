@@ -144,7 +144,7 @@ class DeviceForm(forms.ModelForm):
                 'class': 'form-control select2',
                 'id': 'id_patch_port_in'
             }),
-            'employee': Select(attrs={
+            'employee': SelectMultiple(attrs={
                 'class': 'form-control select2',
                 'id': 'id_employee'}),
         }
@@ -215,7 +215,6 @@ class DeviceForm(forms.ModelForm):
                     self.fields['wall_port_in'].initial = instance.wall_port_in.id
 
                 self.fields['employee'].queryset = Employee.objects.filter(office=instance.office)
-                self.fields['employee'].initial = instance.employee.id if instance.employee else None
 
                 self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__office=instance.office)
                 self.fields['switch_port_in'].initial = instance.switch_port_in.id if self.instance.switch_port_in else None

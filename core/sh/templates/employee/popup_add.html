@@ -38,10 +38,10 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.last_name.id_for_label }}">Apellido del Empleado: </label>
-                {{ form.loc }}
-                 {% if form.last_name.errors %}
-                    <div class="invalid-feedback d-block">{{ form.last_name.errors|join:"<br>" }}</div>
+                <label for="{{ form.employee_last_name.id_for_label }}">Apellido del Empleado: </label>
+                {{ form.employee_last_name }}
+                 {% if form.employee_last_name.errors %}
+                    <div class="invalid-feedback d-block">{{ form.employee_last_name.errors|join:"<br>" }}</div>
                  {% endif %}
             </div>
 
@@ -93,7 +93,7 @@
 
     <script>
 
-        submitPopupForm('#officeForm', "{% url 'sh:office_add' %}", 'office');
+        submitPopupForm('#employeeForm', "{% url 'sh:employee_add' %}", 'employee');
 
         let officeAddUrl = "{% url 'sh:office_add' %}";
         let employee_statusAddUrl = "{% url 'sh:office_loc_add' %}";

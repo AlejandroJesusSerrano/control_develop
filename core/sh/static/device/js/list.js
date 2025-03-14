@@ -18,16 +18,22 @@ $(document).ready(function(){
             {"data": "brand"},
             {"data": "model"},
             {"data": "ip"},
-            {"data": "w_port"},
-            {"data": "s_port"},
-            {"data": "p_port"},
             {"data": "office"},
-            {"data": "employee"},
+            {
+                "data": "employee",
+                "render": function(data, type, row){
+                    if (Array.isArray(data)){
+                        return data.join('<br>');
+                    } else {
+                        return data;
+                    }
+                }
+            },
             {"data": null, "defaultContent": ""},
         ],
         columnDefs: [
             {
-                targets: [9],
+                targets: [6],
                 class: 'text-center align-middle',
                 orderable: false,
                 render: function(data, type, row){

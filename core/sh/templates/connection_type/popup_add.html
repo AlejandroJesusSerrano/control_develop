@@ -4,7 +4,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Agregar Provincia</title>
+    <title>Agregar Tipo de Conexión</title>
     <link rel="stylesheet" href="{% static 'lib/adminlte_3.2.0/dist/css/adminlte.min.css' %}">
     <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2.min.css' %}">
     <link rel="stylesheet" href="{% static 'lib/select2_4.1.0/dist/css/select2-bootstrap.min.css' %}">
@@ -16,12 +16,12 @@
 
 <body>
     <div class="container">
-        <h2>Agregar Provincia</h2>
+        <h2>Agregar Tipo de Conexión</h2>
         <form method="post" id="connection_typeForm">
             {% csrf_token %}
             <div class="form-group">
                 <label for="{{ form.connection_type.id_for_label }}">Tipo de Conexión:</label>
-                {{ form.connection_type_id }}
+                {{ form.connection_type }}
                 {% if form.connection_type.errors %}
                   <div class="invalid-feedback d-block">{{ form.connection_type.errors|join:"<br>" }}</div>
                 {% endif %}

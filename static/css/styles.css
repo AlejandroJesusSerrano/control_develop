@@ -32,6 +32,11 @@ footer.main-footer {
   padding: 1.25rem;
 }
 
+.bg-custom-dark-over-dark {
+  background-color: #454d55 !important;
+  color: #f1f3f5 !important;
+}
+
 .content-wrapper {
   background-color: #454d55 !important; /* Asegura que el fondo coincida con el tema oscuro */
   padding-bottom: 2rem !important; /* Agrega un margen interno inferior */
