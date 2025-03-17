@@ -97,8 +97,28 @@
 
     <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
     <script src="{% static 'js/popup.js' %}"></script>
-
+    <script src="{% static 'js/popup_filters.js' %}"></script>
     <script>
+        $(document).ready(function() {
+
+            const urls = {
+                load_switches: "{% url 'sh:ajax_load_switch' %}",
+                load_patcheras: "{% url 'sh:ajax_load_patchera' %}",
+                load_switch_ports: "{% url 'sh:ajax_load_switch_port' %}",
+                load_patch_ports: "{% url 'sh:ajax_load_patch_ports' %}",
+            }
+
+            initPopupFilters(
+                '#id_office',
+                '#id_switch',
+                '#id_patchera',
+                '#id_switch_port_in',
+                '#id_patch_port_in',
+                null,
+                urls,
+                true
+            );
+        });
 
         submitPopupForm('#wall_portForm', "{% url 'sh:wall_port_add' %}", 'wall_port');
 
@@ -164,6 +184,7 @@
                 console.log('Selector actualizado con:', event.data.name);
             }
         });
+
     </script>
 </body>
 </html>

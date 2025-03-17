@@ -227,12 +227,12 @@ def ajax_load_device(request):
     return JsonResponse(data, safe=False)
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_switch(request):
 
-    location_id = request.POST.get('location_id')
-    office_id = request.POST.get('office_id')
-    rack_id = request.POST.get('rack_id')
+    location_id = request.POST.get('location_id') or request.GET.get('location_id')
+    office_id = request.POST.get('office_id') or request.GET.get('office_id')
+    rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
 
     filters = {}
     if location_id:
@@ -325,14 +325,17 @@ def load_switch_serial_n(request):
 
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_patchera(request):
-    location_id = request.POST.get('location_id')
-    rack_id = request.POST.get('rack_id')
+    location_id = request.POST.get('location_id') or request.GET.get('location_id')
+    office_id = request.POST.get('office_id') or request.GET.get('office_id')
+    rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
 
     filters = {}
     if location_id:
         filters['rack__office__loc__edifice__location_id'] = location_id
+    if office_id:
+        filters['rack__office_id'] = office_id
     if rack_id:
         filters['rack_id'] = rack_id
 
@@ -350,10 +353,11 @@ def ajax_load_patchera(request):
 
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_patch_ports(request):
-    """Devuelve los Patch_Port disponibles de una patchera determinada."""
-    patchera_id = request.POST.get('patchera_id')
+
+    patchera_id = request.POST.get('patchera_id') or request.GET.get('patchera_id')
+
     if not patchera_id:
         return JsonResponse([], safe=False)
 
@@ -465,9 +469,9 @@ def ajax_load_wall_port(request):
 
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_switch_port(request):
-    switch_id = request.POST.get('switch_id')
+    switch_id = request.POST.get('switch_id') or request.GET.get('switch_id')
 
     used_ports = set()
 
