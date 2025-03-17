@@ -335,7 +335,7 @@ def ajax_load_patchera(request):
     if location_id:
         filters['rack__office__loc__edifice__location_id'] = location_id
     if office_id:
-        filters['rack__office_id'] = office_id
+        filters['rack__office_id'] = office_id  
     if rack_id:
         filters['rack_id'] = rack_id
 
