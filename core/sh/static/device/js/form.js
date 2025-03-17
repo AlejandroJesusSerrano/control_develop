@@ -31,40 +31,34 @@ $(document).ready(function() {
         });
     }
 
-    if ($('#id_switch_ports').length > 0) {
-        $('select[name="switch_ports"]').on('change', function() {
-            const switch_ports_id = $(this).val();
-            if (switch_ports_id) {
-                updateOptions('/sh/ajax/load_switch_port/', {
-                    'switch_id': switch_ports_id
-                }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
+    function togglePortFields() {
+        const wallPortValue = $('#id_wall_port_in').val();
+        const switchPortValue = $('#id_switch_port_in').val();
+        const patchPortValue = $('#id_patch_port_in').val();
 
-                $('select[name="patchera_ports"]').val(null).trigger('change');
-                $('select[name="patch_port_in"]').val(null).trigger('change');
-                $('select[name="patch_port_in"]').closest('.form-group').hide();
-            } else {
-                $('select[name="patch_port_in"]').closest('.form-group').show();
-            }
-        });
+        if (wallPortValue) {
+            $('#id_switch_port_in').prop('disabled', true);
+            $('#id_patch_port_in').prop('disabled', true);
+        } else if (switchPortValue) {
+            $('#id_wall_port_in').prop('disabled', true);
+            $('#id_patch_port_in').prop('disabled', true);
+        } else if (patchPortValue) {
+            $('#id_wall_port_in').prop('disabled', true);
+            $('#id_switch_port_in').prop('disabled', true);
+        } else {
+            $('#id_wall_port_in').prop('disabled', false);
+            $('#id_switch_port_in').prop('disabled', false);
+            $('#id_patch_port_in').prop('disabled', false);
+        }
     }
 
-    if ($('#id_patchera_ports').length > 0) {
-        $('select[name="patchera_ports"]').on('change', function() {
-            const patchera_id = $(this).val();
-            if (patchera_id){
-                updateOptions('/sh/ajax/load_patch_ports/', {
-                    'patchera_id': patchera_id
-                }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
+    // Inicializar al cargar la página
+    togglePortFields();
 
-                $('select[name="switch_ports"]').val(null).trigger('change');
-                $('select[name="switch_port_in"]').val(null).trigger('change');
-                $('select[name="switch_port_in"]').closest('.form-group').hide();
-            } else {
-                $('select[name="switch_port_in"]').closest('.form-group').show();
-            }
-        });
-    }
-
+    // Escuchar cambios en los campos
+    $('#id_wall_port_in, #id_switch_port_in, #id_patch_port_in').on('change', function() {
+        togglePortFields();
+    });
 
 
     $('select[name="dev_type"]').on('change', function() {
@@ -131,6 +125,12 @@ $(document).ready(function() {
         popup.focus();
     });
 
+    $('#connection_popup_add').on('click', function() {
+        let url = connectionAddUrl + '?popup=1';
+        let popup = window.open(url, 'Agregar Conexión', 'width=800, height=250');
+        popup.focus();
+    });
+
     $('#office_popup_add').on('click', function() {
         let url = officeAddUrl + '?popup=1';
         let popup = window.open(url, 'Agregar Oficina', 'width=800, height=750');
@@ -139,14 +139,14 @@ $(document).ready(function() {
 
     $('#employee_popup_add').on('click', function() {
         let url = employeeAddUrl + '?popup=1';
-        let popup = window.open(url, 'Agregar Empleado', 'width=800, height=700');
+        let popup = window.open(url, 'Agregar Empleado', 'width=800, height=650');
         popup.focus();
     });
 
     $('#wall_port_popup_add').on('click', function() {
         let office_id = $('#id_office').val();
         let url = wallPortAddUrl + '?popup=1&office_id=' + office_id;
-        let popup = window.open(url, 'Agregar Puerto de Pared', 'width=800, height=825');
+        let popup = window.open(url, 'Agregar Puerto de Pared', 'width=800, height=900');
         popup.focus();
     });
 
@@ -169,6 +169,14 @@ $(document).ready(function() {
             let select = $('#id_dev_model');
             let option = new Option(dev_modelName, dev_modelId, true, true);
             select.append(option).val(dev_modelId).trigger('change');
+        }
+
+        if (event.data.type === 'connectionAdded') {
+            let connectionId = event.data.id;
+            let connectionName = event.data.name;
+            let select = $('#id_connection');
+            let option = new Option(connectionName, connectionId, true, true);
+            select.append(option).val(connectionId).trigger('change');
         }
 
         if (event.data.type === 'officeAdded') {

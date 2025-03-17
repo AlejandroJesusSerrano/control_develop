@@ -60,7 +60,7 @@ $(document).ready(function() {
 
   $('#move_type_popup_add').on('click', function() {
     let url = moveTypeAddUrl + "?popup=1";
-    let popup = window.open(url, 'Agregar Tipo de Movimiento', 'width=800,height=800');
+    let popup = window.open(url, 'Agregar Tipo de Movimiento', 'width=800,height=350');
     popup.focus();
   });
 

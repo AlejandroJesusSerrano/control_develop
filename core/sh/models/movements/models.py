@@ -28,6 +28,7 @@ class Movements(models.Model):
 
     def toJSON(self):
         item = model_to_dict(self)
+        item['id'] = self.id
         item['date'] = self.date.strftime('%d/%m/%Y')
         item['techs'] = str(self.techs)
         item['move'] = str(self.move)
@@ -36,7 +37,7 @@ class Movements(models.Model):
         item['device'] = f"{self.device.dev_model} / S/N: {self.device.serial_n}" if self.device else 'SIN DISPOSITIVO'
         item['switch'] = f"{self.switch.model.brand.brand} / {self.switch.model.dev_model} / S/N°: {self.switch.serial_n}" if self.switch else 'SIN SWITCH'
         item['suply'] = self.suply.suply_type.suply_type if self.suply else 'SIN INSUMO'
-        item['detail'] = self.detail or ''
+        item['detail'] = self.detail or 'NO SE HAN INGRESADO DETALLES'
         return item
 
     class Meta:

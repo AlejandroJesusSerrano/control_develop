@@ -149,10 +149,19 @@
             <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
         </form>
     </div>
+
     <script src="{% static 'lib/select2_4.1.0/dist/js/select2.full.min.js' %}"></script>
     <script src="{% static 'js/popup.js' %}"></script>
+    <script src="{% static 'js/popup_filters.js' %}"></script>
 
     <script>
+
+        $(document).ready(function() {
+
+            const urls = {
+                
+            }
+        });
 
         submitPopupForm('#deviceForm', "{% url 'sh:device_add' %}", 'device');
 

@@ -20,47 +20,51 @@
         <form method="post" id="officeForm">
             {% csrf_token %}
 
-            <div class="form-group">
-                <label for="{{ form.dependency.id_for_label }}">Dependencia: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="dependency_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.dependency }}
-                {% if form.depdendency.errors %}
-                  <div class="invalid-feedback d-block">{{ form.dependency.errors|join:"<br>" }}</div>
-                {% endif %}
+            <div class="row bg-custom-dark-over-dark p-3 my-2 rounded">
+                <div class="form-group col-12">
+                    <label for="{{ form.dependency.id_for_label }}">Dependencia: </label>
+                    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="dependency_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.dependency }}
+                    {% if form.depdendency.errors %}
+                      <div class="invalid-feedback d-block">{{ form.dependency.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.edifice.id_for_label }}">Edificio: </label>
+                    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="edifice_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.edifice }}
+                    {% if form.edifice.errors %}
+                      <div class="invalid-feedback d-block">{{ form.edifice.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.loc.id_for_label }}">Ubicación de la Oficina: </label>
+                    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="office_loc_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.loc }}
+                     {% if form.loc.errors %}
+                        <div class="invalid-feedback d-block">{{ form.loc.errors|join:"<br>" }}</div>
+                     {% endif %}
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.edifice.id_for_label }}">Edificio: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="edifice_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.edifice }}
-                {% if form.edifice.errors %}
-                  <div class="invalid-feedback d-block">{{ form.edifice.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
+            <div class="row bg-custom-dark-over-dark p-3 my-2 rounded">
+                <div class="form-group col-12">
+                    <label for="{{ form.office.id_for_label }}">Oficina: </label>
+                    {{ form.office }}
+                     {% if form.office.errors %}
+                        <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
+                     {% endif %}
+                </div>
 
-            <div class="form-group">
-                <label for="{{ form.loc.id_for_label }}">Ubicación de la Oficina: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="office_loc_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.loc }}
-                 {% if form.loc.errors %}
-                    <div class="invalid-feedback d-block">{{ form.loc.errors|join:"<br>" }}</div>
-                 {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.office.id_for_label }}">Oficina: </label>
-                {{ form.office }}
-                 {% if form.office.errors %}
-                    <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
-                 {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.description.id_for_label }}">Descripción: </label>
-                {{ form.description }}
-                 {% if form.description.errors %}
-                    <div class="invalid-feedback d-block">{{ form.description.errors|join:"<br>" }}</div>
-                 {% endif %}
+                <div class="form-group col-12">
+                    <label for="{{ form.description.id_for_label }}">Descripción: </label>
+                    {{ form.description }}
+                     {% if form.description.errors %}
+                        <div class="invalid-feedback d-block">{{ form.description.errors|join:"<br>" }}</div>
+                     {% endif %}
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>

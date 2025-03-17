@@ -23,6 +23,10 @@ class MovementsListView(ListView):
             if action == 'searchdata':
                 movements = Movements.objects.all()
                 data = [m.toJSON() for m in movements]
+            elif action == 'get-details':
+                movement_id = request.POST.get('id')
+                movement = Movements.objects.get(id=movement_id)
+                data = movement.toJSON()
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

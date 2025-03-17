@@ -19,69 +19,75 @@
         <h2>Agregar Empleado</h2>
         <form method="post" id="employeeForm">
             {% csrf_token %}
-
-            <div class="form-group">
-                <label for="{{ form.office.id_for_label }}">Oficina: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.office }}
-                {% if form.office.errors %}
-                  <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.employee_name.id_for_label }}">Nombre del Empleado: </label>
-                {{ form.employee_name }}
-                {% if form.employee_name.errors %}
-                  <div class="invalid-feedback d-block">{{ form.employee_name.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.employee_last_name.id_for_label }}">Apellido del Empleado: </label>
-                {{ form.employee_last_name }}
-                 {% if form.employee_last_name.errors %}
-                    <div class="invalid-feedback d-block">{{ form.employee_last_name.errors|join:"<br>" }}</div>
-                 {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.cuil.id_for_label }}">Número de CUIL: </label>
-                {{ form.cuil }}
-                 {% if form.cuil.errors %}
-                    <div class="invalid-feedback d-block">{{ form.cuil.errors|join:"<br>" }}</div>
-                 {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.status.id_for_label }}">Estado del Empleado: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="employee_status_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.status }}
-                 {% if form.status.errors %}
-                    <div class="invalid-feedback d-block">{{ form.status.errors|join:"<br>" }}</div>
-                 {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.user_pc.id_for_label }}">Usuario de la PC: </label>
-                {{ form.user_pc }}
-                 {% if form.user_pc.errors %}
-                    <div class="invalid-feedback d-block">{{ form.user_pc.errors|join:"<br>" }}</div>
-                 {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="id_avatar_image_input">Imagen del Empleado:</label>
-                {{ form.avatar }}
-                <button type="button" class="btn btn-primary" id="custom_avatar_button">
-                    <i class="fas fa-upload"></i> Seleccionar Imagen
-                </button>
-                <span id="avatar_name" class="ml-2">Ningún archivo seleccionado</span>
-                {% if form.avatar.errors %}
-                <div class="invalid-feedback d-block">
-                    {{ form.avatar.errors|join:"<br>" }}
+            <div class="row bg-custom-dark-over-dark p-3 my-2 rounded">
+                <div class="form-group col-12">
+                    <label for="{{ form.office.id_for_label }}">Oficina: </label>
+                    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="office_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.office }}
+                    {% if form.office.errors %}
+                      <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
+                    {% endif %}
                 </div>
-                {% endif %}
+            </div>
+
+            <div class="row bg-custom-dark-over-dark p-3 my-2 rounded">
+                <div class="form-group col-12">
+                    <label for="{{ form.user_pc.id_for_label }}">Usuario de la PC: </label>
+                    {{ form.user_pc }}
+                     {% if form.user_pc.errors %}
+                        <div class="invalid-feedback d-block">{{ form.user_pc.errors|join:"<br>" }}</div>
+                     {% endif %}
+                </div>
+            </div>
+
+            <div class="row bg-custom-dark-over-dark p-3 my-2 rounded">
+
+                <div class="form-group col-6">
+                    <label for="{{ form.employee_name.id_for_label }}">Nombre del Empleado: </label>
+                    {{ form.employee_name }}
+                    {% if form.employee_name.errors %}
+                      <div class="invalid-feedback d-block">{{ form.employee_name.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.employee_last_name.id_for_label }}">Apellido del Empleado: </label>
+                    {{ form.employee_last_name }}
+                     {% if form.employee_last_name.errors %}
+                        <div class="invalid-feedback d-block">{{ form.employee_last_name.errors|join:"<br>" }}</div>
+                     {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.cuil.id_for_label }}">Número de CUIL: </label>
+                    {{ form.cuil }}
+                     {% if form.cuil.errors %}
+                        <div class="invalid-feedback d-block">{{ form.cuil.errors|join:"<br>" }}</div>
+                     {% endif %}
+                </div>
+
+                <div class="form-group  col-6">
+                    <label for="{{ form.status.id_for_label }}">Estado del Empleado: </label>
+                    <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="employee_status_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.status }}
+                     {% if form.status.errors %}
+                        <div class="invalid-feedback d-block">{{ form.status.errors|join:"<br>" }}</div>
+                     {% endif %}
+                </div>
+
+                <div class="form-group col-12 my-2">
+                    <label for="id_avatar_image_input">Imagen del Empleado:</label>
+                    {{ form.avatar }}
+                    <button type="button" class="btn btn-primary" id="custom_avatar_button">
+                        <i class="fas fa-upload"></i> Seleccionar Imagen
+                    </button>
+                    <span id="avatar_name" class="ml-2">Ningún archivo seleccionado</span>
+                    {% if form.avatar.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.avatar.errors|join:"<br>" }}
+                    </div>
+                    {% endif %}
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
