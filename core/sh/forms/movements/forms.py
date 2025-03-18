@@ -46,6 +46,16 @@ class MovementsForm(ModelForm):
         widget=forms.Select(attrs={'class': 'form-control select2', 'id': 'id_loc'}),
         required=False
     )
+    date = forms.DateField(
+        widget=DateInput(attrs={
+            'class': 'form-control datepicker',
+            'id': 'id_date',
+            'autocomplete': 'off',
+            'data-provide': 'datepicker',
+            'data-date-format': 'dd/mm/yyyy'
+        }),
+        input_formats=['%d/%m/%Y']
+    )
 
     class Meta:
         model = Movements
@@ -64,13 +74,6 @@ class MovementsForm(ModelForm):
             'switch': Select(attrs={'class': 'form-control select2', 'id': 'id_switch'}),
             'move': Select(attrs={'class': 'form-control select2', 'id': 'id_move'}),
             'techs': Select(attrs={'class': 'form-control select2', 'id': 'id_techs'}),
-            'date': DateInput(attrs={
-                'class': 'form-control datepicker',
-                'id': 'id_date',
-                'autocomplete': 'off',
-                'data-provide': 'datepicker',
-                'data-date-format': 'dd/mm/yyyy'
-            }),
             'suply': Select(attrs={'class': 'form-control select2', 'id': 'id_suply'}),
             'detail': Textarea(attrs={
                 'class': 'form-control',

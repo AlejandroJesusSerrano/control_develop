@@ -1,4 +1,108 @@
+<div class="modal fade" id="movementDetailModal" tabindex="-1" role="dialog" aria-labelledby="movementDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content bg-dark">
+            <!-- Encabezado del modal -->
+            <div class="modal-header bg-custom-dark-over-dark">
+                <h5 class="modal-title" id="movementDetailModalLabel">
+                    <i class="fas fa-info-circle"></i> Detalles del Movimiento
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-close text-light"></i></span>
+                </button>
+            </div>
 
+            <!-- Cuerpo del modal -->
+            <div class="modal-body bg-dark">
+                <div class="card bg-custom-dark-over-dark">
+                    <div class="card-header bg-custom-primary">
+                        <h5 class="card-title">
+                            <i class="fas fa-clipboard-list"></i> Movimiento Nro: {{movement.id}}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Envolver las tarjetas en un row -->
+                        <div class="row">
+                            <!-- Tarjeta Dispositivo -->
+                            <div class="col-12 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-laptop"></i> Dispositivo
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <h5 class="mb-0">{{movement.device.dev_model.dev_type.dev_type}}<h5/>
+                                        <h4 class="mb-0">MARCA: {{movement.device.dev_model.brand.brand}} | MODELO: {{movement.device.dev_model.dev_model}} | N° DE SERIE: {{movement.device.serial_n}}</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Oficina y Usuario -->
+                            <div class="col-6 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-building"></i> Oficina y Usuario
+                                    </div>
+                                    <div class="card-body">
+                                        {% if movement.office.loc.edifice.edifice != 'SEDE CENTRAL' %}
+                                            <p><strong>OFICINA: </strong>{{movement.office.office}} EDIFICIO: {{movement.office.loc.edifice.edifice}}</p>
+                                        {% else %}
+                                            <p><strong>OFICINA: </strong> {{movement.office.office}}</p>
+                                        {% endif %}
+                                        <p><strong>USUARIO: </strong>{{movement.employee.employee_last_name}}, {{movement.employee.employee_name}} <strong>CUIL N°: </strong> {{movement.employee.cuil}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Técnico y Fecha -->
+                            <div class="col-6 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-user-tie"></i> Técnico y Fecha
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>TECNICO: </strong> {{movement.techs}}</p>
+                                        <p>FECHA DEL MOVIMIENTO: <strong>{{movement.date}}</strong></span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Insumo y Movimiento -->
+                            <div class="col-6 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-box-open"></i> Insumo y Movimiento
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>Movimiento:</strong> <span id="detail-move"></span></p>
+                                        <p><strong>Insumo Utilizado:</strong> <span id="detail-suply"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Detalle del Movimiento -->
+                            <div class="col-6 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-file-alt"></i> Detalle del Movimiento
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="mb-0"><span id="detail-detail"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie del modal -->
+            <div class="modal-footer bg-custom-dark-over-dark">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
 <div class="modal fade" id="movementDetailModal" tabindex="-1" role="dialog" aria-labelledby="movementDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
       <div class="modal-content bg-dark">
@@ -30,4 +134,4 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->

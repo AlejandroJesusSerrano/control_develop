@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.utils.decorators import method_decorator
 
 from core.sh.forms.movements.forms import MovementsForm
@@ -186,3 +187,18 @@ class MovementsDeleteView(DeleteView):
         context['action'] = 'delete'
         context['btn_color'] = 'bg-custom-danger'
         return context
+
+class MovementsDetailsView(DetailView):
+    model = Movements
+    template_name = 'Movements/modal_details.html'
+    context_object_name = 'movement'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        print("Objeto:", self.object)
+        print("Detalle:", self.object.detail)  # This line is not working
+        context = self.get_context_data(object=self.object)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return render(request, self.template_name, context)
+        else:
+            return super().get(request, *args, **kwargs)

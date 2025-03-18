@@ -22,7 +22,7 @@ $(document).ready(function() {
 
   $('#switch_popup_add').on('click', function() {
     let url = switchAddUrl + "?popup=1";
-    let popup = window.open(url, 'Agregar Switch', 'width=800,height=1080');
+    let popup = window.open(url, 'Agregar Switch', 'width=800,height=825');
     popup.focus();
   });
 

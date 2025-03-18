@@ -20,89 +20,94 @@
         <form method="post" id="wall_portForm">
             {% csrf_token %}
 
-            <div class="form-group">
-                <label for="{{ form.model.id_for_label }}">Modelo: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="model_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.model }}
-                {% if form.model.errors %}
-                  <div class="invalid-feedback d-block">{{ form.model.errors|join:"<br>" }}</div>
-                {% endif %}
+            <div class="row bg-custom-dark-over-dark p-3 my-2">
+                <div class="form-group col-12">
+                    <label for="{{ form.model.id_for_label }}">Modelo: </label>
+                    <button type="button" class="btn btn-xs {{btn_color}} ml-2 mb-1" id="model_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.model }}
+                    {% if form.model.errors %}
+                      <div class="invalid-feedback d-block">{{ form.model.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.serial_n.id_for_label }}">Número de Serie: </label>
+                    {{ form.serial_n }}
+                    {% if form.serial_n.errors %}
+                      <div class="invalid-feedback d-block">{{ form.serial_n.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.ports_q.id_for_label }}">Cantidad de Puertos: </label>
+                    {{ form.ports_q }}
+                    {% if form.ports_q.errors %}
+                      <div class="invalid-feedback d-block">{{ form.ports_q.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.serial_n.id_for_label }}">Número de Serie: </label>
-                {{ form.serial_n }}
-                {% if form.serial_n.errors %}
-                  <div class="invalid-feedback d-block">{{ form.serial_n.errors|join:"<br>" }}</div>
-                {% endif %}
+            <div class="row bg-custom-dark-over-dark p-3 my-2">
+                <div class="form-group col-6">
+                    <label for="{{ form.rack.id_for_label }}">Rack: </label>
+                    {{ form.rack }}
+                    {% if form.rack.errors %}
+                      <div class="invalid-feedback d-block">{{ form.rack.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.ip.id_for_label }}">Dirección IP: </label>
+                    {{ form.ip }}
+                    {% if form.ip.errors %}
+                      <div class="invalid-feedback d-block">{{ form.ip.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.switch_rack_pos.id_for_label }}">Posición del Switch en el Rack: </label>
+                    {{ form.switch_rack_pos }}
+                    {% if form.switch_rack_pos.errors %}
+                      <div class="invalid-feedback d-block">{{ form.switch_rack_pos.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group col-6">
+                    <label for="{{ form.office.id_for_label }}">Oficina: </label>
+                    {{ form.office }}
+                    {% if form.office.errors %}
+                      <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="{{ form.ports_q.id_for_label }}">Cantidad de Puertos: </label>
-                {{ form.ports_q }}
-                {% if form.ports_q.errors %}
-                  <div class="invalid-feedback d-block">{{ form.ports_q.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
+            <div class="row bg-custom-dark-over-dark p-3 my-2">
+                <div class="form-group">
+                    <label for="{{ form.wall_port_in.id_for_label }}">Boca de la Pared de Ingreso: </label>
+                    <button type="button" class="btn btn-xs {{btn_color}} ml-2 mb-1" id="wall_port_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.wall_port_in }}
+                    {% if form.wall_port_in %}
+                      <div class="invalid-feedback d-block">{{ form.wall_port_in.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
 
-            <div class="form-group">
-                <label for="{{ form.rack.id_for_label }}">Rack: </label>
-                {{ form.rack }}
-                {% if form.rack.errors %}
-                  <div class="invalid-feedback d-block">{{ form.rack.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
+                <div class="form-group">
+                    <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
+                    <button type="button" class="btn btn-xs {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.switch_port_in }}
+                    {% if form.switch_port_in %}
+                      <div class="invalid-feedback d-block">{{ form.switch_port_in.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
 
-            <div class="form-group">
-                <label for="{{ form.ip.id_for_label }}">Dirección IP: </label>
-                {{ form.ip }}
-                {% if form.ip.errors %}
-                  <div class="invalid-feedback d-block">{{ form.ip.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.switch_rack_pos.id_for_label }}">Posición del Switch en el Rack: </label>
-                {{ form.switch_rack_pos }}
-                {% if form.switch_rack_pos.errors %}
-                  <div class="invalid-feedback d-block">{{ form.switch_rack_pos.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.office.id_for_label }}">Oficina: </label>
-                {{ form.office }}
-                {% if form.office.errors %}
-                  <div class="invalid-feedback d-block">{{ form.office.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-
-            <div class="form-group">
-                <label for="{{ form.wall_port_in.id_for_label }}">Boca de la Pared de Ingreso: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="wall_port_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.wall_port_in }}
-                {% if form.wall_port_in %}
-                  <div class="invalid-feedback d-block">{{ form.wall_port_in.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.switch_port_in.id_for_label }}">Puerto del Switch de Ingreso: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="switch_port_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.switch_port_in }}
-                {% if form.switch_port_in %}
-                  <div class="invalid-feedback d-block">{{ form.switch_port_in.errors|join:"<br>" }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.patch_port_in.id_for_label }}">Puerto de la Patchera de Ingreso: </label>
-                <button type="button" class="btn btn-sm {{btn_color}} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
-                {{ form.patch_port_in }}
-                {% if form.patch_port_in %}
-                  <div class="invalid-feedback d-block">{{ form.patch_port_in.errors|join:"<br>" }}</div>
-                {% endif %}
+                <div class="form-group">
+                    <label for="{{ form.patch_port_in.id_for_label }}">Puerto de la Patchera de Ingreso: </label>
+                    <button type="button" class="btn btn-xs {{btn_color}} ml-2 mb-1" id="patch_port_popup_add"><i class="fas fa-plus"></i></button>
+                    {{ form.patch_port_in }}
+                    {% if form.patch_port_in %}
+                      <div class="invalid-feedback d-block">{{ form.patch_port_in.errors|join:"<br>" }}</div>
+                    {% endif %}
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Guardar <i class="fas fa-save"></i></button>
