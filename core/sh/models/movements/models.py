@@ -34,8 +34,14 @@ class Movements(models.Model):
         item['move'] = str(self.move)
         item['office'] = self.office.office if self.office else 'SIN OFICINA'
         item['employee'] = f'{self.employee.employee_last_name}, {self.employee.employee_name}, CUIL Nro: {self.employee.cuil}' if self.employee else 'SIN EMPLEADO'
-        item['device'] = f"{self.device.dev_model.dev_type.dev_type} | {self.device.dev_model.brand.brand} {self.device.dev_model.dev_model} | N° DE SERIE:  {self.device.serial_n}" if self.device else 'SIN DISPOSITIVO'
-        item['switch'] = f"SWITCH -> MARCA:  {self.switch.model.brand.brand} -> MODELO:  {self.switch.model.dev_model.dev_model} -> N° DE SERIE:  {self.switch.serial_n}" if self.switch else 'SIN SWITCH'
+
+        if self.device:
+            item['equipment'] = f"{self.device.dev_model.dev_type.dev_type} | {self.device.dev_model.brand.brand} {self.device.dev_model.dev_model} | N° DE SERIE:  {self.device.serial_n}"
+        elif self.switch:
+            item['equipment'] = f"SWITCH -> MARCA:  {self.switch.model.brand.brand} -> MODELO:  {self.switch.model.dev_model} -> N° DE SERIE:  {self.switch.serial_n}"
+        else:
+            item['equipment'] = 'NO HAY EQUIPO'
+
         item['suply'] = self.suply.suply_type.suply_type if self.suply else 'SIN INSUMO'
         item['detail'] = self.detail or 'NO SE HAN INGRESADO DETALLES'
         return item

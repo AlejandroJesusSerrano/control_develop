@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
@@ -104,7 +105,7 @@ class EmployeeCreateView(CreateView):
         context['action'] = 'add'
         context['bg_color'] = 'bg-custom-primary'
         context['btn_color'] = 'bg-custom-primary'
-        context['filter_btn_color'] = 'btn-primary'
+        context['filter_btn_color'] = 'bg-custom-primary'
         return context
 
 class EmployeeUpadateView(UpdateView):
@@ -211,3 +212,15 @@ class EmployeeDeleteView(DeleteView):
         context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context
+
+class EmployeeDetailsView(DetailView):
+    model = Employee
+    template_name = 'employee/modal_details.html'
+    context_object_name = 'employee'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return render (request, self.template_name, context)
+        return super().get(request, *args, **kwargs)

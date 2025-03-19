@@ -66,43 +66,43 @@ $(document).ready(function() {
 
   window.addEventListener('message', function(event) {
     if (event.data.type === 'officeAdded') {
-      let office_id = event.data.id;
-      let office_name = event.data.name;
+      let officeId = event.data.id;
+      let officeName = event.data.name;
       let select = $('#id_office');
-      let option = new Option(office_name, office_id, true, true);
+      let option = new Option(officeName, officeId, true, true);
       select.append(option).val(officeId).trigger('change');
     }
 
     if (event.data.type === 'employeeAdded') {
-      let employee_id = event.data.id;
-      let employee_name = event.data.name;
+      let employeeId = event.data.id;
+      let employeeName = event.data.name;
       let select = $('#id_employee');
-      let option = new Option(employee_name, employee_id, true, true);
+      let option = new Option(employeeName, employeeId, true, true);
       select.append(option).val(employeeId).trigger('change');
     }
 
     if (event.data.type === 'deviceAdded') {
-      let device_id = event.data.id;
-      let device_name = event.data.name;
+      let deviceId = event.data.id;
+      let deviceName = event.data.name;
       let select = $('#id_device');
-      let option = new Option(device_name, device_id, true, true);
+      let option = new Option(deviceName, deviceId, true, true);
       select.append(option).val(deviceId).trigger('change');
     }
 
     if (event.data.type === 'switchAdded') {
-      let switch_id = event.data.id;
-      let switch_name = event.data.name;
+      let switchId = event.data.id;
+      let switchName = event.data.name;
       let select = $('#id_switch');
-      let option = new Option(switch_name, switch_id, true, true);
+      let option = new Option(switchName, switchId, true, true);
       select.append(option).val(switchId).trigger('change');
     }
 
     if (event.data.type === 'moveTypeAdded') {
-      let move_type_id = event.data.id;
-      let move_type_name = event.data.name;
-      let select = $('#id_movements_type');
-      let option = new Option(move_type_name, move_type_id, true, true);
-      select.append(option).val(moveTypeId).trigger('change');
+      let moveId = event.data.id;
+      let moveName = event.data.name;
+      let select = $('#id_move');
+      let option = new Option(moveName, moveId, true, true);
+      select.append(option).val(moveId).trigger('change');
     }
   });
 

@@ -61,7 +61,7 @@ function loadDevModelDetail(devModelId) {
                 $(this).remove();
             });
         },
-        error: function(jqXHR, textStatus, errorThrown){
+        error: function(xhr, status, error){
             console.log('Error al cargar la información del modelo de dispositivo', error);
         }
     });

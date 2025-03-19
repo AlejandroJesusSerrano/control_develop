@@ -130,17 +130,17 @@ class SwitchUpdateView(UpdateView):
                     'success': True,
                     'message': 'Switch actualizado exitosamente',
                     'switch_id': self.object.id,
-                    'switch_name': f'{self.object.model.brand.brand} {self.object.model.model} DE {self.object.ports_q} PUERTOS',
-                    'switch_model': self.object.model.model,
+                    'switch_name': f'{self.object.model.brand.brand} {self.object.model.dev_model} DE {self.object.ports_q} PUERTOS',
+                    'switch_model': self.object.model.dev_model,
                     'switch_brand': self.object.model.brand.brand,
                     'switch_ports_q': self.object.ports_q,
                     'switch_ip': self.object.ip,
                     'switch_rack': f'RACK: {self.object.rack.rack} EN OFICINA: {self.object.rack.office.office}' if self.object.rack else 'No se encuentra en Rack',
                     'switch_rack_pos': self.object.switch_rack_pos if self.object.rack else 'No se encuentra en Rack',
                     'switch_office': self.object.office.office,
-                    'switch_wall_port_in': self.object.wall_port_in if self.object.wall_port_in else 'No ingresa de pared',
-                    'switch_switch_port_in': self.object.switch_port_in if self.object.switch_port_in else 'No ingresa de switch',
-                    'switch_patch_port_in': self.object.patch_port_in if self.object.patch_port_in else 'No ingresa de patchera',
+                    'switch_wall_port_in': str(self.object.wall_port_in) if self.object.wall_port_in else 'No ingresa de pared',
+                    'switch_switch_port_in': str(self.object.switch_port_in) if self.object.switch_port_in else 'No ingresa de switch',
+                    'switch_patch_port_in': str(self.object.patch_port_in) if self.object.patch_port_in else 'No ingresa de patchera',
                 }
                 return JsonResponse(data)
             else:

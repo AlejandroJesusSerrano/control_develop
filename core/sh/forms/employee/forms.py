@@ -40,7 +40,7 @@ class EmployeeForm(forms.ModelForm):
   class Meta:
     model = Employee
     fields = [
-      'province', 'location', 'dependency', 'edifice', 'loc','employee_name', 'employee_last_name', 'cuil', 'status', 'user_pc', 'office', 'avatar'
+      'province', 'location', 'dependency', 'edifice', 'loc','employee_name', 'employee_last_name', 'cuil', 'status', 'user_pc', 'office', 'avatar', 'notes'
     ]
     widgets = {
       'employee_name': TextInput(attrs={
@@ -76,10 +76,16 @@ class EmployeeForm(forms.ModelForm):
         'placeholder': 'Seleccione una imagen de perfil',
         'id': 'id_avatar_image_input'
       }),
+      'notes': Textarea(attrs={
+        'class': 'form-control',
+        'placeholder': 'Ingrese observaciones sobre el empleado',
+        'id': 'id_notes_input'
+      })
     }
 
     help_texts = {
-      'cuil': '* Ingrese solo los numeros, sin guiones ni puntos'
+      'cuil': '* Ingrese solo los numeros, sin guiones ni puntos',
+      'avatar': '* Seleccione una imagen de perfil para el empleado'
     }
 
   def __init__(self, *args, **kwargs):

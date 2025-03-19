@@ -53,7 +53,7 @@ function loadOfficeDetail(officeId) {
                 $(this).remove();
             });
         },
-        error: function(jqXHR, textStatus, errorThrown){
+        error: function(xhr, status, error){
             console.log('Error al cargar la información de la oficina', error);
         }
     });

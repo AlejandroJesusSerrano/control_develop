@@ -28,13 +28,14 @@ class Device(models.Model):
 
   def __str__(self):
     if self.employee.exists():
-        emp_str = ", ".join([f"{emp.employee_last_name}, {emp.employee_name}, Oficina: {emp.office.office}" for emp in self.employee.all()]) 
+        emp_str = ", ".join([f"{emp.employee_last_name}, {emp.employee_name}, Oficina: {emp.office.office}" for emp in self.employee.all()])
     else:
         emp_str = "No asignado"
     return f"{self.dev_model.dev_type} Marca: {self.dev_model.brand}, Modelo: {self.dev_model.dev_model}, S/N°: {self.serial_n}, Empleado: {emp_str}"
 
   def toJSON(self):
     item = model_to_dict(self)
+    item['ip']= self.ip if self.ip else 'SIN IP'
     item['type'] = self.dev_model.dev_type.dev_type
     item['brand'] = self.dev_model.brand.brand
     item['model'] = self.dev_model.dev_model

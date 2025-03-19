@@ -472,6 +472,7 @@ def ajax_load_wall_port(request):
 @require_http_methods(["GET", "POST"])
 def ajax_load_switch_port(request):
     switch_id = request.POST.get('switch_id') or request.GET.get('switch_id')
+    exclude_switch_id = request.POST.get('exclude_switch_id') or request.GET.get('exclude_switch_id')
 
     used_ports = set()
 

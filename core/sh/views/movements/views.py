@@ -47,7 +47,6 @@ class MovementsListView(ListView):
         context['add_btn_title'] = 'Agregar Movimiento'
         return context
 
-# core/sh/views/movements/views.py
 class MovementsCreateView(CreateView):
     model = Movements
     form_class = MovementsForm

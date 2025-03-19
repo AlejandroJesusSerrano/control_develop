@@ -14,7 +14,7 @@ $(document).ready(function(){
             dataSrc: ""
         },
         columns: [
-            {"data": "device"},
+            {"data": "equipment"},
             {"data": "office"},
             {"data": "employee"},
             {"data": "move"},
@@ -23,12 +23,6 @@ $(document).ready(function(){
             {"data": null, "defaultContent": ""},
         ],
         columnDefs: [
-            {
-                targets: 0,
-                render: function(data, type, row){
-                    return row.device || row.switch;
-                }
-            },
             {
                 targets: [6],
                 class: 'text-center',

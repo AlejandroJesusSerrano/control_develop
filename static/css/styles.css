@@ -32,6 +32,11 @@ footer.main-footer {
   padding: 1.25rem;
 }
 
+.card-img-top {
+  width: 180px;
+  height: auto;
+}
+
 .bg-custom-dark-over-dark {
   background-color: #454d55 !important;
   color: #f1f3f5 !important;

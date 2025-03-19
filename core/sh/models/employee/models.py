@@ -12,6 +12,7 @@ class Employee(models.Model):
   user_pc = models.CharField(max_length=11, verbose_name='Nombre de Usuario')
   office = models.ForeignKey(Office, related_name='employee_office', verbose_name='Oficina', on_delete=models.CASCADE)
   avatar = models.ImageField(upload_to='img_avatars/%Y/%m/%d', null=True, blank=True, verbose_name='Avatar')
+  notes = models.TextField(null=True, blank=True, verbose_name='Observaciones')
   date_creation = models.DateTimeField(auto_now=True, verbose_name='Fecha de Registro')
   date_updated = models.DateTimeField(auto_now_add=True, verbose_name='Última Modificación')
 
@@ -34,7 +35,7 @@ class Employee(models.Model):
     item['cuil'] = self.cuil
     item['status'] = self.status.status
     item['user_pc'] = self.user_pc
-    item['office'] = (f"Oficina: {self.office.office} / Localidad: {self.office.loc.edifice.location.location} / Provincia: {self.office.loc.edifice.location.province.province}")
+    item['office'] = (f"{self.office.office} / Localidad: {self.office.loc.edifice.location.location} / Provincia: {self.office.loc.edifice.location.province.province}")
     item['dependency'] = self.office.dependency.dependency
     item['avatar'] = self.avatar.url if self.avatar else '/media/no_file.svg'
     return item
