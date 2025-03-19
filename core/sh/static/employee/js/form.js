@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     $('#id_avatar_image_input').on('change', function() {
         const fileName = $(this).val().split('//').pop();
-        $('#file_name').text(fileName || 'Ningún archivo seleccionado');
+        $('#avatar_name').text(fileName || 'Ningún archivo seleccionado');
     });
 
     $('#toggle-office-filters').on('click', function (e) {

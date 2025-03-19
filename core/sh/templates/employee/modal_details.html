@@ -1,0 +1,72 @@
+<div class="modal fade" id="employeeDetailModal" ...>
+    <div class="modal-dialog modal-xl" ...>
+        <div class="modal-content bg-dark">
+            <div class="modal-header bg-custom-dark-over-dark">
+                <h5 class="modal-title" id="employeeDetailModalLabel">
+                    <i class="fas fa-info-circle"></i> Detalles de Empleado
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-close text-light"></i></span>
+                </button>
+            </div>
+
+            <div class="modal-body bg-dark">
+                <div class="card bg-custom-dark-over-dark">
+                    <div class="card-header bg-custom-primary">
+                        <h5 class="card-title">
+                            <i class="fas fa-clipboard-list"></i> Empleado - Id Nro: {{employee.id}}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row d-flex">
+
+                            <div class="col-12 mb-2">
+                                <div class="card col-12 bg-custom-dark-over-dark">
+                                    <div class="row g-0">
+                                        <div class="col-2 p-0">
+                                            {% if employee.avatar %}
+                                                <img src="{{ employee.avatar.url }}" class="card-img-top" alt="Imagen de {{ employee.employee_full_name }}">
+                                            {% else %}
+                                                <img src="/media/no_file.svg" class="card-img-top" alt="Imagen no disponible">
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-8">
+                                            <div class="card-body mt-4">
+                                                <h4 class="mb-5"><strong>{{ employee.employee_full_name }}</strong></h4>
+                                                <h5 class="mb-5"><strong>CUIL: </strong> {{ employee.cuil }} <strong>| NOMBRE DE USUARIO: </strong> {{employee.user_pc}}</h5>
+
+                                                <h6 class="mb-3"><strong>SITUACIÓN: </strong> {{ employee.status }}</h6>
+                                                <p class="card-text text-body-secondary">Última modificación: {{ employee.date_updated }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-building"></i> Dependencia y Oficina
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>DEPENDENCIA: </strong> {{employee.office.dependency.dependency}}</p>
+                                        <p><strong>OFICINA: </strong>{{employee.office.office}} <strong>SITA EN: </strong> <strong>PISO: </strong> {{employee.office.loc.floor}} <strong>| ALA: </strong> {{employee.office.loc.wing}} </p>
+                                        <p><strong>DEL EDIFICIO: </strong> {{employee.office.loc.edifice.edifice}} <strong> CON DOMICILIO EN: </strong> {{employee.office.loc.edifice.address}}</p>
+                                        <p><strong>LOCALIDAD: </strong>{{employee.office.loc.edifice.location.location}}</p>
+                                        <p><strong>DISTRITO: </strong>{{employee.office.loc.edifice.location.province.province}} <strong>N°: {{employee.office.loc.edifice.location.province.number_id}}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer mt-1 bg-custom-dark-over-dark">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
