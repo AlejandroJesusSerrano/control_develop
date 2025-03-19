@@ -96,8 +96,8 @@ $(document).ready(function() {
       let option = new Option(switchName, switchId, true, true);
       select.append(option).val(switchId).trigger('change');
     }
-
-    if (event.data.type === 'moveTypeAdded') {
+    console.log('Mensaje recibido en el formulario de movimientos:', event.data);
+    if (event.data.type === 'moveAdded') {
       let moveId = event.data.id;
       let moveName = event.data.name;
       let select = $('#id_move');

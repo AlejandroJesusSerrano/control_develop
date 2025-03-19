@@ -69,10 +69,10 @@ class Move_Type_CreateView(CreateView):
             if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 data = {
                     'success': True,
-                    'message': 'Ubicación de oficina agregada correctamente',
-                    'move_type_id': self.object.id,
-                    'move_type_name': self.object.move,
-                    'move_type_details': self.object.details
+                    'message': 'Tipo de Movimiento agregado correctamente',
+                    'move_id': self.object.id,
+                    'move_name': self.object.move,
+                    'move_details': self.object.details
                 }
                 return JsonResponse(data)
             else:

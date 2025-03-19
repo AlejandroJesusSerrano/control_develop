@@ -52,16 +52,12 @@
     <script src="{% static 'js/popup.js' %}"></script>
 
     <script>
-
-        $(document).ready(function() {
             submitPopupForm('#moveTypeForm', "{% url 'sh:move_type_add' %}", 'move');
-        });
 
         initPopup({
             entityType: 'move',
             formSelector: '#moveTypeForm',
         });
-
     </script>
 </body>
 </html>

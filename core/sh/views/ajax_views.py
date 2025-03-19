@@ -474,6 +474,9 @@ def ajax_load_switch_port(request):
     switch_id = request.POST.get('switch_id') or request.GET.get('switch_id')
     exclude_switch_id = request.POST.get('exclude_switch_id') or request.GET.get('exclude_switch_id')
 
+    if not switch_id:
+        return JsonResponse([], safe=False)
+
     used_ports = set()
 
     wall_port_used = Wall_Port.objects.exclude(
@@ -491,14 +494,19 @@ def ajax_load_switch_port(request):
     ).values_list('patch_port_in_id', flat=True)
     used_ports.update(device_used)
 
-    if not switch_id:
-        return JsonResponse([], safe=False)
+    switch_ports = Switch_Port.objects.filter(
+        switch_id=switch_id
+    ).exclude(
+        id__in=list(used_ports)
+    ).order_by('port_id')
 
-    switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=list(used_ports)).order_by('port_id')
+    if exclude_switch_id:
+        switch_ports = switch_ports.exclude(switch_id=exclude_switch_id)
+
+    switch_ports = switch_ports.order_by('port_id')
 
     data = [{'id': sp.id, 'name': f'Puerto: {sp.port_id}'} for sp in switch_ports]
     return JsonResponse(data, safe=False)
-
 
 @csrf_protect
 @require_POST

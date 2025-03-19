@@ -221,8 +221,6 @@ $(document).ready(function() {
     });
 
 
-
-
     initializeFormSubmission('#myform', 'edit');
 
 });
