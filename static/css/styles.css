@@ -21,6 +21,11 @@
   vertical-align: middle !important;
 }
 
+.card-img-top {
+  width: 100%;
+  height: auto;
+}
+
 body {
   background-color: #343a40 !important; /* Fondo oscuro */
   color: #f8f9fa !important; /* Texto claro */

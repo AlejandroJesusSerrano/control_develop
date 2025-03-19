@@ -1,0 +1,44 @@
+<div class="modal fade" id="devModelDetailModal" tabindex="-1" role="dialog" aria-labelledby="devModelDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content bg-dark">
+            <!-- Encabezado del modal -->
+            <div class="modal-header bg-custom-dark-over-dark">
+                <h5 class="modal-title" id="devModelDetailModalLabel">
+                    <i class="fas fa-info-circle"></i> Detalles Modelos de Dispositivos
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-close text-light"></i></span>
+                </button>
+            </div>
+
+            <!-- Cuerpo del modal -->
+            <div class="modal-body bg-dark">
+                <div class="card bg-custom-dark-over-dark mb-1">
+                    <div class="row g-0">
+                        <div class="col-4 p-0">
+                            {% if model.image %}
+                                <img src="{{ model.image.url }}" class="card-img-top" alt="Imagen del Modelo de Dispositivo {{ model.model }}">
+                            {% else %}
+                                <img src="/media/no_file.svg" class="card-img-top" alt="Imagen no disponible">
+                            {% endif %}
+                        </div>
+                        <div class="col-8">
+                            <div class="card-body text-center">
+                                <h4 class="display-5"><strong>MODELO: {{model.dev_model}}</strong></h4>
+
+                                <h5> <strong>TIPO DE DISPOSITIVO: </strong> {{model.dev_type}} | <strong>MARCA: </strong> {{model.brand}}</h5>
+                                <p class="card-text text-body-secondary">Alta en sistema: {{model.date_creation}}</p>
+                                <p class="card-text text-body-secondary">Última modificación: {{model.date_updated}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie del modal -->
+            <div class="modal-footer mt-1 bg-custom-dark-over-dark">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

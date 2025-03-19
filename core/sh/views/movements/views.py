@@ -195,8 +195,6 @@ class MovementsDetailsView(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        print("Objeto:", self.object)
-        print("Detalle:", self.object.detail)  # This line is not working
         context = self.get_context_data(object=self.object)
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return render(request, self.template_name, context)

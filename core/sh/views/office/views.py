@@ -1,8 +1,9 @@
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 
@@ -206,3 +207,16 @@ class OfficeDeleteView(DeleteView):
         context['bg_color'] = 'bg-custom-danger'
         context['action'] = 'delete'
         return context
+
+class OfficeDetailsView(DetailView):
+    model = Office
+    template_name = 'Office/modal_details.html'
+    context_object_name = 'office'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return render(request, self.template_name, context)
+        else:
+            return super().get(request, *args, **kwargs)

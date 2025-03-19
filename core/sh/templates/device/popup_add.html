@@ -17,7 +17,7 @@
 <body>
     <div class="container">
         <h2>Agregar Dispositivo</h2>
-        <form method="post" id="wall_portForm">
+        <form method="post" id="deviceForm">
             {% csrf_token %}
 
             <div class="row bg-custom-dark-over-dark p-3 my-2">
@@ -155,13 +155,6 @@
     <script src="{% static 'js/popup_filters.js' %}"></script>
 
     <script>
-
-        $(document).ready(function() {
-
-            const urls = {
-                
-            }
-        });
 
         submitPopupForm('#deviceForm', "{% url 'sh:device_add' %}", 'device');
 

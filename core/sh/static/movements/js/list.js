@@ -52,13 +52,9 @@ function loadMovementDetail(movementId) {
         type: 'GET',
         dataType: 'html',
         success: function(data) {
-            // Eliminar el modal anterior si existe
             $('#movementDetailModal').remove();
-            // Añadir el nuevo modal al body
             $('body').append(data);
-            // Mostrar el modal
             $('#movementDetailModal').modal('show');
-            // Eliminar el modal al cerrarlo para evitar acumulación
             $('#movementDetailModal').on('hidden.bs.modal', function() {
                 $(this).remove();
             });
