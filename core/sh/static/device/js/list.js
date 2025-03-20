@@ -37,7 +37,7 @@ $(document).ready(function(){
                 class: 'text-center align-middle',
                 orderable: false,
                 render: function(data, type, row){
-                    let buttons = '<a href="#" type="button" class="btn btn-primary"><i class="fas fa-search"></i></a> ';
+                    let buttons = '<button type="button" class="btn bg-custom-primary btn-detail" data-id="' + row.id + '"><i class="fas fa-search"></i></button> ';
                     buttons += '<a href="/sh/device/edit/'+row.id+'/" type="button" class="btn bg-custom-warning"><i class="fas fa-edit"></i></a> ';
                     buttons += '<a href="/sh/device/delete/'+row.id+'/" type="button" class="btn bg-custom-danger"><i class="fas fa-trash-alt"></i></a> ';
                     return buttons
@@ -52,4 +52,28 @@ $(document).ready(function(){
 
         }
     });
+});
+
+function loadDeviceDetail(deviceId) {
+    $.ajax({
+        url: '/sh/device/details/' + deviceId + '/',
+        type: 'GET',
+        dataType: 'html',
+        success: function(data) {
+            $('#deviceDetailModal').remove();
+            $('body').append(data);
+            $('#deviceDetailModal').modal('show');
+            $('#deviceDetailModal').on('hidden.bs.modal', function() {
+                $(this).remove();
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar el detalle del dispositivo: ', error);
+        }
+    });
+}
+
+$(document).on('click', '.btn-detail', function(){
+    let deviceId = $(this).data('id');
+    loadDeviceDetail(deviceId);
 });

@@ -1,9 +1,9 @@
-<div class="modal fade" id="devModelDetailModal" tabindex="-1" role="dialog" aria-labelledby="devModelDetailModalLabel" aria-hidden="true">
+<div class="modal fade" id="deviceDetailModal" tabindex="-1" role="dialog" aria-labelledby="deviceDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content bg-dark">
             <!-- Encabezado del modal -->
             <div class="modal-header bg-custom-dark-over-dark">
-                <h5 class="modal-title" id="devModelDetailModalLabel">
+                <h5 class="modal-title" id="deviceDetailModalLabel">
                     <i class="fas fa-info-circle"></i> Detalles Modelos de Dispositivos
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -16,19 +16,19 @@
                 <div class="card bg-custom-dark-over-dark mb-1">
                     <div class="row g-0">
                         <div class="col-4 p-0">
-                            {% if model.image %}
-                                <img src="{{ model.image.url }}" class="card-img-top" alt="Imagen del Modelo de Dispositivo {{ model.model }}">
+                            {% if device.dev_model.image %}
+                                <img src="{{ device.dev_model.image.url }}" class="card-img-top" alt="Imagen del Dispositivo {{ model.model }}">
                             {% else %}
                                 <img src="/media/no_file.svg" class="card-img-top" alt="Imagen no disponible">
                             {% endif %}
                         </div>
                         <div class="col-8">
                             <div class="card-body text-center">
-                                <h4 class="display-5"><strong>MODELO: {{model.dev_model}}</strong></h4>
+                                <h4 class="display-5"><strong>MODELO: {{device.dev_model.dev_model}}</strong></h4>
 
-                                <h5> <strong>TIPO DE DISPOSITIVO: </strong> {{model.dev_type}} | <strong>MARCA: </strong> {{model.brand}}</h5>
-                                <p class="card-text text-body-secondary">Alta en sistema: {{model.date_creation}}</p>
-                                <p class="card-text text-body-secondary">Última modificación: {{model.date_updated}}</p>
+                                <h5> <strong>TIPO DE DISPOSITIVO: </strong> {{device.dev_model.dev_type}} | <strong>MARCA: </strong> {{device.dev_model.brand.brand}}</h5>
+                                <p class="card-text text-body-secondary">Alta en sistema: {{device.date_creation}}</p>
+                                <p class="card-text text-body-secondary">Última modificación: {{device.date_updated}}</p>
                             </div>
                         </div>
                     </div>
