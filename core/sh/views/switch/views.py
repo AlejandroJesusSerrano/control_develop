@@ -161,6 +161,7 @@ class SwitchUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['switch_id'] = self.object.id
         context['page_title'] = 'Switchs'
         context['title'] = 'Editar un Switch'
         context['btn_add_id'] = 'switch_add'

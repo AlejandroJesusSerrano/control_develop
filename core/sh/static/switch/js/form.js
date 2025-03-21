@@ -41,6 +41,31 @@ $(document).ready(function() {
         });
     }
 
+    if ($('#id_wall_port_in').length > 0) {
+        $('select[name="wall_port_in"]').on('change', function(){
+            const wall_port_id = $(this).val();
+            if (wall_port_id) {
+                updateOptions('/sh/ajax/load_wall_port/', {
+                'wall_port_id': wall_port_id
+            }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+
+            $('select[name="patchera_ports"]').val(null).trigger('change').prop('disabled', true);
+            $('select[name="patch_port_in"]').val(null).trigger('change').prop('disabled', true);
+
+            $('select[name="switch_ports"]').val(null).trigger('change').prop('disabled', true);
+            $('select[name="switch_port_in"]').val(null).trigger('change').prop('disabled', true);
+
+    } else {
+
+        $('select[name="patchera_ports"]').prop('disabled', false);
+        $('select[name="patch_port_in"]').prop('disabled', false);
+
+        $('select[name="switch_ports"]').prop('disabled', false);
+        $('select[name="switch_port_in"]').prop('disabled', false);
+
+        $('select[name="wall_port_in"]').val(null).trigger('change');
+    }})};
+
     if ($('#id_patchera_ports').length > 0) {
         $('select[name="patchera_ports"]').on('change', function(){
             const patchera_ports_id = $(this).val();
@@ -49,11 +74,16 @@ $(document).ready(function() {
                 'patchera_id': patchera_ports_id
             }, $('select[name="patch_port_in"]'), $('#id_patch_port_in').data('preselected'));
 
-            $('select[name="switch_ports"]').val(null).trigger('change');
-            $('select[name="switch_port_in"]').val(null).trigger('change');
-            $('select[name="switch_port_in"]').closest('.form-group').hide();
+            $('select[name="switch_ports"]').val(null).trigger('change').prop('disabled', true);
+            $('select[name="switch_port_in"]').val(null).trigger('change').prop('disabled', true);
+
+            $('select[name="wall_port_in"]').val(null).trigger('change').prop('disabled', true);
     } else {
-        $('select[name="switch_port_in"]').closest('.form-group').show();
+        $('select[name="switch_ports"]').prop('disabled', false);
+        $('select[name="switch_port_in"]').prop('disabled', false);
+        $('select[name="wall_port_in"]').prop('disabled', false);
+
+        $('select[name="patch_port_in"]').val(null).trigger('change');
     }})};
 
     if ($('#id_switch_ports').length > 0) {
@@ -64,11 +94,19 @@ $(document).ready(function() {
                 'switch_id': switch_ports_id
             }, $('select[name="switch_port_in"]'), $('#id_switch_port_in').data('preselected'));
 
-            $('select[name="patchera_ports"]').val(null).trigger('change');
-            $('select[name="patch_port_in"]').val(null).trigger('change');
-            $('select[name="patch_port_in"]').closest('.form-group').hide();
+            $('select[name="patchera_ports"]').val(null).trigger('change').prop('disabled', true);
+            $('select[name="patch_port_in"]').val(null).trigger('change').prop('disabled', true);
+
+            $('select[name="wall_port_in"]').val(null).trigger('change').prop('disabled', true);
+
     } else {
-        $('select[name="patch_port_in"]').closest('.form-group').show();
+
+        $('select[name="patchera_ports"]').prop('disabled', false);
+        $('select[name="patch_port_in"]').prop('disabled', false);
+        $('select[name="wall_port_in"]').prop('disabled', false);
+
+        $('select[name="switch_port_in"]').val(null).trigger('change');
+
     }})};
 
     $('#toggle-office-filters').on('click', function (e) {
@@ -253,11 +291,25 @@ function updateLocPortsOptions(loc_ports_id) {
 
 function updateOfficePortsOptions(office_ports_id) {
     if (office_ports_id) {
-        if ($('#id_rack_ports').length > 0) {
-            updateOptions('/sh/ajax/load_rack/', {
-                'office_id': office_ports_id
-            }, $('select[name="rack_ports"]'), $('#id_rack_ports').data('preselected'));
-        }
+        const exclude_switch_id = $('#switch-form').data('switch-id') || null;
+
+        updateOptions('/sh/ajax/load_rack/', {
+            'office_id': office_ports_id
+        }, $('select[name="rack_ports"]'), $('#id_rack_ports').data('preselected'));
+
+        updateOptions('/sh/ajax/load_wall_port/', {
+            'office_id': office_ports_id
+        }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
+
+        updateOptions('/sh/ajax/load_switch/', {
+            'office_id': office_ports_id
+        }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
+
+        updateOptions('/sh/ajax/load_patchera/', {
+            'office_id': office_ports_id
+        }, $('select[name="patchera_ports"]'), $('#id_patchera_ports').data('preselected'));
+
+
     } else {
         clearDependentFields(['#id_rack_ports', '#id_switch_ports', '#id_switch_port_in', '#id_patchera_ports', '#id_patch_port_in', '#id_wall_port_in']);
     }
@@ -265,13 +317,20 @@ function updateOfficePortsOptions(office_ports_id) {
 
 function updateRackPortsOptions(rack_ports_id) {
     if (rack_ports_id) {
-        if ($('#id_switch_ports').length > 0) {
-            updateOptions('/sh/ajax/load_switch/', {
-                'rack_id': rack_ports_id
-            }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
-        }
+        updateOptions('/sh/ajax/load_switch/', {
+            'rack_id': rack_ports_id
+        }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected'));
+
+        updateOptions('/sh/ajax/load_patchera/', {
+            'rack_id': rack_ports_id
+        }, $('select[name="patchera_ports"]'), $('#id_patchera_ports').data('preselected'));
+
     } else {
-        clearDependentFields(['#id_switch_ports', '#id_switch_port_in', '#id_patchera_ports', '#id_patch_port_in']);
+        updateOptions('/sh/ajax/load_switch/', {
+            'rack_id': null
+        }, $('select[name="switch_ports"]'), $('#id_switch_ports').data('preselected')); 
+
+        clearDependentFields([ '#id_patchera_ports', '#id_patch_port_in']);
     }
 }
 

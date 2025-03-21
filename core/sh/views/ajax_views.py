@@ -122,6 +122,9 @@ def ajax_load_office(request):
 @csrf_protect
 @require_POST
 def ajax_load_rack(request):
+
+    racks = Rack.objects.all()
+
     province_id = request.POST.get('province_id')
     location_id = request.POST.get('location_id')
     dependency_id = request.POST.get('dependency_id')
@@ -129,21 +132,19 @@ def ajax_load_rack(request):
     loc_id = request.POST.get('loc_id')
     office_id = request.POST.get('office_id')
 
-    filters = {}
     if province_id:
-        filters['office__loc__edifice__location__province_id'] = province_id
+        racks = racks.filter(office__loc__edifice__location__province_id=province_id)
     if location_id:
-        filters['office__loc__edifice__location_id'] = location_id
+        racks = racks.filter(office__loc__edifice__location_id=location_id)
     if dependency_id:
-        filters['office__dependency_id'] = dependency_id
+        racks = racks.filter(office__dependency_id=dependency_id)
     if edifice_id:
-        filters['office__loc__edifice_id'] = edifice_id
+        racks = racks.filter(office__loc__edifice_id=edifice_id)
     if loc_id:
-        filters['office__loc_id'] = loc_id
+        racks = racks.filter(office__loc_id=loc_id)
     if office_id:
-        filters['office_id'] = office_id
+        racks = racks.filter(office_id=office_id)
 
-    racks = Rack.objects.filter(**filters).distinct()
     data = [{'id': rack.id, 'name': f'RACK: {rack.rack} EN OFICINA: {rack.office.office}'} for rack in racks]
     return JsonResponse(data, safe=False)
 
@@ -230,28 +231,28 @@ def ajax_load_device(request):
 @require_http_methods(["GET", "POST"])
 def ajax_load_switch(request):
 
+    switches = Switch.objects.all()
+
     location_id = request.POST.get('location_id') or request.GET.get('location_id')
     office_id = request.POST.get('office_id') or request.GET.get('office_id')
     rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
+    exclude_switch_id = request.POST.get('exclude_switch_id') or request.GET.get('exclude_switch_id')
 
-    filters = {}
     if location_id:
-        filters['office__loc__edifice__location_id'] = location_id
+        switches = switches.filter(office__loc__edifice__location_id = location_id)
     if office_id:
-        filters['office_id'] = office_id
+        switches = switches.filter(office_id = office_id)
+
     if rack_id:
-        filters['rack_id'] = rack_id
+        switches = switches.filter(rack_id=rack_id)
+    else:
+        switches = switches.filter(rack__isnull=False)
 
-    if not filters:
-        return JsonResponse([], safe=False)
+    if exclude_switch_id:
+        switches = switches.exclude(id=exclude_switch_id)
 
-    switches = Switch.objects.filter(**filters).distinct()
-    data = [
-        {
-            'id': switch.id,
-            'name': f"{switch.model.brand.brand} / PUERTOS: {switch.ports_q} / POSICION: {switch.switch_rack_pos}"
-        } for switch in switches
-    ]
+    data = [{'id': switch.id,  'name': f"{switch.model.brand.brand}/ PUERTOS: {switch.ports_q} / POSICION: {switch.switch_rack_pos}"} for switch in switches]
+
     return JsonResponse(data, safe=False)
 
 
@@ -327,28 +328,20 @@ def load_switch_serial_n(request):
 @csrf_protect
 @require_http_methods(["GET", "POST"])
 def ajax_load_patchera(request):
+    patcheras = Patchera.objects.all()
+
     location_id = request.POST.get('location_id') or request.GET.get('location_id')
     office_id = request.POST.get('office_id') or request.GET.get('office_id')
     rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
 
-    filters = {}
     if location_id:
-        filters['rack__office__loc__edifice__location_id'] = location_id
+        patcheras = patcheras.filter(rack__office__loc__edifice__location_id=location_id)
     if office_id:
-        filters['rack__office_id'] = office_id  
+        patcheras = patcheras.filter(rack__office_id=office_id)
     if rack_id:
-        filters['rack_id'] = rack_id
+        patcheras = patcheras.filter(rack_id=rack_id)
 
-    if not filters:
-        return JsonResponse([], safe=False)
-
-    patcheras = Patchera.objects.filter(**filters).distinct()
-    data = [
-        {
-            'id': patch.id,
-            'name': f'PATCHERA: {patch.patchera} / RACK: {patch.rack.rack}'
-        } for patch in patcheras
-    ]
+    data = [{'id': patch.id, 'name': f'PATCHERA: {patch.patchera} / RACK: {patch.rack.rack}'} for patch in patcheras]
     return JsonResponse(data, safe=False)
 
 
@@ -431,40 +424,31 @@ def ajax_load_model(request):
 
 
 @csrf_protect
-@require_POST
+@require_http_methods(["GET", "POST"])
 def ajax_load_wall_port(request):
-    location_id = request.POST.get('location_id')
-    edifice_id = request.POST.get('edifice_id')
-    office_id = request.POST.get('office_id')
 
-    filters = {}
+    wall_ports = Wall_Port.objects.all()
+
+    location_id = request.POST.get('location_id') or request.GET.get('location_id')
+    edifice_id = request.POST.get('edifice_id') or request.GET.get('edifice_id')
+    office_id = request.POST.get('office_id') or request.GET.get('office_id')
+
+
     if location_id:
-        filters['office__loc__edifice__location_id'] = location_id
+        wall_ports = wall_ports.filter(office__loc__edifice__location_id=location_id)
     if edifice_id:
-        filters['office__loc__edifice_id'] = edifice_id
+        wall_ports = wall_ports.filter(office__loc__edifice_id=edifice_id)
     if office_id:
-        filters['office_id'] = office_id
+        wall_ports = wall_ports.filter(office_id=office_id)
 
-    if not filters:
-        return JsonResponse([], safe=False)
+    switch_used_ids = Wall_Port.objects.filter(switch_wall_port_in__isnull=False).values_list('id', flat=True)
+    device_used_idd = Wall_Port.objects.filter(device_wall_port_in__isnull=False).values_list('id', flat=True)
 
-    used_ids = set()
+    used_ids = set(switch_used_ids) | set(device_used_idd)
 
-    device_wall = Wall_Port.objects.filter(device_wall_port_in__isnull=False).values_list('id', flat=True)
-    used_ids.update(device_wall)
+    wall_ports = wall_ports.exclude(id__in=used_ids)
 
-    switch_wall = Wall_Port.objects.filter(switch_wall_port_in__isnull=False).values_list('id', flat=True)
-    used_ids.update(switch_wall)
-
-    wall_ports = Wall_Port.objects.filter(**filters).exclude(id__in=used_ids).order_by('wall_port')
-
-    data = [
-        {
-            'id': w.id,
-            'name': f'BOCA DE PARED: {w.wall_port} / OFICINA: {w.office} / EDIFICIO: {w.office.loc.edifice}'
-        }
-        for w in wall_ports
-    ]
+    data = [{'id': w.id, 'name': f'BOCA DE PARED: {w.wall_port} / OFICINA: {w.office} / EDIFICIO: {w.office.loc.edifice}'} for w in wall_ports]
     return JsonResponse(data, safe=False)
 
 
