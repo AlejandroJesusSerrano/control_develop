@@ -45,25 +45,21 @@ $(document).ready(function() {
         $('select[name="wall_port_in"]').on('change', function(){
             const wall_port_id = $(this).val();
             if (wall_port_id) {
-                updateOptions('/sh/ajax/load_wall_port/', {
-                'wall_port_id': wall_port_id
-            }, $('select[name="wall_port_in"]'), $('#id_wall_port_in').data('preselected'));
 
-            $('select[name="patchera_ports"]').val(null).trigger('change').prop('disabled', true);
-            $('select[name="patch_port_in"]').val(null).trigger('change').prop('disabled', true);
+                $('select[name="patchera_ports"]').val(null).trigger('change').prop('disabled', true);
+                $('select[name="patch_port_in"]').val(null).trigger('change').prop('disabled', true);
 
-            $('select[name="switch_ports"]').val(null).trigger('change').prop('disabled', true);
-            $('select[name="switch_port_in"]').val(null).trigger('change').prop('disabled', true);
+                $('select[name="switch_ports"]').val(null).trigger('change').prop('disabled', true);
+                $('select[name="switch_port_in"]').val(null).trigger('change').prop('disabled', true);
 
-    } else {
+            } else {
 
-        $('select[name="patchera_ports"]').prop('disabled', false);
-        $('select[name="patch_port_in"]').prop('disabled', false);
+                $('select[name="patchera_ports"]').prop('disabled', false);
+                $('select[name="patch_port_in"]').prop('disabled', false);
 
-        $('select[name="switch_ports"]').prop('disabled', false);
-        $('select[name="switch_port_in"]').prop('disabled', false);
+                $('select[name="switch_ports"]').prop('disabled', false);
+                $('select[name="switch_port_in"]').prop('disabled', false);
 
-        $('select[name="wall_port_in"]').val(null).trigger('change');
     }})};
 
     if ($('#id_patchera_ports').length > 0) {

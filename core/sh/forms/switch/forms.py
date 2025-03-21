@@ -151,6 +151,16 @@ class SwitchForm(forms.ModelForm):
             self.fields['brand'].queryset = Brand.objects.all()
             self.fields['model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
 
+            if 'brand' in self.data:
+                try:
+                    brand_id = int(self.data.get('brand'))
+                    self.fields['model'].queryset = Dev_Model.objects.filter(
+                        dev_type__dev_type='SWITCH',
+                        brand_id=brand_id
+                        )
+                except (ValueError, TypeError):
+                    pass
+
             if 'data' in kwargs:
                 location_id = kwargs['data'].get('location')
                 if location_id:
