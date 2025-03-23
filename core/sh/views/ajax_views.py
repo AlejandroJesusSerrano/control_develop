@@ -233,6 +233,7 @@ def ajax_load_switch(request):
     location_id = request.POST.get('location_id') or request.GET.get('location_id')
     office_id = request.POST.get('office_id') or request.GET.get('office_id')
     rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
+    exclude_switch_id = request.POST.get('exclude_switch_id') or request.GET.get('exclude_switch_id')
 
     filters = {}
     if location_id:
@@ -243,9 +244,13 @@ def ajax_load_switch(request):
         filters['rack_id'] = rack_id
 
     if not filters:
-        return JsonResponse([], safe=False)
+        switches = Switch.objects.all()
+    else:
+        switches = Switch.objects.filter(**filters).distinct()
 
-    switches = Switch.objects.filter(**filters).distinct()
+    if exclude_switch_id:
+        switches = switches.exclude(id=exclude_switch_id)
+
     data = [
         {
             'id': switch.id,
@@ -340,9 +345,10 @@ def ajax_load_patchera(request):
         filters['rack_id'] = rack_id
 
     if not filters:
-        return JsonResponse([], safe=False)
+        patcheras = Patchera.objects.all()
+    else:
+        patcheras = Patchera.objects.filter(**filters).distinct()
 
-    patcheras = Patchera.objects.filter(**filters).distinct()
     data = [
         {
             'id': patch.id,
@@ -358,9 +364,6 @@ def ajax_load_patch_ports(request):
 
     patchera_id = request.POST.get('patchera_id') or request.GET.get('patchera_id')
 
-    if not patchera_id:
-        return JsonResponse([], safe=False)
-
     used_ids = set()
 
     device_patch = Patch_Port.objects.filter(device_patch_port_in__isnull=False).values_list('id', flat=True)
@@ -372,7 +375,10 @@ def ajax_load_patch_ports(request):
     wall_patch = Patch_Port.objects.filter(wall_patch_port_in__isnull=False).values_list('id', flat=True)
     used_ids.update(wall_patch)
 
-    patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ids).order_by('port')
+    if not patchera_id:
+        patch_ports = Patch_Port.objects.exclude(id__in=used_ids).order_by('port')
+    else:
+        patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ids).order_by('port')
 
     data = [{'id': p.id, 'name': f'Puerto: {p.port}'} for p in patch_ports]
     return JsonResponse(data, safe=False)
@@ -445,9 +451,6 @@ def ajax_load_wall_port(request):
     if office_id:
         filters['office_id'] = office_id
 
-    if not filters:
-        return JsonResponse([], safe=False)
-
     used_ids = set()
 
     device_wall = Wall_Port.objects.filter(device_wall_port_in__isnull=False).values_list('id', flat=True)
@@ -456,7 +459,11 @@ def ajax_load_wall_port(request):
     switch_wall = Wall_Port.objects.filter(switch_wall_port_in__isnull=False).values_list('id', flat=True)
     used_ids.update(switch_wall)
 
-    wall_ports = Wall_Port.objects.filter(**filters).exclude(id__in=used_ids).order_by('wall_port')
+    if not filters:
+        wall_ports = Wall_Port.objects.exclude(id__in=used_ids).order_by('wall_port')
+    else:
+        wall_ports = Wall_Port.objects.filter(**filters).exclude(id__in=used_ids).order_by('wall_port')
+
 
     data = [
         {
@@ -474,36 +481,27 @@ def ajax_load_switch_port(request):
     switch_id = request.POST.get('switch_id') or request.GET.get('switch_id')
     exclude_switch_id = request.POST.get('exclude_switch_id') or request.GET.get('exclude_switch_id')
 
-    if not switch_id:
-        return JsonResponse([], safe=False)
-
     used_ports = set()
 
-    wall_port_used = Wall_Port.objects.exclude(
-        switch_port_in=None
-    ).values_list('switch_port_in_id', flat=True)
-    used_ports.update(wall_port_used)
+    wall_port_switch_used = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_wall_port_in', flat=True)
+    used_ports.update(wall_port_switch_used)
 
-    switch_used = Switch.objects.exclude(
-        switch_port_in=None
-    ).values_list('switch_port_in_id', flat=True)
+    wall_port_device_used = Wall_Port.objects.exclude(switch_port_in=None).values_list('device_wall_port_in', flat=True)
+    used_ports.update(wall_port_device_used)
+
+    switch_used = Switch.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
     used_ports.update(switch_used)
 
-    device_used = Device.objects.exclude(
-        switch_port_in=None
-    ).values_list('patch_port_in_id', flat=True)
+    device_used = Device.objects.exclude(switch_port_in=None).values_list('patch_port_in_id', flat=True)
     used_ports.update(device_used)
 
-    switch_ports = Switch_Port.objects.filter(
-        switch_id=switch_id
-    ).exclude(
-        id__in=list(used_ports)
-    ).order_by('port_id')
+    if not switch_id:
+        switch_ports = Switch_Port.objects.exclude(id__in=list(used_ports)).order_by('port_id')
+    else:
+        switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=list(used_ports)).order_by('port_id')
 
     if exclude_switch_id:
         switch_ports = switch_ports.exclude(switch_id=exclude_switch_id)
-
-    switch_ports = switch_ports.order_by('port_id')
 
     data = [{'id': sp.id, 'name': f'Puerto: {sp.port_id}'} for sp in switch_ports]
     return JsonResponse(data, safe=False)

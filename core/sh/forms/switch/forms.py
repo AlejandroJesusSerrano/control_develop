@@ -86,13 +86,13 @@ class SwitchForm(forms.ModelForm):
 
     # Otros campos existentes
     brand = forms.ModelChoiceField(
-        queryset = Brand.objects.none(),
+        queryset = Brand.objects.all(),
         widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_brand'}),
         required = False
     )
 
     model = forms.ModelChoiceField(
-        queryset = Dev_Model.objects.none(),
+        queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH'),
         widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_dev_model'}),
         required = False
     )
@@ -147,9 +147,6 @@ class SwitchForm(forms.ModelForm):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-        # Inicializar querysets base
-            self.fields['brand'].queryset = Brand.objects.all()
-            self.fields['model'].queryset = Dev_Model.objects.filter(dev_type__dev_type='SWITCH')
 
             if 'data' in kwargs:
                 location_id = kwargs['data'].get('location')
@@ -215,15 +212,19 @@ class SwitchForm(forms.ModelForm):
                         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch=instance)
                         self.fields['switch_port_in'].initial = instance.switch_port_in
 
-                        self.fields['office'].required = True
+                self.fields['office'].required = True
 
         def clean(self):
             cleaned_data = super().clean()
-
+            brand = cleaned_data.get('brand')
             model = cleaned_data.get('model')
             serial_n = cleaned_data.get('serial_n')
             rack = cleaned_data.get('rack')
             switch_rack_pos = cleaned_data.get('switch_rack_pos')
+
+            if brand and model:
+                if model.brand != brand:
+                    self.add_error('model', f'El modelo {model} no corresponde a la marca {brand}')
 
             qs = Switch.objects.all()
             if self.instance:
