@@ -2,7 +2,6 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
 
-from django.db.models import Q
 from core.sh.models import Dependency, Device, Office, Brand, Dev_Type, Employee, Switch_Port, Dev_Model, Wall_Port
 from core.sh.models.edifice.models import Edifice
 from core.sh.models.location.models import Location

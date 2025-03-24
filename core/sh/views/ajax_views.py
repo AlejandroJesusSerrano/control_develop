@@ -236,12 +236,25 @@ def ajax_load_switch(request):
     exclude_switch_id = request.POST.get('exclude_switch_id') or request.GET.get('exclude_switch_id')
 
     filters = {}
+
     if location_id:
-        filters['office__loc__edifice__location_id'] = location_id
+        try:
+            filters['office__loc__edifice__location_id'] = location_id
+        except ValueError:
+            print('Error en location_id:', location_id)
+
     if office_id:
-        filters['office_id'] = office_id
+        try:
+            filters['office_id'] = office_id
+        except ValueError:
+            print('Error en office_id:', office_id)
+
     if rack_id:
-        filters['rack_id'] = rack_id
+        try:
+            filters['rack_id'] = rack_id
+        except ValueError:
+            print('Error en rack_id:', rack_id)
+
 
     if not filters:
         switches = Switch.objects.all()
@@ -249,13 +262,18 @@ def ajax_load_switch(request):
         switches = Switch.objects.filter(**filters).distinct()
 
     if exclude_switch_id:
-        switches = switches.exclude(id=exclude_switch_id)
+        try:
+            switches = switches.exclude(id=int(exclude_switch_id))
+        except ValueError:
+            print('Error en exclude_switch_id:', exclude_switch_id)
 
     data = [
+
         {
             'id': switch.id,
             'name': f"{switch.model.brand.brand} / PUERTOS: {switch.ports_q} / POSICION: {switch.switch_rack_pos}"
         } for switch in switches
+
     ]
     return JsonResponse(data, safe=False)
 
