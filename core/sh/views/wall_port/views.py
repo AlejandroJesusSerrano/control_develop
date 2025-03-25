@@ -272,7 +272,7 @@ class WallPortUpdateView(UpdateView):
                     context['form'].fields['patch_port_in'].queryset = Patch_Port.objects.exclude(id__in=used_patch_ports)
                     context['form'].initial['patch_port_in'] = patch_port_in.id
 
-                return context
+        return context
 
 class WallPortDeleteView(DeleteView):
     model = Wall_Port

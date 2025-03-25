@@ -459,17 +459,19 @@ def ajax_load_model(request):
     data = [{'id': m.id, 'name': m.dev_model} for m in dev_models]
     return JsonResponse(data, safe=False)
 
-
 @csrf_protect
 @require_http_methods(["GET", "POST"])
 def ajax_load_wall_port(request):
 
     wall_ports = Wall_Port.objects.all()
 
+    wall_port_in_id = request.POST.get('wall_port_in_id') or request.GET.get('wall_port_in_id')
+
     location_id = request.POST.get('location_id') or request.GET.get('location_id')
     edifice_id = request.POST.get('edifice_id') or request.GET.get('edifice_id')
     office_id = request.POST.get('office_id') or request.GET.get('office_id')
 
+    used_wall_ports = set()
 
     if location_id:
         wall_ports = wall_ports.filter(office__loc__edifice__location_id=location_id)
@@ -478,13 +480,17 @@ def ajax_load_wall_port(request):
     if office_id:
         wall_ports = wall_ports.filter(office_id=office_id)
 
-    switch_wall_port_in = Wall_Port.objects.filter(switch_wall_port_in__isnull=False).values_list('id', flat=True)
 
-    device_wall_port_in = Wall_Port.objects.filter(device_wall_port_in__isnull=False).values_list('id', flat=True)
+    switch_wall_ports = Wall_Port.objects.exclude(switch_wall_port_in=None).values_list('switch_wall_port_in', flat=True)
+    used_wall_ports.update(switch_wall_ports)
 
-    used_ids = set(switch_wall_port_in) | set(device_wall_port_in)
+    device_wall_ports = Wall_Port.objects.exclude(device_wall_port_in=None).values_list('device_wall_port_in', flat=True)
+    used_wall_ports.update(device_wall_ports)
 
-    wall_ports = wall_ports.exclude(id__in=used_ids).order_by('wall_port')
+    if not wall_port_in_id:
+        wall_ports = wall_ports.exclude(id__in=list(used_wall_ports)).order_by('wall_port')
+    else:
+        wall_ports = wall_ports.filter(id=wall_port_in_id).exclude(id__in=list(used_wall_ports)).order_by('wall_port')
 
     data = [
         {
@@ -494,6 +500,7 @@ def ajax_load_wall_port(request):
         for w in wall_ports
     ]
     return JsonResponse(data, safe=False)
+
 
 
 @csrf_protect

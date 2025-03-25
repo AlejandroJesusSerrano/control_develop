@@ -135,7 +135,7 @@ $(document).ready(function () {
       let option = new Option(patch_portName, patch_portId, true, true);
       select.append(option).trigger('change');
     }
-  });S
+  });
 
   initializeFormSubmission('#myform', 'edit');
 

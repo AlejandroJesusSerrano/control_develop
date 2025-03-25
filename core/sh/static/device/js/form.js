@@ -198,7 +198,7 @@ $(document).ready(function() {
         if (event.data.type === 'wall_portAdded') {
             let wall_portId = event.data.id;
             let wall_portName = event.data.name;
-            let select = $('#id_wall_port');
+            let select = $('#id_wall_port_in');
             let option = new Option(wall_portName, wall_portId, true, true);
             select.append(option).val(wall_portId).trigger('change');
         }
@@ -206,7 +206,7 @@ $(document).ready(function() {
         if (event.data.type === 'switch_portAdded') {
             let switch_portId = event.data.id;
             let switch_portName = event.data.name;
-            let select = $('#id_switch_port');
+            let select = $('#id_switch_port_in');
             let option = new Option(switch_portName, switch_portId, true, true);
             select.append(option).val(switch_portId).trigger('change');
         }
@@ -214,7 +214,7 @@ $(document).ready(function() {
         if (event.data.type === 'patch_portAdded') {
             let patch_portId = event.data.id;
             let patch_portName = event.data.name;
-            let select = $('#id_patch_port');
+            let select = $('#id_patch_port_in');
             let option = new Option(patch_portName, patch_portId, true, true);
             select.append(option).val(patch_portId).trigger('change');
         }
