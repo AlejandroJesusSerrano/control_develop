@@ -87,7 +87,7 @@ function updateOptions(url, data, selectElement, preselectedVal = null) {
 
   if (activeRequests[selectId]) {
     console.log(`Solicitud activa ya existente para ${selectId}, abortando.`);
-    return;
+    return $.Deferred().reject().promise();
   }
   activeRequests[selectId] = true;
 
@@ -97,7 +97,7 @@ function updateOptions(url, data, selectElement, preselectedVal = null) {
     preselectedVal = selectElement.val() || '';
   }
 
-  $.ajax({
+  return $.ajax({
     url: url,
     type: 'POST',
     data: data,
