@@ -355,6 +355,8 @@ def load_switch_serial_n(request):
 def ajax_load_patchera(request):
     patcheras = Patchera.objects.all()
 
+    filters = {}
+
     location_id = request.POST.get('location_id') or request.GET.get('location_id')
     office_id = request.POST.get('office_id') or request.GET.get('office_id')
     rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
@@ -476,18 +478,13 @@ def ajax_load_wall_port(request):
     if office_id:
         wall_ports = wall_ports.filter(office_id=office_id)
 
-    used_ids = set()
+    switch_wall_port_in = Wall_Port.objects.filter(switch_wall_port_in__isnull=False).values_list('id', flat=True)
 
-    wall_ports = wall_ports.exclude(id__in=used_ids)
+    device_wall_port_in = Wall_Port.objects.filter(device_wall_port_in__isnull=False).values_list('id', flat=True)
 
-    switch_wall = Wall_Port.objects.filter(switch_wall_port_in__isnull=False).values_list('id', flat=True)
-    used_ids.update(switch_wall)
+    used_ids = set(switch_wall_port_in) | set(device_wall_port_in)
 
-    if not filters:
-        wall_ports = Wall_Port.objects.exclude(id__in=used_ids).order_by('wall_port')
-    else:
-        wall_ports = Wall_Port.objects.filter(**filters).exclude(id__in=used_ids).order_by('wall_port')
-
+    wall_ports = wall_ports.exclude(id__in=used_ids).order_by('wall_port')
 
     data = [
         {
