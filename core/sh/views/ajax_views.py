@@ -511,35 +511,14 @@ def ajax_load_switch_port(request):
 
     exclude_switch_id = request.POST.get('exclude_switch_id') or request.GET.get('exclude_switch_id')
 
-    if switch_id:
-        switch_ports = switch_ports.filter(switch_id=switch_id)
-
     switch_switch_ports = Switch.objects.filter(switch_port_in__isnull=False).values_list('switch_port_in_id', flat=True)
     device_switch_ports = Device.objects.filter(switch_port_in__isnull=False).values_list('switch_port_in_id', flat=True)
     used_switch_ports = set(switch_switch_ports) | set(device_switch_ports)
-    
-    if not switch_id:
-        switch_ports = switch_ports.exclude(id__in=used_switch_ports).order_by('port_id')
-    else:
-        switch_ports = switch_ports.exclude(id__in=used_switch_ports).order_by('port_id')
-    # used_ports = set()
 
-    # wall_port_switch_used = Wall_Port.objects.exclude(switch_port_in=None).values_list('switch_wall_port_in', flat=True)
-    # used_ports.update(wall_port_switch_used)
+    if switch_id:
+        switch_ports = switch_ports.filter(switch_id=switch_id)
 
-    # wall_port_device_used = Wall_Port.objects.exclude(switch_port_in=None).values_list('device_wall_port_in', flat=True)
-    # used_ports.update(wall_port_device_used)
-
-    # switch_used = Switch.objects.exclude(switch_port_in=None).values_list('switch_port_in_id', flat=True)
-    # used_ports.update(switch_used)
-
-    # device_used = Device.objects.exclude(switch_port_in=None).values_list('patch_port_in_id', flat=True)
-    # used_ports.update(device_used)
-
-    # if not switch_id:
-    #     switch_ports = Switch_Port.objects.exclude(id__in=list(used_ports)).order_by('port_id')
-    # else:
-    #     switch_ports = Switch_Port.objects.filter(switch_id=switch_id).exclude(id__in=list(used_ports)).order_by('port_id')
+    switch_ports = switch_ports.exclude(id__in=used_switch_ports).order_by('port_id')
 
     if exclude_switch_id:
         switch_ports = switch_ports.exclude(switch_id=exclude_switch_id)
