@@ -51,11 +51,25 @@ $(document).ready(function() {
         updatePatcheraPortsOptions(patchera_id);
     });
 
+    togglePosFields()
+
     togglePortFields();
 
     $('select[name="wall_port_in"], select[name="switch_ports"], select[name="switch_port_in"], select[name="patchera_ports"], select[name="patch_port_in"], select[name="rack_ports"]').on('change', function() {
+        if (!posIsToggling) {
+            togglePosFields()
+        }
+    });
+
+    $('select[name="office"], select[name="rack"]').on('change', function() {
         if (!isToggling) {
-            togglePortFields()
+            togglePosFields();
+        }
+    });
+
+    $('input[name="switch_rack_pos"]').on('input', function() {
+        if (!isToggling) {
+            togglePosFields();
         }
     });
 
@@ -200,6 +214,42 @@ $(document).ready(function() {
     initializeFormSubmission('#myform', 'edit');
 
 });
+
+let posIsToggling = false;
+
+function togglePosFields() {
+    if (posIsToggling) return;
+    posIsToggling = true;
+
+    const officeValue = $('select[name="office"]').val();
+    const rackValue = $('select[name="rack"]').val();
+    const rackPosValue = $('input[name="switch_rack_pos"]').val();
+
+    $('input[name="switch_rack_pos"]').prop('disabled', false);
+    $('select[name="rack"]').prop('disabled', false);
+    $('select[name="office"]').prop('disabled', false);
+
+
+    if (officeValue) {
+        $('select[name="rack"]').prop('disabled', true).val('').trigger('change.select2');
+        $('input[name="switch_rack_pos"]').prop('disabled', true).val('');
+    }
+
+    else if (rackValue || rackPosValue) {
+        $('select[name="office"]').prop('disabled', true).val('').trigger('change.select2');
+        console.log("Office disabled:", $('select[name="office"]').prop('disabled'));
+
+    } else {
+        $('input[name="switch_rack_pos"]').prop('disabled', false);
+        $('select[name="rack"]').prop('disabled', false);
+        $('select[name="office"]').prop('disabled', false);
+    }
+
+    $('select[name="office"], select[name="rack"]').trigger('change.select2');
+
+    posIsToggling = false;
+}
+
 
 let isToggling = false;
 

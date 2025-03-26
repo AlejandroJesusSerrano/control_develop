@@ -228,3 +228,8 @@ input:-webkit-autofill:focus {
 .btn-primary:hover {
   background-color: #495057;
 }
+
+.form-control[disabled] {            /* Texto gris */
+  cursor: not-allowed;        /* Cursor de "no permitido" */
+  opacity: 0;               /* Ligera transparencia */
+}
