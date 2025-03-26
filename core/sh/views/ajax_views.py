@@ -471,8 +471,6 @@ def ajax_load_wall_port(request):
     edifice_id = request.POST.get('edifice_id') or request.GET.get('edifice_id')
     office_id = request.POST.get('office_id') or request.GET.get('office_id')
 
-    used_wall_ports = set()
-
     if location_id:
         wall_ports = wall_ports.filter(office__loc__edifice__location_id=location_id)
     if edifice_id:
@@ -481,16 +479,16 @@ def ajax_load_wall_port(request):
         wall_ports = wall_ports.filter(office_id=office_id)
 
 
-    switch_wall_ports = Wall_Port.objects.exclude(switch_wall_port_in=None).values_list('switch_wall_port_in', flat=True)
-    used_wall_ports.update(switch_wall_ports)
-
-    device_wall_ports = Wall_Port.objects.exclude(device_wall_port_in=None).values_list('device_wall_port_in', flat=True)
-    used_wall_ports.update(device_wall_ports)
+    switch_wall_ports = Switch.objects.filter(wall_port_in__isnull=False).values_list('wall_port_in_id', flat=True)
+    device_wall_ports = Device.objects.filter(wall_port_in__isnull=False).values_list('wall_port_in_id', flat=True)
+    used_wall_ports = set(switch_wall_ports) | set(device_wall_ports)
 
     if not wall_port_in_id:
-        wall_ports = wall_ports.exclude(id__in=list(used_wall_ports)).order_by('wall_port')
+        wall_ports = wall_ports.exclude(id__in=used_wall_ports).order_by('wall_port')
     else:
-        wall_ports = wall_ports.filter(id=wall_port_in_id).exclude(id__in=list(used_wall_ports)).order_by('wall_port')
+        wall_ports = wall_ports.filter(id=wall_port_in_id).exclude(id__in=used_wall_ports).order_by('wall_port')
+
+    print("Filtered WallPorts:", list(wall_ports.values_list('id', flat=True)))
 
     data = [
         {

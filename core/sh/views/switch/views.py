@@ -7,6 +7,8 @@ from django.utils.decorators import method_decorator
 
 from core.sh.forms.switch.forms import SwitchForm
 from core.sh.models import Brand, Dependency, Dev_Model, Dev_Type, Edifice, Office, Switch, Location
+from core.sh.models.device.models import Device
+from core.sh.models.wall_port.models import Wall_Port
 
 class SwitchListView(ListView):
     model = Switch
@@ -52,6 +54,16 @@ class SwitchCreateView(CreateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        switch_wall_ports = Switch.objects.filter(wall_port_in__isnull=False).values_list('wall_port_in', flat=True)
+        device_wall_ports = Device.objects.filter(wall_port_in__isnull=False).values_list('wall_port_in', flat=True)
+        used_wall_ports = set(switch_wall_ports) | set(device_wall_ports)
+
+        form.fields['wall_port_in'].queryset = Wall_Port.objects.exclude(id__in=used_wall_ports)
+        return form
 
     def get_template_names(self):
         if self.request.GET.get('popup') == '1':
@@ -120,6 +132,22 @@ class SwitchUpdateView(UpdateView):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        switch_wall_ports = Switch.objects.filter(wall_port_in__isnull=False).values_list('wall_port_in_id', flat=True)
+        device_wall_ports = Device.objects.filter(wall_port_in__isnull=False).values_list('wall_port_in_id', flat=True)
+        used_wall_ports = set(switch_wall_ports) | set(device_wall_ports)
+
+        current_wall_port = self.get_object().wall_port_in
+        if current_wall_port:
+            form.fields['wall_port_in'].queryset = Wall_Port.objects.exclude(
+                id__in=used_wall_ports
+            ) | Wall_Port.objects.filter(id=current_wall_port.id)
+        else:
+            form.fields['wall_port_in'].queryset = Wall_Port.objects.exclude(id__in=used_wall_ports)
+        return form
 
     def form_valid(self, form):
         try:
