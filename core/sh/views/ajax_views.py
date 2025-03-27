@@ -386,49 +386,41 @@ def ajax_load_patchera(request):
 @require_http_methods(["GET", "POST"])
 def ajax_load_patch_ports(request):
 
+    patch_ports = Patch_Port.objects.all()
+
     patchera_id = request.POST.get('patchera_id') or request.GET.get('patchera_id')
 
-    used_ids = set()
+    switch_patch_ports = Switch.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
+    device_patch_ports = Device.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
+    wall_patch_ports = Wall_Port.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
 
-    device_patch = Patch_Port.objects.filter(device_patch_port_in__isnull=False).values_list('id', flat=True)
-    used_ids.update(device_patch)
+    used_patch_ports = set(switch_patch_ports) | set(device_patch_ports) | set(wall_patch_ports)
 
-    switch_patch = Patch_Port.objects.filter(switch_patch_port_in__isnull=False).values_list('id', flat=True)
-    used_ids.update(switch_patch)
+    patch_ports = patch_ports.exclude(id__in=used_patch_ports)
 
-    wall_patch = Patch_Port.objects.filter(wall_patch_port_in__isnull=False).values_list('id', flat=True)
-    used_ids.update(wall_patch)
+    if patchera_id:
+        patch_ports = patch_ports.filter(patchera_id=patchera_id).exclude(id__in=used_patch_ports).order_by('port')
 
-    if not patchera_id:
-        patch_ports = Patch_Port.objects.exclude(id__in=used_ids).order_by('port')
-    else:
-        patch_ports = Patch_Port.objects.filter(patchera_id=patchera_id).exclude(id__in=used_ids).order_by('port')
-
-    data = [{'id': p.id, 'name': f'Puerto: {p.port}'} for p in patch_ports]
+    data = [{'id': p.id, 'name': f'PUERTO: {p.port} / PATCHERA: {p.patchera} / RACK: {p.patchera.rack} /OFICINA: {p.patchera.rack.office}'} for p in patch_ports]
     return JsonResponse(data, safe=False)
 
 
 @csrf_protect
 @require_POST
 def ajax_load_model(request):
-    """
-    Carga Dev_Model segun usage (device/switch).
-    Filtra brand, dev_type y office (buscando Device u Switch).
-    """
-    usage = request.POST.get('usage')  # 'device' o 'switch'
+
+    usage = request.POST.get('usage')
     dev_type_name = request.POST.get('dev_type_name')
     brand_id = request.POST.get('brand_id')
     office_id = request.POST.get('office_id')
 
     dev_models = Dev_Model.objects.all()
 
-    # 1) Filtrar usage
     if usage == 'device':
         dev_models = dev_models.exclude(dev_type__dev_type='SWITCH')
     elif usage == 'switch':
         dev_models = dev_models.filter(dev_type__dev_type='SWITCH')
 
-    # 2) Filtrar brand
     if brand_id and brand_id.strip():
         try:
             brand_id_int = int(brand_id)
@@ -436,7 +428,6 @@ def ajax_load_model(request):
         except ValueError:
             dev_models = dev_models.filter(brand__brand=brand_id)
 
-    # 3) Filtrar dev_type_name
     if dev_type_name and dev_type_name.strip():
         try:
             dev_type_id = int(dev_type_name)
@@ -444,11 +435,7 @@ def ajax_load_model(request):
         except ValueError:
             dev_models = dev_models.filter(dev_type__dev_type=dev_type_name)
 
-    # 4) Filtrar por office
     if office_id:
-        # Device => device_model
-        # Switch => switch_model
-        # Unimos con Q
         dev_models = dev_models.filter(
             models.Q(device_model__office_id=office_id) |
             models.Q(switch_model__office_id=office_id)
@@ -513,17 +500,20 @@ def ajax_load_switch_port(request):
 
     switch_switch_ports = Switch.objects.filter(switch_port_in__isnull=False).values_list('switch_port_in_id', flat=True)
     device_switch_ports = Device.objects.filter(switch_port_in__isnull=False).values_list('switch_port_in_id', flat=True)
-    used_switch_ports = set(switch_switch_ports) | set(device_switch_ports)
+    wall_switch_ports = Wall_Port.objects.filter(switch_port_in__isnull=False).values_list('switch_port_in_id', flat=True)
+    patch_switch_ports = Patch_Port.objects.filter(switch_port_in__isnull=False).values_list('switch_port_in_id', flat=True)
+    used_switch_ports = set(switch_switch_ports) | set(device_switch_ports) | set(wall_switch_ports) | set(patch_switch_ports)
+
+    switch_ports = switch_ports.exclude(id__in=used_switch_ports).order_by('port_id')
 
     if switch_id:
         switch_ports = switch_ports.filter(switch_id=switch_id)
 
-    switch_ports = switch_ports.exclude(id__in=used_switch_ports).order_by('port_id')
 
     if exclude_switch_id:
         switch_ports = switch_ports.exclude(switch_id=exclude_switch_id)
 
-    data = [{'id': sp.id, 'name': f'Puerto: {sp.port_id}'} for sp in switch_ports]
+    data = [{'id': sp.id, 'name': f'PUERTO: {sp.port_id} - SWITCH {sp.switch.model.brand.brand} / {sp.switch.model.dev_model}, POSICION {sp.switch.switch_rack_pos}, RACK {sp.switch.rack} OFICINA {sp.switch.rack.office}' if sp.switch.rack else f'PUERTO: {sp.port_id} - SWITCH {sp.switch.model.brand.brand} / {sp.switch.model.dev_model} OFICINA {sp.switch.office}'} for sp in switch_ports]
     return JsonResponse(data, safe=False)
 
 @csrf_protect
@@ -569,13 +559,11 @@ def ajax_load_dev_type(request):
 
     dev_types = Dev_Type.objects.all()
 
-    # Filtrar por usage
     if usage == 'device':
         dev_types = dev_types.exclude(dev_type='SWITCH')
     elif usage == 'switch':
         dev_types = dev_types.filter(dev_type='SWITCH')
 
-    # Filtrar por office si corresponde (usando los nombres de relación correctos)
     if office_id:
         dev_types = dev_types.filter(
             Q(device_model__office_id=office_id) |

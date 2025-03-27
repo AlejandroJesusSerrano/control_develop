@@ -74,7 +74,10 @@ class SwitchForm(forms.ModelForm):
 
     patchera_ports = forms.ModelChoiceField(
         queryset = Patchera.objects.all(),
-        widget = forms.Select(attrs={'class': 'form-control select2', 'id': 'id_patchera_ports'}),
+        widget = forms.Select(attrs={
+            'class': 'form-control select2', 
+            'id': 'id_patchera_ports',
+            'order_by': 'rack'}),
         required = False
     )
 
@@ -169,7 +172,7 @@ class SwitchForm(forms.ModelForm):
                         self.fields['rack'].queryset = Rack.objects.filter(office__loc__edifice__location=location).order_by('rack')
                         self.fields['rack_ports'].queryset = Rack.objects.filter(office__loc__edifice__location=location).order_by('rack')
                         self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office__loc__edifice__location=location).order_by('wall_port')
-                        self.fields['patchera_ports'].queryset = Patchera.objects.filter(rack__office__loc__edifice__location=location).order_by('patchera')
+                        self.fields['patchera_ports'].queryset = Patchera.objects.filter(rack__office__loc__edifice__location=location).order_by('rack')
                         self.fields['switch_ports'].queryset = Switch.objects.filter(office__loc__edifice__location=location).order_by('model')
                         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch__rack__office__loc__edifice__location=location).order_by('port_id')
                         self.fields['patch_port_in'].queryset = Patch_Port.objects.filter(patchera__rack__office__loc__edifice__location=location).order_by('port')
