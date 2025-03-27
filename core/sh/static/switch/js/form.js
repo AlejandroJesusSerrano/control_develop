@@ -6,7 +6,7 @@ $(document).ready(function() {
     updateSwitchBrandOptions();
 
     updateSwitchPortsOptions(null);
-    updateSwitchPortsOptions(null);
+    updatePatcheraPortsOptions(null);
 
     if ($('#id_edifice_ports').length > 0) {
             $('select[name="edifice_ports"]').on('change', function() {
