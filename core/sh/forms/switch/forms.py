@@ -258,3 +258,11 @@ class SwitchForm(forms.ModelForm):
                     self.add_error('rack', f'ya se encuentra ocupáda la posicion {switch_rack_pos} en el rack {rack}')
                     self.add_error('switch_rack_pos', f'el rack {rack}, ya tiene ocupada la posicion de switch {switch_rack_pos}')
             return cleaned_data
+
+        def save(self, commit=True):
+            instance = super().save(commit=False)
+            if not instance.office and instance.rack:
+                instance.office = instance.rack.office
+            if commit:
+                instance.save()
+            return instance
