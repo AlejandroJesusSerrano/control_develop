@@ -192,7 +192,7 @@ class SwitchForm(forms.ModelForm):
                 else:
                     self.fields['edifice_ports'].queryset = Edifice.objects.all()
 
-                if 'self.instance' and self.instance.pk:
+                if self.instance and self.instance.pk:
                     if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice and self.instance.office.loc.edifice.location and self.instance.office.loc.edifice.location.province and self.instance.office.dependency:
                         self.fields['province'].queryset = Province.objects.all()
                         self.fields['province'].initial = self.instance.office.loc.edifice.location.province.id
@@ -246,7 +246,7 @@ class SwitchForm(forms.ModelForm):
                     self.add_error('model', f'El modelo {model} no corresponde a la marca {brand}')
 
             qs = Switch.objects.all()
-            if self.instance:
+            if self.instance and self.instance.pk:
                 qs = qs.exclude(pk=self.instance.pk)
 
             if qs.filter(model=model, serial_n=serial_n).exists():
