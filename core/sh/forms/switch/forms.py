@@ -192,38 +192,37 @@ class SwitchForm(forms.ModelForm):
                 else:
                     self.fields['edifice_ports'].queryset = Edifice.objects.all()
 
-                if 'instance' in kwargs and kwargs['instance']:
-                    instance=kwargs['instance']
-                    if instance.office and instance.office.loc and instance.office.loc.edifice and instance.office.loc.edifice.location and instance.office.loc.edifice.location.province and instance.office.dependency:
+                if 'self.instance' and self.instance.pk:
+                    if self.instance.office and self.instance.office.loc and self.instance.office.loc.edifice and self.instance.office.loc.edifice.location and self.instance.office.loc.edifice.location.province and self.instance.office.dependency:
                         self.fields['province'].queryset = Province.objects.all()
-                        self.fields['province'].initial = instance.office.loc.edifice.location.province.id
+                        self.fields['province'].initial = self.instance.office.loc.edifice.location.province.id
 
-                        self.fields['location'].queryset = Location.objects.filter(province=instance.office.loc.edifice.location.province)
-                        self.fields['location'].initial = instance.office.loc.edifice.location.id
+                        self.fields['location'].queryset = Location.objects.filter(province=self.instance.office.loc.edifice.location.province)
+                        self.fields['location'].initial = self.instance.office.loc.edifice.location.id
 
-                        self.fields['edifice'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
-                        self.fields['edifice'].initial = instance.office.loc.edifice.id
+                        self.fields['edifice'].queryset = Edifice.objects.filter(location=self.instance.office.loc.edifice.location)
+                        self.fields['edifice'].initial = self.instance.office.loc.edifice.id
 
-                        self.fields['edifice_ports'].queryset = Edifice.objects.filter(location=instance.office.loc.edifice.location)
-                        self.fields['edifice_ports'].initial = instance.office.loc.edifice.id
+                        self.fields['edifice_ports'].queryset = Edifice.objects.filter(location=self.instance.office.loc.edifice.location)
+                        self.fields['edifice_ports'].initial = self.instance.office.loc.edifice.id
 
-                        self.fields['dependency'].queryset = Dependency.objects.filter(location=instance.office.dependency.location)
-                        self.fields['dependency'].initial = instance.office.dependency.id
+                        self.fields['dependency'].queryset = Dependency.objects.filter(location=self.instance.office.dependency.location)
+                        self.fields['dependency'].initial = self.instance.office.dependency.id
 
-                        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=instance.office.loc.edifice)
-                        self.fields['loc'].initial = instance.office.loc.id
+                        self.fields['loc'].queryset = Office_Loc.objects.filter(edifice=self.instance.office.loc.edifice)
+                        self.fields['loc'].initial = self.instance.office.loc.id
 
-                        self.fields['office'].queryset = Office.objects.filter(loc=instance.office.loc, dependency=instance.office.dependency)
-                        self.fields['office'].initial = instance.office.id
+                        self.fields['office'].queryset = Office.objects.filter(loc=self.instance.office.loc, dependency=self.instance.office.dependency)
+                        self.fields['office'].initial = self.instance.office.id
 
-                        self.fields['rack'].queryset = Rack.objects.filter(office=instance.office)
-                        self.fields['rack'].initial = instance.rack
+                        self.fields['rack'].queryset = Rack.objects.filter(office=self.instance.office)
+                        self.fields['rack'].initial = self.instance.rack
 
-                        self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office=instance.office)
-                        self.fields['wall_port_in'].initial = instance.wall_port_in
+                        self.fields['wall_port_in'].queryset = Wall_Port.objects.filter(office=self.instance.office)
+                        self.fields['wall_port_in'].initial = self.instance.wall_port_in
 
-                        self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch=instance)
-                        self.fields['switch_port_in'].initial = instance.switch_port_in
+                        self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch=self.instance)
+                        self.fields['switch_port_in'].initial = self.instance.switch_port_in
 
                 self.fields['office'].required = False
 
