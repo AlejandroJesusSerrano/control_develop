@@ -274,7 +274,7 @@ def ajax_load_switch(request):
 
         {
             'id': switch.id,
-            'name': f"{switch.model.brand.brand} / PUERTOS: {switch.ports_q} / POSICION: {switch.switch_rack_pos}"
+            'name': f"{switch.model.brand.brand} DE {switch.ports_q} PUERTOS / POSICION: {switch.switch_rack_pos} / RACK: {switch.rack} / OFICINA: {switch.office}" if switch.rack else f"{switch.model.brand.brand} DE {switch.ports_q} PUERTOS / OFICINA: {switch.office}"
         } for switch in switches
 
     ]

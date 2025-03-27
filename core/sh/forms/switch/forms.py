@@ -225,7 +225,7 @@ class SwitchForm(forms.ModelForm):
                         self.fields['switch_port_in'].queryset = Switch_Port.objects.filter(switch=instance)
                         self.fields['switch_port_in'].initial = instance.switch_port_in
 
-                self.fields['office'].required = True
+                self.fields['office'].required = False
 
         def clean(self):
             cleaned_data = super().clean()
@@ -234,6 +234,13 @@ class SwitchForm(forms.ModelForm):
             serial_n = cleaned_data.get('serial_n')
             rack = cleaned_data.get('rack')
             switch_rack_pos = cleaned_data.get('switch_rack_pos')
+            office = cleaned_data.get('office')
+
+            if not office and not rack:
+                self.add_error('office', 'Debe seleccionar una oficina o un rack.')
+                self.add_error('rack', 'Debe seleccionar una oficina o un rack.')
+            elif rack and not office:
+                cleaned_data['office'] = rack.office
 
             if brand and model:
                 if model.brand != brand:

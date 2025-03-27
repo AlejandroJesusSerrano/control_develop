@@ -65,7 +65,7 @@ class Switch(models.Model):
     verbose_name = 'Switch'
     verbose_name_plural = 'Switches'
     db_table = 'switchs'
-    ordering = ['id']
+    ordering = ['office']
     constraints = [
       models.UniqueConstraint(fields=['model', 'serial_n'], name='unique_model_serial'),
       models.UniqueConstraint(fields=['rack', 'switch_rack_pos'], name='unique_rack_switch_rack_pos')
