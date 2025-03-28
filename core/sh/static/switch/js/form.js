@@ -329,68 +329,6 @@ function togglePortFields() {
     isToggling = false;
 }
 
-// let isToggling = false;
-
-// function togglePortFields(){
-//     if (isToggling) return;
-//     isToggling = true;
-
-//     const rackPortValue = $('select[name="rack_ports"]').val();
-//     const wallPortValue = $('select[name="wall_port_in"]').val();
-//     const switchPortValue = $('select[name="switch_ports"]').val();
-//     const switchPortInValue = $('select[name="switch_port_in"]').val();
-//     const patcheraPortValue = $('select[name="patchera_ports"]').val();
-//     const patchPortInValue = $('select[name="patch_port_in"]').val();
-
-//     $('select[name="wall_port_in"]').prop('disabled', false);
-//     $('select[name="switch_ports"]').prop('disabled', false);
-//     $('select[name="switch_port_in"]').prop('disabled', false);
-//     $('select[name="patchera_ports"]').prop('disabled', false);
-//     $('select[name="patch_port_in"]').prop('disabled', false);
-
-//     if (rackPortValue) {
-//         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
-//     }
-
-//     if (wallPortValue) {
-//         $('select[name="switch_ports"]').prop('disabled', true).val(null);
-//         $('select[name="switch_port_in"]').prop('disabled', true).val(null);
-//         $('select[name="patchera_ports"]').prop('disabled', true).val(null);
-//         $('select[name="patch_port_in"]').prop('disabled', true).val(null);
-//     }
-
-//     if (switchPortValue || switchPortInValue) {
-//         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
-//         $('select[name="patchera_ports"]').prop('disabled', true).val(null);
-//         $('select[name="patch_port_in"]').prop('disabled', true).val(null);
-//     }
-
-//     if (switchPortInValue) {
-//         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
-//         $('select[name="patchera_ports"]').prop('disabled', true).val(null);
-//         $('select[name="patch_port_in"]').prop('disabled', true).val(null);
-//     }
-
-//     if (patcheraPortValue) {
-//         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
-//         $('select[name="switch_ports"]').prop('disabled', true).val(null);
-//         $('select[name="switch_port_in"]').prop('disabled', true).val(null);
-//     }
-
-//     if (patchPortInValue) {
-//         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
-//         $('select[name="switch_ports"]').prop('disabled', true).val(null);
-//         $('select[name="switch_port_in"]').prop('disabled', true).val(null);
-//         // Si patchera_ports no está seleccionado, deshabilitarlo
-//         if (!patcheraPortValue) {
-//             $('select[name="patchera_ports"]').prop('disabled', true).val(null);
-//         }
-//     }
-
-//     $('select[name="wall_port_in"], select[name="switch_ports"], select[name="switch_port_in"], select[name="patchera_ports"], select[name="patch_port_in"]').trigger('change.select2');
-
-//     isToggling = false;
-// }
 
 function updateEdificePortsFromLocation(location_id) {
     if (location_id) {
@@ -519,8 +457,14 @@ function updateSwitchPortsOptions(switch_id) {
 }
 
 function updatePatcheraPortsOptions(patchera_id) {
+    let office_id = $('select[name="office_ports"]').val();
+    let rack_id = $('select[name="rack_ports"]').val();
+    let location_id = $('select[name="location"]').val();
     let params = {
-        'patchera_id': patchera_id
+        'patchera_id': patchera_id,
+        'office_id': office_id,
+        'rack_id': rack_id,
+        'location_id': location_id
     };
     if (patchera_id !== undefined && patchera_id !== null) {
         params['patchera_id'] = patchera_id;

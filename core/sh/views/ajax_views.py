@@ -355,8 +355,6 @@ def load_switch_serial_n(request):
 def ajax_load_patchera(request):
     patcheras = Patchera.objects.all()
 
-    filters = {}
-
     location_id = request.POST.get('location_id') or request.GET.get('location_id')
     office_id = request.POST.get('office_id') or request.GET.get('office_id')
     rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
@@ -368,10 +366,7 @@ def ajax_load_patchera(request):
     if rack_id:
         patcheras = patcheras.filter(rack_id=rack_id)
 
-    if not filters:
-        patcheras = Patchera.objects.all()
-    else:
-        patcheras = Patchera.objects.filter(**filters).distinct()
+    patcheras = patcheras.distinct()
 
     data = [
         {
@@ -381,28 +376,90 @@ def ajax_load_patchera(request):
     ]
     return JsonResponse(data, safe=False)
 
-
 @csrf_protect
 @require_http_methods(["GET", "POST"])
 def ajax_load_patch_ports(request):
-
+    # Iniciar con todos los puertos de patchera
     patch_ports = Patch_Port.objects.all()
 
+    # Obtener parámetros de la solicitud
+    location_id = request.POST.get('location_id') or request.GET.get('location_id')
+    office_id = request.POST.get('office_id') or request.GET.get('office_id')
+    rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
     patchera_id = request.POST.get('patchera_id') or request.GET.get('patchera_id')
+    patch_port_in = request.POST.get('patch_port_in') or request.GET.get('patch_port_in')
 
+    # Aplicar filtros según los parámetros recibidos
+    if location_id:
+        patch_ports = patch_ports.filter(patchera__rack__office__loc__edifice__location_id=location_id)
+    if office_id:
+        patch_ports = patch_ports.filter(patchera__rack__office_id=office_id)
+    if rack_id:
+        patch_ports = patch_ports.filter(patchera__rack_id=rack_id)
+    if patchera_id:
+        patch_ports = patch_ports.filter(patchera_id=patchera_id)
+
+    # Identificar puertos en uso
     switch_patch_ports = Switch.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
     device_patch_ports = Device.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
     wall_patch_ports = Wall_Port.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
-
     used_patch_ports = set(switch_patch_ports) | set(device_patch_ports) | set(wall_patch_ports)
 
+    # Excluir puertos en uso (solo una vez)
     patch_ports = patch_ports.exclude(id__in=used_patch_ports)
 
-    if patchera_id:
-        patch_ports = patch_ports.filter(patchera_id=patchera_id).exclude(id__in=used_patch_ports).order_by('port')
+    # Filtrar por patch_port_in si se proporciona
+    if patch_port_in:
+        patch_ports = patch_ports.filter(id=patch_port_in)
 
-    data = [{'id': p.id, 'name': f'PUERTO: {p.port} / PATCHERA: {p.patchera} / RACK: {p.patchera.rack} /OFICINA: {p.patchera.rack.office}'} for p in patch_ports]
+    # Ordenar por el campo correcto (port)
+    patch_ports = patch_ports.order_by('port')
+
+    # Preparar los datos para la respuesta
+    data = [
+        {
+            'id': p.id,
+            'name': f'PUERTO: {p.port} / PATCHERA: {p.patchera} / RACK: {p.patchera.rack} / OFICINA: {p.patchera.rack.office}'
+        } for p in patch_ports
+    ]
     return JsonResponse(data, safe=False)
+
+# @csrf_protect
+# @require_http_methods(["GET", "POST"])
+# def ajax_load_patch_ports(request):
+
+#     patch_ports = Patch_Port.objects.all()
+#     patch_port_in = request.POST.get('patch_port_in') or request.GET.get('patch_port_in')
+
+#     location_id = request.POST.get('location_id') or request.GET.get('location_id')
+#     office_id = request.POST.get('office_id') or request.GET.get('office_id')
+#     rack_id = request.POST.get('rack_id') or request.GET.get('rack_id')
+
+#     patchera_id = request.POST.get('patchera_id') or request.GET.get('patchera_id')
+
+#     if location_id:
+#         patch_ports = patch_ports.filter(patchera__rack__office__loc__edifice__location_id=location_id)
+#     if office_id:
+#         patch_ports = patch_ports.filter(patchera__rack__office_id=office_id)
+#     if rack_id:
+#         patch_ports = patch_ports.filter(patchera__rack_id=rack_id)
+
+
+#     switch_patch_ports = Switch.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
+#     device_patch_ports = Device.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
+#     wall_patch_ports = Wall_Port.objects.filter(patch_port_in__isnull=False).values_list('patch_port_in_id', flat=True)
+
+#     used_patch_ports = set(switch_patch_ports) | set(device_patch_ports) | set(wall_patch_ports)
+
+#     patch_ports = patch_ports.exclude(id__in=used_patch_ports)
+
+#     if not patch_port_in:
+#         patch_ports = patch_ports.exclude(id__in=used_patch_ports).order_by('wall_port')
+#     else:
+#         patch_ports = patch_ports.filter(id=patch_port_in).exclude(id__in=used_patch_ports).order_by('wall_port')
+
+#     data = [{'id': p.id, 'name': f'PUERTO: {p.port} / PATCHERA: {p.patchera} / RACK: {p.patchera.rack} /OFICINA: {p.patchera.rack.office}'} for p in patch_ports]
+#     return JsonResponse(data, safe=False)
 
 
 @csrf_protect

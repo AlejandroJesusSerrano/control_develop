@@ -239,12 +239,21 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-12">
+                    <div class="form-group col-6">
                         <label for="id_office_ports">Oficina:</label>
                         {{ form.office_ports }}
                         {% if form.office_ports.errors %}
                         <div class="invalid-feedback d-block">
                             {{ form.office_ports.errors|join:"<br>" }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="id_rack_ports">Rack:</label>
+                        {{ form.rack_ports }}
+                        {% if form.rack_ports.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.rack_ports.errors|join:"<br>" }}
                         </div>
                         {% endif %}
                     </div>
@@ -255,15 +264,6 @@
                         {% if form.wall_port_in.errors %}
                         <div class="invalid-feedback d-block">
                             {{ form.wall_port_in.errors|join:"<br>" }}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group col-12">
-                        <label for="id_rack_ports">Rack:</label>
-                        {{ form.rack_ports }}
-                        {% if form.rack_ports.errors %}
-                        <div class="invalid-feedback d-block">
-                            {{ form.rack_ports.errors|join:"<br>" }}
                         </div>
                         {% endif %}
                     </div>
