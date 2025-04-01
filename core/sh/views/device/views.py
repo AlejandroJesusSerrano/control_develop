@@ -249,8 +249,74 @@ class DeviceDeleteView(DeleteView):
 class DeviceDetailsView(DetailView):
     model = Device
     template_name = 'device/modal_details.html'
-    context_object_name = 'device'
+    context = 'device'
 
+    def get_context_data(self, **kwargs):
+        device = self.object
+        context = super().get_context_data(**kwargs)
+        flag_wall_port = None
+        flag_switch = None
+        flag_patch_port = None
+
+        connections = []
+
+        while device or flag_wall_port or flag_switch or flag_patch_port:
+            if device:
+                if device.wall_port_in:
+                    flags_str = str(device.wall_port_in.wall_port)
+                    flags_str.add(connections)
+                    flag_wall_port = device.wall_port_in
+                elif device.switch_port_in:
+                    flags_str = str(device.switch_port_in.switch)
+                    flags_str.add(connections)
+                    flag_switch_port = device.switch_port_in.switch
+                elif device.patch_port_in:
+                    flags_str = str(device.patch_port_in.port)
+                    flags_str.add(connections)
+                    flag_switch_port = device.patch_port_in.port
+                device = None
+
+            elif flag_wall_port:
+                if flag_wall_port.switch_port_in:
+                    flags_str = str(flag_wall_port.switch_port_in.switch)
+                    flags_str.add(connections)
+                    flag_switch = flag_wall_port.switch_port_in.switch
+                elif flag_wall_port.patch_port_in:
+                    flags_str = f'{flag_wall_port.patch_port_in.port} {flag_wall_port.patch_port_in.patchera} {flag_wall_port.patch_port_in.patchera.rack}'
+                    flags_str.add(connections)
+                    flag_patch_port = flag_wall_port.patch_port_in.port
+                flag_wall_port = None
+
+            elif flag_switch:
+                if flag_switch.patch_port_in:
+                    flags_str = f'{flag_switch.patch_port_in.port} {flag_switch.patch_port_in.patchera} {flag_switch.patch_port_in.patchera.rack}'
+                    flags_str.add(connections)
+                    flag_patch_port = flag_switch.patch_port_in.port
+                    flag_switch = None
+                elif flag_switch.switch_port_in:
+                    flags_str = str(flag_switch.switch_port_in.switch)
+                    flags_str.add(connections)
+                    flag_switch = flag_switch.switch_port_in.switch
+                elif flag_switch.wall_port_in:
+                    flag_str = str(flag_switch.wall_port_in.wall_port)
+                    flags_str.add(connections)
+                    flag_wall_port = flag_switch.wall_port_in.wall_port
+                    flag_switch = None
+                else:
+                    flag_switch = None
+            else:
+                if flag_wall_port.switch_port_in:
+                    flags_str = str(flag_wall_port.switch_port_in.switch)
+                    flags_str.add(connections)
+                    flag_switch = flag_wall_port.switch_port_in.switch
+                elif flag_wall_port.patch_port_in:
+                    flags_str = f'{flag_wall_port.patch_port_in.port} {flag_wall_port.patch_port_in.patchera} {flag_wall_port.patch_port_in.patchera.rack}'
+                    flags_str.add(connections)
+                    flag_patch_port = flag_wall_port.patch_port_in.port
+                flag_wall_port = None
+
+        context['connections'] = connections
+        return context
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()

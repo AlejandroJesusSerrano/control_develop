@@ -90,8 +90,8 @@
                                         {% if device.wall_port_in.switch_port_in %}
 
                                         <p class="mb-2 text-center">
-                                            <strong><i class="fa-solid fa-server"> </i>Puerto del Switch:</strong>
-                                            {{ device.wall_port_in.switch_port_in.port_id }}
+                                            <strong><i class="fa-solid fa-server"> </i>PUERTO: </strong>
+                                            {{ device.wall_port_in.switch_port_in.port_id }} DEL SWITCH: {{ device.wall_port_in.switch_port_in.switch.model.brand }} {{ device.wall_port_in.switch_port_in.switch.model.dev_model }} DE {{device.wall_port_in.switch_port_in.switch.ports_q}} BOCAS
                                         </p>
                                         <p class="mb-2 text-center">
                                             <i class="fas fa-arrow-down"></i>
