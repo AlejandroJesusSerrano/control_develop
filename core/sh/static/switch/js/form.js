@@ -259,7 +259,6 @@ function togglePortFields() {
     if (isToggling) return;
     isToggling = true;
 
-    // Obtener los valores de los campos
     const rackPortValue = $('select[name="rack_ports"]').val();
     const wallPortValue = $('select[name="wall_port_in"]').val();
     const switchPortValue = $('select[name="switch_ports"]').val();
@@ -267,19 +266,18 @@ function togglePortFields() {
     const patcheraPortValue = $('select[name="patchera_ports"]').val();
     const patchPortInValue = $('select[name="patch_port_in"]').val();
 
-    // Habilitar todos los campos inicialmente para evitar conflictos
     $('select[name="wall_port_in"]').prop('disabled', false);
     $('select[name="switch_ports"]').prop('disabled', false);
     $('select[name="switch_port_in"]').prop('disabled', false);
     $('select[name="patchera_ports"]').prop('disabled', false);
     $('select[name="patch_port_in"]').prop('disabled', false);
 
-    // Lógica para rack_ports
+
     if (rackPortValue) {
         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
     }
 
-    // Lógica para wall_port_in
+
     if (wallPortValue) {
         $('select[name="switch_ports"]').prop('disabled', true).val(null);
         $('select[name="switch_port_in"]').prop('disabled', true).val(null);
@@ -287,43 +285,34 @@ function togglePortFields() {
         $('select[name="patch_port_in"]').prop('disabled', true).val(null);
     }
 
-    // Lógica para switch_ports
     if (switchPortValue) {
         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
         $('select[name="patchera_ports"]').prop('disabled', true).val(null);
         $('select[name="patch_port_in"]').prop('disabled', true).val(null);
-        // switch_port_in permanece habilitado para selección
         $('select[name="switch_port_in"]').prop('disabled', false);
     }
 
-    // Lógica para switch_port_in (mismo efecto que switch_ports, pero switch_ports habilitado)
     if (switchPortInValue) {
         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
         $('select[name="patchera_ports"]').prop('disabled', true).val(null);
         $('select[name="patch_port_in"]').prop('disabled', true).val(null);
-        // switch_ports permanece habilitado para filtrar
         $('select[name="switch_ports"]').prop('disabled', false);
     }
 
-    // Lógica para patchera_ports
     if (patcheraPortValue) {
         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
         $('select[name="switch_ports"]').prop('disabled', true).val(null);
         $('select[name="switch_port_in"]').prop('disabled', true).val(null);
-        // patch_port_in permanece habilitado para selección
         $('select[name="patch_port_in"]').prop('disabled', false);
     }
 
-    // Lógica para patch_port_in (mismo efecto que patchera_ports, pero patchera_ports habilitado)
     if (patchPortInValue) {
         $('select[name="wall_port_in"]').prop('disabled', true).val(null);
         $('select[name="switch_ports"]').prop('disabled', true).val(null);
         $('select[name="switch_port_in"]').prop('disabled', true).val(null);
-        // patchera_ports permanece habilitado para filtrar
         $('select[name="patchera_ports"]').prop('disabled', false);
     }
 
-    // Actualizar Select2
     $('select[name="wall_port_in"], select[name="switch_ports"], select[name="switch_port_in"], select[name="patchera_ports"], select[name="patch_port_in"]').trigger('change.select2');
 
     isToggling = false;

@@ -19,8 +19,11 @@ class Wall_Port(models.Model):
 
     def __str__(self):
         switch_info = f"-> SWITCH: {self.switch_port_in.switch.model.brand} DE {self.switch_port_in.switch.ports_q} BOCAS EN EL PUERTO {self.switch_port_in.port_id}" if self.switch_port_in else 'NO SWITCH'
+
         switch_port_in_info = f"SWITCH/RACK: {self.switch_port_in.switch.switch_rack_pos} -> PUERTO: {self.switch_port_in.port_id} -> RACK: {self.switch_port_in.switch.rack}" if self.switch_port_in else "NO VIENE DE SWITCH"
+
         patch_port_in_info = f"RACK: {self.patch_port_in.patchera.rack} -> PATCHERA: {self.patch_port_in.patchera} PUERTO: {self.patch_port_in}" if self.patch_port_in else "NO VIENE DE PATCHERA"
+
         return f'BOCA: {self.wall_port} EN OFICINA {self.office.office} -> INGRESO A LA BOCA DESDE: {patch_port_in_info}' if self.patch_port_in else f'BOCA: {self.wall_port} EN OFICINA {self.office.office} -> INGRESO A LA BOCA DESDE: {switch_info} -> {switch_port_in_info}'
 
     def toJSON(self):

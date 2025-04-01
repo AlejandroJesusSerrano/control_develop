@@ -351,6 +351,10 @@ class WallPortForm(forms.ModelForm):
         office = cleaned_data.get('office')
         wall_port = cleaned_data.get('wall_port')
 
-        if Wall_Port.objects.filter(office=office, wall_port=wall_port).exists():
+        qs = Wall_Port.objects.filter(office=office, wall_port=wall_port)
+        if self.instance and self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
             self.add_error('wall_port', 'Esta boca de pared ya existe en la oficina seleccionada.')
         return cleaned_data

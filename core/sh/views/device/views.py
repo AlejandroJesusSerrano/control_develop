@@ -251,6 +251,7 @@ class DeviceDetailsView(DetailView):
     template_name = 'device/modal_details.html'
     context_object_name = 'device'
 
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
