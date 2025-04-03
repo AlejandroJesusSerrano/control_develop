@@ -20,6 +20,9 @@ class Switch_Port(models.Model):
     item['switch'] = str(self.switch.model.brand) +'-> '+str(self.switch.ports_q)+'-> Rack Pos: '+str(self.switch.switch_rack_pos)
     item['obs'] = str(self.obs) if self.obs else 'NO HAY OBSERVACIONES'
     return item
+  
+  def get_next_connection(self):
+    return self.switch.get_next_connection()
 
   class Meta:
     verbose_name = 'Puerto de Switch'

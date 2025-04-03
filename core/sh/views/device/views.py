@@ -14,6 +14,7 @@ from core.sh.models.dependency.models import Dependency
 from core.sh.models.edifice.models import Edifice
 from core.sh.models.location.models import Location
 from core.sh.models.office_loc.models import Office_Loc
+from core.sh.models.patch_port.models import Patch_Port
 from core.sh.models.province.models import Province
 
 class DeviceListView(ListView):
@@ -249,72 +250,23 @@ class DeviceDeleteView(DeleteView):
 class DeviceDetailsView(DetailView):
     model = Device
     template_name = 'device/modal_details.html'
-    context = 'device'
+    context_object_name = 'device'
 
     def get_context_data(self, **kwargs):
-        device = self.object
         context = super().get_context_data(**kwargs)
-        flag_wall_port = None
-        flag_switch = None
-        flag_patch_port = None
-
+        device = self.object
         connections = []
+        current = device
 
-        while device or flag_wall_port or flag_switch or flag_patch_port:
-            if device:
-                if device.wall_port_in:
-                    flags_str = str(device.wall_port_in.wall_port)
-                    flags_str.add(connections)
-                    flag_wall_port = device.wall_port_in
-                elif device.switch_port_in:
-                    flags_str = str(device.switch_port_in.switch)
-                    flags_str.add(connections)
-                    flag_switch_port = device.switch_port_in.switch
-                elif device.patch_port_in:
-                    flags_str = str(device.patch_port_in.port)
-                    flags_str.add(connections)
-                    flag_switch_port = device.patch_port_in.port
-                device = None
-
-            elif flag_wall_port:
-                if flag_wall_port.switch_port_in:
-                    flags_str = str(flag_wall_port.switch_port_in.switch)
-                    flags_str.add(connections)
-                    flag_switch = flag_wall_port.switch_port_in.switch
-                elif flag_wall_port.patch_port_in:
-                    flags_str = f'{flag_wall_port.patch_port_in.port} {flag_wall_port.patch_port_in.patchera} {flag_wall_port.patch_port_in.patchera.rack}'
-                    flags_str.add(connections)
-                    flag_patch_port = flag_wall_port.patch_port_in.port
-                flag_wall_port = None
-
-            elif flag_switch:
-                if flag_switch.patch_port_in:
-                    flags_str = f'{flag_switch.patch_port_in.port} {flag_switch.patch_port_in.patchera} {flag_switch.patch_port_in.patchera.rack}'
-                    flags_str.add(connections)
-                    flag_patch_port = flag_switch.patch_port_in.port
-                    flag_switch = None
-                elif flag_switch.switch_port_in:
-                    flags_str = str(flag_switch.switch_port_in.switch)
-                    flags_str.add(connections)
-                    flag_switch = flag_switch.switch_port_in.switch
-                elif flag_switch.wall_port_in:
-                    flag_str = str(flag_switch.wall_port_in.wall_port)
-                    flags_str.add(connections)
-                    flag_wall_port = flag_switch.wall_port_in.wall_port
-                    flag_switch = None
-                else:
-                    flag_switch = None
+        while current:
+            next_connection = current.get_next_connection()
+            print(f"Current: {current}, Next: {next_connection}")
+            if next_connection:
+                connections.append(str(next_connection))
+                current = next_connection
             else:
-                if flag_wall_port.switch_port_in:
-                    flags_str = str(flag_wall_port.switch_port_in.switch)
-                    flags_str.add(connections)
-                    flag_switch = flag_wall_port.switch_port_in.switch
-                elif flag_wall_port.patch_port_in:
-                    flags_str = f'{flag_wall_port.patch_port_in.port} {flag_wall_port.patch_port_in.patchera} {flag_wall_port.patch_port_in.patchera.rack}'
-                    flags_str.add(connections)
-                    flag_patch_port = flag_wall_port.patch_port_in.port
-                flag_wall_port = None
-
+                current = None
+        print(f"Final connections: {connections}")  #
         context['connections'] = connections
         return context
 

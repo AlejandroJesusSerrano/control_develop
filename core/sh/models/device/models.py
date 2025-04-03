@@ -61,6 +61,14 @@ class Device(models.Model):
 			item['employee'] = 'NO HAY EMPLEADO ASIGNADO'
 		return item
 
+	def get_next_connection(self):
+		if self.wall_port_in is not None:
+			return self.wall_port_in
+		elif self.switch_port_in is not None:
+			return self.switch_port_in
+		elif self.patch_port_in is not None:
+			return self.patch_port_in
+		return None
 	class Meta:
 		verbose_name = 'Dispositivo'
 		verbose_name_plural = 'Dispositivos'

@@ -47,6 +47,13 @@ class Wall_Port(models.Model):
         item['details'] = self.details if self.details else 'SIN DETALLES'
         return item
 
+    def get_next_connection(self):
+        if self.switch_port_in is not None:
+            return self.switch_port_in
+        elif self.patch_port_in is not None:
+            return self.patch_port_in
+        return None
+
     class Meta:
         app_label = 'sh'
         verbose_name = 'Boca de Pared'

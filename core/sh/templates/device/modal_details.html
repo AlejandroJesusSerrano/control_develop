@@ -77,71 +77,21 @@
                                     <div class="card-header bg-custom-primary">
                                         <i class="fas fa-plug"></i> Conexiones
                                     </div>
-                                    {% if  device.wall_port_in%}
-                                    <div class="card-body">
-                                        <p class="mb-2 text-center">
-                                            <strong><i class="fa-solid fa-ethernet"> </i> Boca de Pared:</strong>
-                                            {{ device.wall_port_in }}
-                                        </p>
-                                        <p class="mb-2 text-center">
-                                            <i class="fas fa-arrow-down"></i>
-                                        </p>
-
-                                        {% if device.wall_port_in.switch_port_in %}
-
-                                        <p class="mb-2 text-center">
-                                            <strong><i class="fa-solid fa-server"> </i>PUERTO: </strong>
-                                            {{ device.wall_port_in.switch_port_in.port_id }} DEL SWITCH: {{ device.wall_port_in.switch_port_in.switch.model.brand }} {{ device.wall_port_in.switch_port_in.switch.model.dev_model }} DE {{device.wall_port_in.switch_port_in.switch.ports_q}} BOCAS
-                                        </p>
-                                        <p class="mb-2 text-center">
-                                            <i class="fas fa-arrow-down"></i>
-                                        </p>
-                                        <p class="mb-2 text-center">
-                                            <strong><i class="fa-solid fa-server"> </i>Del Switch:</strong>
-                                            {{ device.wall_port_in.switch_port_in.switch }}
-                                        </p>
-                                        <p class="mb-2 text-center">
-                                            <i class="fas fa-arrow-down"></i>
-                                        </p>
-                                        <p class="mb-2 text-center">
-                                            <strong><i class="fa-solid fa-server"> </i>Switch: </strong>
-                                            {{device.switch_port_in.switch.model.brand}} DE {{device.switch_port_in.switch.ports_q}} BOCAS
-                                        </p>
-
-                                        {% endif %}
-                                    </div>
-                                    {% elif device.switch_port_in %}
-                                    <div class="card-body">
-                                        <p class="mb-2">
-                                            <strong>Puerto de Switch:</strong>
-                                            {% if device.switch_port_in %}
-                                                {% if device.switch_port_in.switch.switch_rack_pos %}
-                                                    Switch: {{ device.switch_port_in.switch }} / Puerto: {{ device.switch_port_in.port_id }} / Rack: {{ device.switch_port_in.switch.switch_rack_pos.rack }} / Posición: {{ device.switch_port_in.switch.switch_rack_pos.rack_pos }}
-                                                {% else %}
-                                                    Switch: {{ device.switch_port_in.switch }} / Puerto: {{ device.switch_port_in.port_id }} / En la oficina: {{ device.switch_port_in.switch.office }}
+                                    {% if  connections %}
+                                        {% for connection  in connections %}
+                                            <p class="mb-2 text-center">
+                                                {{ connection }}
+                                            </p>
+                                                {% if not forloop.last %}
+                                                    <p class="mb-2 text-center">
+                                                        <i class="fas fa-arrow-down"></i>
+                                                    </p>
                                                 {% endif %}
-                                            {% else %}
-                                                No se conecta a Switch
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                    {% elif device.patch_port_in%}
-                                    <div class="card-body"></div>
-                                        <p class="mb-2">
-                                            <strong>Puerto de Patchera:</strong>
-                                            {% if device.patch_port_in %}
-                                                Rack: {{ device.patch_port_in.patchera.rack }} / Patchera: {{ device.patch_port_in.patchera }} / Puerto: {{ device.patch_port_in.port }}
-                                            {% else %}
-                                                No conectado a patchera
-                                            {% endif %}
-                                        </p>
-                                    </div>
-                                    {% elif not device.patch_port_in or not switch_port_in or not wall_port_in %}
-                                    <div class="card-body">
+                                        {% endfor %}
+                                    {% else %}
                                         <p class="mb-2 text-center">
                                             <strong>Dispositivo sin conexion a la Red</strong>
                                         </p>
-                                    </div>
                                     {% endif %}
                                 </div>
                             </div>

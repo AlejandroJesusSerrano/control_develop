@@ -61,6 +61,16 @@ class Switch(models.Model):
     item['switch_rack_pos'] = self.switch_rack_pos if self.rack else 'NO ESTA EN RACK'
     return item
 
+  def get_next_connection(self):
+    if self.wall_port_in is not None:
+      return self.wall_port_in
+    elif self.switch_port_in is not None:
+      return self.switch_port_in
+    elif self.patch_port_in is not None:
+      return self.patch_port_in
+    else:
+      return None
+
   class Meta:
     verbose_name = 'Switch'
     verbose_name_plural = 'Switches'

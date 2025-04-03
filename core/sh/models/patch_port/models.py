@@ -19,6 +19,11 @@ class Patch_Port(models.Model):
     item['rack'] = f'RACK: {self.patchera.rack.rack} EN OFICINA: {self.patchera.rack.office.office} / LOCALIDAD: {self.patchera.rack.office.loc.edifice.location.location} / PROVINCIA: {self.patchera.rack.office.loc.edifice.location.province.province}'
     return item
 
+  def get_next_connection(self):
+    if self.switch_port_in is not None:
+      return self.switch_port_in
+    return None
+
   class Meta:
     verbose_name = 'Puerto Patchera'
     verbose_name_plural = 'Puertos Patcheras'
