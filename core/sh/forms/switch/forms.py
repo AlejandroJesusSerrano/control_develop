@@ -103,9 +103,13 @@ class SwitchForm(forms.ModelForm):
     class Meta:
         model = Switch
         fields = [
-            'brand', 'model', 'serial_n', 'ports_q', 'rack', 'province', 'location', 'dependency', 'edifice', 'edifice_ports', 'loc', 'loc_ports', 'office', 'office_ports', 'rack_ports', 'switch_rack_pos', 'wall_port_in', 'switch_ports', 'switch_port_in', 'patchera_ports', 'patch_port_in', 'ip'
+            'brand', 'model', 'serial_n', 'ports_q', 'rack', 'province', 'location', 'dependency', 'edifice', 'edifice_ports', 'loc', 'loc_ports', 'office', 'office_ports', 'rack_ports', 'switch_rack_pos', 'wall_port_in', 'switch_ports', 'switch_port_in', 'patchera_ports', 'patch_port_in', 'ip', 'switch_type'
         ]
         widgets = {
+            'switch_type': Select(attrs={
+                'class': 'form-control select2',
+                'id': 'id_switch_type'
+            }),
             'serial_n': TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ingrese el número de serie',

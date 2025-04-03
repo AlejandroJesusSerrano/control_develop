@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import model_to_dict
+from django.forms import ValidationError, model_to_dict
 
 from core.sh.models.patch_port.models import Patch_Port
 from core.sh.models.wall_port.models import Wall_Port
@@ -11,6 +11,7 @@ from ..rack.models import Rack
 
 class Switch(models.Model):
   model = models.ForeignKey(Dev_Model, related_name = 'switch_model', verbose_name = 'Modelo', on_delete = models.CASCADE)
+  switch_type = models.CharField(max_length = 7, verbose_name = 'Tipo de Switch', choices = (('CORE', 'CORE'), ('NO CORE', 'NO CORE')), default = 'NO CORE')
   serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True)
   ports_q = models.CharField(max_length = 2, verbose_name = 'Cantidad de Puertos')
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
@@ -60,6 +61,11 @@ class Switch(models.Model):
     item['office'] = self.office.office if self.office else 'NO ESTA EN UNA OFICINA'
     item['switch_rack_pos'] = self.switch_rack_pos if self.rack else 'NO ESTA EN RACK'
     return item
+  
+  def delete(self, *args, **kwargs):
+    if self.switch_type == 'CORE':
+      raise ValidationError("No se puede eliminar un switch de tipo 'CORE' ya que es crítico para la red")
+    super().delete(*args, **kwargs)
 
   def get_next_connection(self):
     if self.wall_port_in is not None:

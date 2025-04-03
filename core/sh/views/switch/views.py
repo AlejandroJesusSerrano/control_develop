@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.forms import ValidationError
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.http.response import HttpResponse as HttpResponse
@@ -163,9 +164,9 @@ class SwitchUpdateView(UpdateView):
                     'switch_brand': self.object.model.brand.brand,
                     'switch_ports_q': self.object.ports_q,
                     'switch_ip': self.object.ip,
-                    'switch_rack': f'RACK: {self.object.rack.rack} EN OFICINA: {self.object.rack.office.office}' if self.object.rack else 'No se encuentra en Rack',
+                    'switch_rack': f'RACK: {self.object.rack.rack} EN OFICINA: {self.object.rack.office.office if self.object.rack.office else "Desconocida"}' if self.object.rack else 'No se encuentra en Rack',
                     'switch_rack_pos': self.object.switch_rack_pos if self.object.rack else 'No se encuentra en Rack',
-                    'switch_office': self.object.office.office,
+                    'switch_office': self.object.office.office if self.object.office else 'No se encuentra en oficina',
                     'switch_wall_port_in': str(self.object.wall_port_in) if self.object.wall_port_in else 'No ingresa de pared',
                     'switch_switch_port_in': str(self.object.switch_port_in) if self.object.switch_port_in else 'No ingresa de switch',
                     'switch_patch_port_in': str(self.object.patch_port_in) if self.object.patch_port_in else 'No ingresa de patchera',
@@ -174,6 +175,7 @@ class SwitchUpdateView(UpdateView):
             else:
                 return super().form_valid(form)
         except Exception as e:
+            print(f"Error al actualizar el switch: {e}")
             if self.request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'error': str(e)}, status=500)
             else:
@@ -218,10 +220,10 @@ class SwitchUpdateView(UpdateView):
             location=switch.office.loc.edifice.location
         )
 
-        if switch.office:
-            context['form'].fields['office'].queryset = Office.objects.select_related('loc__edifice').filter(
-            loc__edifice=switch.office.loc.edifice
-        )
+        if switch.office and switch.office.loc and switch.office.loc.edifice:
+            context['form'].fields['office'].queryset = Office.objects.select_related('loc__edifice').filter(loc__edifice=switch.office.loc.edifice)
+        else:
+            context['form'].fields['office'].queryset = Office.objects.none()
 
         context['form'].initial['brand'] = switch.model.brand.id if switch.model and switch.model.brand else None
         context['form'].initial['dev_type'] = switch.model.dev_type.id if switch.model and switch.model.dev_type else 'SWITCH'
@@ -239,7 +241,7 @@ class SwitchUpdateView(UpdateView):
             'data-preselected': self.object.model.id if self.object.model else ''
         })
         context['form'].fields['edifice'].widget.attrs.update({
-            'data-preselected': self.object.office.loc.edifice.id if self.object.office.loc.edifice else ''
+            'data-preselected': self.object.office.loc.edifice.id if self.object.office and self.object.office.loc and self.object.loc.edifice else ''
         })
         context['form'].fields['office'].widget.attrs.update({
             'data-preselected': self.object.office.id if self.object.office else ''
@@ -264,6 +266,17 @@ class SwitchDeleteView(DeleteView):
         except Exception as e:
             data['error'] = str(e)
         return JsonResponse(data)
+
+    def delete(self, request, *args, **kwargs):
+        self.object.delete()
+        try:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'message': 'Switch eliminado exitosamente'})
+            return super().delete(request, *args, **kwargs)
+        except ValidationError as e:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': str(e)}, status=400)
+            raise
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
