@@ -11,7 +11,7 @@ class Patch_Port(models.Model):
   date_updated = models.DateTimeField(auto_now_add = True, verbose_name = 'Última Modificación')
 
   def __str__(self):
-    return f'PUERTO: {self.port} PATCHERA: {self.patchera} DEL RACK: {self.patchera.rack}'
+    return f'PUERTO: {self.port} PATCHERA: {self.patchera.patchera} DEL RACK: {self.patchera.rack.rack}'
 
   def toJSON(self):
     item = model_to_dict(self)

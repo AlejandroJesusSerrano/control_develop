@@ -77,10 +77,10 @@
                                     <div class="card-header bg-custom-primary">
                                         <i class="fas fa-plug"></i> Conexiones
                                     </div>
-                                    {% if  connections %}
+                                    {% if connections %}
                                         {% for connection  in connections %}
                                             <p class="mb-2 text-center">
-                                                {{ connection }}
+                                                <i class="fas fa-ethernet"></i> {{ connection }}
                                             </p>
                                                 {% if not forloop.last %}
                                                     <p class="mb-2 text-center">

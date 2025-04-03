@@ -17,7 +17,7 @@ class PatchPortForm(forms.ModelForm):
   class Meta:
     model = Patch_Port
     fields = [
-      'rack', 'patchera', 'port'
+      'rack', 'patchera', 'port', 'switch_port_in'
       ]
     widgets = {
       'patchera': Select(attrs={
@@ -28,6 +28,10 @@ class PatchPortForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'Ingrese el número de puerto',
         'id': 'id_patch_port_input'
+      }),
+      'switch_port_in': Select(attrs={
+        'class': 'form-control select2',
+        'id': 'id_switch_port_in'
       })
     }
 
@@ -64,8 +68,13 @@ class PatchPortForm(forms.ModelForm):
     patchera = self.cleaned_data.get('patchera')
     port = self.cleaned_data.get('port')
 
+    qs = Patch_Port.objects.all()
 
-    if Patch_Port.objects.filter(patchera=patchera, port=port).exists():
+    if self.instance.pk:
+      qs = qs.exclude(pk=self.instance.pk)
+
+
+    if qs.filter(patchera=patchera, port=port).exists():
       self.add_error('port', f"* El número de puerto '{port}' que quiere ingresar, ya se encuentra registrado en la patchera: '{patchera}' del Rack '{rack}'")
 
     return cleaned_data

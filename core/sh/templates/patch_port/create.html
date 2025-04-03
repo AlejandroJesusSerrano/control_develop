@@ -43,6 +43,16 @@
     {% endif %}
 </div>
 
+<div class="form-group">
+    <label for="id_swtich_port_in">Puerto del Switch de Ingreso: </label>
+    {{ form.switch_port_in }}
+    {% if form.swithc_port_in.errors %}
+    <div class="invalid-feedback d-block">
+        {{ form.switch_port_in.errors|join:"<br>" }}
+    </div>
+    {% endif %}
+</div>
+
 {% endblock form %}
 
 {% block form_scripts %}

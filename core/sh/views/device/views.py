@@ -260,13 +260,11 @@ class DeviceDetailsView(DetailView):
 
         while current:
             next_connection = current.get_next_connection()
-            print(f"Current: {current}, Next: {next_connection}")
             if next_connection:
                 connections.append(str(next_connection))
                 current = next_connection
             else:
                 current = None
-        print(f"Final connections: {connections}")  #
         context['connections'] = connections
         return context
 

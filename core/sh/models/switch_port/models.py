@@ -10,9 +10,9 @@ class Switch_Port(models.Model):
 
   def __str__(self):
     if self.switch.rack:
-      return f'PUERTO: {self.port_id} - SWITCH {self.switch.model.brand} / {self.switch.model.dev_model}, POSICION {self.switch.switch_rack_pos}, RACK {self.switch.rack},  OFICINA {self.switch.rack.office}'
+      return f'PUERTO: {self.port_id} - SWITCH {self.switch.model.brand} {self.switch.model.dev_model}, POSICION {self.switch.switch_rack_pos}, RACK {self.switch.rack},  OFICINA {self.switch.rack.office}'
     else:
-      return f'PUERTO: {self.port_id} - SWITCH {self.switch.model.brand} / {self.switch.model.dev_model}, OFICINA {self.switch.office}'
+      return f'PUERTO: {self.port_id} - SWITCH {self.switch.model.brand} {self.switch.model.dev_model}, OFICINA {self.switch.office}'
 
   def toJSON(self):
     item = model_to_dict(self)
@@ -20,7 +20,7 @@ class Switch_Port(models.Model):
     item['switch'] = str(self.switch.model.brand) +'-> '+str(self.switch.ports_q)+'-> Rack Pos: '+str(self.switch.switch_rack_pos)
     item['obs'] = str(self.obs) if self.obs else 'NO HAY OBSERVACIONES'
     return item
-  
+
   def get_next_connection(self):
     return self.switch.get_next_connection()
 

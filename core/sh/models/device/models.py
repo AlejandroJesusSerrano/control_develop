@@ -69,6 +69,7 @@ class Device(models.Model):
 		elif self.patch_port_in is not None:
 			return self.patch_port_in
 		return None
+
 	class Meta:
 		verbose_name = 'Dispositivo'
 		verbose_name_plural = 'Dispositivos'
