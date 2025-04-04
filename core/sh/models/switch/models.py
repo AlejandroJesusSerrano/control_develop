@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ValidationError, model_to_dict
 
+from core.sh.models.dev_status.models import Dev_Status
 from core.sh.models.patch_port.models import Patch_Port
 from core.sh.models.wall_port.models import Wall_Port
 
@@ -14,6 +15,7 @@ class Switch(models.Model):
   switch_type = models.CharField(max_length = 7, verbose_name = 'Tipo de Switch', choices = (('CORE', 'CORE'), ('NO CORE', 'NO CORE')), default = 'NO CORE')
   serial_n = models.CharField(max_length = 20, verbose_name='N° de Serie', null = True, blank = True)
   ports_q = models.CharField(max_length = 2, verbose_name = 'Cantidad de Puertos')
+  status = models.ForeignKey(Dev_Status, related_name = 'switch_status', verbose_name = 'Estado', on_delete = models.CASCADE)
   rack = models.ForeignKey(Rack, related_name = 'switch_rack', verbose_name = 'Rack', on_delete = models.CASCADE, null = True, blank = True)
   ip = models.CharField(max_length = 15, verbose_name = 'Dirección IP', null = True, blank = True)
   switch_rack_pos = models.CharField(max_length = 2, verbose_name = 'Posición en el Rack', blank=True, null=True)
@@ -53,6 +55,7 @@ class Switch(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['brand'] = self.model.brand.brand if self.model and self.model.brand else 'GENÉRICO'
+    item['conection_in'] = self.wall_port_in or f"PUERTO: {self.switch_port_in.port_id} DEL SWITCH: {self.switch_port_in.switch.model}" or self.patch_port_in if self.wall_port_in or self.switch_port_in or self.patch_port_in else "SIN CONEXION DE INGRESO DESDE LA RED"
     item['serial_n'] = self.serial_n if self.serial_n else 'GENÉRICO SIN S/N°'
     item['ports_q'] = self.ports_q
     item['model'] = self.model.dev_model
@@ -61,7 +64,7 @@ class Switch(models.Model):
     item['office'] = self.office.office if self.office else 'NO ESTA EN UNA OFICINA'
     item['switch_rack_pos'] = self.switch_rack_pos if self.rack else 'NO ESTA EN RACK'
     return item
-  
+
   def delete(self, *args, **kwargs):
     if self.switch_type == 'CORE':
       raise ValidationError("No se puede eliminar un switch de tipo 'CORE' ya que es crítico para la red")

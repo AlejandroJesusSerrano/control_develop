@@ -103,7 +103,7 @@ class SwitchForm(forms.ModelForm):
     class Meta:
         model = Switch
         fields = [
-            'brand', 'model', 'serial_n', 'ports_q', 'rack', 'province', 'location', 'dependency', 'edifice', 'edifice_ports', 'loc', 'loc_ports', 'office', 'office_ports', 'rack_ports', 'switch_rack_pos', 'wall_port_in', 'switch_ports', 'switch_port_in', 'patchera_ports', 'patch_port_in', 'ip', 'switch_type'
+            'brand', 'model', 'serial_n', 'ports_q', 'rack', 'province', 'location', 'dependency', 'edifice', 'edifice_ports', 'loc', 'loc_ports', 'office', 'office_ports', 'rack_ports', 'switch_rack_pos', 'wall_port_in', 'switch_ports', 'switch_port_in', 'patchera_ports', 'patch_port_in', 'ip', 'switch_type', 'status'
         ]
         widgets = {
             'switch_type': Select(attrs={
@@ -119,6 +119,10 @@ class SwitchForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Ingrese la cantidad de puertos del Switch',
                 'id': 'id_ports_q_input'
+            }),
+            'status': Select(attrs={
+                'class': 'form-control select2',
+                'id': 'id_status'
             }),
             'ip': TextInput(attrs={
                 'class': 'form-control',

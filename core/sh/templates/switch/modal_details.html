@@ -1,0 +1,110 @@
+<div class="modal fade" id="switchDetailModal" tabindex="-1" role="dialog" aria-labelledby="switchDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content bg-dark">
+            <!-- Encabezado del modal -->
+            <div class="modal-header bg-custom-dark-over-dark">
+                <h5 class="modal-title" id="switchDetailModalLabel">
+                    <i class="fas fa-info-circle"></i> Detalles del Switch
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"><i class="fas fa-close text-light"></i></span>
+                </button>
+            </div>
+
+            <!-- Cuerpo del modal -->
+            <div class="modal-body bg-dark">
+                <div class="card bg-custom-dark-over-dark">
+                    <div class="card-header bg-custom-primary">
+                        <h5 class="card-title">
+                            <i class="fas fa-desktop"></i> ID de Switch: {{ switch.id }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Información básica del dispositivo -->
+                            <div class="col-md-12 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-info"></i> Información Básica
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="mb-3 text-center"><strong>SWITCH: {{ switch.model.brand.brand }} {{ switch.model.dev_model }} DE {{switch.ports_q}} BOCAS</strong></h4>
+                                                <p class="mb-2"><strong>Estado:</strong> {{ switch.status }}</p>
+                                                <p class="mb-2"><strong>IP:</strong> {{ switch.ip|default:"No asignada" }}</p>
+                                                <p class="mb-2"><strong>Número de Serie:</strong> {{ switch.serial_n }}</p>
+
+                                                <p class="text-muted small">Última modificación: {{ switch.date_updated|date:"d/m/Y H:i" }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Detalles de la oficina -->
+                            <div class="col-md-6 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-building"></i> Oficina
+                                    </div>
+                                    <div class="card-body">
+                                        {% if switch.rack %}
+                                            <p class="mb-2"><strong>Posicion en el Rack:</strong> {{ switch.switch_rack_pos }}</p>
+                                            <p class="mb-2"><strong>Rack:</strong> {{ switch.rack.rack }}</p>
+                                            <p class="mb-2"><strong>Oficina:</strong> {{ switch.rack.office.office }}</p>
+                                            <p class="mb-2"><strong>Dependencia:</strong> {{ switch.rack.office.dependency.dependency }}</p>
+                                            <p class="mb-2"><strong>Edificio:</strong> {{ switch.rack.office.loc.edifice.edifice }}</p>
+                                            <p class="mb-2"><strong>Domicilio:</strong> {{ switch.rack.office.loc.edifice.address }}</p>
+                                            <p class="mb-2"><strong>Ubicación en el Edificio:</strong> Piso: {{ switch.office.loc.floor }} | Ala: {{ switch.office.loc.wing }}</p>
+                                            <p class="mb-2"><strong>Localidad:</strong> {{ switch.rack.office.loc.edifice.location.location }}</p>
+                                            <p class="mb-2"><strong>Provincia:</strong> {{ switch.rack.office.loc.edifice.location.province.province }}</p>
+                                        {% else %}
+                                            <p class="mb-2"><strong>Oficina:</strong> {{ switch.office.office }}</p>
+                                            <p class="mb-2"><strong>Dependencia:</strong> {{ switch.office.dependency.dependency }}</p>
+                                            <p class="mb-2"><strong>Edificio:</strong> {{ switch.office.loc.edifice.edifice }}</p>
+                                            <p class="mb-2"><strong>Domicilio:</strong> {{ switch.office.loc.edifice.address }}</p>
+                                            <p class="mb-2"><strong>Ubicación en el Edificio:</strong> Piso: {{ switch.office.loc.floor }} | Ala: {{ switch.office.loc.wing }}</p>
+                                            <p class="mb-2"><strong>Localidad:</strong> {{ switch.office.loc.edifice.location.location }}</p>
+                                            <p class="mb-2"><strong>Provincia:</strong> {{ switch.office.loc.edifice.location.province.province }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Detalles de conexión -->
+                            <div class="col-md-6 mb-2">
+                                <div class="card bg-dark">
+                                    <div class="card-header bg-custom-primary">
+                                        <i class="fas fa-plug"></i> Conexiones
+                                    </div>
+                                    {% if connections %}
+                                        {% for connection  in connections %}
+                                            <p class="mb-2 mt-3 text-center">
+                                                <i class="fas fa-ethernet"></i> {{ connection }}
+                                            </p>
+                                                {% if not forloop.last %}
+                                                    <p class="mb-2 text-center">
+                                                        <i class="fas fa-arrow-down"></i>
+                                                    </p>
+                                                {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="mb-2 text-center">
+                                            <strong>Dispositivo sin conexion a la Red</strong>
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie del modal -->
+            <div class="modal-footer bg-custom-dark-over-dark">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

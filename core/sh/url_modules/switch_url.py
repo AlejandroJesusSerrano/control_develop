@@ -10,5 +10,6 @@ urlpatterns = [
   path('switch/add/', switch_views.SwitchCreateView.as_view(), name='switch_add'),
   path('switch/edit/<int:pk>/', switch_views.SwitchUpdateView.as_view(), name='switch_edit'),
   path('switch/delete/<int:pk>/', switch_views.SwitchDeleteView.as_view(), name='switch_delete'),
+  path('switch/detail/<int:pk>/', switch_views.SwitchDetailsView.as_view(), name='switch_detail'),
 
 ]

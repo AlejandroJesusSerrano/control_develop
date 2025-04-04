@@ -47,7 +47,7 @@
                         </div>
                         {% endif %}
                     </div>
-                    <div class="form-group col-4">
+                    <div class="form-group col-3">
                         <label for="id_serial_n">Tipo de Switch:</label>
                         {{ form.switch_type }}
                         {% if form.switch_type.errors %}
@@ -56,7 +56,7 @@
                         </div>
                         {% endif %}
                     </div>
-                    <div class="form-group col-4">
+                    <div class="form-group col-3">
                         <label for="id_ports_q">Cantidad de Puertos:</label>
                         {{ form.ports_q }}
                         {% if form.ports_q.help_text %}
@@ -68,12 +68,21 @@
                         </div>
                     {% endif %}
                     </div>
-                    <div class="form-group col-4">
+                    <div class="form-group col-3">
                         <label for="id_ip">Dirección IP:</label>
                         {{ form.ip }}
                         {% if form.ip.errors %}
                         <div class="invalid-feedback d-block">
                             {{ form.ip.errors|join:"<br>" }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group col-3">
+                        <label for="id_status">Estado del Switch:</label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.status.errors|join:"<br>" }}
                         </div>
                         {% endif %}
                     </div>
