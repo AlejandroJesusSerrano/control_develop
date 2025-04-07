@@ -2,11 +2,11 @@ from django.db import models
 from django.forms import ValidationError, model_to_dict
 
 class SwitchFont(models.Model):
-    font_name = models.CharField(max_length=2, related_name = 'font_name', verbose_name = 'Fuente')
+    font_name = models.CharField(max_length=2, verbose_name = 'Fuente')
     switch = models.OneToOneField('sh.Switch', related_name='switch_font', verbose_name='Switch', on_delete=models.CASCADE, blank=True, null=True)
-    font_status = models.CharField(max_length = 7, verbose_name = 'Estados de la Fuente', choices = (
+    font_status = models.CharField(max_length = 21, verbose_name = 'Estados de la Fuente', choices = (
         ('FUNCIONAL REPUESTO', 'FUNCIONAL REPUESTO'),
-        ('FUNCIONAL EN RACK, FUNCIONAL EN RACK'),
+        ('FUNCIONAL EN RACK', 'FUNCIONAL EN RACK'),
         ('ROTA ESPERANDO ENVIO', 'ROTA ESPERANDO ENVIO'),
         ('ENVIDA EN REPARACION', 'ENVIDA EN REPARACION'),
         ), default = 'FUNCIONAL EN RACK')
@@ -46,17 +46,17 @@ class SwitchFont(models.Model):
         item = model_to_dict(self)
         item['font'] = self.font_name
         item['switch'] = f"{self.switch.model.brand.brand} {self.switch.model.dev_model}" if self.switch.model.brand and self.switch.model.dev_model else 'GENÉRICO'
+        item['rack'] = self.switch.rack.rack if self.switch.rack else 'SIN RACK'
         item['status'] = self.font_status
         item['send'] = self.send_date.strftime('%d/%m/%Y') if self.send_date else 'NO TIENE FECHA DE ENVIO'
         item['reception'] = self.reception_date.strftime('%d/%m/%Y') if self.reception_date else 'NO TIENE FECHA DE RECEPCION'
         return item
 
     class Meta:
-        verbose_name = 'Switch'
-        verbose_name_plural = 'Switches'
-        db_table = 'switchs'
-        ordering = ['office']
+        verbose_name = 'SwitchFont'
+        verbose_name_plural = 'SwitchesFonts'
+        db_table = 'fuentes de switchs'
+        ordering = ['font_name']
         constraints = [
-        models.UniqueConstraint(fields=['model', 'serial_n'], name='unique_model_serial'),
-        models.UniqueConstraint(fields=['rack', 'switch_rack_pos'], name='unique_rack_switch_rack_pos')
-    ]
+            models.UniqueConstraint(fields=['font_name', 'switch'], name='unique_switch_font')
+        ]

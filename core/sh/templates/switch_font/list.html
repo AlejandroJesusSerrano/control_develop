@@ -1,0 +1,38 @@
+{% extends 'list.html' %}
+
+{% load static %}
+
+{% block header_list %}
+ <!-- Datatables de la App sh -->
+ <script src="{% static 'switch_font/js/list.js' %}"></script>
+{% endblock header_list %}
+
+{% block columns %}
+
+    <th scope="col" style="width: 5%;">Fuente</th>
+    <th scope="col" style="width: 20%;">Instalada en el Switch</th>
+    <th scope="col" style="width: 10%;">Rack:</th>
+    <th scope="col" style="width: 15%;">Estado</th>
+    <th scope="col" style="width: 15%;">Último Envio</th>
+    <th scope="col" style="width: 20%;">Último Recepeción</th>
+    <th scope="col" style="width: 10%;">Opciones</th>
+
+{% endblock columns %}
+
+{% block rows %}
+
+
+
+{% endblock rows %}
+
+{% block add_button %}
+
+<a href="{{ create_url }}" type="button" class="btn btn-primary" id="{{btn_add_id}}">
+  <i class="fas fa-plus"></i> Agregar Fuente de Switch
+</a>
+
+{% endblock add_button %}
+
+{% block js %}
+
+{% endblock js %}

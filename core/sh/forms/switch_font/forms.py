@@ -2,6 +2,7 @@ from django.forms import *
 from django import forms
 from django.forms import Select, TextInput
 
+from core.sh.models.switch.models import Switch
 from core.sh.models.switch_font.models import SwitchFont
 
 class SwitchFontForm(forms.ModelForm):
@@ -25,14 +26,14 @@ class SwitchFontForm(forms.ModelForm):
                 'class': 'form-control select2',
                 'id': 'id_ports_q_input'
             }),
-            'send_date': DateField(attrs={
+            'send_date': TextInput(attrs={
                 'class': 'form-control datepicker',
                 'id': 'id_send_date',
                 'autocomplete': 'off',
                 'data-provide': 'datepicker',
                 'data-date-format': 'dd/mm/yyyy',
             }),
-            'reception_date': DateField(attrs={
+            'reception_date': TextInput(attrs={
                 'class': 'form-control datepicker',
                 'id': 'id_reception_date',
                 'autocomplete': 'off',
@@ -43,3 +44,11 @@ class SwitchFontForm(forms.ModelForm):
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+
+            self.fields['switch'].queryset = Switch.objects.filter(rack__isnull=False)
+
+        def clean_switch(self):
+            switch = self.cleaned_data.get('switch')
+            if not switch.rack:
+                raise forms.ValidationError('El switch seleccionado no está en un rack.')
+            return switch
