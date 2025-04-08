@@ -10,8 +10,9 @@ class SwitchFont(models.Model):
         ('ROTA ESPERANDO ENVIO', 'ROTA ESPERANDO ENVIO'),
         ('ENVIDA EN REPARACION', 'ENVIDA EN REPARACION'),
         ), default = 'FUNCIONAL EN RACK')
-    send_date = models.DateTimeField(auto_now_add = False, verbose_name = 'Fecha de Envio', null = True, blank = True)
-    reception_date = models.DateTimeField(auto_now_add = False, verbose_name = 'Fecha de Recepcion', null = True, blank = True)
+    send_date = models.DateField(auto_now_add = False, verbose_name = 'Fecha de Envio', null = True, blank = True)
+    reception_date = models.DateField(auto_now_add = False, verbose_name = 'Fecha de Recepcion', null = True, blank = True)
+    obs = models.TextField(max_length = 200, verbose_name = 'Observaciones', null = True, blank = True)
     date_creation = models.DateTimeField(auto_now_add = True, verbose_name = 'Fecha de Registro')
     date_updated = models.DateTimeField(auto_now = True, verbose_name = 'Última Modificación')
 

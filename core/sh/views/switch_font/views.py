@@ -69,7 +69,7 @@ class SwitchFontCreateView(CreateView):
                     'font_name': self.object.font_name,
                     'switch': f'{self.object.switch.model.brand.brand} {self.object.switch.model.dev_model} DE {self.object.switch.ports_q} PUERTOS',
                     'font_status': self.object.font_status,
-                    'send_date': self.object.send_date.stfrtime('%d/%m/%Y') if self.object.send_date else 'NO TIENE FECHA DE ENVIO',
+                    'send_date': self.object.send_date.strftime('%d/%m/%Y') if self.object.send_date else 'NO TIENE FECHA DE ENVIO',
                     'reception_date': self.object.reception_date.strftime('%d/%m/%Y') if self.object.reception_date else 'NO TIENE FECHA DE RECEPCION',
                 }
                 return JsonResponse(data)
@@ -125,7 +125,7 @@ class SwitchFontUpdateView(UpdateView):
                     'font_name': self.object.id,
                     'switch': f'{self.object.switch.model.brand.brand} {self.object.switch.model.dev_model} DE {self.object.switch.ports_q} PUERTOS',
                     'font_status': self.object.font_status,
-                    'send_date': self.object.send_date.stfrtime('%d/%m/%Y') if self.object.send_date else 'NO TIENE FECHA DE ENVIO',
+                    'send_date': self.object.send_date.strftime('%d/%m/%Y') if self.object.send_date else 'NO TIENE FECHA DE ENVIO',
                     'reception_date': self.object.reception_date.strftime('%d/%m/%Y') if self.object.reception_date else 'NO TIENE FECHA DE RECEPCION',
                 }
                 return JsonResponse(data)

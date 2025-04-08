@@ -10,7 +10,7 @@ class SwitchFontForm(forms.ModelForm):
     class Meta:
         model = SwitchFont
         fields = [
-            'font_name', 'switch', 'font_status', 'send_date', 'reception_date'
+            'font_name', 'switch', 'font_status', 'send_date', 'reception_date', 'obs'
         ]
         widgets = {
             'font_name': TextInput(attrs={
@@ -26,29 +26,34 @@ class SwitchFontForm(forms.ModelForm):
                 'class': 'form-control select2',
                 'id': 'id_ports_q_input'
             }),
-            'send_date': TextInput(attrs={
-                'class': 'form-control datepicker',
-                'id': 'id_send_date',
-                'autocomplete': 'off',
-                'data-provide': 'datepicker',
-                'data-date-format': 'dd/mm/yyyy',
-            }),
-            'reception_date': TextInput(attrs={
-                'class': 'form-control datepicker',
-                'id': 'id_reception_date',
-                'autocomplete': 'off',
-                'data-provide': 'datepicker',
-                'data-date-format': 'dd/mm/yyyy',
+            'obs': TextInput(attrs={
+                'class': 'form-control',
+                'id': 'id_obs',
+                'placeholder': 'Ingrese una observación'
             })
         }
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+        send_date = forms.DateField(
+            input_formats=['%d/%m/%Y'],
+            required=False
+        )
 
-            self.fields['switch'].queryset = Switch.objects.filter(rack__isnull=False)
+        reception_date = forms.DateField(
+            input_formats=['%d/%m/%Y'],
+            required=False
+        )
 
-        def clean_switch(self):
-            switch = self.cleaned_data.get('switch')
-            if not switch.rack:
-                raise forms.ValidationError('El switch seleccionado no está en un rack.')
-            return switch
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        switches = Switch.objects.filter(rack__isnull=False)
+        self.fields['switch'].queryset = switches
+
+    def clean_switch(self):
+        switch = self.cleaned_data.get('switch')
+        font_name = self.cleaned_data.get('font_name')
+        qs = SwitchFont.objects.all()
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.filter(switch=switch, font_name=font_name).exists():
+            raise forms.ValidationError('Ya se encuentra asociada una fuente con el mismo nombre para este switch.')
+        return switch

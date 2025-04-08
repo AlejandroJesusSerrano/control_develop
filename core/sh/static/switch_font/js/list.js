@@ -20,11 +20,12 @@ $(document).ready(function(){
             {"data": "status"},
             {"data": "send"},
             {"data": "reception"},
+            {"data": "obs"},
             {"data": null,  "defaultContent": ""},
         ],
         columnDefs: [
             {
-                targets: [6],
+                targets: [7],
                 class: 'text-center',
                 orderable: false,
                 render: function(data, type, row){
