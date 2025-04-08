@@ -55,7 +55,15 @@ class Switch(models.Model):
   def toJSON(self):
     item = model_to_dict(self)
     item['brand'] = self.model.brand.brand if self.model and self.model.brand else 'GENÉRICO'
-    item['conection_in'] = self.wall_port_in or f"PUERTO: {self.switch_port_in.port_id} DEL SWITCH: {self.switch_port_in.switch.model}" or self.patch_port_in if self.wall_port_in or self.switch_port_in or self.patch_port_in else "SIN CONEXION DE INGRESO DESDE LA RED"
+    # Manejo seguro de conection_in
+    if self.wall_port_in:
+        item['conection_in'] = str(self.wall_port_in)
+    elif self.switch_port_in:
+        item['conection_in'] = f"PUERTO: {self.switch_port_in.port_id} DEL SWITCH: {self.switch_port_in.switch.model}"
+    elif self.patch_port_in:
+        item['conection_in'] = str(self.patch_port_in)
+    else:
+        item['conection_in'] = "SIN CONEXION DE INGRESO DESDE LA RED"
     item['serial_n'] = self.serial_n if self.serial_n else 'GENÉRICO SIN S/N°'
     item['ports_q'] = self.ports_q
     item['model'] = self.model.dev_model
