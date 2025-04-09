@@ -35,7 +35,7 @@ class Wall_Port(models.Model):
             item['switch_port_in'] = None
 
         if self.patch_port_in and self.patch_port_in.patchera:
-            item['patch_port_in'] = f"RACK: {self.patch_port_in.patchera.rack} -> PATCHERA: {self.patch_port_in.patchera} -> PUERTO: {self.patch_port_in.port}"
+            item['patch_port_in'] = f"RACK: {self.patch_port_in.patchera.rack} -> PATCHERA: {self.patch_port_in.patchera.patchera} -> PUERTO: {self.patch_port_in.port}"
         else:
             item['patch_port_in'] = None
 
