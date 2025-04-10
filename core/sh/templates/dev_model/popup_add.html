@@ -98,18 +98,18 @@
         let brandAddUrl = "{% url 'sh:brand_add' %}";
 
         initPopup({
-            triggerSelector: '#brand_add_popup',
-            popupUrl: "{% url 'sh:brand_add' %}",
+            triggerSelector: '#dev_type_popup_add',
+            popupUrl: "{% url 'sh:dev_type_add' %}",
             entityType: 'dev_model',
-            selectedId: 'id_brand',
+            selectedId: 'id_dev_type',
             formSelector: '#dev_modelForm',
             onSuccess: function(response) {
-                console.log('Marca agregada:', response);
+                console.log('Tipo de Dispositivo agregado:', response);
             }
         })
 
         initPopup({
-            triggerSelector: '#brand_add_popup',
+            triggerSelector: '#brand_popup_add',
             popupUrl: "{% url 'sh:brand_add' %}",
             entityType: 'dev_model',
             selectedId: 'id_brand',
